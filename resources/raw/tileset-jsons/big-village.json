@@ -1,0 +1,14 @@
+{ "columns":40,
+ "image":"..\/tilesets\/big-village.jpg",
+ "imageheight":5120,
+ "imagewidth":1280,
+ "margin":0,
+ "name":"big-village",
+ "spacing":0,
+ "tilecount":6400,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

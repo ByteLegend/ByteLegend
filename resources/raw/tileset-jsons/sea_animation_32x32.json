@@ -1,0 +1,27 @@
+{ "columns":10,
+ "image":"..\/tilesets\/sea_animation_32x32.png",
+ "imageheight":640,
+ "imagewidth":320,
+ "margin":0,
+ "name":"sea_animation_32x32",
+ "spacing":0,
+ "tilecount":200,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tiles":[
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":0
+                }, 
+                {
+                 "duration":500,
+                 "tileid":1
+                }],
+         "id":3
+        }],
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

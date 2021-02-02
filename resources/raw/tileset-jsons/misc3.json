@@ -1,0 +1,14 @@
+{ "columns":8,
+ "image":"..\/tilesets\/misc3.png",
+ "imageheight":4992,
+ "imagewidth":256,
+ "margin":0,
+ "name":"misc3",
+ "spacing":0,
+ "tilecount":1248,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

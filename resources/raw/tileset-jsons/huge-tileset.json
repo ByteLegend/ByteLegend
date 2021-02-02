@@ -1,0 +1,14 @@
+{ "columns":63,
+ "image":"..\/tilesets\/huge-tileset.png",
+ "imageheight":1088,
+ "imagewidth":2016,
+ "margin":0,
+ "name":"huge-tileset",
+ "spacing":0,
+ "tilecount":2142,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

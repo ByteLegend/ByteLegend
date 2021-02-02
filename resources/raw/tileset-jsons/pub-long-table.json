@@ -1,0 +1,14 @@
+{ "columns":16,
+ "image":"..\/tilesets\/pub-long-table.png",
+ "imageheight":512,
+ "imagewidth":512,
+ "margin":0,
+ "name":"pub-long-table",
+ "spacing":0,
+ "tilecount":256,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

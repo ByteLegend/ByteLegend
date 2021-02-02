@@ -1,0 +1,27 @@
+{ "columns":12,
+ "image":"..\/tilesets\/vehicle-animation.png",
+ "imageheight":256,
+ "imagewidth":384,
+ "margin":0,
+ "name":"vehicle-animation",
+ "spacing":0,
+ "tilecount":96,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tiles":[
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":39
+                }, 
+                {
+                 "duration":500,
+                 "tileid":41
+                }],
+         "id":40
+        }],
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

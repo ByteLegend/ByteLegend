@@ -1,0 +1,9 @@
+- id: YouHaveXStars
+  en: You have {0} star(s).
+  zh_hans: 你有{0}颗星星
+- id: StarCondition
+  en: I only allow people with more than {0} star to pass.
+  zh_hans: 我只允许{0}颗星星的人通过
+- id: PubGuardAfterStar
+  en: Nice job!
+  zh_hans: 干的漂亮！

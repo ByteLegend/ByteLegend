@@ -1,0 +1,14 @@
+{ "columns":20,
+ "image":"..\/tilesets\/BrowserQuest_32x32.png",
+ "imageheight":3232,
+ "imagewidth":640,
+ "margin":0,
+ "name":"BrowserQuest_32x32",
+ "spacing":0,
+ "tilecount":2020,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

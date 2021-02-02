@@ -1,0 +1,14 @@
+{ "columns":16,
+ "image":"..\/tilesets\/restaurant-crate.png",
+ "imageheight":512,
+ "imagewidth":512,
+ "margin":0,
+ "name":"restaurant-crate",
+ "spacing":0,
+ "tilecount":576,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

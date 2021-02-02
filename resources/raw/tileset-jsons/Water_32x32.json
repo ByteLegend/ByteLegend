@@ -1,0 +1,72 @@
+{ "columns":64,
+ "image":"..\/tilesets\/Water_32x32.png",
+ "imageheight":1536,
+ "imagewidth":2048,
+ "margin":0,
+ "name":"Water_32x32",
+ "spacing":0,
+ "terrains":[
+        {
+         "name":"Water",
+         "tile":-1
+        }],
+ "tilecount":3072,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tiles":[
+        {
+         "id":5,
+         "terrain":[-1, -1, -1, 0]
+        }, 
+        {
+         "id":6,
+         "terrain":[-1, -1, 0, 0]
+        }, 
+        {
+         "id":7,
+         "terrain":[-1, -1, 0, -1]
+        }, 
+        {
+         "id":69,
+         "terrain":[-1, 0, -1, 0]
+        }, 
+        {
+         "id":70,
+         "terrain":[0, 0, 0, 0]
+        }, 
+        {
+         "id":71,
+         "terrain":[0, -1, 0, -1]
+        }, 
+        {
+         "id":133,
+         "terrain":[-1, 0, -1, -1]
+        }, 
+        {
+         "id":134,
+         "terrain":[0, 0, -1, -1]
+        }, 
+        {
+         "id":135,
+         "terrain":[0, -1, -1, -1]
+        }, 
+        {
+         "id":196,
+         "terrain":[0, 0, 0, -1]
+        }, 
+        {
+         "id":197,
+         "terrain":[0, 0, -1, 0]
+        }, 
+        {
+         "id":260,
+         "terrain":[0, -1, 0, 0]
+        }, 
+        {
+         "id":261,
+         "terrain":[-1, 0, 0, 0]
+        }],
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

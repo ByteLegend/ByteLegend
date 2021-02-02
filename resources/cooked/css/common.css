@@ -1,0 +1,169 @@
+body {
+    overflow: hidden; /* Hide scrollbars */
+    background-color: black;
+}
+
+.map-title {
+    color: white;
+    text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.1em 0.1em 0.2em;
+}
+
+/*.default-link {*/
+/*    color: #007bff*/
+/*}*/
+
+/*.default-link :hover {*/
+/*    color: #0069d9;*/
+/*    text-decoration: underline;*/
+/*}*/
+
+.map-title-widget {
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+.locale-selection-widget .btn-primary {
+    background: transparent;
+    color: #ffffff;
+    text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.1em 0.1em 0.2em;
+}
+
+.map-name-selection {
+    display: inline-block;
+    text-shadow: none;
+}
+
+.map-name-selection .btn-primary {
+    background: transparent;
+    color: #ffffff;
+    text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.1em 0.1em 0.2em;
+}
+
+#online-counter {
+    background: transparent;
+    color: #ffffff;
+    text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.1em 0.1em 0.2em;
+}
+
+.white-text-black-shadow {
+    color: white;
+    text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.2em 0.2em 0.2em;
+}
+
+.locale-selection-widget {
+    margin-top: 10px;
+}
+
+.picture-frame-border {
+    border: 3px solid transparent;
+    border-image: url("../img/ui/border.png") 3 repeat;
+}
+
+/*.modal-content {*/
+/*    background-image: url("../img/ui/minimap.png");*/
+/*    background-size: 100% 100%;*/
+/*}*/
+
+.canvas-border {
+    border: 2px solid #2a3cad;
+    border-radius: 4px;
+    box-shadow: 0 0 10px #2a3cad;
+}
+
+.user-mouse-interaction-layer {
+    cursor: url("../img/cursor/cursor-normal.png"), auto;
+}
+
+.cursor-scroll-up {
+    cursor: url("../img/cursor/cursor-scroll-up.png"), auto;
+}
+
+.cursor-scroll-down {
+    cursor: url("../img/cursor/cursor-scroll-down.png"), auto;
+}
+
+.cursor-scroll-left {
+    cursor: url("../img/cursor/cursor-scroll-left.png"), auto;
+}
+
+.cursor-scroll-right {
+    cursor: url("../img/cursor/cursor-scroll-right.png"), auto;
+}
+
+.cursor-scroll-left-up {
+    cursor: url("../img/cursor/cursor-scroll-left-up.png"), auto;
+}
+
+.cursor-scroll-left-down {
+    cursor: url("../img/cursor/cursor-scroll-left-down.png"), auto;
+}
+
+.cursor-scroll-right-up {
+    cursor: url("../img/cursor/cursor-scroll-right-up.png"), auto;
+}
+
+.cursor-scroll-right-down {
+    cursor: url("../img/cursor/cursor-scroll-right-down.png"), auto;
+}
+
+.item-enter {
+    opacity: 0;
+}
+
+.item-enter-active {
+    opacity: 1;
+    transition: opacity 2000ms ease-in;
+}
+
+.item-exit {
+    opacity: 1;
+}
+
+.item-exit-active {
+    opacity: 0;
+    transition: opacity 1000ms ease-in;
+}
+
+.avatar-img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.avatar-login-span {
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.white-text-black-shadow-1 {
+    color: white;
+    text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000, #000 0.1em 0.1em 0.1em;
+}
+
+.menu-item-div {
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+}
+
+.menu-item-div :hover {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    border: none;
+}
+
+.menu-item-div-title {
+    position: relative;
+    top: -90px;
+    left: -48px;
+    width: 160px;
+    text-align: center;
+}

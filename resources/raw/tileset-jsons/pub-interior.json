@@ -1,0 +1,14 @@
+{ "columns":16,
+ "image":"..\/tilesets\/pub-interior.png",
+ "imageheight":512,
+ "imagewidth":512,
+ "margin":0,
+ "name":"pub-interior",
+ "spacing":0,
+ "tilecount":256,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

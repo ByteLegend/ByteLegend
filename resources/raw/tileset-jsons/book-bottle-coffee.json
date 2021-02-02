@@ -1,0 +1,14 @@
+{ "columns":12,
+ "image":"..\/tilesets\/book-bottle-coffee.png",
+ "imageheight":512,
+ "imagewidth":384,
+ "margin":0,
+ "name":"book-bottle-coffee",
+ "spacing":0,
+ "tilecount":432,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

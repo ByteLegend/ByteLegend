@@ -1,0 +1,14 @@
+{ "columns":24,
+ "image":"..\/tilesets\/Outside_CBlue.png",
+ "imageheight":768,
+ "imagewidth":768,
+ "margin":0,
+ "name":"Outside_CBlue",
+ "spacing":0,
+ "tilecount":576,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}

@@ -1,0 +1,14 @@
+{ "columns":8,
+ "image":"..\/tilesets\/Misc_WallInteriorIcon_32x32.png",
+ "imageheight":4256,
+ "imagewidth":256,
+ "margin":0,
+ "name":"Misc_WallInteriorIcon_32x32",
+ "spacing":0,
+ "tilecount":1064,
+ "tiledversion":"1.4.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.4
+}
