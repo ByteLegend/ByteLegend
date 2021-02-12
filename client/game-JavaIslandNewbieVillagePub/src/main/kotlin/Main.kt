@@ -6,5 +6,9 @@ import kotlinx.browser.window
 val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
 
 fun main() {
-//    gameRuntime.addMapEntrance(JAVA_ISLAND_NEWBIE_VILLAGE_PUB, JAVA_ISLAND)
+    gameRuntime.sceneContainer.getSceneById(JAVA_ISLAND_NEWBIE_VILLAGE_PUB).configure {
+        mapEntrance {
+            destMapId = JAVA_ISLAND
+        }
+    }
 }

@@ -6,9 +6,9 @@ import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
+import com.bytelegend.app.client.api.dsl.GameSceneBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NpcBuilder
-import com.bytelegend.app.client.api.dsl.ObjectsConfigurer
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.mapToArray
@@ -37,7 +37,7 @@ class DefaultGameScene(
         initContainerSize,
     )
 ) : GameScene,
-    ObjectsConfigurer,
+    GameSceneBuilder,
     DIAware,
     GameContainerSizeAware by canvasState {
     override val gameRuntime: GameRuntime by di.instance()
@@ -46,6 +46,9 @@ class DefaultGameScene(
     }
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
+    override fun configure(block: GameSceneBuilder.() -> Unit) {
+       block()
+    }
 
     init {
         map.objects.forEach {
@@ -63,14 +66,17 @@ class DefaultGameScene(
         builder.action()
 
         val destMapId = builder.destMapId!!
-        val id = defaultMapEntranceId(map.id, destMapId)
-        val coordinate = objects.getById<GameMapPoint>(defaultMapEntrancePointId(id)).point
+        val entranceId = builder.id ?: defaultMapEntranceId(map.id, destMapId)
+        val entrancePointId = builder.entrancePointId ?: defaultMapEntrancePointId(entranceId)
+        val coordinate = objects.getById<GameMapPoint>(entrancePointId).point
+        val backEntrancePointId = builder.backEntrancePointId?: defaultMapEntrancePointId(destMapId, map.id)
 
         val mapEntrance = MapEntrance(
-            id,
+            entranceId,
             this,
             coordinate,
-            destMapId
+            destMapId,
+            backEntrancePointId
         )
 
         objects.add(mapEntrance)

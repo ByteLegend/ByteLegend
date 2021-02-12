@@ -1,5 +1,6 @@
 package com.bytelegend.app.client.api
 
+import com.bytelegend.app.client.api.dsl.GameSceneBuilder
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.GridSize
@@ -170,6 +171,8 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
     val blockers: Array<Array<Int>>
     val objects: GameObjectContainer
     val canvasState: GameCanvasState
+
+    fun configure(block: GameSceneBuilder.() -> Unit)
 }
 
 interface GameSceneContainer : GameContainerSizeAware {

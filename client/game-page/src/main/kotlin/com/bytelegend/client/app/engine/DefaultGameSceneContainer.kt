@@ -10,6 +10,7 @@ import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.TextAjaxResource
+import com.bytelegend.app.client.api.dsl.GameSceneBuilder
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.RawGameMap
 import com.bytelegend.app.shared.i18n.Locale

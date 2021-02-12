@@ -9,6 +9,7 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.mapToArrayWithIndex
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.obj.MapEntrance
 import com.bytelegend.client.app.sprite.toSprite
 
 class DefaultGameObjectContainer(

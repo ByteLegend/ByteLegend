@@ -21,6 +21,7 @@ class MapEntrance(
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
     private val destMapId: String,
+    private val backEntrancePointId: String
 ) : GameObject, GameSceneAware, GridCoordinateAware {
     override val layer: Int = INVISIBLE_OBJECT_PLAYER
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.MapEntrance)
@@ -33,9 +34,7 @@ class MapEntrance(
 
                 val newHero = HeroCharacter(newScene, oldHero.player)
                 newHero.direction = oldHero.direction
-                val newMapEntrance = newScene.objects.getById<GameMapPoint>(
-                    defaultMapEntrancePointId(destMapId, gameScene.map.id)
-                ).point
+                val newMapEntrance = newScene.objects.getById<GameMapPoint>(backEntrancePointId).point
                 newHero.pixelCoordinate = newMapEntrance * newScene.map.tileSize
 
                 oldHero.close()

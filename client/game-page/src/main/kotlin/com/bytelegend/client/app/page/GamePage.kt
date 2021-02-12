@@ -114,8 +114,6 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     }
 
     private fun addGlobalResources() {
-        console.log(1)
-        console.log(game.player.isAnonymous)
         if (!game.player.isAnonymous) {
             val animationSetId = playerAnimationSetResourceId(animationSetId(SERVER_SIDE_DATA.player.characterId!!))
             game.resourceLoader.add(
@@ -134,7 +132,6 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                 false
             )
         }
-        console.log(2)
         game.resourceLoader.add(
             I18nTextResource(
                 "common-${game.locale.toLowerCase()}",
@@ -143,10 +140,8 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         ) {
             game.i18nTextContainer.putAll(it)
         }
-        console.log(3)
         game.resourceLoader.add(ImageResource("texture", game.resolve("/img/ui/texture.jpg"), 1))
         game.resourceLoader.add(GameMapHierarchyResource(game.resolve("/map/hierarchy.json"), 1))
-        console.log(4)
     }
 
     private fun onWindowResize() {

@@ -64,10 +64,12 @@
   zh_hans: 素材
 - id: ContactUsIfYouThinkUsMisuse
   en: |
-    The game assets are collected from Internet.
+    The game materials are collected from Internet, which are usually not properly licensed.
     Please contact us if you see us misusing any: <a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>.
+    We'll take care of it immediately.
   zh_hans: |
-    游戏素材来自互联网，如果您发现我们误用了任何素材，请联系：<a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>。
+    游戏素材来自互联网，很多时候并没有明确的版权声明，如果您发现我们误用了任何素材，请联系：<a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>。
+    我们会第一时间处理。
 - id: ClickHere
   en: Click here
   zh_hans: 点击这里
@@ -161,6 +163,9 @@
 - id: JavaCollectionRegionName
   en: Collection Framework
   zh_hans: Java的集合框架
+- id: MenuContactTitle
+  en: About & Contact
+  zh_hans: 关于 & 联系
 - id: AboutByteLegendTitle
   en: About ByteLegend
   zh_hans: 关于字节传说
