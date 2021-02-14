@@ -63,8 +63,11 @@ abstract class AbstractCharacter(
         gameScene.gameRuntime.eventBus.remove(GAME_CLOCK_50HZ_EVENT, clockEventListener)
     }
 
-    override val gridCoordinate: GridCoordinate
+    override var gridCoordinate: GridCoordinate
         get() = pixelCoordinate / gameScene.map.tileSize
+        set(value) {
+            throw IllegalStateException("Setting grid coordinate is not allowed, use movePath instead.")
+        }
 
     // The time we update movement state last time
     private var lastAnimationTime: Timestamp? = null
@@ -116,7 +119,6 @@ abstract class AbstractCharacter(
                 enterTile(gridCoordinate)
 
                 if (gridCoordinate == movePath.last()) {
-
                     // stop
                     still = true
                     lastAnimationTime = null

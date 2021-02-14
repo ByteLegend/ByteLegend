@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     api(project(":shared"))
-    implementation(project(":client:common"))
+    api(project(":client:common"))
 }
 
 kotlin {

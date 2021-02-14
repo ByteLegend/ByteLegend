@@ -9,17 +9,9 @@ interface Sprite : GameObject {
     /**
      * Whether the sprite is inside the canvas or not.
      *
-     * Return true if the sprite is completely out of canvas (no overlap) so we don't need to paint it at all.
+     * Return true if the sprite is completely out of canvas (no overlapping) so we don't need to paint it at all.
      */
     fun outOfCanvas(): Boolean = true
 
     fun draw(canvas: CanvasRenderingContext2D)
-
-//    override fun init() {
-//        gameScene.sprites.add(this)
-//    }
-//
-//    override fun close() {
-//        gameScene.sprites.remove(id)
-//    }
 }

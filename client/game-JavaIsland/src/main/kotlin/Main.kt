@@ -9,6 +9,17 @@ fun main() {
     gameRuntime.sceneContainer.getSceneById(JAVA_ISLAND).configure {
         mapEntrance {
             destMapId = JAVA_ISLAND_NEWBIE_VILLAGE_PUB
+        }
+
+        obj {
+            id = "JavaIslandNewbieVillageNoticeboard"
+            coordinatePointId = "JavaIslandNewbieVillageNoticeboardPoint"
+            onClick = {
+                gameRuntime.modalController.show {
+                    child(JavaIslandNewbieVillageNoticeboard::class) {}
+                }
+            }
+        }
 //            npc {
 //                id = "JavaIslandNewbieVillageOldMan"
 //                animationSetIndex = 1
@@ -37,6 +48,5 @@ fun main() {
 //            point {
 //
 //            }
-        }
     }
 }

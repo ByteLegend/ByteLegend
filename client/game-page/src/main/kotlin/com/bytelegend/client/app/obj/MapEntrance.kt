@@ -1,10 +1,11 @@
 package com.bytelegend.client.app.obj
 
+import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneAware
-import com.bytelegend.app.client.api.GridCoordinateAware
 import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.INVISIBLE_OBJECT_PLAYER
+import com.bytelegend.app.shared.INVISIBLE_OBJECT_LAYER
+import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
@@ -22,9 +23,10 @@ class MapEntrance(
     override val gridCoordinate: GridCoordinate,
     private val destMapId: String,
     private val backEntrancePointId: String
-) : GameObject, GameSceneAware, GridCoordinateAware {
-    override val layer: Int = INVISIBLE_OBJECT_PLAYER
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.MapEntrance)
+) : GameObject, GameSceneAware, CoordinateAware {
+    override val layer: Int = INVISIBLE_OBJECT_LAYER
+    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.MapEntrance, GameObjectRole.CoordinateAware)
+    override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
 
     override fun onTouch(character: GameObject) {
         if (gameRuntime.hero != null && gameRuntime.hero!!.id == character.id) {

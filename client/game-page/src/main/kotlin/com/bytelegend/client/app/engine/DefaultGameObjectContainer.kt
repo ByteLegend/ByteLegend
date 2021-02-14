@@ -1,28 +1,27 @@
 package com.bytelegend.client.app.engine
 
+import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.GridCoordinateAware
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.mapToArrayWithIndex
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.obj.MapEntrance
 import com.bytelegend.client.app.sprite.toSprite
 
 class DefaultGameObjectContainer(
     private val gameScene: GameScene
 ) : GameObjectContainer {
-    private val objectsById: MutableMap<String, GameObject> = JSObjectBackedMap()
-    private val objectsByRole: MutableMap<String, MutableMap<String, GameObject>> = JSObjectBackedMap()
+    private val objectsById: IdGameObjectContainer = IdGameObjectContainer()
+    private val objectsByRole: MutableMap<String, IdGameObjectContainer> = JSObjectBackedMap()
     private val background: Array<Array<List<Sprite>>> = gameScene.map.rawTiles.mapToArrayWithIndex { it, coordinate ->
         it.layers.map { it.toSprite(gameScene, gameScene.map.tileSize * coordinate, gameScene.tileset.htmlElement) }
     }
 
     override fun <T : GameObject> getByIdOrNull(id: String): T? {
-        return objectsById.get(id).unsafeCast<T?>()
+        return objectsById[id].unsafeCast<T?>()
     }
 
     override fun <T : GameObject> getById(id: String): T {
@@ -32,27 +31,27 @@ class DefaultGameObjectContainer(
     override fun add(gameObject: GameObject) {
         objectsById[gameObject.id] = gameObject
         gameObject.roles.forEach {
-            objectsByRole.getOrPut(it.toString()) { JSObjectBackedMap() }.put(gameObject.id, gameObject)
+            objectsByRole.putGameObject(it, gameObject)
         }
     }
 
     override fun <T : GameObject> remove(id: String): T? {
-        val obj = objectsById.remove(id)
+        val obj = objectsById.remove(id)?.unsafeCast<T>()
         obj?.roles?.forEach {
-            objectsByRole.get(it.toString())?.remove(id)
+            objectsByRole.removeGameObject(it, id)
         }
         return obj?.unsafeCast<T>()
     }
 
     override fun getByCoordinate(coordinate: GridCoordinate): List<GameObject> {
-        return objectsById.values.filter {
-            it is GridCoordinateAware && it.gridCoordinate == coordinate
+        return getByRole<GameObject>(GameObjectRole.CoordinateAware).filter {
+           it.unsafeCast<CoordinateAware>().gridCoordinate == coordinate
         }
     }
 
     @Suppress("UnsafeCastFromDynamic")
     override fun <T : GameObject> getByRole(role: GameObjectRole): List<T> {
-        return objectsByRole.getOrPut(role.toString()) { JSObjectBackedMap() }.values.toList().asDynamic()
+        return objectsByRole.getGameObject(role)
     }
 
     override fun getDrawableSprites(): List<Sprite> {
@@ -99,4 +98,20 @@ class DefaultGameObjectContainer(
             layerToSprites.getValue(layerIndex.toString())
         }
     }
+}
+
+fun MutableMap<String, IdGameObjectContainer>.putGameObject(key: Any, gameObject: GameObject) {
+    getOrPut(key.toString()) { IdGameObjectContainer() }.put(gameObject.id, gameObject)
+}
+
+@Suppress("UnsafeCastFromDynamic")
+fun <T : GameObject> MutableMap<String, IdGameObjectContainer>.getGameObject(key: Any): List<T> {
+    return getOrPut(key.toString()) { IdGameObjectContainer() }.values.toList().asDynamic()
+}
+
+fun MutableMap<String, IdGameObjectContainer>.removeGameObject(key: Any, id: String) {
+    getOrPut(key.toString()) { IdGameObjectContainer() }.remove(id)
+}
+
+class IdGameObjectContainer : MutableMap<String, GameObject> by JSObjectBackedMap() {
 }

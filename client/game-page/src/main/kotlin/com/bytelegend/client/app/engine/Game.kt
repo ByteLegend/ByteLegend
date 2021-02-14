@@ -8,6 +8,7 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.JSObjectBackedMap
+import com.bytelegend.app.client.api.ModalController
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.WindowBasedEventBus
@@ -19,7 +20,7 @@ import com.bytelegend.app.shared.ServerSideData
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.obj.PlayerCharacter
 import com.bytelegend.client.app.ui.DefaultModalController
-import com.bytelegend.client.app.ui.ModalController
+import com.bytelegend.client.app.ui.ModalControllerInternal
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import org.kodein.di.DI
@@ -34,7 +35,6 @@ const val GAME_CLOCK_50HZ = 50 // Hertz
 
 fun init(serverSideData: ServerSideData): Game {
     val di = DI {
-        bind<ModalController>() with singleton { DefaultModalController(di) }
         bind<ResourceLoader>() with singleton { DefaultResourceLoader(di) }
         bind<EventBus>() with instance(WindowBasedEventBus)
         bind<GameSceneContainer>() with singleton { DefaultGameSceneContainer(di, PixelSize(window.innerWidth, window.innerHeight)) }
@@ -81,7 +81,9 @@ class Game(
         resourceLoader.getLoadedResource(GAME_MAP_HIERARCHY_ID)
     }
 
-    val modalController: ModalController by di.instance()
+    override val modalController: ModalControllerInternal by lazy {
+        DefaultModalController(di)
+    }
 
     val player: Player by di.instance()
     val serverLocation: ServerLocation by di.instance()

@@ -6,7 +6,7 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 
 
-interface Character : GameObject, GridCoordinateAware, MutableLocation {
+interface Character : GameObject, CoordinateMutable {
     /**
      * 1. player-{playerId}, e.g. player-gh#ByteLegendBot
      * 2. npc-{npcId}, e.g. npc-JavaIslandNewbieVillageOldMan
@@ -22,14 +22,12 @@ interface Character : GameObject, GridCoordinateAware, MutableLocation {
     var movePath: List<GridCoordinate>
 }
 
-interface GridCoordinateAware {
+interface CoordinateMutable: CoordinateAware {
+    override var gridCoordinate: GridCoordinate
+    override var pixelCoordinate: PixelCoordinate
+}
+
+interface CoordinateAware {
     val gridCoordinate: GridCoordinate
+    val pixelCoordinate: PixelCoordinate
 }
-
-/**
- * The coordinate of location in map.
- */
-interface MutableLocation {
-    var pixelCoordinate: PixelCoordinate
-}
-

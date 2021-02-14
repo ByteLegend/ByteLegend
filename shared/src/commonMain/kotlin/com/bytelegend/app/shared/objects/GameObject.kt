@@ -25,6 +25,8 @@ interface GameObject : Lifecycle {
 /**
  * A GameObject can have multiple roles, so that we can fetch all objects
  * of same roles, for example, the hero object can have "Hero", "Player", "Character" roles.
+ *
+ * Roles are very similar to interfaces, but with better performance.
  */
 enum class GameObjectRole {
     MapText,
@@ -36,7 +38,8 @@ enum class GameObjectRole {
     Player,
     Character,
     NPC,
-    MapEntrance;
+    MapEntrance,
+    CoordinateAware;
 
     companion object {
         fun fromIndex(index: Int): GameObjectRole = values()[index - 1]

@@ -90,7 +90,7 @@ class Menu : GameUIComponent<MenuProps, RState>() {
     private val menuHeight = 64
     private val menuWidth = 400
     private val items: List<MenuItemData> = listOf(
-        // 1. menu-github: link to ByteLegend/ByteLegend
+        // 1. menu-github: link to github.com/ByteLegend/ByteLegend
         // 2. menu-notification: open notification box
         // 3. menu-settings: open settings box
         // 4. menu-about: about box
@@ -127,7 +127,7 @@ class Menu : GameUIComponent<MenuProps, RState>() {
     }
 
     private fun onClickCreditsMenu() {
-        game.modalController.showModal(this) {
+        game.modalController.show {
             child(CreditsModal::class) {
                 attrs.game = game
             }
@@ -185,7 +185,7 @@ class Menu : GameUIComponent<MenuProps, RState>() {
     }
 
     private fun onClickContactAboutMenu() {
-        game.modalController.showModal(this) {
+        game.modalController.show {
             BootstrapModalHeader {
                 attrs.closeButton = true
                 BootstrapModalTitle {

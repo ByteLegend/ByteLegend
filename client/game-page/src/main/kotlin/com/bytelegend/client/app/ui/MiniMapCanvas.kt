@@ -217,7 +217,7 @@ class MiniMapCanvasLayer : AbstractMapCanvas<MiniMapCanvasState>() {
                 }
                 attrs.title = game.i("Maximize")
                 attrs.onClick = {
-                    game.modalController.showModal(this@MiniMapCanvasLayer) {
+                    game.modalController.show {
                         BootstrapModalHeader {
                             attrs.closeButton = true
                             BootstrapModalTitle {

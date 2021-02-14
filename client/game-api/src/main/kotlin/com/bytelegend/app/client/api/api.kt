@@ -9,7 +9,10 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import common.ui.bootstrap.BootstrapModalProps
 import org.w3c.dom.CanvasRenderingContext2D
+import react.Component
+import react.RElementBuilder
 
 val HERO_ID = "hero"
 
@@ -31,6 +34,7 @@ interface GameRuntime {
     val sceneContainer: GameSceneContainer
     val currentTimeMillis: Long
     val activeScene: GameScene
+    val modalController: ModalController
 
     fun i(textId: String, vararg args: String): String
 }
@@ -196,4 +200,8 @@ interface GameSceneContainer : GameContainerSizeAware {
      * If {switchAfterLoad} is true, the UI will switch after loading.
      */
     fun loadScene(mapId: String, switchAfterLoad: Boolean = true, onFinish: (GameScene?, GameScene) -> Unit = { _, _ -> })
+}
+
+interface ModalController {
+    fun show(modal: RElementBuilder<BootstrapModalProps>.() -> Unit)
 }

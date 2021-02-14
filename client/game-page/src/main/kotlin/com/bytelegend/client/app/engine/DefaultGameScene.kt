@@ -9,6 +9,7 @@ import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.api.dsl.GameSceneBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NpcBuilder
+import com.bytelegend.app.client.api.dsl.ObjectBuilder
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.mapToArray
@@ -67,7 +68,7 @@ class DefaultGameScene(
 
         val destMapId = builder.destMapId!!
         val entranceId = builder.id ?: defaultMapEntranceId(map.id, destMapId)
-        val entrancePointId = builder.entrancePointId ?: defaultMapEntrancePointId(entranceId)
+        val entrancePointId = builder.coordinatePointId ?: defaultMapEntrancePointId(entranceId)
         val coordinate = objects.getById<GameMapPoint>(entrancePointId).point
         val backEntrancePointId = builder.backEntrancePointId?: defaultMapEntrancePointId(destMapId, map.id)
 
@@ -80,6 +81,11 @@ class DefaultGameScene(
         )
 
         objects.add(mapEntrance)
+    }
+
+    override fun obj(action: ObjectBuilder.() -> Unit) {
+        val builder = ObjectBuilder()
+        builder.action()
     }
 
     override fun npc(builder: NpcBuilder.() -> Unit) {

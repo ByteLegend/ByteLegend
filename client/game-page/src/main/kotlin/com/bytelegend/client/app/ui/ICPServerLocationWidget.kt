@@ -69,8 +69,7 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
     }
 
     private fun showServerLocationModal() {
-        game.modalController.showModal(this) {
-//                attrs.ariaLabelledby = "contained-modal-title-vcenter"
+        game.modalController.show {
             BootstrapModalHeader {
                 attrs.closeButton = true
                 BootstrapModalTitle {
