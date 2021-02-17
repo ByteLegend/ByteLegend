@@ -88,11 +88,14 @@
   en: "This game would not exist without the following artwork:"
   zh_hans: "这个游戏的诞生离不开以下素材："
 - id: ClickHereToSeeOpenSourceSoftware
-  en: " to see the open source software we used:"
+  en: " to see the open source software we used."
   zh_hans: "查看我们使用的开源软件。"
 - id: ClickHereToSeeArtwork
-  en: " to see the artwork we used:"
+  en: " to see the artwork we used."
   zh_hans: "查看我们使用的素材。"
+- id: SpecialThanksMyDaughter
+  en: This game is dedicated to my cute daughter Kitty, without whom it would have been completed much earlier. 🤦
+  zh_hans: 谨以本游戏献给我的萌闺女Kitty，要不是她我早就写完了…… 🤦
 - id: SpecialThanksGradleParagraph
   en: |
     <a href="https://gradle.org" target="_blank" class="badge badge-success">Gradle</a>: an awesome automated tool, by which the game is built.

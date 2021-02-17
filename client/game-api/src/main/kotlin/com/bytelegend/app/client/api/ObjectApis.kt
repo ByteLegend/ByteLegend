@@ -5,7 +5,6 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 
-
 interface Character : GameObject, CoordinateMutable {
     /**
      * 1. player-{playerId}, e.g. player-gh#ByteLegendBot
@@ -22,7 +21,7 @@ interface Character : GameObject, CoordinateMutable {
     var movePath: List<GridCoordinate>
 }
 
-interface CoordinateMutable: CoordinateAware {
+interface CoordinateMutable : CoordinateAware {
     override var gridCoordinate: GridCoordinate
     override var pixelCoordinate: PixelCoordinate
 }

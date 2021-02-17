@@ -26,7 +26,6 @@ val LEFT_MOVE = listOf(GridCoordinate(0, 1), GridCoordinate(2, 1))
 val RIGHT_STILL = GridCoordinate(1, 2)
 val RIGHT_MOVE = listOf(GridCoordinate(0, 2), GridCoordinate(2, 2))
 
-
 // How many pixels does a character move per second?
 const val CHARACTER_MOVE_SPEED_PIXEL_PER_SECOND = 128
 // Character move per 100 ms, to avoid millisecond precision issue

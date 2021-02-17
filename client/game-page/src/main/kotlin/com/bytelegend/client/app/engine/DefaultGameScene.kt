@@ -8,6 +8,7 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.api.dsl.GameSceneBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
+import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
 import com.bytelegend.app.client.api.dsl.NpcBuilder
 import com.bytelegend.app.client.api.dsl.ObjectBuilder
 import com.bytelegend.app.shared.GameMap
@@ -18,11 +19,15 @@ import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
+import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.obj.GenericCoordinateAwareGameObject
 import com.bytelegend.client.app.obj.MapEntrance
 import com.bytelegend.client.app.obj.defaultMapEntranceId
 import com.bytelegend.client.app.obj.defaultMapEntrancePointId
+import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.sprite.GameCurveSprite
 import com.bytelegend.client.app.sprite.GameTextSprite
+import com.bytelegend.client.app.ui.noticeboard.JavaIslandNewbieVillageNoticeboard
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
@@ -48,7 +53,7 @@ class DefaultGameScene(
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
     override fun configure(block: GameSceneBuilder.() -> Unit) {
-       block()
+        block()
     }
 
     init {
@@ -70,7 +75,7 @@ class DefaultGameScene(
         val entranceId = builder.id ?: defaultMapEntranceId(map.id, destMapId)
         val entrancePointId = builder.coordinatePointId ?: defaultMapEntrancePointId(entranceId)
         val coordinate = objects.getById<GameMapPoint>(entrancePointId).point
-        val backEntrancePointId = builder.backEntrancePointId?: defaultMapEntrancePointId(destMapId, map.id)
+        val backEntrancePointId = builder.backEntrancePointId ?: defaultMapEntrancePointId(destMapId, map.id)
 
         val mapEntrance = MapEntrance(
             entranceId,
@@ -86,6 +91,43 @@ class DefaultGameScene(
     override fun obj(action: ObjectBuilder.() -> Unit) {
         val builder = ObjectBuilder()
         builder.action()
+
+        val coordinate = objects.getById<GameMapPoint>(builder.coordinatePointId!!).point
+
+        objects.add(
+            GenericCoordinateAwareGameObject(
+                builder.id!!,
+                coordinate,
+                coordinate * map.tileSize,
+                builder.onClick
+            )
+        )
+    }
+
+    override fun noticeboard(action: NoticeboardBuilder.() -> Unit) {
+        val builder = NoticeboardBuilder()
+        builder.action()
+
+        val coordinate = objects.getById<GameMapPoint>(builder.coordinatePointId!!).point
+
+        objects.add(
+            GenericCoordinateAwareGameObject(
+                builder.id!!,
+                coordinate,
+                coordinate * map.tileSize,
+                onClickFunction = {
+                    game.modalController.show {
+                        child(JavaIslandNewbieVillageNoticeboard::class) {
+                            attrs.game = game
+                        }
+                    }
+                },
+                setOf(
+                    GameObjectRole.CoordinateAware,
+                    GameObjectRole.Clickable,
+                )
+            )
+        )
     }
 
     override fun npc(builder: NpcBuilder.() -> Unit) {

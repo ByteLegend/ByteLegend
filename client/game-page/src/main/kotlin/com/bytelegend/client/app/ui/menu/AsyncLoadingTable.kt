@@ -22,8 +22,7 @@ import react.dom.thead
 import react.dom.tr
 import react.setState
 
-interface AsyncLoadingTableProps : GameProps {
-}
+interface AsyncLoadingTableProps : GameProps
 
 interface AsyncLoadingTableState : RState {
     var data: Array<dynamic>

@@ -8,7 +8,6 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.JSObjectBackedMap
-import com.bytelegend.app.client.api.ModalController
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.WindowBasedEventBus
@@ -81,7 +80,7 @@ class Game(
         resourceLoader.getLoadedResource(GAME_MAP_HIERARCHY_ID)
     }
 
-    override val modalController: ModalControllerInternal by lazy {
+    val modalController: ModalControllerInternal by lazy {
         DefaultModalController(di)
     }
 

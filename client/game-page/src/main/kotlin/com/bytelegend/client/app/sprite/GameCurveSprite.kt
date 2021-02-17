@@ -2,7 +2,6 @@ package com.bytelegend.client.app.sprite
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
-import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GameObjectRole

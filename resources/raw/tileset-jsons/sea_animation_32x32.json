@@ -1,4 +1,12 @@
 { "columns":10,
+ "editorsettings":
+    {
+     "export":
+        {
+         "format":"",
+         "target":"."
+        }
+    },
  "image":"..\/tilesets\/sea_animation_32x32.png",
  "imageheight":640,
  "imagewidth":320,
@@ -6,7 +14,7 @@
  "name":"sea_animation_32x32",
  "spacing":0,
  "tilecount":200,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.4.3",
  "tileheight":32,
  "tiles":[
         {
@@ -20,6 +28,150 @@
                  "tileid":1
                 }],
          "id":3
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":11
+                }, 
+                {
+                 "duration":500,
+                 "tileid":15
+                }],
+         "id":41
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":12
+                }, 
+                {
+                 "duration":500,
+                 "tileid":16
+                }],
+         "id":42
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":13
+                }, 
+                {
+                 "duration":500,
+                 "tileid":17
+                }],
+         "id":43
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":14
+                }, 
+                {
+                 "duration":500,
+                 "tileid":18
+                }],
+         "id":44
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":21
+                }, 
+                {
+                 "duration":500,
+                 "tileid":25
+                }],
+         "id":51
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":22
+                }, 
+                {
+                 "duration":500,
+                 "tileid":26
+                }],
+         "id":52
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":23
+                }, 
+                {
+                 "duration":500,
+                 "tileid":27
+                }],
+         "id":53
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":24
+                }, 
+                {
+                 "duration":500,
+                 "tileid":28
+                }],
+         "id":54
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":31
+                }, 
+                {
+                 "duration":500,
+                 "tileid":35
+                }],
+         "id":61
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":32
+                }, 
+                {
+                 "duration":500,
+                 "tileid":36
+                }],
+         "id":62
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":33
+                }, 
+                {
+                 "duration":500,
+                 "tileid":37
+                }],
+         "id":63
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":34
+                }, 
+                {
+                 "duration":500,
+                 "tileid":38
+                }],
+         "id":64
         }],
  "tilewidth":32,
  "type":"tileset",

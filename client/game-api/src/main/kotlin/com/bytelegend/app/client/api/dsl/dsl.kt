@@ -1,10 +1,6 @@
 package com.bytelegend.app.client.api.dsl
 
-import com.bytelegend.app.client.api.GameRuntime
-import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
-
 
 class MapEntranceBuilder {
     /**
@@ -43,14 +39,43 @@ class NpcBuilder {
 
 class ObjectBuilder {
     var id: String? = null
-    var coordinatePointId:String? = null
+    var coordinatePointId: String? = null
     var onInit: () -> Unit = {}
     var onTouch: (GameObject) -> Unit = {}
     var onClick: () -> Unit = {}
 }
 
+class NoticeboardBuilder {
+    var id: String? = null
+    var coordinatePointId: String? = null
+}
+
 interface GameSceneBuilder {
     fun mapEntrance(builder: MapEntranceBuilder.() -> Unit)
     fun obj(builder: ObjectBuilder.() -> Unit)
+
+    /*
+    This shouldn't be in API module, but we have to workaround the following issue:
+
+    react-dom.development.js?3169:11340 Uncaught Error: Invalid hook call. Hooks can only be called inside of the body of a function component. This could happen for one of the following reasons:
+    1. You might have mismatching versions of React and the renderer (such as React DOM)
+    2. You might be breaking the Rules of Hooks
+    3. You might have more than one copy of React in the same app
+    See https://reactjs.org/link/invalid-hook-call for tips about how to debug and fix this problem.
+    at resolveDispatcher (react.development.js?ec8f:1476)
+    at useContext (react.development.js?ec8f:1484)
+    at useBootstrapPrefix (ThemeProvider.js?ebe6:19)
+    at ModalBody (createWithBsPrefix.js?32e6:27)
+    at renderWithHooks (react-dom.development.js?3169:14985)
+    at updateForwardRef (react-dom.development.js?3169:17044)
+    at beginWork (react-dom.development.js?3169:19098)
+    at HTMLUnknownElement.callCallback (react-dom.development.js?3169:3945)
+    at Object.invokeGuardedCallbackDev (react-dom.development.js?3169:3994)
+    at invokeGuardedCallback (react-dom.development.js?3169:4056)
+
+    The cause seems to be that react is bundled into game-page and game-JavaIsland,
+    i.e. "more than one copy of React in the same app"
+     */
+    fun noticeboard(builder: NoticeboardBuilder.() -> Unit)
     fun npc(builder: NpcBuilder.() -> Unit)
 }

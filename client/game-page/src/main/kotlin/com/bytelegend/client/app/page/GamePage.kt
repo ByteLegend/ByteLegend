@@ -85,18 +85,18 @@ interface GamePageState : RState
 
 interface GamePageProps : RProps
 
-
 class GamePage : RComponent<GamePageProps, GamePageState>() {
     init {
         addGlobalResources()
 
         game.sceneContainer.loadScene(SERVER_SIDE_DATA.mapId) { _, newScene ->
-            game.start()
             if (!SERVER_SIDE_DATA.player.isAnonymous) {
                 val obj = HeroCharacter(newScene, SERVER_SIDE_DATA.player)
                 game._hero = obj
                 obj.init()
             }
+
+            game.start()
         }
         game.eventBus.on<Nothing>(GAME_UI_UPDATE_EVENT) {
             setState {}

@@ -10,13 +10,12 @@ val vertxVersion = "4.0.0"
 val guiceVersion = "4.2.3-SNAPSHOT"
 val guavaVersion = "28.2-jre"
 val jacksonVersion = "2.12.1"
-val kotlinVersion = "1.4.21"
+val kotlinVersion = "1.4.30"
 val kotlinCoroutinesCommonVersion = "1.3.8"
 val kotlinxVersion = "1.4.2"
 val junitVersion = "5.7.0"
 val junit4Version = "4.13"
 val mockKVersion = "1.9.3"
-val reflectasmVersion = "1.11.9"
 val apiGuadianVersion = "1.1.0"
 val log4jVersion = "2.13.3"
 val logbackVersion = "1.2.3"
@@ -45,11 +44,11 @@ val caffeineVersion = "2.8.8"
 val testContainersVersion = "1.15.1"
 val dynamodbCrossRegionReplicationVersion = "1.2.1.12"
 val kodeinVersion = "7.2.0"
-val kotlinReactVersion = "17.0.1-pre.144-kotlin-1.4.21"
+val kotlinReactVersion = "17.0.1-pre.146-kotlin-1.4.30"
 val reactVersion = "17.0.1"
-val kotlinStyledVersion = "5.2.0-pre.144-kotlin-1.4.21"
-val styledComponentsVersion = "5.2.0"
-val reactBootstrapVersion = "1.4.0"
+val kotlinStyledVersion = "5.2.1-pre.146-kotlin-1.4.30"
+val styledComponentsVersion = "5.2.1"
+val reactBootstrapVersion = "1.4.3"
 val materialUIVersion = "4.11.2"
 val kotlinBrowserVersion = "0.2"
 val reactTransitionGroupVersion = "4.4.1"
@@ -84,7 +83,6 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinxVersion"),
     OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinxVersion"),
     OpenSourceLibrary("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"),
-    OpenSourceLibrary("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"),
     OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion"),
 
     OpenSourceLibrary("javax.inject:javax.inject:1"),
@@ -105,10 +103,6 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"),
     OpenSourceLibrary("commons-codec:commons-codec:$apacheCommonsCodecVersion"),
 
-    OpenSourceLibrary(
-        "reflectasm", "com.esotericsoftware:reflectasm", reflectasmVersion,
-        "ReflectASM", "https://github.com/EsotericSoftware/reflectasm", BSD
-    ),
     OpenSourceLibrary(
         "commons-lang3", "org.apache.commons:commons-lang3", commonsLangVersion,
         "Apache Commons Lang", "https://github.com/apache/commons-lang", Apache2

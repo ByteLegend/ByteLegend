@@ -29,7 +29,6 @@ internal fun CanvasRenderingContext2D.setShadow(
     shadowBlur = blur.toDouble()
 }
 
-
 internal fun CanvasRenderingContext2D.quadraticCurveTo(x: Int, y: Int, xc: Int, yc: Int) {
     quadraticCurveTo(x.toDouble(), y.toDouble(), xc.toDouble(), yc.toDouble())
 }

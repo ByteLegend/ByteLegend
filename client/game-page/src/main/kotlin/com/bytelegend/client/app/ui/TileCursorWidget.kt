@@ -2,6 +2,7 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
@@ -99,9 +100,15 @@ class TileCursorWidget : GameUIComponent<TileCursorWidgetProps, TileCursorWidget
     }
 
     private fun determineBorderColor(cursorCoordinate: GridCoordinate): String = when {
+        isClickable(cursorCoordinate) -> "#007bff"
         game.hero == null -> "white"
         game.activeScene != game._hero!!.gameScene -> "white"
         search(game.activeScene.blockers, game.hero!!.gridCoordinate, cursorCoordinate).isEmpty() -> "red"
         else -> "green"
     }
+
+    private fun isClickable(cursorCoordinate: GridCoordinate) =
+        game.activeScene.objects.getByCoordinate(cursorCoordinate).any {
+            it.roles.contains(GameObjectRole.Clickable)
+        }
 }

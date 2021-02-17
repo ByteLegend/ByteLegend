@@ -4,10 +4,7 @@ import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.imageBlockOnCanvas
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.app.shared.objects.Lifecycle
 import com.bytelegend.app.shared.outOfCanvas
-import org.w3c.dom.CanvasRenderingContext2D
-
 
 abstract class AbstractMovableSprite : Sprite {
     abstract var pixelCoordinate: PixelCoordinate

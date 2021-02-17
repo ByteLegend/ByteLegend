@@ -7,3 +7,17 @@
 - id: PubGuardAfterStar
   en: Nice job!
   zh_hans: 干的漂亮！
+- id: BravePeopleDedication
+  en: |
+    This is dedicated to the following brave people, <br>
+    who know the tough journey ahead but still set out without hesitation, <br>
+    and you, if you have stuck with programming until the very end. <br>
+    <b>Finish <a href="https://github.com/ByteLegendQuest/remember-brave-people" target="_blank">the challenge</a> to leave your name.</b>
+  zh_hans: |
+    谨献给下列的勇士们，他们明知前路艰难险阻却依然选择义无反顾；<br>
+    也献给你——如果你能始终对编程保持热爱，直到最后的最后。<br>
+    <b>完成<a href="https://github.com/ByteLegendQuest/remember-brave-people" target="_blank">这里的挑战</a>，留下你的名字。</b>
+- id: JoinedAt
+  en: Joined at
+  zh_hans: 加入于
+

@@ -45,7 +45,7 @@ class DefaultGameObjectContainer(
 
     override fun getByCoordinate(coordinate: GridCoordinate): List<GameObject> {
         return getByRole<GameObject>(GameObjectRole.CoordinateAware).filter {
-           it.unsafeCast<CoordinateAware>().gridCoordinate == coordinate
+            it.unsafeCast<CoordinateAware>().gridCoordinate == coordinate
         }
     }
 
@@ -113,5 +113,4 @@ fun MutableMap<String, IdGameObjectContainer>.removeGameObject(key: Any, id: Str
     getOrPut(key.toString()) { IdGameObjectContainer() }.remove(id)
 }
 
-class IdGameObjectContainer : MutableMap<String, GameObject> by JSObjectBackedMap() {
-}
+class IdGameObjectContainer : MutableMap<String, GameObject> by JSObjectBackedMap()

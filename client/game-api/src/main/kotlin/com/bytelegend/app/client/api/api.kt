@@ -10,8 +10,6 @@ import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import common.ui.bootstrap.BootstrapModalProps
-import org.w3c.dom.CanvasRenderingContext2D
-import react.Component
 import react.RElementBuilder
 
 val HERO_ID = "hero"
@@ -34,7 +32,7 @@ interface GameRuntime {
     val sceneContainer: GameSceneContainer
     val currentTimeMillis: Long
     val activeScene: GameScene
-    val modalController: ModalController
+//    val modalController: ModalController
 
     fun i(textId: String, vararg args: String): String
 }

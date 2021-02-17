@@ -54,7 +54,6 @@ class NPC(
     }
 }
 
-
 private fun GameScene.npcAnimationSet(animationSetIndex: Int) = AnimationSet(
     unsafeCast<Game>().resourceLoader.getLoadedResource<ImageResourceData>(mapNpcAnimationSetResourceId(map.id)).htmlElement,
     npcAnimationSetCoordinate(animationSetIndex)

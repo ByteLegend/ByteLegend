@@ -44,6 +44,7 @@ class GameModal : GameUIComponent<GameProps, RState>() {
             BootstrapModal {
                 attrs.show = true
                 attrs.size = "lg"
+                attrs.animation = false
                 attrs.onHide = {
                     game.modalController.hide()
                 }

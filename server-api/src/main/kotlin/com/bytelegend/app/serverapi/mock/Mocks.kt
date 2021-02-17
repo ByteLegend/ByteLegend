@@ -16,5 +16,5 @@ val mockPlayer = Player().apply {
 
 val anonymousPlayer = Player().apply {
     id = "anon#Anonymous"
-    username =  "anon#Anonymous"
+    username = "anon#Anonymous"
 }

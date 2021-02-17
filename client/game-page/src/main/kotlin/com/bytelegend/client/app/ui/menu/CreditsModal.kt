@@ -6,12 +6,6 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import common.ui.bootstrap.BootstrapModalBody
 import common.ui.bootstrap.BootstrapNav
-import common.ui.bootstrap.BootstrapSpinner
-import common.ui.bootstrap.BootstrapTable
-import kotlinx.browser.window
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.await
-import kotlinx.coroutines.launch
 import kotlinx.css.h5
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.events.Event
@@ -22,14 +16,8 @@ import react.dom.RDOMBuilder
 import react.dom.a
 import react.dom.br
 import react.dom.h5
-import react.dom.jsStyle
 import react.dom.li
 import react.dom.p
-import react.dom.tbody
-import react.dom.td
-import react.dom.th
-import react.dom.thead
-import react.dom.tr
 import react.dom.ul
 import react.setState
 
@@ -71,6 +59,14 @@ class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
             +i("SpecialThanks")
         }
 
+        builder.p {
+            +i("SpecialThanksMyDaughter")
+        }
+
+        builder.h5 {
+            +i("Thanks")
+        }
+
         builder.ul {
             li {
                 consumer.onTagContentUnsafe {
@@ -87,13 +83,6 @@ class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
                     +i("SpecialThanksTiledParagraph")
                 }
             }
-        }
-
-        builder.h5 {
-            +i("Thanks")
-        }
-
-        builder.ul {
             li {
                 aTag(i("ClickHere")) {
                     setState {
