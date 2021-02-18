@@ -2,7 +2,6 @@ package com.bytelegend.utils
 
 import com.bytelegend.app.shared.BLOCKER
 import com.bytelegend.app.shared.ConstantPoolEntry
-import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.GridSize
@@ -16,15 +15,16 @@ import com.bytelegend.app.shared.RawGameMapTile
 import com.bytelegend.app.shared.RawGameMapTileLayer
 import com.bytelegend.app.shared.RawStaticImageLayer
 import com.bytelegend.app.shared.RawTileAnimationFrame
+import com.bytelegend.app.shared.map
+import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.github.utils.generated.TiledMap
 import com.bytelegend.github.utils.generated.TiledTileset
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
-import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.File
-import java.io.FileFilter
 import javax.imageio.ImageIO
+import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.pow
 
@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
     allMapJsons.forEach {
         val mapId = it.name.replace(".json", "")
         MapGenerator(mapId, it, outputMapDir.resolve(mapId)).generate()
-        NPCAnimationSetGenerator(it.parentFile, outputMapDir.resolve(mapId).resolve("npc.png")).generate()
+//        NPCAnimationSetGenerator(it.parentFile, outputMapDir.resolve(mapId).resolve("npc.png")).generate()
     }
 
     outputMapDir.resolve("hierarchy.json").writeText(
@@ -106,7 +106,7 @@ class MapGenerator(
     }
 
     private val imageReader: ImageReader = ImageReader()
-    private val tilesetWriter: TilesetImageWriter = TilesetImageWriter(outputDir.resolve("tileset.png"), outputDir.resolve("minimap.png"))
+    private val tilesetWriter: TilesetImageWriter = TilesetImageWriter(outputDir.resolve("tileset.png"))
 
     private val srcTiles: LinkedHashMap<GridCoordinate, RawTileLayers> = LinkedHashMap()
     private val blockers: MutableMap<GridCoordinate, Int> = mutableMapOf()
@@ -126,6 +126,7 @@ class MapGenerator(
         layer.id.toInt() to i - playerLayerIndex
     }.toMap()
     private val tiledObjectReader = TiledObjectReader(tiledMap, rawLayerIdToIndexMap)
+    private val dynamicSpriteReader = DynamicSpriteReader()
 
     fun generate() {
         require(!used) { "An instance can only be used once!" }
@@ -150,6 +151,7 @@ class MapGenerator(
         }
 
         squashAndDeduplicateSrcTiles()
+        dynamicSpriteReader.readDynamicSpriteAndPopulateTileset()
 
         // Now we know how many dest tiles, and how large the dest tileset is, let's generate!
         initDestTilesetImage()
@@ -176,7 +178,7 @@ class MapGenerator(
             GridSize(tiledMap.width.toInt(), tiledMap.height.toInt()),
             tiledMap.getTileSize(),
             destTiles as List<List<RawGameMapTile>>,
-            tiledObjectReader.readRawObjects()
+            tiledObjectReader.readRawObjects() + dynamicSpriteReader.getDynamicSprites()
         )
         val compressedMap = rawMap.compress()
         require(compressedMap.decompress().compress() == compressedMap)
@@ -199,6 +201,12 @@ class MapGenerator(
         tilesetWriter.init(GridSize(destTilesetGridWidth, destTilesetGridHeight))
     }
 
+    private fun putIntoSrcImageBlocksToDestBlockMapping(blocks: List<ImageBlock>) {
+        srcImageBlocksToDestBlockMapping.computeIfAbsent(blocks) {
+            srcImageBlocksToDestBlockMapping.size + 1
+        }
+    }
+
     /**
      * - Deduplicate: remove duplicate tiles
      */
@@ -206,9 +214,7 @@ class MapGenerator(
         srcTiles.values.forEach { layers ->
             layers.squashedLayers.forEach { layer ->
                 layer.destTiles.forEach {
-                    srcImageBlocksToDestBlockMapping.computeIfAbsent(it.blocks) {
-                        srcImageBlocksToDestBlockMapping.size + 1
-                    }
+                    putIntoSrcImageBlocksToDestBlockMapping(it.blocks)
                 }
             }
         }
@@ -254,7 +260,7 @@ class MapGenerator(
         /**
          * The original layers, the first element is at the bottom.
          */
-        val staticImageLayers: List<StaticTileImageLayer>
+        private val staticImageLayers: List<StaticTileImageLayer>
     ) : SquashedLayer, DestTile {
         override val layer: Int
             get() = staticImageLayers.minOf { it.layer }
@@ -285,56 +291,8 @@ class MapGenerator(
         return RawGameMapTile(srcTile.squashedLayers.map { it.toDestLayer() }, blocker)
     }
 
-    inner class MinimapImageWriter(private val outputFile: File) {
-        // 3200x3200 -> 200x200
-        // Calculate average pixel of each tile, then write it as 2x2
-        fun generateDestMinimapImage() {
-            val outputImage = BufferedImage(tiledMap.width.toInt() * 2, tiledMap.height.toInt() * 2, BufferedImage.TYPE_INT_ARGB)
-            val graphics = outputImage.graphics
-            srcTiles.forEach { (coordinate: GridCoordinate, layers: RawTileLayers) ->
-                val imageBlock: ImageBlock = layers.squashedLayers[0].destTiles[0].blocks[0]
-
-//                val leftTop = imageReader.readPixel(imageBlock.image, imageBlock.block.x, imageBlock.block.y)
-//                val rightTop = imageReader.readPixel(imageBlock.image, imageBlock.block.x + imageBlock.block.width - 1, imageBlock.block.y)
-//                val leftBottom = imageReader.readPixel(imageBlock.image, imageBlock.block.x, imageBlock.block.y + imageBlock.block.height - 1)
-//                val rightBottom = imageReader.readPixel(imageBlock.image, imageBlock.block.x + imageBlock.block.width - 1, imageBlock.block.y + imageBlock.block.height - 1)
-//
-//                graphics.color = Color(leftTop.r, leftTop.g, leftTop.b, leftTop.a)
-//                graphics.fillRect(coordinate.x * 2, coordinate.y * 2, 1, 1)
-//                graphics.color = Color(rightTop.r, rightTop.g, rightTop.b, rightTop.a)
-//                graphics.fillRect(coordinate.x * 2 + 1, coordinate.y * 2, 1, 1)
-//                graphics.color = Color(leftBottom.r, leftBottom.g, leftBottom.b, leftBottom.a)
-//                graphics.fillRect(coordinate.x * 2, coordinate.y * 2 + 1, 1, 1)
-//                graphics.color = Color(rightBottom.r, rightBottom.g, rightBottom.b, rightBottom.a)
-//                graphics.fillRect(coordinate.x * 2 + 1, coordinate.y * 2 + 1, 1, 1)
-
-                var rSum = 0
-                var gSum = 0
-                var bSum = 0
-                var count = 0
-                for (x in 0 until 2) {
-                    for (y in 0 until imageBlock.block.height) {
-                        val pixel = imageReader.readPixel(imageBlock.image, imageBlock.block.x + x, imageBlock.block.y + y)
-                        if (pixel.a == 255) {
-                            count++
-                            rSum += pixel.r
-                            gSum += pixel.g
-                            bSum += pixel.b
-                        }
-                    }
-                }
-
-                graphics.color = Color(rSum / count, gSum / count, bSum / count, 255)
-                graphics.fillRect(coordinate.x * 2, coordinate.y * 2, 2, 2)
-            }
-            graphics.dispose()
-            ImageIO.write(outputImage, "PNG", outputFile)
-        }
-    }
-
     inner class TilesetImageWriter(
-        private val tilesetImage: File,
-        private val minimapImage: File,
+        private val tilesetImage: File
     ) {
         lateinit var gridSize: GridSize
         lateinit var pixelSize: PixelSize
@@ -362,39 +320,6 @@ class MapGenerator(
             graphics.dispose()
             ImageIO.write(outputImage, "PNG", tilesetImage)
         }
-
-        fun generateDestMinimapImage() {
-            val outputImage = BufferedImage(tiledMap.width.toInt() * 2, tiledMap.height.toInt() * 2, BufferedImage.TYPE_INT_ARGB)
-            val graphics = outputImage.graphics
-
-            srcTiles.forEach { (coordinate: GridCoordinate, layers: RawTileLayers) ->
-                layers.squashedLayers.forEach { layer ->
-                    if (layer is AnimationLayer) {
-                        // only draw the first frame
-                        val imageBlock = layer.frames[0].imageBlock
-                        graphics.drawImage(
-                            imageReader.getImage(imageBlock.image),
-                            coordinate.x * 2, coordinate.y * 2, coordinate.x * 2 + 2, coordinate.y * 2 + 2,
-                            imageBlock.block.x, imageBlock.block.y, imageBlock.block.x + imageBlock.block.width, imageBlock.block.y + imageBlock.block.height,
-                            null
-                        )
-                    } else {
-                        val squashedStaticLayer = layer as MultipleStaticLayersIntoSingleLayer
-                        squashedStaticLayer.blocks.forEach { imageBlock ->
-                            graphics.drawImage(
-                                imageReader.getImage(imageBlock.image),
-                                coordinate.x * 2, coordinate.y * 2, coordinate.x * 2 + 2, coordinate.y * 2 + 2,
-                                imageBlock.block.x, imageBlock.block.y, imageBlock.block.x + imageBlock.block.width, imageBlock.block.y + imageBlock.block.height,
-                                null
-                            )
-                        }
-                    }
-                }
-            }
-
-            graphics.dispose()
-            ImageIO.write(outputImage, "PNG", minimapImage)
-        }
     }
 
     private fun List<TileLayer>.removeRedundantLayers(): List<TileLayer> {
@@ -420,6 +345,7 @@ class MapGenerator(
     }
 
     private fun resolveTile(tileIndex: Int, layerIndex: Int): TileLayer {
+        require(tileIndex != 0)
         val tileset: TilesetAndImage = determineTileset(tileIndex)
         val offset = tileIndex - tileset.firstgid
         val animationTile = tileset.tileset.tiles.firstOrNull { it.id.toInt() == offset && it.animation.isNotEmpty() }
@@ -518,7 +444,80 @@ class MapGenerator(
             return RawTileAnimationFrame(calculateCoordinate(targetIndex), duration)
         }
     }
+
+    data class DynamicSpriteData(
+        val topLeftCorner: GridCoordinate,
+        val frames: List<List<List<ImageBlock>>>
+    )
+
+    inner class DynamicSpriteReader {
+        // key: sprite id
+        // value: matrix of sprite frames
+        private val dynamicSpriteBlocks: MutableMap<String, DynamicSpriteData> = HashMap()
+
+        /**
+         * Read frames of dynamic frames
+         *
+         * Note: this also populates srcImageBlocksToDestBlockMapping
+         */
+        fun readDynamicSpriteAndPopulateTileset() {
+            val dynamicSpriteLayers = tiledMap.layers.find { it.type == "group" }?.layers ?: return
+            dynamicSpriteLayers.forEach {
+                dynamicSpriteBlocks.put(it.name, it.getDynamicSpriteData())
+            }
+        }
+
+        private fun ImageBlock.toTilesetCoordinate(): GridCoordinate {
+            return calculateCoordinate(srcImageBlocksToDestBlockMapping.getValue(listOf(this)))
+        }
+
+        fun getDynamicSprites(): List<GameMapDynamicSprite> {
+            return dynamicSpriteBlocks.entries.map {
+                GameMapDynamicSprite(
+                    it.key,
+                    it.value.topLeftCorner,
+                    it.value.frames.map { it.map { it.toTilesetCoordinate() } }
+                )
+            }
+        }
+
+        private fun TiledMap.Layer2.getDynamicSpriteData(): DynamicSpriteData {
+            // the sprite can cross multiple tiles.
+            val firstTileIndex = data.indexOfFirst { it != 0L }
+            val lastTileIndex = data.indexOfLast { it != 0L }
+            val firstTileCoordinate = GridCoordinate(firstTileIndex % tiledMap.width.toInt(), firstTileIndex / tiledMap.height.toInt())
+            val lastTileCoordinate = GridCoordinate(lastTileIndex % tiledMap.width.toInt(), lastTileIndex / tiledMap.height.toInt())
+
+            val subArrayWidth = abs(lastTileCoordinate.x - firstTileCoordinate.x + 1)
+            val subArrayHeight = abs(lastTileCoordinate.y - firstTileCoordinate.y + 1)
+
+            require(subArrayHeight <= 2 && subArrayWidth <= 2)
+
+            val dataSubArray = mutableListOf<List<List<ImageBlock>>>()
+            for (y in 0 until subArrayHeight) {
+                val row = mutableListOf<List<ImageBlock>>()
+                for (x in 0 until subArrayWidth) {
+                    val realX = x + firstTileCoordinate.x
+                    val realY = y + firstTileCoordinate.y
+                    val tileLayer: TileLayer = resolveTile(data[realY * tiledMap.width.toInt() + realX].toInt(), 0 /* dummy */)
+                    val blocks =
+                        if (tileLayer is StaticTileImageLayer)
+                            listOf(tileLayer.tile)
+                        else
+                            (tileLayer as AnimationLayer).frames.map { it.imageBlock }
+                    row.add(blocks)
+                    blocks.forEach {
+                        // frame by frame
+                        putIntoSrcImageBlocksToDestBlockMapping(listOf(it))
+                    }
+                }
+                dataSubArray.add(row)
+            }
+            return DynamicSpriteData(firstTileCoordinate, dataSubArray.toList())
+        }
+    }
 }
+
 
 fun TiledMap.getTileSize() = PixelSize(tilewidth.toInt(), tileheight.toInt())
 

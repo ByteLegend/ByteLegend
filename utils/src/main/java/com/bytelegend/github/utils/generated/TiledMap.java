@@ -590,7 +590,8 @@ public class TiledMap {
         "x",
         "y",
         "draworder",
-        "objects"
+        "objects",
+        "layers"
     })
     public static class Layer {
 
@@ -618,6 +619,8 @@ public class TiledMap {
         private String draworder;
         @JsonProperty("objects")
         private List<TiledMap.Object> objects = new ArrayList<TiledMap.Object>();
+        @JsonProperty("layers")
+        private List<TiledMap.Layer2> layers = new ArrayList<TiledMap.Layer2>();
         @JsonIgnore
         private Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
@@ -633,17 +636,18 @@ public class TiledMap {
          * @param visible
          * @param data
          * @param objects
+         * @param draworder
+         * @param type
          * @param name
          * @param width
          * @param x
+         * @param layers
          * @param y
-         * @param draworder
          * @param id
          * @param opacity
-         * @param type
          * @param height
          */
-        public Layer(List<Long> data, Long height, Long id, String name, Long opacity, String type, Boolean visible, Long width, Long x, Long y, String draworder, List<TiledMap.Object> objects) {
+        public Layer(List<Long> data, Long height, Long id, String name, Long opacity, String type, Boolean visible, Long width, Long x, Long y, String draworder, List<TiledMap.Object> objects, List<TiledMap.Layer2> layers) {
             super();
             this.data = data;
             this.height = height;
@@ -657,6 +661,7 @@ public class TiledMap {
             this.y = y;
             this.draworder = draworder;
             this.objects = objects;
+            this.layers = layers;
         }
 
         @JsonProperty("data")
@@ -779,6 +784,16 @@ public class TiledMap {
             this.objects = objects;
         }
 
+        @JsonProperty("layers")
+        public List<TiledMap.Layer2> getLayers() {
+            return layers;
+        }
+
+        @JsonProperty("layers")
+        public void setLayers(List<TiledMap.Layer2> layers) {
+            this.layers = layers;
+        }
+
         @JsonAnyGetter
         public Map<String, java.lang.Object> getAdditionalProperties() {
             return this.additionalProperties;
@@ -841,6 +856,10 @@ public class TiledMap {
             sb.append('=');
             sb.append(((this.objects == null)?"<null>":this.objects));
             sb.append(',');
+            sb.append("layers");
+            sb.append('=');
+            sb.append(((this.layers == null)?"<null>":this.layers));
+            sb.append(',');
             sb.append("additionalProperties");
             sb.append('=');
             sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
@@ -864,6 +883,7 @@ public class TiledMap {
             result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
             result = ((result* 31)+((this.width == null)? 0 :this.width.hashCode()));
             result = ((result* 31)+((this.x == null)? 0 :this.x.hashCode()));
+            result = ((result* 31)+((this.layers == null)? 0 :this.layers.hashCode()));
             result = ((result* 31)+((this.y == null)? 0 :this.y.hashCode()));
             result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
             result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
@@ -881,7 +901,276 @@ public class TiledMap {
                 return false;
             }
             TiledMap.Layer rhs = ((TiledMap.Layer) other);
-            return ((((((((((((((this.visible == rhs.visible)||((this.visible!= null)&&this.visible.equals(rhs.visible)))&&((this.data == rhs.data)||((this.data!= null)&&this.data.equals(rhs.data))))&&((this.objects == rhs.objects)||((this.objects!= null)&&this.objects.equals(rhs.objects))))&&((this.draworder == rhs.draworder)||((this.draworder!= null)&&this.draworder.equals(rhs.draworder))))&&((this.type == rhs.type)||((this.type!= null)&&this.type.equals(rhs.type))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.width == rhs.width)||((this.width!= null)&&this.width.equals(rhs.width))))&&((this.x == rhs.x)||((this.x!= null)&&this.x.equals(rhs.x))))&&((this.y == rhs.y)||((this.y!= null)&&this.y.equals(rhs.y))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.opacity == rhs.opacity)||((this.opacity!= null)&&this.opacity.equals(rhs.opacity))))&&((this.height == rhs.height)||((this.height!= null)&&this.height.equals(rhs.height))));
+            return (((((((((((((((this.visible == rhs.visible)||((this.visible!= null)&&this.visible.equals(rhs.visible)))&&((this.data == rhs.data)||((this.data!= null)&&this.data.equals(rhs.data))))&&((this.objects == rhs.objects)||((this.objects!= null)&&this.objects.equals(rhs.objects))))&&((this.draworder == rhs.draworder)||((this.draworder!= null)&&this.draworder.equals(rhs.draworder))))&&((this.type == rhs.type)||((this.type!= null)&&this.type.equals(rhs.type))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.width == rhs.width)||((this.width!= null)&&this.width.equals(rhs.width))))&&((this.x == rhs.x)||((this.x!= null)&&this.x.equals(rhs.x))))&&((this.layers == rhs.layers)||((this.layers!= null)&&this.layers.equals(rhs.layers))))&&((this.y == rhs.y)||((this.y!= null)&&this.y.equals(rhs.y))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.opacity == rhs.opacity)||((this.opacity!= null)&&this.opacity.equals(rhs.opacity))))&&((this.height == rhs.height)||((this.height!= null)&&this.height.equals(rhs.height))));
+        }
+
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonPropertyOrder({
+        "data",
+        "height",
+        "id",
+        "name",
+        "opacity",
+        "type",
+        "visible",
+        "width",
+        "x",
+        "y"
+    })
+    public static class Layer2 {
+
+        @JsonProperty("data")
+        private List<Long> data = new ArrayList<Long>();
+        @JsonProperty("height")
+        private Long height;
+        @JsonProperty("id")
+        private Long id;
+        @JsonProperty("name")
+        private String name;
+        @JsonProperty("opacity")
+        private Long opacity;
+        @JsonProperty("type")
+        private String type;
+        @JsonProperty("visible")
+        private Boolean visible;
+        @JsonProperty("width")
+        private Long width;
+        @JsonProperty("x")
+        private Long x;
+        @JsonProperty("y")
+        private Long y;
+        @JsonIgnore
+        private Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
+
+        /**
+         * No args constructor for use in serialization
+         * 
+         */
+        public Layer2() {
+        }
+
+        /**
+         * 
+         * @param visible
+         * @param data
+         * @param name
+         * @param width
+         * @param x
+         * @param y
+         * @param id
+         * @param opacity
+         * @param type
+         * @param height
+         */
+        public Layer2(List<Long> data, Long height, Long id, String name, Long opacity, String type, Boolean visible, Long width, Long x, Long y) {
+            super();
+            this.data = data;
+            this.height = height;
+            this.id = id;
+            this.name = name;
+            this.opacity = opacity;
+            this.type = type;
+            this.visible = visible;
+            this.width = width;
+            this.x = x;
+            this.y = y;
+        }
+
+        @JsonProperty("data")
+        public List<Long> getData() {
+            return data;
+        }
+
+        @JsonProperty("data")
+        public void setData(List<Long> data) {
+            this.data = data;
+        }
+
+        @JsonProperty("height")
+        public Long getHeight() {
+            return height;
+        }
+
+        @JsonProperty("height")
+        public void setHeight(Long height) {
+            this.height = height;
+        }
+
+        @JsonProperty("id")
+        public Long getId() {
+            return id;
+        }
+
+        @JsonProperty("id")
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        @JsonProperty("name")
+        public String getName() {
+            return name;
+        }
+
+        @JsonProperty("name")
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        @JsonProperty("opacity")
+        public Long getOpacity() {
+            return opacity;
+        }
+
+        @JsonProperty("opacity")
+        public void setOpacity(Long opacity) {
+            this.opacity = opacity;
+        }
+
+        @JsonProperty("type")
+        public String getType() {
+            return type;
+        }
+
+        @JsonProperty("type")
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        @JsonProperty("visible")
+        public Boolean getVisible() {
+            return visible;
+        }
+
+        @JsonProperty("visible")
+        public void setVisible(Boolean visible) {
+            this.visible = visible;
+        }
+
+        @JsonProperty("width")
+        public Long getWidth() {
+            return width;
+        }
+
+        @JsonProperty("width")
+        public void setWidth(Long width) {
+            this.width = width;
+        }
+
+        @JsonProperty("x")
+        public Long getX() {
+            return x;
+        }
+
+        @JsonProperty("x")
+        public void setX(Long x) {
+            this.x = x;
+        }
+
+        @JsonProperty("y")
+        public Long getY() {
+            return y;
+        }
+
+        @JsonProperty("y")
+        public void setY(Long y) {
+            this.y = y;
+        }
+
+        @JsonAnyGetter
+        public Map<String, java.lang.Object> getAdditionalProperties() {
+            return this.additionalProperties;
+        }
+
+        @JsonAnySetter
+        public void setAdditionalProperty(String name, java.lang.Object value) {
+            this.additionalProperties.put(name, value);
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(TiledMap.Layer2 .class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
+            sb.append("data");
+            sb.append('=');
+            sb.append(((this.data == null)?"<null>":this.data));
+            sb.append(',');
+            sb.append("height");
+            sb.append('=');
+            sb.append(((this.height == null)?"<null>":this.height));
+            sb.append(',');
+            sb.append("id");
+            sb.append('=');
+            sb.append(((this.id == null)?"<null>":this.id));
+            sb.append(',');
+            sb.append("name");
+            sb.append('=');
+            sb.append(((this.name == null)?"<null>":this.name));
+            sb.append(',');
+            sb.append("opacity");
+            sb.append('=');
+            sb.append(((this.opacity == null)?"<null>":this.opacity));
+            sb.append(',');
+            sb.append("type");
+            sb.append('=');
+            sb.append(((this.type == null)?"<null>":this.type));
+            sb.append(',');
+            sb.append("visible");
+            sb.append('=');
+            sb.append(((this.visible == null)?"<null>":this.visible));
+            sb.append(',');
+            sb.append("width");
+            sb.append('=');
+            sb.append(((this.width == null)?"<null>":this.width));
+            sb.append(',');
+            sb.append("x");
+            sb.append('=');
+            sb.append(((this.x == null)?"<null>":this.x));
+            sb.append(',');
+            sb.append("y");
+            sb.append('=');
+            sb.append(((this.y == null)?"<null>":this.y));
+            sb.append(',');
+            sb.append("additionalProperties");
+            sb.append('=');
+            sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
+            sb.append(',');
+            if (sb.charAt((sb.length()- 1)) == ',') {
+                sb.setCharAt((sb.length()- 1), ']');
+            } else {
+                sb.append(']');
+            }
+            return sb.toString();
+        }
+
+        @Override
+        public int hashCode() {
+            int result = 1;
+            result = ((result* 31)+((this.visible == null)? 0 :this.visible.hashCode()));
+            result = ((result* 31)+((this.data == null)? 0 :this.data.hashCode()));
+            result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
+            result = ((result* 31)+((this.width == null)? 0 :this.width.hashCode()));
+            result = ((result* 31)+((this.x == null)? 0 :this.x.hashCode()));
+            result = ((result* 31)+((this.y == null)? 0 :this.y.hashCode()));
+            result = ((result* 31)+((this.id == null)? 0 :this.id.hashCode()));
+            result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
+            result = ((result* 31)+((this.opacity == null)? 0 :this.opacity.hashCode()));
+            result = ((result* 31)+((this.type == null)? 0 :this.type.hashCode()));
+            result = ((result* 31)+((this.height == null)? 0 :this.height.hashCode()));
+            return result;
+        }
+
+        @Override
+        public boolean equals(java.lang.Object other) {
+            if (other == this) {
+                return true;
+            }
+            if ((other instanceof TiledMap.Layer2) == false) {
+                return false;
+            }
+            TiledMap.Layer2 rhs = ((TiledMap.Layer2) other);
+            return ((((((((((((this.visible == rhs.visible)||((this.visible!= null)&&this.visible.equals(rhs.visible)))&&((this.data == rhs.data)||((this.data!= null)&&this.data.equals(rhs.data))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.width == rhs.width)||((this.width!= null)&&this.width.equals(rhs.width))))&&((this.x == rhs.x)||((this.x!= null)&&this.x.equals(rhs.x))))&&((this.y == rhs.y)||((this.y!= null)&&this.y.equals(rhs.y))))&&((this.id == rhs.id)||((this.id!= null)&&this.id.equals(rhs.id))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.opacity == rhs.opacity)||((this.opacity!= null)&&this.opacity.equals(rhs.opacity))))&&((this.type == rhs.type)||((this.type!= null)&&this.type.equals(rhs.type))))&&((this.height == rhs.height)||((this.height!= null)&&this.height.equals(rhs.height))));
         }
 
     }

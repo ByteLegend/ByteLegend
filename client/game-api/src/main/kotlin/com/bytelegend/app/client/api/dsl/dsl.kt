@@ -31,10 +31,10 @@ class MapEntranceBuilder {
 
 class NpcBuilder {
     var id: String? = null
-    var animationSetIndex: Int? = null
-    var onInit: (() -> Unit)? = null
-    var onTouch: ((GameObject) -> Unit)? = null
-    var onClick: (() -> Unit)? = null
+    var spriteId: String? = null
+    var onInit: () -> Unit = {}
+    var onTouch: (GameObject) -> Unit = {}
+    var onClick: () -> Unit = {}
 }
 
 class ObjectBuilder {
@@ -45,14 +45,34 @@ class ObjectBuilder {
     var onClick: () -> Unit = {}
 }
 
+class SpriteBuilder {
+    var id: String? = null
+    var spriteId: String? = null
+    var onInit: () -> Unit = {}
+    var onTouch: (GameObject) -> Unit = {}
+    var onClick: () -> Unit = {}
+        set(value) {
+            field = value
+            clickable = true
+        }
+    var clickable: Boolean = false
+    var glow: Boolean = false
+}
+
 class NoticeboardBuilder {
     var id: String? = null
-    var coordinatePointId: String? = null
+    var spriteId: String? = null
 }
 
 interface GameSceneBuilder {
     fun mapEntrance(builder: MapEntranceBuilder.() -> Unit)
+
+    /**
+     * An invisible object
+     */
     fun obj(builder: ObjectBuilder.() -> Unit)
+
+    fun sprite(builder: SpriteBuilder.() -> Unit)
 
     /*
     This shouldn't be in API module, but we have to workaround the following issue:

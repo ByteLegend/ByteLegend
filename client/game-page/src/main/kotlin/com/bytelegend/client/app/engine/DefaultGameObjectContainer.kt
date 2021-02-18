@@ -9,7 +9,7 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.mapToArrayWithIndex
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.sprite.toSprite
+import com.bytelegend.client.app.obj.toSprite
 
 class DefaultGameObjectContainer(
     private val gameScene: GameScene
@@ -31,6 +31,7 @@ class DefaultGameObjectContainer(
     override fun add(gameObject: GameObject) {
         objectsById[gameObject.id] = gameObject
         gameObject.roles.forEach {
+            console.log("${gameObject.id}: $it")
             objectsByRole.putGameObject(it, gameObject)
         }
     }

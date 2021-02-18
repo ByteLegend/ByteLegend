@@ -11,10 +11,10 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.Ratio
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameObjectRole.MapRegion
+import com.bytelegend.client.app.obj.disableShadow
+import com.bytelegend.client.app.obj.quadraticCurveTo
+import com.bytelegend.client.app.obj.setShadow
 import com.bytelegend.client.app.page.HERO_AVATAR_IMG_ID
-import com.bytelegend.client.app.sprite.disableShadow
-import com.bytelegend.client.app.sprite.quadraticCurveTo
-import com.bytelegend.client.app.sprite.setShadow
 import common.ui.bootstrap.BootstrapButton
 import common.ui.bootstrap.BootstrapModalBody
 import common.ui.bootstrap.BootstrapModalHeader

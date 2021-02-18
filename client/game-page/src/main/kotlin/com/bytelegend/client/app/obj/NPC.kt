@@ -1,26 +1,22 @@
 package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.npcAnimationSetCoordinate
+import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.engine.Game
-import com.bytelegend.client.app.engine.mapNpcAnimationSetResourceId
 
 class NPC(
     npcId: String,
+    npcSprite: GameMapDynamicSprite,
     gameScene: GameScene,
-    gridCoordinate: GridCoordinate,
-    npcAnimationSetIndex: Int,
-    private val onInitFunction: () -> Unit,
-    private val onTouchFunction: (GameObject) -> Unit,
-    private val onClickFunction: () -> Unit
+    private val onInitFunction: () -> Unit = {},
+    private val onTouchFunction: (GameObject) -> Unit = {},
+    private val onClickFunction: () -> Unit = {}
 ) : AbstractCharacter(
     gameScene,
-    gridCoordinate * gameScene.map.tileSize,
-    gameScene.npcAnimationSet(npcAnimationSetIndex)
+    npcSprite.topLeftCorner * gameScene.map.tileSize,
+    MapTilesetAnimationSet(gameScene, npcSprite)
 ) {
     override fun init() {
         super.init()
@@ -32,7 +28,8 @@ class NPC(
     override val roles: Set<GameObjectRole> = setOf(
         GameObjectRole.Character,
         GameObjectRole.Sprite,
-        GameObjectRole.NPC
+        GameObjectRole.NPC,
+        GameObjectRole.CoordinateAware
     )
 
     override fun onTouch(obj: GameObject) {
@@ -53,8 +50,3 @@ class NPC(
         gameScene.blockers[gridCoordinate.y][gridCoordinate.x]--
     }
 }
-
-private fun GameScene.npcAnimationSet(animationSetIndex: Int) = AnimationSet(
-    unsafeCast<Game>().resourceLoader.getLoadedResource<ImageResourceData>(mapNpcAnimationSetResourceId(map.id)).htmlElement,
-    npcAnimationSetCoordinate(animationSetIndex)
-)

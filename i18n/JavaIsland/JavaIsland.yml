@@ -20,4 +20,25 @@
 - id: JoinedAt
   en: Joined at
   zh_hans: 加入于
+- id: WhyGitHubTitle
+  en: "<span style='text-align: center'>Why Git/GitHub in ByteLegend challenges? 🤔<span>"
+  zh_hans: "<span style='text-align: center'>为什么要使用Git/GitHub完成挑战？ 🤔<span>"
+- id: WhyGitHubContentHtml
+  en: |
+    Git is the most popular collaborative tool in the world, which is used by top companies all over the world: Google/Apple/Microsoft, etc.<br>
+    If you can use Git, you are actually able to work at any of the top companies in the world.<br>
+    <br>
+    GitHub is the largest and most advanced development platform in the world, all companies in the world
+    will open the door for you, as long as you can finish our chanllenges.<br>
+    <br>
+    With Git/GitHub, you are able to obtain real-world top programming skills while playing the game.<br>
+  zh_hans: |
+    Git是这个世界上使用最广泛的团队协作工具，全世界的顶尖公司都在使用：Google/Apple/Microsoft…… <br>
+    如果你能掌握Git的用法，你就拥有了在全世界的顶尖公司工作的能力。<br>
+    <br>
+    GitHub是这个世界上最大、最先进的代码分享平台，只要你能完成我们的挑战，那么全世界的公司都会对你敞开大门。<br>
+    <br>
+    使用Git/GitHub，你就能在游戏中获得真实世界中的顶尖技能。
+
+
 

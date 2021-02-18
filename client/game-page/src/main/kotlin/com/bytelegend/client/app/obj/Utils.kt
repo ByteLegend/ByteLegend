@@ -1,4 +1,4 @@
-package com.bytelegend.client.app.sprite
+package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.shared.PixelBlock

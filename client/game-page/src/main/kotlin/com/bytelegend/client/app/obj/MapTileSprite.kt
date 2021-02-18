@@ -1,4 +1,4 @@
-package com.bytelegend.client.app.sprite
+package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.AbstractStaticLocationSprite
 import com.bytelegend.app.client.api.GameScene
@@ -27,7 +27,7 @@ class StaticImageBlockSprite(
     coordinate: PixelCoordinate,
     private val tileset: HTMLImageElement,
     private val imageLayer: RawStaticImageLayer
-) : AbstractStaticLocationSprite(coordinate) {
+) : AbstractStaticLocationSprite(coordinate, gameScene.map.tileSize) {
     override val id: String = "${coordinate.x}-${coordinate.y}-${imageLayer.layer}"
     override val layer: Int
         get() = imageLayer.layer
@@ -44,10 +44,9 @@ class AnimationSprite(
     coordinate: PixelCoordinate,
     private val tileset: HTMLImageElement,
     private val animationLayer: RawAnimationLayer
-) : AbstractStaticLocationSprite(coordinate) {
+) : AbstractStaticLocationSprite(coordinate, gameScene.map.tileSize) {
     override val id: String = "${coordinate.x}-${coordinate.y}-${animationLayer.layer}"
-    override val layer: Int
-        get() = animationLayer.layer
+    override val layer: Int = animationLayer.layer
 
     override fun draw(canvas: CanvasRenderingContext2D) {
         getImageBlockOnCanvas(gameScene).run {

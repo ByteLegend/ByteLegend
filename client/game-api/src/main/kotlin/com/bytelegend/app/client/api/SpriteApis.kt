@@ -2,6 +2,7 @@ package com.bytelegend.app.client.api
 
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.imageBlockOnCanvas
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.outOfCanvas
@@ -29,10 +30,11 @@ abstract class AbstractMovableSprite : Sprite {
  * like running river, waterfall, etc.)
  */
 abstract class AbstractStaticLocationSprite(
-    protected val coordinateInMap: PixelCoordinate
+    protected val coordinateInMap: PixelCoordinate,
+    private val spriteSize: PixelSize
 ) : Sprite {
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite)
-    open fun outOfCanvas(gameScene: GameScene) = getImageBlockOnCanvas(gameScene).outOfCanvas(gameScene.canvasState.getCanvasPixelSize())
+    override fun outOfCanvas() = getImageBlockOnCanvas(gameScene).outOfCanvas(gameScene.canvasState.getCanvasPixelSize())
     open fun getImageBlockOnCanvas(gameScene: GameScene) =
-        imageBlockOnCanvas(coordinateInMap, gameScene.canvasState.getCanvasCoordinateInMap(), gameScene.map.tileSize)
+        imageBlockOnCanvas(coordinateInMap, gameScene.canvasState.getCanvasCoordinateInMap(), spriteSize)
 }

@@ -80,7 +80,7 @@ class Game(
         resourceLoader.getLoadedResource(GAME_MAP_HIERARCHY_ID)
     }
 
-    val modalController: ModalControllerInternal by lazy {
+    override val modalController: ModalControllerInternal by lazy {
         DefaultModalController(di)
     }
 

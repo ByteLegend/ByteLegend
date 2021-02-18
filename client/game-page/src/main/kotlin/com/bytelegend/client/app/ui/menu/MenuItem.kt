@@ -131,52 +131,6 @@ class Menu : GameUIComponent<MenuProps, RState>() {
             child(CreditsModal::class) {
                 attrs.game = game
             }
-
-//                BootstrapTabs {
-
-//                    val child = child(NavTab::class) {}
-
-//                    childList.add()
-//                    attrs.children() = arrayOf(child(NavTab::class) {  })
-//                    repeat(2) {
-//
-//                    BootstrapTab {
-//                        attrs.key = "SpecialThanks"
-//                        attrs.eventKey = "SpecialThanks"
-//                        attrs.title = +i("SpecialThanks")
-//                        +"sasfd"
-//                    }
-//
-//                    val c = childList[0]
-//                    childList.clear()
-//                    console.log(childList.size)
-//                    childList.add(arrayOf(c))
-//                    console.log(childList.size)
-//                    }
-//                    childList.add(arrayOf(child(NavTab::class) {}))
-
-//                    BootstrapTab {
-//                        attrs.eventKey = "SpecialThanks"
-//                        attrs.title = +i("SpecialThanks")
-//                        ul {
-//                            li {
-//                                consumer.onTagContentUnsafe {
-//                                    +i("SpecialThanksGradleParagraph")
-//                                }
-//                            }
-//                            li {
-//                                consumer.onTagContentUnsafe {
-//                                    +i("SpecialThanksKotlinParagraph")
-//                                }
-//                            }
-//                            li {
-//                                consumer.onTagContentUnsafe {
-//                                    +i("SpecialThanksTiledParagraph")
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
         }
     }
 

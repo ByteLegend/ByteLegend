@@ -9,8 +9,6 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
-import common.ui.bootstrap.BootstrapModalProps
-import react.RElementBuilder
 
 val HERO_ID = "hero"
 
@@ -32,7 +30,7 @@ interface GameRuntime {
     val sceneContainer: GameSceneContainer
     val currentTimeMillis: Long
     val activeScene: GameScene
-//    val modalController: ModalController
+    val modalController: ModalController
 
     fun i(textId: String, vararg args: String): String
 }
@@ -201,5 +199,5 @@ interface GameSceneContainer : GameContainerSizeAware {
 }
 
 interface ModalController {
-    fun show(modal: RElementBuilder<BootstrapModalProps>.() -> Unit)
+    fun showModal(contentId: String, titleId: String? = null)
 }

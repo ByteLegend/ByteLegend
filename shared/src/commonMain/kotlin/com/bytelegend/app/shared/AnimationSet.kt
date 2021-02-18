@@ -15,7 +15,7 @@ fun animationSetId(characterId: Int) = characterId / (ANIMATION_SET_HORIZONTAL_N
  */
 fun playerAnimationSetCoordinate(index: Int) = animationSetCoordinate(index, PLAYER_ANIMATION_SET_VERTICAL_NUMBER)
 
-fun npcAnimationSetCoordinate(index: Int) = animationSetCoordinate(index, NPC_ANIMATION_SET_VERTICAL_NUMBER)
+//fun npcAnimationSetCoordinate(index: Int) = animationSetCoordinate(index, NPC_ANIMATION_SET_VERTICAL_NUMBER)
 
 private fun animationSetCoordinate(characterId: Int, animationSetVerticalNumber: Int): PixelCoordinate {
     val offset = characterId % (ANIMATION_SET_HORIZONTAL_NUMBER * animationSetVerticalNumber)

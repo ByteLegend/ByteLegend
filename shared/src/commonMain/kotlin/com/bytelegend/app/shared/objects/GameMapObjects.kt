@@ -46,7 +46,9 @@ enum class GameMapObjectType(
     /**
      * Ordered series of points, to form a curve.
      */
-    GameMapCurve(4);
+    GameMapCurve(4),
+
+    GameMapDynamicSprite(5);
 
     companion object {
         fun fromIndex(index: Int): GameMapObjectType = values()[index - 1]

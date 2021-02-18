@@ -11,23 +11,28 @@ import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
 import com.bytelegend.app.client.api.dsl.NpcBuilder
 import com.bytelegend.app.client.api.dsl.ObjectBuilder
+import com.bytelegend.app.client.api.dsl.SpriteBuilder
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.mapToArray
 import com.bytelegend.app.shared.objects.GameMapCurve
+import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.obj.DynamicSprite
+import com.bytelegend.client.app.obj.GameCurveSprite
+import com.bytelegend.client.app.obj.GameTextSprite
 import com.bytelegend.client.app.obj.GenericCoordinateAwareGameObject
 import com.bytelegend.client.app.obj.MapEntrance
+import com.bytelegend.client.app.obj.NPC
+import com.bytelegend.client.app.obj.NoEffect
+import com.bytelegend.client.app.obj.NoticeboardSprite
+import com.bytelegend.client.app.obj.RectangleOuterGlowEffect
 import com.bytelegend.client.app.obj.defaultMapEntranceId
 import com.bytelegend.client.app.obj.defaultMapEntrancePointId
-import com.bytelegend.client.app.page.game
-import com.bytelegend.client.app.sprite.GameCurveSprite
-import com.bytelegend.client.app.sprite.GameTextSprite
-import com.bytelegend.client.app.ui.noticeboard.JavaIslandNewbieVillageNoticeboard
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
@@ -63,6 +68,7 @@ class DefaultGameScene(
                 GameMapObjectType.GameMapRegion -> objects.add(it.unsafeCast<GameMapRegion>())
                 GameMapObjectType.GameMapPoint -> objects.add(it.unsafeCast<GameMapPoint>())
                 GameMapObjectType.GameMapCurve -> gameMapCurve(it.unsafeCast<GameMapCurve>())
+                GameMapObjectType.GameMapDynamicSprite -> objects.add(it.unsafeCast<GameMapDynamicSprite>())
             }
         }
     }
@@ -108,29 +114,49 @@ class DefaultGameScene(
         val builder = NoticeboardBuilder()
         builder.action()
 
-        val coordinate = objects.getById<GameMapPoint>(builder.coordinatePointId!!).point
+        val dynamicSprite = objects.getById<GameMapDynamicSprite>(builder.spriteId!!)
 
-        objects.add(
-            GenericCoordinateAwareGameObject(
-                builder.id!!,
-                coordinate,
-                coordinate * map.tileSize,
-                onClickFunction = {
-                    game.modalController.show {
-                        child(JavaIslandNewbieVillageNoticeboard::class) {
-                            attrs.game = game
-                        }
-                    }
-                },
-                setOf(
-                    GameObjectRole.CoordinateAware,
-                    GameObjectRole.Clickable,
-                )
-            )
-        )
+        NoticeboardSprite(builder.id!!, this, dynamicSprite).init()
     }
 
-    override fun npc(builder: NpcBuilder.() -> Unit) {
+    override fun npc(action: NpcBuilder.() -> Unit) {
+        val builder = NpcBuilder()
+        builder.action()
+
+        NPC(
+            builder.id!!,
+            objects.getById(builder.spriteId!!),
+            this,
+            onInitFunction = builder.onInit,
+            onTouchFunction = builder.onTouch,
+            onClickFunction = builder.onClick
+        ).init()
+    }
+
+    override fun sprite(action: SpriteBuilder.() -> Unit) {
+        val builder = SpriteBuilder()
+        builder.action()
+
+        val effect = if (builder.glow)
+            RectangleOuterGlowEffect(4, 10, 24, 12, 10, "white")
+        else
+            NoEffect
+
+        val roles = if (builder.clickable)
+            setOf(GameObjectRole.Clickable, GameObjectRole.CoordinateAware, GameObjectRole.Sprite)
+        else
+            setOf(GameObjectRole.CoordinateAware, GameObjectRole.Sprite)
+
+        DynamicSprite(
+            builder.id!!,
+            this,
+            objects.getById(builder.spriteId!!),
+            onInitFunction = builder.onInit,
+            onTouchFunction = builder.onTouch,
+            onClickFunction = builder.onClick,
+            effect = effect,
+            roles = roles
+        ).init()
     }
 
     private fun gameMapText(gameMapText: GameMapText) {

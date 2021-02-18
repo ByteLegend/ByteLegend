@@ -9,34 +9,16 @@ import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PLAYER_LAYER
-import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
-import com.bytelegend.client.app.sprite.drawImage
 import org.w3c.dom.CanvasRenderingContext2D
-import org.w3c.dom.HTMLImageElement
-
-val DOWN_STILL = GridCoordinate(1, 0)
-val DOWN_MOVE = listOf(GridCoordinate(0, 0), GridCoordinate(2, 0))
-val UP_STILL = GridCoordinate(1, 3)
-val UP_MOVE = listOf(GridCoordinate(0, 3), GridCoordinate(2, 3))
-val LEFT_STILL = GridCoordinate(1, 1)
-val LEFT_MOVE = listOf(GridCoordinate(0, 1), GridCoordinate(2, 1))
-val RIGHT_STILL = GridCoordinate(1, 2)
-val RIGHT_MOVE = listOf(GridCoordinate(0, 2), GridCoordinate(2, 2))
 
 // How many pixels does a character move per second?
 const val CHARACTER_MOVE_SPEED_PIXEL_PER_SECOND = 128
 // Character move per 100 ms, to avoid millisecond precision issue
 const val CHARACTER_MOVEMENT_MIN_INTERVAL_MS = 100
 const val CHARACTER_ANIMATION_FPS = 2
-
-data class AnimationSet(
-    val htmlImageElement: HTMLImageElement,
-    // The top-left corner pixel coordinate in the animation set.
-    val coordinate: PixelCoordinate
-)
 
 @Suppress("UNUSED_PARAMETER")
 abstract class AbstractCharacter(
@@ -193,49 +175,13 @@ abstract class AbstractCharacter(
         }
     }
 
-    private fun draw(canvas: CanvasRenderingContext2D, coordinateIn12Set: GridCoordinate) {
-        val frame = animationSet.coordinate + coordinateIn12Set * tileSize
+    override fun draw(canvas: CanvasRenderingContext2D) {
+        val imageAndBlock = animationSet.getFrame(still, direction)
         canvas.drawImage(
-            animationSet.htmlImageElement,
-            PixelBlock(frame, tileSize),
+            imageAndBlock.first,
+            imageAndBlock.second,
             getImageBlockOnCanvas()
         )
-    }
-
-    override fun draw(canvas: CanvasRenderingContext2D) {
-        if (still) {
-            when (direction) {
-                Direction.UP -> draw(canvas, UP_STILL)
-                Direction.DOWN -> draw(canvas, DOWN_STILL)
-                Direction.LEFT -> draw(canvas, LEFT_STILL)
-                Direction.RIGHT -> draw(canvas, RIGHT_STILL)
-                else -> throw IllegalStateException()
-            }
-        } else {
-            when (direction) {
-                Direction.UP -> draw(canvas, animationFrameOf(UP_MOVE))
-                Direction.DOWN -> draw(canvas, animationFrameOf(DOWN_MOVE))
-                Direction.LEFT -> draw(canvas, animationFrameOf(LEFT_MOVE))
-                Direction.RIGHT -> draw(canvas, animationFrameOf(RIGHT_MOVE))
-                else -> throw IllegalStateException()
-            }
-        }
-    }
-
-    private fun animationFrameOf(frames: List<GridCoordinate>): GridCoordinate {
-        // ms/(1000/fps) % frameSize
-        //
-        // Given 2-frame animation
-        // 2 fps:
-        //   0~499   -> 0
-        //   500~999 -> 1
-        // 4 fps:
-        //   0~249   -> 0
-        //   250~499 -> 1
-        //   500-749 -> 0
-        //   750-999 -> 1
-        val frameIndex = (gameScene.gameRuntime.currentTimeMillis * CHARACTER_ANIMATION_FPS / 1000).toInt() % frames.size
-        return frames[frameIndex]
     }
 
     private fun directionBetweenCurrentAndNext(currentCoordinate: PixelCoordinate, nextCoordinate: PixelCoordinate) = when {

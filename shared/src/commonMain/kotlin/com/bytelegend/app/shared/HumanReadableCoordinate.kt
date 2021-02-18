@@ -70,6 +70,7 @@ data class PixelSize(val width: Int, val height: Int) {
     operator fun times(gridSize: GridSize) = PixelSize(width * gridSize.width, height * gridSize.height)
     operator fun div(gridSize: GridSize) = PixelSize(width / gridSize.width, height / gridSize.height)
     operator fun div(pixelSize: PixelSize) = GridSize(width / pixelSize.width, height / pixelSize.height)
+    operator fun times(n: Int): PixelSize = PixelSize(width * n, height * n)
 }
 
 @Serializable
@@ -95,6 +96,7 @@ data class PixelCoordinate(val x: Int, val y: Int) {
 
     fun alignToTileBorder(tileSize: PixelSize) = this / tileSize * tileSize
     fun compress(): List<Int> = listOf(x, y)
+    operator fun plus(tileSize: PixelSize) = PixelCoordinate(x + tileSize.width, y + tileSize.height)
 }
 
 data class Ratio(val horizontal: Double, val vertical: Double)
