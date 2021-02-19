@@ -3,6 +3,7 @@ package com.bytelegend.client.app.engine
 import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameScene
+import com.bytelegend.app.client.api.JSArrayBackedList
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.GridCoordinate
@@ -17,7 +18,11 @@ class DefaultGameObjectContainer(
     private val objectsById: IdGameObjectContainer = IdGameObjectContainer()
     private val objectsByRole: MutableMap<String, IdGameObjectContainer> = JSObjectBackedMap()
     private val background: Array<Array<List<Sprite>>> = gameScene.map.rawTiles.mapToArrayWithIndex { it, coordinate ->
-        it.layers.map { it.toSprite(gameScene, gameScene.map.tileSize * coordinate, gameScene.tileset.htmlElement) }
+        val list = JSArrayBackedList<Sprite>()
+        it.layers.forEach {
+            list.add(it.toSprite(gameScene, coordinate, gameScene.tileset.htmlElement))
+        }
+        list
     }
 
     override fun <T : GameObject> getByIdOrNull(id: String): T? {
@@ -54,14 +59,16 @@ class DefaultGameObjectContainer(
         return objectsByRole.getGameObject(role)
     }
 
+    /**
+     * This method is carefully tuned as it's the most frequently invoked method.
+     */
     override fun getDrawableSprites(): List<Sprite> {
         // 1. Scan background for tiles in canvas viewport.
         // 2. Scan sprites in canvas viewport.
         // 3. Sort by layer.
         // 4. Draw.
 
-        // All referenced layer indices
-        val layerIndices = mutableSetOf<Int>()
+        val indexes = js("new Set()")
         // Key: layer index; Value: list of sprites
         val layerToSprites = JSObjectBackedMap<MutableList<Sprite>>()
 
@@ -80,23 +87,29 @@ class DefaultGameObjectContainer(
 
                 if (realX < mapGridWidth && realY < mapGridHeight) {
                     background[realY][realX].forEach { spriteLayer ->
-                        layerIndices.add(spriteLayer.layer)
-                        layerToSprites.getOrPut(spriteLayer.layer.toString()) { mutableListOf() }.add(spriteLayer)
+                        indexes.add(spriteLayer.layer)
+                        layerToSprites.getOrPut(spriteLayer.layer.toString()) { JSArrayBackedList() }.add(spriteLayer)
                     }
                 }
             }
         }
 
-        getByRole<Sprite>(GameObjectRole.Sprite)
-            .filter { !it.outOfCanvas() }
-            .forEach {
-                layerIndices.add(it.layer)
-                layerToSprites.getOrPut(it.layer.toString()) { mutableListOf() }.add(it)
-            }
+        val sprites = getByRole<Sprite>(GameObjectRole.Sprite)
 
-        return layerIndices.sorted().flatMap { layerIndex ->
-            layerToSprites.getValue(layerIndex.toString())
+        sprites.forEach {
+            if (!it.outOfCanvas()) {
+                indexes.add(it.layer)
+                layerToSprites.getOrPut(it.layer.toString()) { JSArrayBackedList() }.add(it)
+            }
         }
+
+        val sorted = JSArrayBackedList<Int>(delegate = js("Array.from(indexes).sort(function(a, b){return a - b;})"))
+        val ret = JSArrayBackedList<Sprite>()
+        sorted.forEach {
+            ret.addAll(layerToSprites.getValue(it.toString()))
+        }
+
+        return ret
     }
 }
 
@@ -106,7 +119,7 @@ fun MutableMap<String, IdGameObjectContainer>.putGameObject(key: Any, gameObject
 
 @Suppress("UnsafeCastFromDynamic")
 fun <T : GameObject> MutableMap<String, IdGameObjectContainer>.getGameObject(key: Any): List<T> {
-    return getOrPut(key.toString()) { IdGameObjectContainer() }.values.toList().asDynamic()
+    return JSArrayBackedList(getOrPut(key.toString()) { IdGameObjectContainer() }.values).asDynamic()
 }
 
 fun MutableMap<String, IdGameObjectContainer>.removeGameObject(key: Any, id: String) {

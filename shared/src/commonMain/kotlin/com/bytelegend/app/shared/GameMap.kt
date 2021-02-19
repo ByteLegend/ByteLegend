@@ -173,10 +173,6 @@ data class RawAnimationLayer(
         frames.forEach { finalConstantPool.add(AnimationFrameEntry(it)) }
     }
 
-    fun getCurrentFrame(time: Long): RawTileAnimationFrame {
-        val index = time / frames.first().duration % frames.size
-        return frames[index.toInt()]
-    }
 }
 
 @Serializable

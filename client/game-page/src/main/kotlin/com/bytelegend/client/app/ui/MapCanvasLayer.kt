@@ -131,11 +131,13 @@ class MapCanvasLayer : AbstractMapCanvas<RState>() {
     }
 
     override fun onPaint(lastAnimationTime: Timestamp) {
+//        val start = Timestamp.now()
         canvas.clearRect(0.0, 0.0, canvasPixelSize.width.toDouble(), canvasPixelSize.height.toDouble())
 
         game.activeScene.objects.getDrawableSprites().forEach {
             it.draw(canvas)
         }
+//        console.log("paint takes ${Timestamp.now() -start}ms")
     }
 
     private fun drawGrid() {

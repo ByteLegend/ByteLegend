@@ -4,8 +4,7 @@ import com.bytelegend.client.app.script.DefaultGameDirector
 import react.RBuilder
 import react.RState
 
-interface GameScriptWidgetDisplayLayerProps : GameProps {
-}
+interface GameScriptWidgetDisplayLayerProps : GameProps
 
 class GameScriptWidgetDisplayLayer : GameUIComponent<GameScriptWidgetDisplayLayerProps, RState>() {
     override fun RBuilder.render() {

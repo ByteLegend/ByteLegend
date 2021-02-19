@@ -54,8 +54,7 @@ import react.RState
   Note that you don't need to respond to window.onresize event, Game.viewport responds to that event.
  */
 
-interface UserMouseInteractionLayerProps : GameProps {
-}
+interface UserMouseInteractionLayerProps : GameProps
 
 class UserMouseInteractionLayer : LayeredGameUIComponent<UserMouseInteractionLayerProps, RState>() {
     override fun RBuilder.render() {
