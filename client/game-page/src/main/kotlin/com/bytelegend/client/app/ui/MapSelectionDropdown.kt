@@ -45,9 +45,10 @@ class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, RState>(
             } else {
                 +i(mapId)
             }
-            attrs.onClick = stateUpdatingEventHandler {
+            // disable map selection when game script is running
+            attrs.onClick = gameControlAwareEventHandler(stateUpdatingEventHandler {
                 game.sceneContainer.loadScene(mapId)
-            }
+            })
         }
     }
 }

@@ -167,3 +167,30 @@ body {
     width: 160px;
     text-align: center;
 }
+
+p.speech-bubble {
+    max-width: 30em;
+    min-width: 10em;
+    background-color: #fff;
+    padding: 1.125em 1.5em;
+    font-size: 1em;
+    border-radius: 1rem;
+    box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
+}
+p.speech-bubble::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: -0.75rem;
+    left: 40px;
+    border: .75rem solid transparent;
+    border-bottom: none;
+
+    border-top-color: #fff;
+    filter: drop-shadow(0 0.0625rem 0.0625rem rgba(0, 0, 0, .1));
+
+    line-height: 1.5;
+    font-weight: 300;
+    color: #192229;
+}

@@ -6,11 +6,12 @@ import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
-import com.bytelegend.app.client.api.dsl.GameSceneBuilder
+import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
 import com.bytelegend.app.client.api.dsl.NpcBuilder
 import com.bytelegend.app.client.api.dsl.ObjectBuilder
+import com.bytelegend.app.client.api.dsl.ObjectsBuilder
 import com.bytelegend.app.client.api.dsl.SpriteBuilder
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.PixelSize
@@ -33,6 +34,7 @@ import com.bytelegend.client.app.obj.NoticeboardSprite
 import com.bytelegend.client.app.obj.RectangleOuterGlowEffect
 import com.bytelegend.client.app.obj.defaultMapEntranceId
 import com.bytelegend.client.app.obj.defaultMapEntrancePointId
+import com.bytelegend.client.app.script.DefaultGameDirector
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
@@ -48,7 +50,7 @@ class DefaultGameScene(
         initContainerSize,
     )
 ) : GameScene,
-    GameSceneBuilder,
+    ObjectsBuilder,
     DIAware,
     GameContainerSizeAware by canvasState {
     override val gameRuntime: GameRuntime by di.instance()
@@ -57,8 +59,14 @@ class DefaultGameScene(
     }
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
-    override fun configure(block: GameSceneBuilder.() -> Unit) {
+    override val director: DefaultGameDirector = DefaultGameDirector(di, this)
+
+    override fun objects(block: ObjectsBuilder.() -> Unit) {
         block()
+    }
+
+    override fun scripts(block: ScriptsBuilder.() -> Unit) {
+        director.scripts(block)
     }
 
     init {

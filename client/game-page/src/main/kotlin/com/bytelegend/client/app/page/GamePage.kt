@@ -19,6 +19,8 @@ import com.bytelegend.client.app.ui.GameContainer
 import com.bytelegend.client.app.ui.GameContainerProps
 import com.bytelegend.client.app.ui.GameModal
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.GameScriptWidgetDisplayLayer
+import com.bytelegend.client.app.ui.GameScriptWidgetDisplayLayerProps
 import com.bytelegend.client.app.ui.HeroIndicatorWidget
 import com.bytelegend.client.app.ui.ICPServerLocationWidget
 import com.bytelegend.client.app.ui.LocaleSelectionDropdown
@@ -164,6 +166,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                     localeSelectionDropdown(attrs)
                     userAvatarWidget(attrs)
                     icpServerLocationWidget(attrs)
+                    gameScriptWidgetDisplayLayer(attrs)
                     scrollButtons(attrs)
                     userMouseInteractionLayer(attrs)
                     mapTitleWidgets(attrs) {
@@ -180,7 +183,6 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                     menu(attrs)
                 }
             }
-//            }
         }
     }
 
@@ -208,6 +210,11 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         parentProps: GameContainerProps,
         block: RElementBuilder<UserMouseInteractionLayerProps>.() -> Unit = {}
     ) = gameChild(parentProps, UserMouseInteractionLayer::class, block)
+
+    fun RElementBuilder<GameContainerProps>.gameScriptWidgetDisplayLayer(
+        parentProps: GameContainerProps,
+        block: RElementBuilder<GameScriptWidgetDisplayLayerProps>.() -> Unit = {}
+    ) = gameChild(parentProps, GameScriptWidgetDisplayLayer::class, block)
 
 //    fun RBuilder.informationDisplayLayer(block: RElementBuilder<InformationDisplayLayerProps>.() -> Unit) = layer(InformationDisplayLayer::class, Layer.InformationDisplay, block)
 //

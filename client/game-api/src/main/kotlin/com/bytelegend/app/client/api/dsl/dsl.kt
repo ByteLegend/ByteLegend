@@ -64,7 +64,7 @@ class NoticeboardBuilder {
     var spriteId: String? = null
 }
 
-interface GameSceneBuilder {
+interface ObjectsBuilder {
     fun mapEntrance(builder: MapEntranceBuilder.() -> Unit)
 
     /**

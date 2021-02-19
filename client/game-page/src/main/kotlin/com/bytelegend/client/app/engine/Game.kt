@@ -43,6 +43,7 @@ fun init(serverSideData: ServerSideData): Game {
         bind<MutableMap<String, String>>(tag = "i18nTextContainer") with instance(JSObjectBackedMap())
         bind<Player>() with instance(serverSideData.player)
         bind<GameRuntime>() with eagerSingleton { Game(di) }
+        bind<GameControl>() with singleton { GameControl(di) }
     }
     val runtime by di.instance<GameRuntime>()
     return runtime as Game
@@ -92,7 +93,7 @@ class Game(
     val i18nTextContainer: MutableMap<String, String> by di.instance(tag = "i18nTextContainer")
     val resourceLoader: ResourceLoader by di.instance()
 
-    private val gameControl = GameControl(di)
+    val gameControl: GameControl by di.instance()
 
     fun start() {
         gameControl.start()

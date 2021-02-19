@@ -200,7 +200,7 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
             }
         }
 
-        props.game.eventBus.emit(MAP_SCROLL_EVENT, direction)
+        gameControl.onScroll(direction)
     }
 
     private fun RBuilder.scrollButton(left: Int, top: Int, width: Int, height: Int, direction: Direction) {

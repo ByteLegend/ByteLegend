@@ -10,6 +10,7 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
+import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.toGameMouseEvent
 import com.bytelegend.client.app.engine.toGridCoordinate
 import kotlinx.html.DIV
@@ -64,6 +65,8 @@ abstract class GameUIComponent<P : GameAwareProps, S : RState> : RComponent<P, S
         get() = props.game.sceneContainer.activeScene!!
     protected val mapCoveredByCanvas: Boolean
         get() = props.game.activeScene.canvasState.mapCoveredByCanvas
+    protected val gameControl: GameControl
+        get() = props.game.gameControl
 
     protected fun moveTo(coordinate: PixelCoordinate) {
         props.game.activeScene.canvasState.moveTo(coordinate)
@@ -85,10 +88,18 @@ abstract class GameUIComponent<P : GameAwareProps, S : RState> : RComponent<P, S
     protected fun toGameMouseEvent(event: Event) = props.game.toGameMouseEvent(event)
     protected fun i(textId: String, vararg args: String) = props.game.i(textId, *args)
 
-    protected fun RBuilder.stateUpdatingEventHandler(fn: (Event) -> Unit): (Event) -> Unit {
+    protected fun stateUpdatingEventHandler(fn: (Event) -> Unit): (Event) -> Unit {
         return {
             fn(it)
             setState { }
+        }
+    }
+
+    protected fun gameControlAwareEventHandler(fn: (Event) -> Unit): (Event) -> Unit {
+        return {
+            if (game.gameControl.userMouseEnabled) {
+                fn(it)
+            }
         }
     }
 }

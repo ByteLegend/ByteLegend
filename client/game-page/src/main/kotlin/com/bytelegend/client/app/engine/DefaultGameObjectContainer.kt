@@ -31,7 +31,6 @@ class DefaultGameObjectContainer(
     override fun add(gameObject: GameObject) {
         objectsById[gameObject.id] = gameObject
         gameObject.roles.forEach {
-            console.log("${gameObject.id}: $it")
             objectsByRole.putGameObject(it, gameObject)
         }
     }

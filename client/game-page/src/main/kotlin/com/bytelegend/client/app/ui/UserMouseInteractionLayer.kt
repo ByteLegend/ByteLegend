@@ -1,11 +1,5 @@
 package com.bytelegend.client.app.ui
 
-import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
-import com.bytelegend.client.app.engine.MOUSE_DOUBLE_CLICK_EVENT
-import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
-import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
-import com.bytelegend.client.app.engine.toGameMouseEvent
-import kotlinx.browser.window
 import kotlinx.html.id
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onMouseMoveFunction
@@ -61,16 +55,9 @@ import react.RState
  */
 
 interface UserMouseInteractionLayerProps : GameProps {
-    /**
-     * If true, the double click events will be omitted, with a 300ms delay to avoid mixing with click events.
-     */
-    var allowDoubleClick: Boolean
 }
 
-const val DOUBLE_CLICK_MAX_INTERVAL_MS = 300
-
 class UserMouseInteractionLayer : LayeredGameUIComponent<UserMouseInteractionLayerProps, RState>() {
-    private var clicks = 0
     override fun RBuilder.render() {
         absoluteDiv(
             canvasCoordinateInGameContainer.x, canvasCoordinateInGameContainer.y,
@@ -80,31 +67,13 @@ class UserMouseInteractionLayer : LayeredGameUIComponent<UserMouseInteractionLay
             attrs {
                 id = "user-mouse-interaction-layer"
                 onClickFunction = {
-                    val gameMouseEvent = toGameMouseEvent(it)
-                    if (!props.allowDoubleClick) {
-                        props.game.eventBus.emit(MOUSE_CLICK_EVENT, gameMouseEvent)
-                    } else {
-                        clicks++
-                        if (clicks == 1) {
-                            window.setTimeout(
-                                {
-                                    if (clicks == 1) {
-                                        props.game.eventBus.emit(MOUSE_CLICK_EVENT, gameMouseEvent)
-                                    } else {
-                                        props.game.eventBus.emit(MOUSE_DOUBLE_CLICK_EVENT, gameMouseEvent)
-                                    }
-                                    clicks = 0
-                                },
-                                DOUBLE_CLICK_MAX_INTERVAL_MS
-                            )
-                        }
-                    }
+                    gameControl.onMouseClickOnCanvas(toGameMouseEvent(it))
                 }
                 onMouseMoveFunction = {
-                    props.game.eventBus.emit(MOUSE_MOVE_EVENT, props.game.toGameMouseEvent(it))
+                    gameControl.onMouseMoveOnCanvas(toGameMouseEvent(it))
                 }
                 onMouseOutFunction = {
-                    props.game.eventBus.emit(MOUSE_OUT_OF_MAP_EVENT, null)
+                    gameControl.onMouseMoveOutOfCanvas()
                 }
             }
         }

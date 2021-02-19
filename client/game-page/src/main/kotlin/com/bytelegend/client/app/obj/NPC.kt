@@ -7,7 +7,7 @@ import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 
 class NPC(
-    npcId: String,
+    override val id: String,
     npcSprite: GameMapDynamicSprite,
     gameScene: GameScene,
     private val onInitFunction: () -> Unit = {},
@@ -24,7 +24,6 @@ class NPC(
         enterTile(gridCoordinate)
     }
 
-    override val id: String = "npc=$npcId"
     override val roles: Set<GameObjectRole> = setOf(
         GameObjectRole.Character,
         GameObjectRole.Sprite,

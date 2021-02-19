@@ -3,13 +3,21 @@ package com.bytelegend.app.client.api
 import kotlinx.css.div
 import react.RBuilder
 
-interface GameDirector {
-    val scripts: List<GameScript>
+
+class SpeechBuilder {
+    /**
+     * The person who speaks.
+     */
+    var objectId: String? = null
+
+    /**
+     * The content HTML id.
+     */
+    var contentHtmlId: String? = null
 }
 
-interface GameScript {
-    fun play(builder: RBuilder, gameRuntime: GameRuntime)
+interface ScriptsBuilder {
+    fun enableUserMouse()
+    fun speech(action: SpeechBuilder.() -> Unit)
+    fun disableUserMouse()
 }
-
-// class CharacterMoveScript: GameScript {
-// }
