@@ -55,6 +55,7 @@ val reactTransitionGroupVersion = "4.4.1"
 val inBrowserDownloadVersion = "2.0.0"
 val getImagePixelsVersion = "1.0.1"
 val reactIconsVersion = "3.11.0"
+val bootstrapSwitchButtonReactVersion = "1.2.0"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -180,7 +181,14 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     ),
     OpenSourceLibrary(name = "in-browser-download", creditName = "in-browser-download", url = "https://github.com/kchapelier/in-browser-download", version = inBrowserDownloadVersion, license = MIT),
     OpenSourceLibrary(name = "get-image-pixels", creditName = "get-image-pixels", url = "https://github.com/mattdesl/get-image-pixels", version = getImagePixelsVersion, license = MIT),
-    OpenSourceLibrary(name = "react-icons", creditName = "react-icons", url = "https://github.com/react-icons/react-icons", version = reactIconsVersion, license = MIT)
+    OpenSourceLibrary(name = "react-icons", creditName = "react-icons", url = "https://github.com/react-icons/react-icons", version = reactIconsVersion, license = MIT),
+    OpenSourceLibrary(
+        name = "bootstrap-switch-button-react",
+        creditName = "bootstrap-switch-button-react",
+        url = "https://github.com/gitbrent/bootstrap-switch-button-react",
+        version = bootstrapSwitchButtonReactVersion,
+        license = MIT
+    )
 )
 
 val nameToLib = mutableMapOf<String, OpenSourceLibrary>()
@@ -206,7 +214,7 @@ fun getVersionByName(name: String): String {
     return nameToLib.getValue(name).version
 }
 
-rootProject.extensions.configure<org.gradle.api.plugins.ExtraPropertiesExtension>("ext") {
+rootProject.extensions.configure<ExtraPropertiesExtension>("ext") {
     set("libs", ::getGavByName)
     set("libVersions", ::getVersionByName)
     set("oss", dependencies.filter { it.creditName.isNotEmpty() }.sortedBy { it.creditName.toLowerCase() })

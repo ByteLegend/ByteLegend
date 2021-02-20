@@ -5,8 +5,11 @@ import com.bytelegend.app.shared.i18n.Locale
 import common.ui.bootstrap.BootstrapDropdownButton
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
+import kotlinx.html.classes
 import react.RBuilder
 import react.RState
+import react.dom.div
+import react.dom.jsStyle
 
 interface LocaleSelectionDropdownProps : GameProps
 
@@ -17,14 +20,11 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
     }
 
     override fun RBuilder.render() {
-        absoluteDiv(
-            uiContainerCoordinateInGameContainer.x + uiContainerSize.width - 175,
-            uiContainerCoordinateInGameContainer.y,
-            AVATAR_WIDTH,
-            AVATAR_HEIGHT / 2,
-            Layer.LocaleSelectionDropdown.zIndex(),
-            classes = setOf("locale-selection-widget")
-        ) {
+        div {
+            attrs.classes = setOf("locale-selection-widget", "map-title-widget")
+            attrs.jsStyle {
+                display = "inline-block"
+            }
             BootstrapDropdownButton {
                 attrs.id = "locale-selection"
                 attrs.title = game.locale.displayName

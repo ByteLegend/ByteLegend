@@ -56,7 +56,7 @@ class FpsCounter : GameUIComponent<FpsCounterProps, FpsCounterState>() {
     override fun RBuilder.render() {
         styledSpan {
             attrs.id = "fps-counter"
-            attrs.classes = setOf("map-title-widget")
+            attrs.classes = setOf("map-title-widget", "map-title-text")
             css {
                 zIndex = Layer.MapTitle.zIndex()
             }

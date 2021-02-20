@@ -14,7 +14,7 @@ interface MapSelectionDropdownProps : GameProps
 class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, RState>() {
     override fun RBuilder.render() {
         BootstrapDropdownButton {
-            attrs.className = "map-name-selection"
+            attrs.className = "map-name-selection map-title-text"
             attrs.id = "map-selection"
             attrs.title = i(gameMap.id)
 

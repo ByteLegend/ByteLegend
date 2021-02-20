@@ -1,8 +1,10 @@
 package com.bytelegend.client.app.page
 
+import com.bytelegend.app.client.api.AudioResource
 import com.bytelegend.app.client.api.GameMapHierarchyResource
 import com.bytelegend.app.client.api.I18nTextResource
 import com.bytelegend.app.client.api.ImageResource
+import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.ServerSideData
 import com.bytelegend.app.shared.animationSetId
@@ -12,6 +14,8 @@ import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.RESOURCE_LOADING_SUCCESS_EVENT
 import com.bytelegend.client.app.engine.init
 import com.bytelegend.client.app.obj.HeroCharacter
+import com.bytelegend.client.app.ui.AudioSwitchWidget
+import com.bytelegend.client.app.ui.AudioSwitchWidgetProps
 import com.bytelegend.client.app.ui.FadeInFadeOutLayer
 import com.bytelegend.client.app.ui.FpsCounter
 import com.bytelegend.client.app.ui.FpsCounterProps
@@ -144,6 +148,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         }
         game.resourceLoader.add(ImageResource("texture", game.resolve("/img/ui/texture.jpg"), 1))
         game.resourceLoader.add(GameMapHierarchyResource(game.resolve("/map/hierarchy.json"), 1))
+        game.resourceLoader.add(AudioResource("forest", game.resolve("/audio/forest.ogg"), 1), false)
     }
 
     private fun onWindowResize() {
@@ -163,17 +168,20 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                 gameContainer(game) {
                     heroIndicator(attrs)
                     modalController(attrs)
-                    localeSelectionDropdown(attrs)
                     userAvatarWidget(attrs)
                     icpServerLocationWidget(attrs)
                     gameScriptWidgetDisplayLayer(attrs)
                     scrollButtons(attrs)
                     userMouseInteractionLayer(attrs)
-                    mapTitleWidgets(attrs) {
+                    mapTitleWidgets(Direction.LEFT, attrs) {
                         mapNameWidget(attrs)
                         mapCoordinateTitleWidget(attrs)
                         fpsCounter(attrs)
 //                                    onlineCounter(attrs)
+                    }
+                    mapTitleWidgets(Direction.RIGHT, attrs) {
+                        audioSwitch(attrs)
+                        localeSelectionDropdown(attrs)
                     }
                     tileCursorWidget(attrs)
                     spriteNameWidget(attrs)
@@ -231,10 +239,14 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     ) = gameChild(parentProps, MiniMapCanvasLayer::class, block)
 
     fun RElementBuilder<GameContainerProps>.mapTitleWidgets(
+        direction: Direction,
         parentProps: GameContainerProps,
         block: RElementBuilder<MapTitleWidgetsProps>.() -> Unit = {}
     ): ReactElement {
-        return gameChild(parentProps, MapTitleWidgets::class, block)
+        return gameChild(parentProps, MapTitleWidgets::class) {
+            attrs.direction = direction
+            block()
+        }
     }
 
     fun RElementBuilder<GameContainerProps>.tileCursorWidget(
@@ -276,8 +288,15 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         return gameChild(parentProps, MapCoordinateTitleWidget::class, block)
     }
 
-    private fun RElementBuilder<GameContainerProps>.localeSelectionDropdown(
-        parentProps: GameContainerProps,
+    private fun RElementBuilder<MapTitleWidgetsProps>.audioSwitch(
+        parentProps: MapTitleWidgetsProps,
+        block: RElementBuilder<AudioSwitchWidgetProps>.() -> Unit = {}
+    ): ReactElement {
+        return gameChild(parentProps, AudioSwitchWidget::class, block)
+    }
+
+    private fun RElementBuilder<MapTitleWidgetsProps>.localeSelectionDropdown(
+        parentProps: MapTitleWidgetsProps,
         block: RElementBuilder<LocaleSelectionDropdownProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, LocaleSelectionDropdown::class, block)

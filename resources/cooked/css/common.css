@@ -3,7 +3,7 @@ body {
     background-color: black;
 }
 
-.map-title {
+.map-title-text {
     color: white;
     text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.1em 0.1em 0.2em;
 }
@@ -19,6 +19,7 @@ body {
 
 .map-title-widget {
     margin-left: 10px;
+    margin-right: 10px;
     font-size: 16px;
 }
 
@@ -146,6 +147,10 @@ body {
 .white-text-black-shadow-1 {
     color: white;
     text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000, #000 0.1em 0.1em 0.1em;
+}
+
+.white-text-white-shadow-1 {
+    text-shadow: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff, #000 0.1em 0.1em 0.1em;
 }
 
 .menu-item-div {

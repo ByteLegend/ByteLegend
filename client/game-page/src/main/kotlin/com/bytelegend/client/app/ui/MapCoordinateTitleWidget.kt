@@ -59,7 +59,7 @@ class MapCoordinateTitleWidget : GameUIComponent<MapCoordinateWidgetProps, MapCo
     override fun RBuilder.render() {
         styledSpan {
             attrs.id = "map-coordinate"
-            attrs.classes = setOf("map-title-widget")
+            attrs.classes = setOf("map-title-widget", "map-title-text")
             css {
                 zIndex = Layer.MapTitle.zIndex()
             }

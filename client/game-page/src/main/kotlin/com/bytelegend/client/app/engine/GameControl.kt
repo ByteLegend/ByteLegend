@@ -3,6 +3,7 @@ package com.bytelegend.client.app.engine
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameSceneContainer
+import com.bytelegend.app.client.api.getAudioElementOrNull
 import com.bytelegend.app.shared.BLOCKER
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
@@ -15,6 +16,15 @@ import org.kodein.di.instance
 class GameControl(
     private val di: DI
 ) {
+    var audioEnabled: Boolean = false
+        set(value) {
+            field = value
+            if (value) {
+                getAudioElementOrNull("forest")?.play()
+            } else {
+                getAudioElementOrNull("forest")?.pause()
+            }
+        }
     var userMouseEnabled = false
     private val gameRuntime: GameRuntime by di.instance()
     private val game: Game by lazy { gameRuntime.unsafeCast<Game>() }

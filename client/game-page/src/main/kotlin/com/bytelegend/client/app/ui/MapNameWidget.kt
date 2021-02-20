@@ -1,13 +1,13 @@
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.app.shared.Direction
 import kotlinx.css.Position
 import kotlinx.css.left
 import kotlinx.css.position
 import kotlinx.css.px
+import kotlinx.css.right
 import kotlinx.css.top
 import kotlinx.css.zIndex
-import kotlinx.html.classes
-import kotlinx.html.id
 import react.RBuilder
 import react.RState
 import styled.css
@@ -21,21 +21,23 @@ import styled.styledDiv
  * - Coordinate
  *
  */
-interface MapTitleWidgetsProps : GameProps
+interface MapTitleWidgetsProps : GameProps {
+    // LEFT/RIGHT
+    var direction: Direction
+}
 
 class MapTitleWidgets : GameUIComponent<MapTitleWidgetsProps, RState>() {
     override fun RBuilder.render() {
         styledDiv {
-            attrs.id = "map-title"
-            attrs.classes = setOf("map-title")
             css {
                 zIndex = Layer.MapTitle.zIndex()
                 position = Position.absolute
-                left = (uiContainerCoordinateInGameContainer.x + 10).px
+                if (props.direction == Direction.LEFT) {
+                    left = (uiContainerCoordinateInGameContainer.x + 10).px
+                } else {
+                    right = (uiContainerCoordinateInGameContainer.x + AVATAR_WIDTH).px
+                }
                 top = (uiContainerCoordinateInGameContainer.y + 10).px
-//                fontSize = props.game.tileSize.height.px
-//                fontWeight = FontWeight.bold
-//                declarations["textShadow"] = "-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;"
             }
             children()
         }

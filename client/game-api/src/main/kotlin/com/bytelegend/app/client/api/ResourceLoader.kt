@@ -1,3 +1,5 @@
+@file:Suppress("UnsafeCastFromDynamic")
+
 package com.bytelegend.app.client.api
 
 import com.bytelegend.app.shared.GameMapDefinition
@@ -8,6 +10,7 @@ import kotlinx.coroutines.await
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonTransformingSerializer
+import org.w3c.dom.HTMLAudioElement
 import org.w3c.dom.HTMLImageElement
 import org.w3c.fetch.Response
 import kotlin.coroutines.resume
@@ -56,31 +59,51 @@ data class ImageResourceData(
 )
 
 fun getImageElement(imageId: String): HTMLImageElement {
-    val elementId = "image-container-$imageId"
+    val elementId = "img-container-$imageId"
     return (document.getElementById(elementId) ?: throw NoSuchElementException("Img element $elementId not found")) as HTMLImageElement
 }
 
-fun getOrCreateImageElement(imageId: String): HTMLImageElement {
-    val elementId = "image-container-$imageId"
+fun getAudioElementOrNull(imageId: String): HTMLAudioElement? {
+    val elementId = "audio-container-$imageId"
+    return document.getElementById(elementId).asDynamic()
+}
+
+private fun <T> getOrCreateHtmlElement(tagName: String, id: String): T {
+    val elementId = "$tagName-container-$id"
     return (
-        document.getElementById(elementId) ?: document.createElement("img").apply {
+        document.getElementById(elementId) ?: document.createElement(tagName).apply {
             this.id = elementId
             document.body?.appendChild(this)
         }
-        ) as HTMLImageElement
+        ).asDynamic()
 }
 
-// class GameScriptResource(
-//    override val id: String,
-//    override val url: String,
-//    override val weight: Int
-// ) : AjaxResource<String>(id, url, weight) {
-//    override suspend fun decode(response: Response): String {
-//        return response.text()
-//            .await()
-//            .apply { eval(this) }
-//    }
-// }
+fun getOrCreateImageElement(imageId: String): HTMLImageElement {
+    return getOrCreateHtmlElement("img", imageId)
+}
+
+fun getOrCreateAudioElement(audioId: String): HTMLAudioElement {
+    return getOrCreateHtmlElement("audio", audioId)
+}
+
+class AudioResource(
+    override val id: String,
+    override val url: String,
+    override val weight: Int
+) : ExpensiveResource<HTMLAudioElement> {
+    override suspend fun load(): HTMLAudioElement = suspendCoroutine { continuation ->
+        val element = getOrCreateAudioElement(id)
+        element.src = url
+        element.preload = "auto"
+        element.loop = true
+        element.oncanplay = {
+            continuation.resume(it.target.unsafeCast<HTMLAudioElement>())
+        }
+        element.onerror = { _, _, _, _, _ ->
+            continuation.resumeWithException(Exception("Can't load $url"))
+        }
+    }
+}
 
 class ImageResource(
     override val id: String,

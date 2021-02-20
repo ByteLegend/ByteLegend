@@ -89,8 +89,10 @@ interface ScrollButtonsState : RState {
 fun Direction.cursorCssClass() = if (this == NONE) "" else "cursor-scroll-${name.toLowerCase().replace('_', '-')}"
 
 class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsState>() {
-    private var verticalButtonWidth = 0
-    private var horizontalButtonHeight = 0
+    private val verticalButtonWidth
+        get() = canvasCoordinateInGameContainer.x
+    private val horizontalButtonHeight
+        get() = canvasCoordinateInGameContainer.y
 
     override fun ScrollButtonsState.init() {
         direction = NONE
@@ -100,8 +102,6 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
         if (mapCoveredByCanvas) {
             return
         }
-        verticalButtonWidth = canvasCoordinateInGameContainer.x
-        horizontalButtonHeight = canvasCoordinateInGameContainer.y
 
         // No div here because we're on top of user mouse interaction layer
         up()
@@ -118,11 +118,12 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
     private fun RBuilder.bottomLeftCorner() {
         scrollButton(
             0, gameContainerHeight * 3 / 4,
-            horizontalButtonHeight, gameContainerWidth / 4, LEFT_DOWN
+            verticalButtonWidth, gameContainerWidth / 4, LEFT_DOWN
         )
         scrollButton(
-            0, gameContainerHeight - verticalButtonWidth, gameContainerWidth / 4,
-            verticalButtonWidth, LEFT_DOWN
+            0, gameContainerHeight - horizontalButtonHeight,
+            gameContainerWidth / 4,
+            horizontalButtonHeight, LEFT_DOWN
         )
     }
 
