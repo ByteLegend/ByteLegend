@@ -13,6 +13,7 @@ import com.bytelegend.app.client.api.TextAjaxResource
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.RawGameMap
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.SCENE_SWITCH_START_EVENT
 import org.kodein.di.DI
 import org.kodein.di.DIAware
@@ -66,6 +67,7 @@ class DefaultGameSceneContainer(
             // the current active scene may be changed during loading
             // don't switch in this case
             _activeScene = newScene
+            game.mainMapCanvasRenderer.refreshCanvasCacheOnSceneSwitch(newScene)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
             eventBus.emit(SCENE_SWITCH_START_EVENT, null)
         } else {

@@ -29,7 +29,7 @@ import com.bytelegend.client.app.ui.HeroIndicatorWidget
 import com.bytelegend.client.app.ui.ICPServerLocationWidget
 import com.bytelegend.client.app.ui.LocaleSelectionDropdown
 import com.bytelegend.client.app.ui.LocaleSelectionDropdownProps
-import com.bytelegend.client.app.ui.MapCanvasLayer
+import com.bytelegend.client.app.ui.MainMapCanvasLayer
 import com.bytelegend.client.app.ui.MapCanvasProps
 import com.bytelegend.client.app.ui.MapCoordinateTitleWidget
 import com.bytelegend.client.app.ui.MapCoordinateWidgetProps
@@ -231,7 +231,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     fun RElementBuilder<GameContainerProps>.mapCanvas(
         parentProps: GameContainerProps,
         block: RElementBuilder<MapCanvasProps>.() -> Unit = {}
-    ) = gameChild(parentProps, MapCanvasLayer::class, block)
+    ) = gameChild(parentProps, MainMapCanvasLayer::class, block)
 
     fun RElementBuilder<GameContainerProps>.miniMapCanvas(
         parentProps: GameContainerProps,

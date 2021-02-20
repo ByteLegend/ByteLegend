@@ -18,6 +18,7 @@ import react.RBuilder
 import react.RState
 import react.dom.RDOMBuilder
 import react.dom.canvas
+import react.dom.jsStyle
 
 // https://codepen.io/vasilly/pen/NRKyWL
 interface MapCanvasProps : GameProps {
@@ -67,10 +68,8 @@ abstract class AbstractMapCanvas<S : RState> : GameUIComponent<MapCanvasProps, S
 
             +"Canvas not supported"
             ref {
-                try {
+                if (it != null) {
                     canvas = (it as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D
-                } catch (ignore: ClassCastException) {
-                    // resizing
                 }
             }
         }
@@ -109,64 +108,66 @@ abstract class AbstractMapCanvas<S : RState> : GameUIComponent<MapCanvasProps, S
     }
 }
 
-class MapCanvasLayer : AbstractMapCanvas<RState>() {
+class MainMapCanvasLayer : GameUIComponent<MapCanvasProps, RState>() {
+    private val windowAnimationEventListener: GameAnimationEventListener = {
+        game.mainMapCanvasRenderer.onAnimation()
+    }
+
     override fun RBuilder.render() {
-        mapCanvas {
-            val mapCanvasZIndex = Layer.MapCanvas.zIndex()
+        val mapCanvasZIndex = Layer.MapCanvas.zIndex()
+        canvas {
             attrs {
-                id = "map-canvas-layer"
-                if (!mapCoveredByCanvas) {
-                    classes = setOf("canvas-border")
-                }
+                id = "background-canvas-layer"
                 width = canvasPixelSize.width.toString()
                 height = canvasPixelSize.height.toString()
-                style = js {
+                jsStyle {
                     zIndex = mapCanvasZIndex
                     position = "absolute"
                     top = "${canvasCoordinateInGameContainer.y}px"
                     left = "${canvasCoordinateInGameContainer.x}px"
                 }
             }
+
+            +"Canvas not supported"
+            ref {
+                if (it != null) {
+                    game.mainMapCanvasRenderer.mapBackgroundLayer = it.getContext("2d")
+                }
+            }
+        }
+        canvas {
+            attrs {
+                id = "objects-canvas-layer"
+                if (!mapCoveredByCanvas) {
+                    classes = setOf("canvas-border")
+                }
+                width = canvasPixelSize.width.toString()
+                height = canvasPixelSize.height.toString()
+                jsStyle {
+                    zIndex = mapCanvasZIndex + 1
+                    position = "absolute"
+                    top = "${canvasCoordinateInGameContainer.y}px"
+                    left = "${canvasCoordinateInGameContainer.x}px"
+                }
+            }
+
+            +"Canvas not supported"
+            ref {
+                if (it != null) {
+                    game.mainMapCanvasRenderer.mapObjectsLayer = it.getContext("2d")
+                }
+            }
         }
     }
 
-    override fun onPaint(lastAnimationTime: Timestamp) {
-//        val start = Timestamp.now()
-        canvas.clearRect(0.0, 0.0, canvasPixelSize.width.toDouble(), canvasPixelSize.height.toDouble())
-
-        game.activeScene.objects.getDrawableSprites().forEach {
-            it.draw(canvas)
-        }
-//        console.log("paint takes ${Timestamp.now() -start}ms")
+    override fun componentDidMount() {
+        super.componentDidMount()
+        props.game.eventBus.on(GAME_ANIMATION_EVENT, windowAnimationEventListener)
     }
 
-    private fun drawGrid() {
-        // Every 5 grid
-        val gridGapX = tileSize.width * 5
-        val gridGapY = tileSize.height * 5
-
-        var lineXInCanvas = ((canvasCoordinateInMap.x / tileSize.width) + 1) * tileSize.width - canvasCoordinateInMap.x
-        var lineYInCanvas = ((canvasCoordinateInMap.y / tileSize.height) + 2) * tileSize.height - canvasCoordinateInMap.y
-
-        canvas.strokeStyle = "white"
-        canvas.lineWidth = 1.0
-
-        while (lineXInCanvas < canvasPixelSize.width) {
-            canvas.beginPath()
-            canvas.moveTo(lineXInCanvas.toDouble(), 0.0)
-            canvas.lineTo(lineXInCanvas.toDouble(), canvasPixelSize.height.toDouble())
-            canvas.stroke()
-
-            lineXInCanvas += gridGapX
-        }
-
-        while (lineYInCanvas < canvasPixelSize.height) {
-            canvas.beginPath()
-            canvas.moveTo(0.0, lineYInCanvas.toDouble())
-            canvas.lineTo(canvasPixelSize.width.toDouble(), lineYInCanvas.toDouble())
-            canvas.stroke()
-
-            lineYInCanvas += gridGapY
-        }
+    override fun componentWillUnmount() {
+        super.componentWillUnmount()
+        props.game.eventBus.remove(GAME_ANIMATION_EVENT, windowAnimationEventListener)
     }
+
 }

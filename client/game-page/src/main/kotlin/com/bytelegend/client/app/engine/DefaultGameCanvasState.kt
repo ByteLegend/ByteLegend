@@ -192,7 +192,7 @@ class DefaultGameCanvasState(
     /**
      * Upon window.requestAnimationFrame, update the state.
      */
-    override fun onAnimate(lastAnimationFrameTime: Timestamp) {
+    fun onAnimate(lastAnimationFrameTime: Timestamp) {
         if (!isActiveScene) {
             expectedScrollDirection = Direction.NONE
         }

@@ -10,6 +10,7 @@ import com.bytelegend.app.shared.RawGameMapTileLayer
 import com.bytelegend.app.shared.RawStaticImageLayer
 import com.bytelegend.app.shared.RawTileAnimationFrame
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.page.game
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLImageElement
 
@@ -17,19 +18,35 @@ fun RawGameMapTileLayer.toSprite(
     gameScene: GameScene,
     coordinate: GridCoordinate,
     tileset: HTMLImageElement
-): Sprite =
+): BackgroundSprite =
     if (this is RawStaticImageLayer) {
         StaticImageBlockSprite(gameScene, coordinate, tileset, this)
     } else {
         AnimationSprite(gameScene, coordinate, tileset, this as RawAnimationLayer)
     }
 
+/**
+ * We use "pre-rendered canvas" to improve rendering performance.
+ * In short, we pre-rendered 2 whole maps on invisible canvases
+ * so we can copy the whole viewport from it in the future.
+ */
+val PRE_RENDERED_CANVAS_NUM = 2
+
+interface BackgroundSprite : Sprite {
+    /**
+     * If an animation tile contain more than 2 frames, we must fall back to realtime rendering.
+     */
+    fun supportPrerender() = true
+
+    fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D)
+}
+
 class StaticImageBlockSprite(
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
     private val tileset: HTMLImageElement,
     private val imageLayer: RawStaticImageLayer
-) : Sprite, CoordinateAware {
+) : BackgroundSprite, CoordinateAware {
     override val id: String = "${gridCoordinate.x}-${gridCoordinate.y}-${imageLayer.layer}"
     override val layer: Int = imageLayer.layer
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
@@ -37,6 +54,11 @@ class StaticImageBlockSprite(
     private val tileWidth = gameScene.map.tileSize.width
     private val tileHeight = gameScene.map.tileSize.width
     private val canvasState = gameScene.canvasState
+
+    override fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D) {
+        draw(canvas, pixelCoordinate.x, pixelCoordinate.y)
+    }
+
     override fun outOfCanvas(): Boolean {
         return pixelCoordinate.x > canvasState.getCanvasCoordinateInMap().x ||
             pixelCoordinate.y > canvasState.getCanvasCoordinateInMap().y ||
@@ -45,10 +67,16 @@ class StaticImageBlockSprite(
     }
 
     override fun draw(canvas: CanvasRenderingContext2D) {
+        draw(
+            canvas,
+            pixelCoordinate.x - canvasState.getCanvasCoordinateInMap().x,
+            pixelCoordinate.y - canvasState.getCanvasCoordinateInMap().y
+        )
+    }
+
+    private fun draw(canvas: CanvasRenderingContext2D, dx: Int, dy: Int) {
         val sx = imageLayer.coordinate.x * tileWidth
         val sy = imageLayer.coordinate.y * tileHeight
-        val dx = pixelCoordinate.x - canvasState.getCanvasCoordinateInMap().x
-        val dy = pixelCoordinate.y - canvasState.getCanvasCoordinateInMap().y
         canvas.drawImage(
             tileset,
             sx.toDouble(), sy.toDouble(), tileWidth.toDouble(), tileHeight.toDouble(),
@@ -62,7 +90,7 @@ class AnimationSprite(
     override val gridCoordinate: GridCoordinate,
     private val tileset: HTMLImageElement,
     private val animationLayer: RawAnimationLayer
-) : Sprite, CoordinateAware {
+) : BackgroundSprite, CoordinateAware {
     override val id: String = "${gridCoordinate.x}-${gridCoordinate.y}-${animationLayer.layer}"
     override val layer: Int = animationLayer.layer
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
@@ -73,6 +101,12 @@ class AnimationSprite(
     private val frames = animationLayer.frames.toTypedArray()
     private val duration = animationLayer.frames[0].duration
 
+    override fun supportPrerender() = frames.size <= PRE_RENDERED_CANVAS_NUM
+
+    override fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D) {
+        drawFrame(frameIndex, canvas, pixelCoordinate.x, pixelCoordinate.y)
+    }
+
     override fun outOfCanvas(): Boolean {
         return pixelCoordinate.x > canvasState.getCanvasCoordinateInMap().x ||
             pixelCoordinate.y > canvasState.getCanvasCoordinateInMap().y ||
@@ -81,11 +115,23 @@ class AnimationSprite(
     }
 
     override fun draw(canvas: CanvasRenderingContext2D) {
-        val frame = getCurrentFrame(frames, duration)
+        drawFrame(
+            getCurrentFrameIndex(frames, duration),
+            canvas,
+            pixelCoordinate.x - canvasState.getCanvasCoordinateInMap().x,
+            pixelCoordinate.y - canvasState.getCanvasCoordinateInMap().y
+        )
+    }
+
+    private fun drawFrame(
+        frameIndex: Int,
+        canvas: CanvasRenderingContext2D,
+        dx: Int,
+        dy: Int
+    ) {
+        val frame = frames[frameIndex]
         val sx = frame.coordinate.x * tileWidth
         val sy = frame.coordinate.y * tileHeight
-        val dx = pixelCoordinate.x - canvasState.getCanvasCoordinateInMap().x
-        val dy = pixelCoordinate.y - canvasState.getCanvasCoordinateInMap().y
         canvas.drawImage(
             tileset,
             sx.toDouble(), sy.toDouble(), tileWidth.toDouble(), tileHeight.toDouble(),
@@ -93,9 +139,7 @@ class AnimationSprite(
         )
     }
 
-    private fun getCurrentFrame(frames: Array<RawTileAnimationFrame>, duration: Int): RawTileAnimationFrame {
-        // for performance purpose.
-        // Comparing to original Kotlin version, the native JS code improves by ~10%
-        return js("frames[Math.floor(new Date().getTime()/duration) % frames.length]")
+    private fun getCurrentFrameIndex(frames: Array<RawTileAnimationFrame>, duration: Int): Int {
+        return ((game.currentTimeMillis / duration) % frames.size).toInt()
     }
 }

@@ -40,7 +40,6 @@ class GameControl(
             clickObjectsAndMove(event.mapCoordinate)
             eventBus.emit(MOUSE_CLICK_EVENT, event)
         } else {
-            console.log("click")
             game.activeScene.director.unsafeCast<DefaultGameDirector>().next()
         }
     }

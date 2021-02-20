@@ -54,7 +54,6 @@ class DefaultGameDirector(
      * Trigger next script to run.
      */
     fun next() {
-        console.log("next: $index")
         if (scripts.isEmpty()) {
             return
         }

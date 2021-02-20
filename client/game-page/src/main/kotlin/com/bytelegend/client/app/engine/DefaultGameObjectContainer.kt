@@ -10,6 +10,7 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.mapToArrayWithIndex
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.obj.BackgroundSprite
 import com.bytelegend.client.app.obj.toSprite
 
 class DefaultGameObjectContainer(
@@ -17,8 +18,8 @@ class DefaultGameObjectContainer(
 ) : GameObjectContainer {
     private val objectsById: IdGameObjectContainer = IdGameObjectContainer()
     private val objectsByRole: MutableMap<String, IdGameObjectContainer> = JSObjectBackedMap()
-    private val background: Array<Array<List<Sprite>>> = gameScene.map.rawTiles.mapToArrayWithIndex { it, coordinate ->
-        val list = JSArrayBackedList<Sprite>()
+    val background: Array<Array<List<BackgroundSprite>>> = gameScene.map.rawTiles.mapToArrayWithIndex { it, coordinate ->
+        val list = JSArrayBackedList<BackgroundSprite>()
         it.layers.forEach {
             list.add(it.toSprite(gameScene, coordinate, gameScene.tileset.htmlElement))
         }
@@ -57,59 +58,6 @@ class DefaultGameObjectContainer(
     @Suppress("UnsafeCastFromDynamic")
     override fun <T : GameObject> getByRole(role: GameObjectRole): List<T> {
         return objectsByRole.getGameObject(role)
-    }
-
-    /**
-     * This method is carefully tuned as it's the most frequently invoked method.
-     */
-    override fun getDrawableSprites(): List<Sprite> {
-        // 1. Scan background for tiles in canvas viewport.
-        // 2. Scan sprites in canvas viewport.
-        // 3. Sort by layer.
-        // 4. Draw.
-
-        val indexes = js("new Set()")
-        // Key: layer index; Value: list of sprites
-        val layerToSprites = JSObjectBackedMap<MutableList<Sprite>>()
-
-        val canvasGridWidth = gameScene.canvasState.getCanvasGridSize().width
-        val canvasGridHeight = gameScene.canvasState.getCanvasGridSize().height
-        val canvasGridInMapX = gameScene.canvasState.getCanvasGridCoordinateInMap().x
-        val canvasGridInMapY = gameScene.canvasState.getCanvasGridCoordinateInMap().y
-        val mapGridWidth = gameScene.map.size.width
-        val mapGridHeight = gameScene.map.size.height
-
-        // One extra line/row to avoid flicking
-        for (x in 0 until canvasGridWidth + 1) {
-            for (y in 0 until canvasGridHeight + 1) {
-                val realX = canvasGridInMapX + x
-                val realY = canvasGridInMapY + y
-
-                if (realX < mapGridWidth && realY < mapGridHeight) {
-                    background[realY][realX].forEach { spriteLayer ->
-                        indexes.add(spriteLayer.layer)
-                        layerToSprites.getOrPut(spriteLayer.layer.toString()) { JSArrayBackedList() }.add(spriteLayer)
-                    }
-                }
-            }
-        }
-
-        val sprites = getByRole<Sprite>(GameObjectRole.Sprite)
-
-        sprites.forEach {
-            if (!it.outOfCanvas()) {
-                indexes.add(it.layer)
-                layerToSprites.getOrPut(it.layer.toString()) { JSArrayBackedList() }.add(it)
-            }
-        }
-
-        val sorted = JSArrayBackedList<Int>(delegate = js("Array.from(indexes).sort(function(a, b){return a - b;})"))
-        val ret = JSArrayBackedList<Sprite>()
-        sorted.forEach {
-            ret.addAll(layerToSprites.getValue(it.toString()))
-        }
-
-        return ret
     }
 }
 

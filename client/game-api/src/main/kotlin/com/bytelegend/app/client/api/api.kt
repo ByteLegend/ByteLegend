@@ -19,7 +19,6 @@ interface GameObjectContainer {
     fun <T : GameObject> remove(id: String): T?
     fun getByCoordinate(coordinate: GridCoordinate): List<GameObject>
     fun <T : GameObject> getByRole(role: GameObjectRole): List<T>
-    fun getDrawableSprites(): List<Sprite>
 }
 
 interface GameRuntime {
@@ -132,11 +131,6 @@ interface GameCanvasState : GameContainerSizeAware {
      * Move canvasCoordinateInMap to map's coordinate, controlled by mini map and hero indicator
      */
     fun moveTo(coordinate: PixelCoordinate)
-
-    /**
-     * Upon window.requestAnimationFrame, update the state.
-     */
-    fun onAnimate(lastAnimationFrameTime: Timestamp)
 
     /**
      * Does canvas cover the whole map?

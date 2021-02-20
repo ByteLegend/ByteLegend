@@ -94,6 +94,7 @@ class Game(
     val resourceLoader: ResourceLoader by di.instance()
 
     val gameControl: GameControl by di.instance()
+    val mainMapCanvasRenderer: MainMapCanvasRenderer = MainMapCanvasRenderer(this)
 
     fun start() {
         gameControl.start()
@@ -113,7 +114,7 @@ class Game(
     }
 
     private fun animate() {
-        sceneContainer.activeScene?.canvasState?.onAnimate(lastAnimationFrameTime)
+        sceneContainer.activeScene?.canvasState?.unsafeCast<DefaultGameCanvasState>()?.onAnimate(lastAnimationFrameTime)
         eventBus.emit(GAME_ANIMATION_EVENT, lastAnimationFrameTime)
         lastAnimationFrameTime = Timestamp.now()
         window.requestAnimationFrame { animate() }

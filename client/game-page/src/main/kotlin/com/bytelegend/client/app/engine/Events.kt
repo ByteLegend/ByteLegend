@@ -2,8 +2,10 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.HumanReadableCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.PixelSize
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 
@@ -37,6 +39,13 @@ data class GameMouseEvent(
     val canvasCoordinate: PixelCoordinate,
     val mapCoordinate: GridCoordinate,
     val humanReadableCoordinate: HumanReadableCoordinate
+)
+
+data class GameAnimationEvent(
+    val lastAnimationTime: Timestamp,
+    val lastAnimationCanvasGridSize: GridSize,
+    val lastAnimationCanvasPixelSize: PixelSize,
+    val lastAnimationCanvasCoordinateInMap: PixelCoordinate,
 )
 
 fun Game.toGridCoordinate(mouseEvent: Event): GridCoordinate {
