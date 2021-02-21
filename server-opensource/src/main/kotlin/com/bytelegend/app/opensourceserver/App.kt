@@ -76,7 +76,7 @@ class App {
 class Config : WebMvcConfigurer {
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
         registry.addResourceHandler("/static/**")
-            .addResourceLocations("file:${System.getProperty("game.resources") ?: throw IllegalStateException("Must set game.resources!")}/");
+            .addResourceLocations("file:${System.getProperty("game.resources") ?: throw IllegalStateException("Must set game.resources!")}/")
     }
 
     override fun addInterceptors(registry: InterceptorRegistry) {
