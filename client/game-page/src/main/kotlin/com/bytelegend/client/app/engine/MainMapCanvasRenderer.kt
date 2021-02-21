@@ -4,11 +4,19 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.JSArrayBackedList
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.Sprite
+import com.bytelegend.app.client.api.Timestamp
+import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.obj.BackgroundSprite
+import com.bytelegend.client.app.obj.PRE_RENDERED_CANVAS_NUM
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 
+/**
+ * This class is carefully tuned, don't surprise on the weird usage and don't change it without profiling.
+ */
 class MainMapCanvasRenderer(
     private val game: Game
 ) {
@@ -23,8 +31,19 @@ class MainMapCanvasRenderer(
     lateinit var mapBackgroundLayer: CanvasRenderingContext2D
     lateinit var mapObjectsLayer: CanvasRenderingContext2D
 
+    /**
+     * We don't need to re-render the whole background if it's not moving.
+     */
+    lateinit var lastBackgroundRenderTime: Timestamp
+    lateinit var lastBackgroundRenderCanvasPixelSize: PixelSize
+    lateinit var lastBackgroundRenderCanvasCoordinateInMap: PixelCoordinate
+
     @Suppress("UnsafeCastFromDynamic")
     fun refreshCanvasCacheOnSceneSwitch(gameScene: GameScene) {
+        lastBackgroundRenderTime = Timestamp(0)
+        lastBackgroundRenderCanvasCoordinateInMap = PixelCoordinate(0, 0)
+        lastBackgroundRenderCanvasPixelSize = PixelSize(0, 0)
+
         val background = objectContainer.background
         // draw static tiles to all caches, and animation tiles to corresponding frames
         canvasCaches.forEachIndexed { cacheCanvasIndex, cacheCanvas ->
@@ -60,6 +79,14 @@ class MainMapCanvasRenderer(
         val canvasPixelSize = gameScene.canvasState.getCanvasPixelSize()
         val canvasCoordinateInMap = gameScene.canvasState.getCanvasCoordinateInMap()
 
+        if (backgroundRefreshRequired(canvasCoordinateInMap, canvasPixelSize)) {
+            lastBackgroundRenderTime = Timestamp.now()
+            lastBackgroundRenderCanvasCoordinateInMap = canvasCoordinateInMap
+            lastBackgroundRenderCanvasPixelSize = canvasPixelSize
+        } else {
+            return
+        }
+
         mapBackgroundLayer.clearRect(0.0, 0.0, canvasPixelSize.width.toDouble(), canvasPixelSize.height.toDouble())
         mapBackgroundLayer.drawImage(
             cacheCanvas,
@@ -72,6 +99,15 @@ class MainMapCanvasRenderer(
             canvasPixelSize.width.toDouble(),
             canvasPixelSize.height.toDouble()
         )
+    }
+
+    private fun backgroundRefreshRequired(
+        currentCanvasCoordinateInMap: PixelCoordinate,
+        currentCanvasPixelSize: PixelSize
+    ): Boolean {
+        return Timestamp.now() - lastBackgroundRenderTime > 1000 / PRE_RENDERED_CANVAS_NUM ||
+            lastBackgroundRenderCanvasCoordinateInMap != currentCanvasCoordinateInMap ||
+            lastBackgroundRenderCanvasPixelSize != currentCanvasPixelSize
     }
 
     private fun drawOnObjectsLayer() {
@@ -92,6 +128,7 @@ class MainMapCanvasRenderer(
         drawByLayerOrder(indexes, layerToSprites, mapObjectsLayer)
     }
 
+    // TODO only rerendering dirty rectangles
     private fun drawNonPrerenderableTiles() {
         val gameScene = game.activeScene
         val canvasGridWidth = gameScene.canvasState.getCanvasGridSize().width
@@ -112,7 +149,7 @@ class MainMapCanvasRenderer(
 
                 if (realX < mapGridWidth && realY < mapGridHeight) {
                     val layers = background[realY][realX]
-                    if (layers.any { !it.supportPrerender() }) {
+                    if (anyNonPrerenderable(layers)) {
                         layers.forEach { spriteLayer ->
                             indexes.add(spriteLayer.layer)
                             layerToSprites.getOrPut(spriteLayer.layer.toString()) { JSArrayBackedList() }.add(spriteLayer)
@@ -122,6 +159,25 @@ class MainMapCanvasRenderer(
             }
         }
         drawByLayerOrder(indexes, layerToSprites, mapBackgroundLayer)
+    }
+
+    /*
+     NOTE: don't use Kotlin collection.any/all, the compiled js uses very slow Kotlin.isType:
+        any$break: do {
+            var tmp$_1;
+            if (Kotlin.isType(layers, Collection) && layers.isEmpty()) {
+              any$result = false;
+              break any$break;
+         }
+     */
+    @Suppress("ReplaceManualRangeWithIndicesCalls")
+    private fun anyNonPrerenderable(layers: List<BackgroundSprite>): Boolean {
+        for (i in 0 until layers.size) {
+            if (!layers[i].supportPrerender()) {
+                return true
+            }
+        }
+        return false
     }
 
     private fun drawByLayerOrder(

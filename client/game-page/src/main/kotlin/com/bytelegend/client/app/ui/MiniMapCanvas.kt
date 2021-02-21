@@ -3,6 +3,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.ImageResourceData
+import com.bytelegend.app.client.api.JSArrayBackedList
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.getImageElement
 import com.bytelegend.app.shared.Direction
@@ -412,7 +413,13 @@ class MiniMapCanvasLayer : AbstractMapCanvas<MiniMapCanvasState>() {
         canvas.lineWidth = 0.0
 
         getRegions().forEach {
-            val vertices = it.vertices.map { it.toMiniMapPixelCoordinate() } + it.vertices[0].toMiniMapPixelCoordinate()
+            // This is tuned, don't touch it without careful profiling
+            val vertices = JSArrayBackedList<PixelCoordinate>()
+            @Suppress("ReplaceManualRangeWithIndicesCalls")
+            for (i in 0 until it.vertices.size) {
+                vertices.add(it.vertices[i].toMiniMapPixelCoordinate())
+            }
+            vertices.add(it.vertices[0].toMiniMapPixelCoordinate())
             canvas.drawRegion(vertices)
         }
     }

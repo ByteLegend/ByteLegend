@@ -22,7 +22,11 @@ class GameTextSprite(
         val coordinateInCanvas = obj.coordinate - gameScene.canvasState.getCanvasCoordinateInMap()
         canvas.save()
         canvas.translate(coordinateInCanvas.x.toDouble(), coordinateInCanvas.y.toDouble())
-        canvas.setShadow("rgba(0,0,0,0.8)", 10, 10, 4)
+        // Firefox has known issue when rendering shadows.
+        // It's INCREDIBLY SLOW when enabling shadow: 30 fps -> 1 fps in the profiling.
+        if (!isFirefox()) {
+            canvas.setShadow("rgba(0,0,0,0.8)", 10, 10, 4)
+        }
         canvas.fillStyle = "white"
         canvas.rotate(obj.rotation.toDouble() * PI / 180)
         canvas.font = "bold ${obj.fontSize}px sans-serif"

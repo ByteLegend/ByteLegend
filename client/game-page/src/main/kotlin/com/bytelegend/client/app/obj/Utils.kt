@@ -3,8 +3,13 @@ package com.bytelegend.client.app.obj
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
+import kotlinx.browser.window
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLImageElement
+
+fun isFirefox(): Boolean {
+    return window.navigator.userAgent.toLowerCase().indexOf("firefox") > -1
+}
 
 internal fun PixelCoordinate.outOfCanvas(gameScene: GameScene): Boolean {
     return (this - gameScene.canvasState.getCanvasCoordinateInMap()).let {
@@ -38,10 +43,13 @@ internal fun CanvasRenderingContext2D.drawCurve(curve: GameCurveSprite, gameScen
     save()
     beginPath()
 
-    shadowColor = "rgba(0,0,0,0.8)"
-    shadowOffsetX = 10.0
-    shadowOffsetY = 10.0
-    shadowBlur = 4.0
+    // Firefox is INCREDIBLY SLOW when drawing shadows.
+    if (!isFirefox()) {
+        shadowColor = "rgba(0,0,0,0.8)"
+        shadowOffsetX = 10.0
+        shadowOffsetY = 10.0
+        shadowBlur = 4.0
+    }
     strokeStyle = "rgba(0,0,0,0.5)"
     lineWidth = 5.0
     setLineDash(arrayOf(32.0, 12.0))

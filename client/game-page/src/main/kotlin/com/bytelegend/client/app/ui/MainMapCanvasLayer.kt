@@ -7,11 +7,9 @@ import com.bytelegend.app.client.api.getImageElement
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener
-import kotlinext.js.js
 import kotlinx.html.CANVAS
 import kotlinx.html.classes
 import kotlinx.html.id
-import kotlinx.html.style
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import react.RBuilder
@@ -169,5 +167,4 @@ class MainMapCanvasLayer : GameUIComponent<MapCanvasProps, RState>() {
         super.componentWillUnmount()
         props.game.eventBus.remove(GAME_ANIMATION_EVENT, windowAnimationEventListener)
     }
-
 }

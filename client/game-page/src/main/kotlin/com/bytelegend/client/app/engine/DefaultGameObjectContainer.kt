@@ -5,7 +5,6 @@ import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.JSArrayBackedList
 import com.bytelegend.app.client.api.JSObjectBackedMap
-import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.mapToArrayWithIndex
 import com.bytelegend.app.shared.objects.GameObject
