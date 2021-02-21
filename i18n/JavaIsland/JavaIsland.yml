@@ -11,8 +11,8 @@
   en: |
     This is dedicated to the brave people below, <br>
     who know the tough journey ahead but still set out without hesitation, <br>
-    including you, if you have stuck with programming until the very end. <br>
-    <b>Finish <a href="https://github.com/ByteLegendQuest/remember-brave-people" target="_blank">the challenge</a> and leave your name.</b>
+    and you, if you have stuck with programming until the very end. <br>
+    <b>Finish <a href="https://github.com/ByteLegendQuest/remember-brave-people" target="_blank">the challenge</a> to leave your name.</b>
   zh_hans: |
     谨献给下列的勇士们，他们明知前路艰难险阻却依然选择义无反顾；<br>
     也献给你——如果你能始终对编程保持热爱，直到最后的最后。<br>
@@ -25,18 +25,18 @@
   zh_hans: "<span style='text-align: center'>为什么要使用Git/GitHub完成挑战？ 🤔<span>"
 - id: WhyGitHubContentHtml
   en: |
-    Git is the most popular collaborative tool in the world, which programmers all over the world cannot live w/out.<br>
+    Git is the most popular collaborative tool in the world, which is used by top companies all over the world: Google/Apple/Microsoft, etc.<br>
     If you know how to use Git, you are actually able to work at any top company in the world.<br>
     <br>
-    GitHub is the largest and most commonly used development platform on this planet. All companies in the world
+    GitHub is the largest and most advanced development platform on this planet. All companies in the world
     will open the door for you, as long as you can finish our chanllenges.<br>
     <br>
     With Git/GitHub, you are able to obtain real-world top programming skills while playing the game.<br>
   zh_hans: |
-    Git是这个世界上使用最广泛的团队协作工具，全世界的程序员都离不开它。<br>
+    Git是这个世界上使用最广泛的团队协作工具，全世界的顶尖公司都在使用：Google/Apple/Microsoft……<br>
     如果你能掌握Git的用法，你就拥有了在任何一家顶尖公司工作的能力。<br>
     <br>
-    GitHub是这个星球上最大、使用最广泛的代码分享平台，只要你能完成我们的挑战，那么全世界的公司都会对你敞开大门。<br>
+    GitHub是这个星球上最大、最先进的代码分享平台，只要你能完成我们的挑战，那么全世界的公司都会对你敞开大门。<br>
     <br>
     使用Git/GitHub，你就能在游戏中获得真实世界中的顶尖技能。
 - id: PleaseTakeALookAtThatBook
