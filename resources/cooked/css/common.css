@@ -173,15 +173,20 @@ body {
     text-align: center;
 }
 
+.brave-people-avatar-tooltip {
+    box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
+}
+
 p.speech-bubble {
     max-width: 30em;
     min-width: 10em;
     background-color: #fff;
-    padding: 1.125em 1.5em;
+    padding: 1em 1em;
     font-size: 1em;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
 }
+
 p.speech-bubble::after {
     content: '';
     position: absolute;

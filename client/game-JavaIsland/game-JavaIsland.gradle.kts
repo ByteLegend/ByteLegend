@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly(project(":client:game-api"))
+    implementation(project(":client:game-api"))
 }
 
 kotlin {

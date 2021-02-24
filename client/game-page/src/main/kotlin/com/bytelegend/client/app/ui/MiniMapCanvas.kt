@@ -59,12 +59,10 @@ const val COLLAPSE_ANIMATION_SPEED_PERCENTAGE_PER_SECOND = 800 // 800% per secon
 const val MINIMAP_AVATAR_SIZE = 16
 
 class MiniMapCanvasLayer : AbstractMapCanvas<MiniMapCanvasState>() {
-    private val miniMapWidth: Int by lazy {
-        gameMap.size.width * 2 + 2
-    }
-    private val miniMapHeight: Int by lazy {
-        gameMap.size.height * 2 + 2
-    }
+    private val miniMapWidth: Int
+        get() = gameMap.size.width * 2 + 2
+    private val miniMapHeight: Int
+        get() = gameMap.size.height * 2 + 2
 
     // minimap frame border
     private val miniMapX: Int

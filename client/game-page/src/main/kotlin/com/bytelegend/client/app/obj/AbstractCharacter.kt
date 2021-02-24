@@ -16,6 +16,7 @@ import org.w3c.dom.CanvasRenderingContext2D
 
 // How many pixels does a character move per second?
 const val CHARACTER_MOVE_SPEED_PIXEL_PER_SECOND = 128
+
 // Character move per 100 ms, to avoid millisecond precision issue
 const val CHARACTER_MOVEMENT_MIN_INTERVAL_MS = 100
 const val CHARACTER_ANIMATION_FPS = 2
@@ -47,7 +48,10 @@ abstract class AbstractCharacter(
     override var gridCoordinate: GridCoordinate
         get() = pixelCoordinate / gameScene.map.tileSize
         set(value) {
-            throw IllegalStateException("Setting grid coordinate is not allowed, use movePath instead.")
+            require(movePath.isEmpty()) {
+                "Setting grid coordinate when character is moving!"
+            }
+            pixelCoordinate = value * gameScene.map.tileSize
         }
 
     // The time we update movement state last time

@@ -183,13 +183,13 @@
   zh_hans: 联系我们
 - id: ContactUsParagraph
   en: |
-    If you have any questions, suggestions or business opportunities,
+    If you have any questions, suggestions or coorperation opportunities,
     please feel free to contact us at <a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>.
   zh_hans: |
-    如果有任何问题、建议或者商业合作机会，请联系<a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>。
+    如果有任何问题、建议或者合作机会，请联系<a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>。
 - id: JavaIsland
   en: Java Island
   zh_hans: 爪哇岛
 - id: JavaIslandNewbieVillagePub
-  en: StarPubs
-  zh_hans: 星吧客
+  en: Foo Bar
+  zh_hans: 福报酒吧

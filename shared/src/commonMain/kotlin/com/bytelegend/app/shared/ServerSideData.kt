@@ -23,5 +23,9 @@ data class ServerSideData(
 @Serializable
 data class GameMapDefinition(
     val id: String,
-    val submaps: List<GameMapDefinition>
+    val submaps: List<GameMapDefinition>,
+    /**
+     * How many frames in background animation, this value is used to pre-render background.
+     */
+    val frameNumber: Int
 )

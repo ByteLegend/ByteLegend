@@ -9,10 +9,14 @@ import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.obj.AbstractCharacter
+import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
 import org.kodein.di.DI
 import org.kodein.di.instance
+import react.RHandler
+import kotlin.reflect.KClass
 
 interface GameScript {
     /**
@@ -40,7 +44,7 @@ class DefaultGameDirector(
 
     private var counter = 0
 
-    val currentWidgets: MutableMap<String, Widget> = JSObjectBackedMap()
+    val currentWidgets: MutableMap<String, Widget<out GameProps>> = JSObjectBackedMap()
 
     /**
      * Start all scripts
@@ -75,7 +79,9 @@ class DefaultGameDirector(
 
     fun scripts(block: ScriptsBuilder.() -> Unit) {
         require(scripts.isEmpty() && index == -1)
+        disableUserMouse()
         block()
+        enableUserMouse()
         start()
     }
 
@@ -93,13 +99,12 @@ class DefaultGameDirector(
         builder.action()
 
         val character = gameScene.objects.getById<AbstractCharacter>(builder.objectId!!)
-        val speechBubbleWidget = SpeechBubbleWidget(
-            gameScene,
-            character.pixelCoordinate,
-            gameScene.gameRuntime.i(builder.contentHtmlId!!)
-        )
-
-        scripts.add(DisplayWidgetScript(speechBubbleWidget))
+        scripts.add(DisplayWidgetScript(SpeechBubbleWidget::class) {
+            attrs.game = gameScene.gameRuntime.asDynamic()
+            attrs.speakerCoordinate = character.pixelCoordinate
+            attrs.contentHtml = gameScene.gameRuntime.i(builder.contentHtmlId!!, *builder.args)
+            attrs.arrow = builder.arrow
+        })
     }
 
     override fun disableUserMouse() {
@@ -115,12 +120,13 @@ class DefaultGameDirector(
         return counter++
     }
 
-    inner class DisplayWidgetScript(
-        private val widget: Widget
+    inner class DisplayWidgetScript<P : GameProps>(
+        private val klass: KClass<out GameUIComponent<P, *>>,
+        private val handler: RHandler<P>
     ) : GameScript {
         private val id = "${gameScene.map.id}-ScriptWidget-${getAndIncrement()}"
         override fun start() {
-            currentWidgets[id] = widget
+            currentWidgets[id] = Widget(klass, handler)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
 

@@ -30,6 +30,7 @@ class AvatarTooltip : RComponent<AvatarCardProps, RState>() {
 
     override fun RBuilder.render() {
         div {
+            attrs.classes = setOf("brave-people-avatar-tooltip")
             attrs.jsStyle {
                 position = "absolute"
                 left = "${props.tile.x + TOOLTIP_OFFSET_X}px"

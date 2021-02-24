@@ -4,6 +4,7 @@ import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.RawAnimationLayer
 import com.bytelegend.app.shared.RawGameMapTileLayer
@@ -18,7 +19,7 @@ fun RawGameMapTileLayer.toSprite(
     gameScene: GameScene,
     coordinate: GridCoordinate,
     tileset: HTMLImageElement
-): BackgroundSprite =
+): BackgroundSpriteLayer =
     if (this is RawStaticImageLayer) {
         StaticImageBlockSprite(gameScene, coordinate, tileset, this)
     } else {
@@ -32,11 +33,13 @@ fun RawGameMapTileLayer.toSprite(
  */
 val PRE_RENDERED_CANVAS_NUM = 2
 
-interface BackgroundSprite : Sprite {
+interface BackgroundSpriteLayer : Sprite {
     /**
-     * If an animation tile contain more than 2 frames, we must fall back to realtime rendering.
+     * Upon the following cases, we must fall back to realtime rendering:
+     * - If an animation tile contain more than 2 frames.
+     * - If a layer is above player.
      */
-    fun supportPrerender() = true
+    fun supportPrerender(): Boolean
 
     fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D)
 }
@@ -46,7 +49,7 @@ class StaticImageBlockSprite(
     override val gridCoordinate: GridCoordinate,
     private val tileset: HTMLImageElement,
     private val imageLayer: RawStaticImageLayer
-) : BackgroundSprite, CoordinateAware {
+) : BackgroundSpriteLayer, CoordinateAware {
     override val id: String = "${gridCoordinate.x}-${gridCoordinate.y}-${imageLayer.layer}"
     override val layer: Int = imageLayer.layer
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
@@ -54,6 +57,8 @@ class StaticImageBlockSprite(
     private val tileWidth = gameScene.map.tileSize.width
     private val tileHeight = gameScene.map.tileSize.width
     private val canvasState = gameScene.canvasState
+
+    override fun supportPrerender() = imageLayer.layer < PLAYER_LAYER
 
     override fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D) {
         draw(canvas, pixelCoordinate.x, pixelCoordinate.y)
@@ -90,7 +95,7 @@ class AnimationSprite(
     override val gridCoordinate: GridCoordinate,
     private val tileset: HTMLImageElement,
     private val animationLayer: RawAnimationLayer
-) : BackgroundSprite, CoordinateAware {
+) : BackgroundSpriteLayer, CoordinateAware {
     override val id: String = "${gridCoordinate.x}-${gridCoordinate.y}-${animationLayer.layer}"
     override val layer: Int = animationLayer.layer
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
@@ -101,7 +106,7 @@ class AnimationSprite(
     private val frames = animationLayer.frames.toTypedArray()
     private val duration = animationLayer.frames[0].duration
 
-    override fun supportPrerender() = frames.size <= PRE_RENDERED_CANVAS_NUM
+    override fun supportPrerender() = frames.size <= PRE_RENDERED_CANVAS_NUM && animationLayer.layer < PLAYER_LAYER
 
     override fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D) {
         drawFrame(frameIndex, canvas, pixelCoordinate.x, pixelCoordinate.y)

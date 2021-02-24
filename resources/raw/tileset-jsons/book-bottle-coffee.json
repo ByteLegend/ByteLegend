@@ -14,20 +14,24 @@
  "name":"book-bottle-coffee",
  "spacing":0,
  "tilecount":192,
- "tiledversion":"1.4.3",
+ "tiledversion":"1.4.2",
  "tileheight":32,
  "tiles":[
         {
          "animation":[
                 {
                  "duration":100,
-                 "tileid":129
+                 "tileid":120
                 }, 
                 {
-                 "duration":400,
-                 "tileid":130
+                 "duration":100,
+                 "tileid":121
+                }, 
+                {
+                 "duration":100,
+                 "tileid":122
                 }],
-         "id":153
+         "id":146
         }, 
         {
          "animation":[
@@ -40,6 +44,22 @@
                  "tileid":142
                 }],
          "id":154
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":100,
+                 "tileid":132
+                }, 
+                {
+                 "duration":100,
+                 "tileid":133
+                }, 
+                {
+                 "duration":100,
+                 "tileid":134
+                }],
+         "id":158
         }],
  "tilewidth":32,
  "type":"tileset",

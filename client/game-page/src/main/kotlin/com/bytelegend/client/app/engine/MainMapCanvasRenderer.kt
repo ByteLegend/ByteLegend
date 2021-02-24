@@ -8,7 +8,7 @@ import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.obj.BackgroundSprite
+import com.bytelegend.client.app.obj.BackgroundSpriteLayer
 import com.bytelegend.client.app.obj.PRE_RENDERED_CANVAS_NUM
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D
@@ -20,15 +20,19 @@ import org.w3c.dom.HTMLCanvasElement
 class MainMapCanvasRenderer(
     private val game: Game
 ) {
-    private val canvasCaches: List<HTMLCanvasElement> = List(2) {
-        document.createElement("canvas").apply {
-            this.id = "canvas-cache-$it"
-            document.body?.appendChild(this)
-        }.asDynamic()
-    }
+    private val canvasCaches: MutableMap<String, List<HTMLCanvasElement>> = JSObjectBackedMap()
     private val objectContainer: DefaultGameObjectContainer
         get() = game.activeScene.objects.unsafeCast<DefaultGameObjectContainer>()
+
+    /**
+     * The pre-render-able tiles, mostly background.
+     */
     lateinit var mapBackgroundLayer: CanvasRenderingContext2D
+
+    /**
+     * The non-pre-render-able tiles, including dynamic sprites (e.g. NPC) and
+     * the tile layer above pal
+     */
     lateinit var mapObjectsLayer: CanvasRenderingContext2D
 
     /**
@@ -39,26 +43,40 @@ class MainMapCanvasRenderer(
     lateinit var lastBackgroundRenderCanvasCoordinateInMap: PixelCoordinate
 
     @Suppress("UnsafeCastFromDynamic")
-    fun refreshCanvasCacheOnSceneSwitch(gameScene: GameScene) {
+    fun putSceneBackgroundIntoCanvasCacheIfAbsent(gameScene: GameScene) {
+        val mapId = gameScene.map.id
+        if (canvasCaches.containsKey(mapId)) {
+            return
+        }
+        val mapBackgroundFrames = game.idToMapDefinition.getValue(mapId).frameNumber
+
+        val canvasElements: List<HTMLCanvasElement> = List(mapBackgroundFrames) {
+            document.createElement("canvas").apply {
+                this.id = "canvas-cache-$mapId-$it"
+                document.body?.appendChild(this)
+            }.asDynamic()
+        }
+        canvasCaches[mapId] = canvasElements
+
         lastBackgroundRenderTime = Timestamp(0)
         lastBackgroundRenderCanvasCoordinateInMap = PixelCoordinate(0, 0)
         lastBackgroundRenderCanvasPixelSize = PixelSize(0, 0)
 
         val background = objectContainer.background
         // draw static tiles to all caches, and animation tiles to corresponding frames
-        canvasCaches.forEachIndexed { cacheCanvasIndex, cacheCanvas ->
-            cacheCanvas.width = gameScene.map.pixelSize.width
-            cacheCanvas.height = gameScene.map.pixelSize.height
-            cacheCanvas.style.display = "none"
-            val context: CanvasRenderingContext2D = cacheCanvas.getContext("2d").asDynamic()
+        canvasElements.forEachIndexed { cacheCanvasIndex, canvasElement ->
+            canvasElement.width = gameScene.map.pixelSize.width
+            canvasElement.height = gameScene.map.pixelSize.height
+            canvasElement.style.display = "none"
+            val context: CanvasRenderingContext2D = canvasElement.getContext("2d").asDynamic()
 
             for (y in 0 until gameScene.map.size.height) {
                 for (x in 0 until gameScene.map.size.width) {
                     val layers = background[y][x]
-                    if (layers.all { it.supportPrerender() }) {
-                        layers.forEach {
-                            it.prerenderFrame(cacheCanvasIndex, context)
-                        }
+                    // Draw all tiles, no matter they support pre-rendering or not
+                    // to avoid black crack on tile border
+                    layers.forEach {
+                        it.prerenderFrame(cacheCanvasIndex, context)
                     }
                 }
             }
@@ -68,13 +86,13 @@ class MainMapCanvasRenderer(
     fun onAnimation() {
         drawPrerenderedBackgroundLayer()
         drawNonPrerenderableTiles()
-        drawOnObjectsLayer()
     }
 
     private fun drawPrerenderedBackgroundLayer() {
         val gameScene = game.activeScene
-        val currentFrameIndex = ((game.currentTimeMillis / 500) % 2).toInt()
-        val cacheCanvas = canvasCaches[currentFrameIndex]
+        val mapId = gameScene.map.id
+        val currentFrameIndex = ((game.currentTimeMillis / 500) % (game.idToMapDefinition.getValue(mapId).frameNumber)).toInt()
+        val canvasElement = canvasCaches.getValue(mapId)[currentFrameIndex]
 
         val canvasPixelSize = gameScene.canvasState.getCanvasPixelSize()
         val canvasCoordinateInMap = gameScene.canvasState.getCanvasCoordinateInMap()
@@ -89,7 +107,7 @@ class MainMapCanvasRenderer(
 
         mapBackgroundLayer.clearRect(0.0, 0.0, canvasPixelSize.width.toDouble(), canvasPixelSize.height.toDouble())
         mapBackgroundLayer.drawImage(
-            cacheCanvas,
+            canvasElement,
             canvasCoordinateInMap.x.toDouble(),
             canvasCoordinateInMap.y.toDouble(),
             canvasPixelSize.width.toDouble(),
@@ -110,33 +128,19 @@ class MainMapCanvasRenderer(
             lastBackgroundRenderCanvasPixelSize != currentCanvasPixelSize
     }
 
-    private fun drawOnObjectsLayer() {
-        val canvasPixelSize = game.activeScene.canvasState.getCanvasPixelSize()
-        mapObjectsLayer.clearRect(0.0, 0.0, canvasPixelSize.width.toDouble(), canvasPixelSize.height.toDouble())
-        val sprites = objectContainer.getByRole<Sprite>(GameObjectRole.Sprite)
-
-        // filter non-pre-render-able tiles, draw them.
-        val indexes = js("new Set()")
-        // Key: layer index; Value: list of sprites
-        val layerToSprites = JSObjectBackedMap<MutableList<Sprite>>()
-        sprites.forEach {
-            if (!it.outOfCanvas()) {
-                indexes.add(it.layer)
-                layerToSprites.getOrPut(it.layer.toString()) { JSArrayBackedList() }.add(it)
-            }
-        }
-        drawByLayerOrder(indexes, layerToSprites, mapObjectsLayer)
-    }
-
     // TODO only rerendering dirty rectangles
     private fun drawNonPrerenderableTiles() {
         val gameScene = game.activeScene
+        val canvasPixelSize = gameScene.canvasState.getCanvasPixelSize()
         val canvasGridWidth = gameScene.canvasState.getCanvasGridSize().width
         val canvasGridHeight = gameScene.canvasState.getCanvasGridSize().height
         val canvasGridInMapX = gameScene.canvasState.getCanvasGridCoordinateInMap().x
         val canvasGridInMapY = gameScene.canvasState.getCanvasGridCoordinateInMap().y
         val mapGridWidth = gameScene.map.size.width
         val mapGridHeight = gameScene.map.size.height
+
+        mapObjectsLayer.clearRect(0.0, 0.0, canvasPixelSize.width.toDouble(), canvasPixelSize.height.toDouble())
+
         val background = objectContainer.unsafeCast<DefaultGameObjectContainer>().background
         // filter non-pre-render-able tiles, draw them.
         val indexes = js("new Set()")
@@ -158,7 +162,14 @@ class MainMapCanvasRenderer(
                 }
             }
         }
-        drawByLayerOrder(indexes, layerToSprites, mapBackgroundLayer)
+        objectContainer.getByRole<Sprite>(GameObjectRole.Sprite)
+            .forEach {
+                if (!it.outOfCanvas()) {
+                    indexes.add(it.layer)
+                    layerToSprites.getOrPut(it.layer.toString()) { JSArrayBackedList() }.add(it)
+                }
+            }
+        drawByLayerOrder(indexes, layerToSprites, mapObjectsLayer)
     }
 
     /*
@@ -171,7 +182,7 @@ class MainMapCanvasRenderer(
          }
      */
     @Suppress("ReplaceManualRangeWithIndicesCalls")
-    private fun anyNonPrerenderable(layers: List<BackgroundSprite>): Boolean {
+    private fun anyNonPrerenderable(layers: List<BackgroundSpriteLayer>): Boolean {
         for (i in 0 until layers.size) {
             if (!layers[i].supportPrerender()) {
                 return true

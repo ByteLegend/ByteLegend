@@ -80,6 +80,9 @@ class Game(
     val mapHierarchy: List<GameMapDefinition> by lazy {
         resourceLoader.getLoadedResource(GAME_MAP_HIERARCHY_ID)
     }
+    val idToMapDefinition: Map<String, GameMapDefinition> by lazy {
+        mapHierarchy.toMap()
+    }
 
     override val modalController: ModalControllerInternal by lazy {
         DefaultModalController(di)
@@ -129,4 +132,17 @@ class Game(
     }
 
     fun resolve(path: String) = "${RRBD}$path"
+}
+
+private fun List<GameMapDefinition>.toMap(): Map<String, GameMapDefinition> {
+    val ret = JSObjectBackedMap<GameMapDefinition>()
+    forEach { it.putIntMap(ret) }
+    return ret
+}
+
+private fun GameMapDefinition.putIntMap(map: MutableMap<String, GameMapDefinition>) {
+    map[id] = this
+    submaps.forEach {
+        it.putIntMap(map)
+    }
 }

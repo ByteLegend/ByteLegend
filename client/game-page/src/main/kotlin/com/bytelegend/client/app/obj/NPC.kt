@@ -28,7 +28,8 @@ class NPC(
         GameObjectRole.Character,
         GameObjectRole.Sprite,
         GameObjectRole.NPC,
-        GameObjectRole.CoordinateAware
+        GameObjectRole.CoordinateAware,
+        GameObjectRole.Clickable,
     )
 
     override fun onTouch(obj: GameObject) {

@@ -111,21 +111,26 @@ class MainMapCanvasLayer : GameUIComponent<MapCanvasProps, RState>() {
         game.mainMapCanvasRenderer.onAnimation()
     }
 
-    override fun RBuilder.render() {
-        val mapCanvasZIndex = Layer.MapCanvas.zIndex()
-        canvas {
-            attrs {
-                id = "background-canvas-layer"
-                width = canvasPixelSize.width.toString()
-                height = canvasPixelSize.height.toString()
-                jsStyle {
-                    zIndex = mapCanvasZIndex
-                    position = "absolute"
-                    top = "${canvasCoordinateInGameContainer.y}px"
-                    left = "${canvasCoordinateInGameContainer.x}px"
-                }
+    private fun RDOMBuilder<CANVAS>.canvasAttr(canvasId: String, canvasZIndex: Int) {
+        attrs {
+            id = canvasId
+            if (!mapCoveredByCanvas) {
+                classes = setOf("canvas-border")
             }
+            width = canvasPixelSize.width.toString()
+            height = canvasPixelSize.height.toString()
+            jsStyle {
+                zIndex = canvasZIndex
+                position = "absolute"
+                top = "${canvasCoordinateInGameContainer.y}px"
+                left = "${canvasCoordinateInGameContainer.x}px"
+            }
+        }
+    }
 
+    override fun RBuilder.render() {
+        canvas {
+            canvasAttr("background-canvas-layer", Layer.MapCanvas.zIndex())
             +"Canvas not supported"
             ref {
                 if (it != null) {
@@ -134,20 +139,7 @@ class MainMapCanvasLayer : GameUIComponent<MapCanvasProps, RState>() {
             }
         }
         canvas {
-            attrs {
-                id = "objects-canvas-layer"
-                if (!mapCoveredByCanvas) {
-                    classes = setOf("canvas-border")
-                }
-                width = canvasPixelSize.width.toString()
-                height = canvasPixelSize.height.toString()
-                jsStyle {
-                    zIndex = mapCanvasZIndex + 1
-                    position = "absolute"
-                    top = "${canvasCoordinateInGameContainer.y}px"
-                    left = "${canvasCoordinateInGameContainer.x}px"
-                }
-            }
+            canvasAttr("objects-canvas-layer", Layer.MapCanvas.zIndex() + 1)
 
             +"Canvas not supported"
             ref {

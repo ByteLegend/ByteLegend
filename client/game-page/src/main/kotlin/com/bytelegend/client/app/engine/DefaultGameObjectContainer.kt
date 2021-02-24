@@ -9,7 +9,7 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.mapToArrayWithIndex
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.obj.BackgroundSprite
+import com.bytelegend.client.app.obj.BackgroundSpriteLayer
 import com.bytelegend.client.app.obj.toSprite
 
 class DefaultGameObjectContainer(
@@ -17,8 +17,8 @@ class DefaultGameObjectContainer(
 ) : GameObjectContainer {
     private val objectsById: IdGameObjectContainer = IdGameObjectContainer()
     private val objectsByRole: MutableMap<String, IdGameObjectContainer> = JSObjectBackedMap()
-    val background: Array<Array<List<BackgroundSprite>>> = gameScene.map.rawTiles.mapToArrayWithIndex { it, coordinate ->
-        val list = JSArrayBackedList<BackgroundSprite>()
+    val background: Array<Array<List<BackgroundSpriteLayer>>> = gameScene.map.rawTiles.mapToArrayWithIndex { it, coordinate ->
+        val list = JSArrayBackedList<BackgroundSpriteLayer>()
         it.layers.forEach {
             list.add(it.toSprite(gameScene, coordinate, gameScene.tileset.htmlElement))
         }

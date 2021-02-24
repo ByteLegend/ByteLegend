@@ -100,6 +100,7 @@ class TileCursorWidget : GameUIComponent<TileCursorWidgetProps, TileCursorWidget
     }
 
     private fun determineBorderColor(cursorCoordinate: GridCoordinate): String = when {
+        game.hero != null && game.hero!!.gridCoordinate == cursorCoordinate -> "white"
         isClickable(cursorCoordinate) -> "#007bff"
         game.hero == null -> "white"
         game.activeScene != game._hero!!.gameScene -> "white"

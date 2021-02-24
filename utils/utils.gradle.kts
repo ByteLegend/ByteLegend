@@ -135,7 +135,7 @@ processResourcesTasks.add(registerExecTask(
 
 val allMaps: List<String> = rootProject
     .file("resources/raw/maps").walk()
-    .filter { it.isFile && it.name.endsWith(".json") }
+    .filter { it.isFile && it.name.endsWith(".json") && it.name != "hierarchy.json" }
     .map { it.name.replace(".json", "") }
     .toList()
 processResourcesTasks.add(tasks.register<Copy>("copyGameJs") {

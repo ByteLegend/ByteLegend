@@ -2,7 +2,6 @@ package com.bytelegend.utils
 
 import com.bytelegend.app.shared.BLOCKER
 import com.bytelegend.app.shared.ConstantPoolEntry
-import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.NON_BLOCKER
@@ -23,6 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import java.awt.image.BufferedImage
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import javax.imageio.ImageIO
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -34,40 +35,27 @@ fun main(args: Array<String>) {
     // RRBD/map
     val outputMapDir = File(args[1])
 
-    val (mapHierarchy, allMapJsons) = scanMapHierarchy(inputMapDir)
+    Files.copy(
+        inputMapDir.resolve("hierarchy.json").toPath(),
+        outputMapDir.resolve("hierarchy.json").toPath(),
+        StandardCopyOption.REPLACE_EXISTING
+    )
+
+    val allMapJsons = scanMapJsons(inputMapDir)
 
     allMapJsons.forEach {
         val mapId = it.name.replace(".json", "")
         MapGenerator(mapId, it, outputMapDir.resolve(mapId)).generate()
-//        NPCAnimationSetGenerator(it.parentFile, outputMapDir.resolve(mapId).resolve("npc.png")).generate()
     }
-
-    outputMapDir.resolve("hierarchy.json").writeText(
-        objectMapper.writeValueAsString(mapHierarchy)
-    )
 }
 
-fun scanMapHierarchy(inputMapDir: File): Pair<List<GameMapDefinition>, List<File>> {
-    val idToMap: MutableMap<String, GameMapDefinition> = mutableMapOf()
-    val allMapJsons = inputMapDir.walk()
-        .filter { it.isFile && it.name.endsWith(".json") }
-        .toList()
-    allMapJsons.forEach {
-        val mapId = it.name.replace(".json", "")
-        idToMap[mapId] = GameMapDefinition(mapId, mutableListOf())
-    }
-
-    val rootMaps = mutableListOf<GameMapDefinition>()
-    allMapJsons.forEach {
-        val mapId = it.name.replace(".json", "")
-        val parentMapId = it.parentFile.parentFile.name
-        if (idToMap.containsKey(parentMapId)) {
-            (idToMap.getValue(parentMapId).submaps as MutableList).add(idToMap.getValue(mapId))
-        } else {
-            rootMaps.add(idToMap.getValue(mapId))
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+fun scanMapJsons(inputMapDir: File): List<File> {
+    return inputMapDir.listFiles()
+        .filter { it.isDirectory }
+        .flatMap {
+            it.walk().filter { it.isFile && it.name.endsWith(".json") }
         }
-    }
-    return rootMaps to allMapJsons
 }
 
 val module = SimpleModule().apply {
@@ -485,8 +473,8 @@ class MapGenerator(
             // the sprite can cross multiple tiles.
             val firstTileIndex = data.indexOfFirst { it != 0L }
             val lastTileIndex = data.indexOfLast { it != 0L }
-            val firstTileCoordinate = GridCoordinate(firstTileIndex % tiledMap.width.toInt(), firstTileIndex / tiledMap.height.toInt())
-            val lastTileCoordinate = GridCoordinate(lastTileIndex % tiledMap.width.toInt(), lastTileIndex / tiledMap.height.toInt())
+            val firstTileCoordinate = GridCoordinate(firstTileIndex % tiledMap.width.toInt(), firstTileIndex / tiledMap.width.toInt())
+            val lastTileCoordinate = GridCoordinate(lastTileIndex % tiledMap.width.toInt(), lastTileIndex / tiledMap.width.toInt())
 
             val subArrayWidth = abs(lastTileCoordinate.x - firstTileCoordinate.x + 1)
             val subArrayHeight = abs(lastTileCoordinate.y - firstTileCoordinate.y + 1)

@@ -7,6 +7,7 @@ import com.bytelegend.app.client.api.getAudioElementOrNull
 import com.bytelegend.app.shared.BLOCKER
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.ui.MAP_SCROLL_EVENT
 import common.utils.search
@@ -70,14 +71,17 @@ class GameControl(
             it.onClick()
         }
 
-        if (gameRuntime.hero != null && gameRuntime.activeScene == game._hero!!.gameScene) {
+        if (gameRuntime.hero != null &&
+            gameRuntime.activeScene == game._hero!!.gameScene &&
+            !isBlocker(coordinate)
+        ) {
             val hero = gameRuntime.hero!!
-            if (scene.blockers[coordinate.y][coordinate.x] != BLOCKER) {
-                val path = search(scene.blockers, hero.gridCoordinate, coordinate)
-                if (path.isNotEmpty()) {
-                    hero.movePath = path
-                }
+            val path = search(scene.blockers, hero.gridCoordinate, coordinate)
+            if (path.isNotEmpty()) {
+                hero.movePath = path
             }
         }
     }
+
+    private fun isBlocker(coordinate: GridCoordinate) = gameSceneContainer.activeScene!!.blockers[coordinate.y][coordinate.x] > NON_BLOCKER
 }

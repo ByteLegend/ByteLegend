@@ -67,7 +67,7 @@ class DefaultGameSceneContainer(
             // the current active scene may be changed during loading
             // don't switch in this case
             _activeScene = newScene
-            game.mainMapCanvasRenderer.refreshCanvasCacheOnSceneSwitch(newScene)
+            game.mainMapCanvasRenderer.putSceneBackgroundIntoCanvasCacheIfAbsent(newScene)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
             eventBus.emit(SCENE_SWITCH_START_EVENT, null)
         } else {
