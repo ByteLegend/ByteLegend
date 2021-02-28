@@ -1,11 +1,12 @@
 package com.bytelegend.app.shared
 
+import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.i18n.Locale
 import kotlinx.serialization.Serializable
 
 /**
  * Some data rendered to HTML page directly so it can be used
- * before AJAX resources are loaded.
+ * BEFORE AJAX resources are loaded.
  */
 @Serializable
 data class ServerSideData(
@@ -18,6 +19,14 @@ data class ServerSideData(
     val playerCoordinate: GridCoordinate?
 ) {
     fun resolve(path: String) = "$RRBD$path"
+}
+
+
+@Serializable
+data class WebSocketInitData(
+    val player: Player,
+    val gameMapDefinitions: List<GameMapDefinition>
+) {
 }
 
 @Serializable

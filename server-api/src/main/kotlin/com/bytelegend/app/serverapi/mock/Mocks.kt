@@ -1,10 +1,10 @@
 package com.bytelegend.app.serverapi.mock
 
-import com.bytelegend.app.shared.Player
+import com.bytelegend.app.shared.entities.Player
 import kotlin.random.Random
 
 val mockPlayer = Player().apply {
-    id = "gh#ByteLegendBot"
+    _id = "gh#ByteLegendBot"
     username = "ByteLegendBot"
     nickname = "ByteLegendBot"
     x = 6
@@ -15,6 +15,6 @@ val mockPlayer = Player().apply {
 }
 
 val anonymousPlayer = Player().apply {
-    id = "anon#Anonymous"
+    _id = "anon#Anonymous"
     username = "anon#Anonymous"
 }

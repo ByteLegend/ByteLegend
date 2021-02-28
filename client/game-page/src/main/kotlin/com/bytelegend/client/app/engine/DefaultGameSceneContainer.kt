@@ -6,22 +6,23 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.I18nTextResource
 import com.bytelegend.app.client.api.ImageResource
-import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.TextAjaxResource
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.RawGameMap
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.page.game
-import com.bytelegend.client.app.ui.SCENE_SWITCH_START_EVENT
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
 
+const val SCENE_LOADING_START_EVENT = "scene.switch.start"
+const val SCENE_LOADING_END_EVENT = "scene.switch.end"
+
 fun mapJsonResourceId(mapId: String) = "$mapId-map"
 fun mapTilesetResourceId(mapId: String) = "$mapId-tileset"
-fun mapNpcAnimationSetResourceId(mapId: String) = "$mapId-npc"
 fun mapScriptResourceId(mapId: String) = "$mapId-script"
 fun mapTextResourceId(mapId: String, locale: Locale) = "$mapId-${locale.toLowerCase()}"
 
@@ -51,62 +52,51 @@ class DefaultGameSceneContainer(
         }
 
     override fun loadScene(mapId: String, switchAfterLoad: Boolean, onFinish: (GameScene?, GameScene) -> Unit) {
-        // during loading, activeScene may already changed, so we save the reference
-        val oldScene = _activeScene
-        val scene = scenes[mapId]
-        if (scene == null) {
-            createThenSwitchScene(oldScene, mapId, switchAfterLoad, onFinish)
-        } else {
-            loadScene(oldScene, scene, switchAfterLoad, onFinish)
+        GlobalScope.launch {
+            // during loading, activeScene may already changed, so we save the reference
+            val oldScene = _activeScene
+            val scene = scenes[mapId]
+            if (scene == null) {
+                eventBus.emit(SCENE_LOADING_START_EVENT, null)
+                createThenSwitchScene(oldScene, mapId, switchAfterLoad, onFinish)
+                eventBus.emit(SCENE_LOADING_END_EVENT, null)
+            } else {
+                switchScene(oldScene, scene, switchAfterLoad, onFinish)
+            }
+
+            _activeScene!!.scripts {
+                disableUserMouse()
+                fadeIn()
+                enableUserMouse()
+            }
+
+            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
     }
 
-    private fun loadScene(oldScene: GameScene?, newScene: GameScene, switch: Boolean, action: (GameScene?, GameScene) -> Unit) {
+    private fun switchScene(oldScene: GameScene?, newScene: GameScene, switch: Boolean, action: (GameScene?, GameScene) -> Unit) {
         action(oldScene, newScene)
         if (switch && _activeScene == oldScene) {
             // the current active scene may be changed during loading
             // don't switch in this case
             _activeScene = newScene
             game.mainMapCanvasRenderer.putSceneBackgroundIntoCanvasCacheIfAbsent(newScene)
-            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
-            eventBus.emit(SCENE_SWITCH_START_EVENT, null)
-        } else {
-            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
     }
 
-    private fun createThenSwitchScene(oldScene: GameScene?, mapId: String, switchAfterLoading: Boolean, action: (GameScene?, GameScene) -> Unit) {
-        resourceLoader.add(GameMapResource(mapJsonResourceId(mapId), "$RRBD/map/$mapId/map.json", 1)) {
-            createSceneOnReady(oldScene, mapId, switchAfterLoading, action)
-        }
-        resourceLoader.add(ImageResource(mapTilesetResourceId(mapId), "$RRBD/map/$mapId/tileset.png", 1)) {
-            createSceneOnReady(oldScene, mapId, switchAfterLoading, action)
-        }
-        resourceLoader.add(ImageResource(mapNpcAnimationSetResourceId(mapId), "$RRBD/map/$mapId/npc.png", 1)) {
-            createSceneOnReady(oldScene, mapId, switchAfterLoading, action)
-        }
-        resourceLoader.add(TextAjaxResource(mapScriptResourceId(mapId), "$RRBD/js/game-$mapId.js", 1)) {
-            createSceneOnReady(oldScene, mapId, switchAfterLoading, action)
-        }
-        resourceLoader.add(I18nTextResource(mapTextResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.toLowerCase()}.json", 1)) {
-            createSceneOnReady(oldScene, mapId, switchAfterLoading, action)
-        }
-    }
+    private suspend fun createThenSwitchScene(oldScene: GameScene?, mapId: String, switchAfterLoading: Boolean, action: (GameScene?, GameScene) -> Unit) {
+        val map = resourceLoader.loadAsync(GameMapResource(mapJsonResourceId(mapId), "$RRBD/map/$mapId/map.json", 1))
+        val tileset = resourceLoader.loadAsync(ImageResource(mapTilesetResourceId(mapId), "$RRBD/map/$mapId/tileset.png", 1))
+        val mapScript = resourceLoader.loadAsync(TextAjaxResource(mapScriptResourceId(mapId), "$RRBD/js/game-$mapId.js", 1))
+        val i18nText = resourceLoader.loadAsync(I18nTextResource(mapTextResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.toLowerCase()}.json", 1))
 
-    private fun createSceneOnReady(oldScene: GameScene?, mapId: String, switchAfterLoading: Boolean, action: (GameScene?, GameScene) -> Unit) {
-        val map = resourceLoader.getLoadedResourceOrNull<RawGameMap>("$mapId-map") ?: return
-        val tileset = resourceLoader.getLoadedResourceOrNull<ImageResourceData>("$mapId-tileset") ?: return
-        val script = resourceLoader.getLoadedResourceOrNull<String>("$mapId-script") ?: return
-        val i18nText = resourceLoader.getLoadedResourceOrNull<Map<String, String>>("$mapId-${locale.toLowerCase()}") ?: return
+        i18nContainer.putAll(i18nText.await())
 
-        i18nContainer.putAll(i18nText)
-
-        val scene = DefaultGameScene(di, map, tileset, gameContainerSize)
+        val scene = DefaultGameScene(di, map.await(), tileset.await(), gameContainerSize)
         scenes[mapId] = scene
-        loadScene(oldScene, scene, switchAfterLoading, action)
+        switchScene(oldScene, scene, switchAfterLoading, action)
 
-        eval(script)
-
+        eval(mapScript.await())
         resourceLoader.resetSession()
     }
 }

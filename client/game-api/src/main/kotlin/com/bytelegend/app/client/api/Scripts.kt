@@ -36,6 +36,8 @@ interface ScriptsBuilder {
             this.arrow = arrow
         }
     }
+    fun starFly(fromObjectId: String)
 
     fun disableUserMouse()
+    fun fadeIn()
 }

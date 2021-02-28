@@ -1,6 +1,9 @@
+@file:Suppress("DeferredResultUnused")
+
 package com.bytelegend.client.app.page
 
 import com.bytelegend.app.client.api.AudioResource
+import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameMapHierarchyResource
 import com.bytelegend.app.client.api.I18nTextResource
 import com.bytelegend.app.client.api.ImageResource
@@ -11,12 +14,12 @@ import com.bytelegend.app.shared.animationSetId
 import com.bytelegend.app.shared.playerAnimationSetResourceId
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
-import com.bytelegend.client.app.engine.RESOURCE_LOADING_SUCCESS_EVENT
+import com.bytelegend.client.app.engine.SCENE_LOADING_END_EVENT
+import com.bytelegend.client.app.engine.SCENE_LOADING_START_EVENT
 import com.bytelegend.client.app.engine.init
 import com.bytelegend.client.app.obj.HeroCharacter
 import com.bytelegend.client.app.ui.AudioSwitchWidget
 import com.bytelegend.client.app.ui.AudioSwitchWidgetProps
-import com.bytelegend.client.app.ui.FadeInFadeOutLayer
 import com.bytelegend.client.app.ui.FpsCounter
 import com.bytelegend.client.app.ui.FpsCounterProps
 import com.bytelegend.client.app.ui.GameContainer
@@ -57,6 +60,8 @@ import common.ui.CSSTransition
 import common.ui.CSSTransitionProps
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import react.RBuilder
 import react.RComponent
@@ -87,11 +92,17 @@ fun main() {
     }
 }
 
-interface GamePageState : RState
+interface GamePageState : RState {
+    var loading: Boolean
+}
 
 interface GamePageProps : RProps
 
 class GamePage : RComponent<GamePageProps, GamePageState>() {
+    override fun GamePageState.init() {
+        loading = true
+    }
+
     init {
         addGlobalResources()
 
@@ -104,14 +115,8 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
             game.start()
         }
-        game.eventBus.on<Nothing>(GAME_UI_UPDATE_EVENT) {
-            setState {}
-        }
-        game.eventBus.on<Any>(RESOURCE_LOADING_SUCCESS_EVENT) {
-            setState { }
-        }
         window.onresize = {
-            if (!game.resourceLoader.isLoading()) {
+            if (!state.loading) {
                 // Do nothing if page is still loading
                 onWindowResize()
             }
@@ -122,14 +127,14 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     private fun addGlobalResources() {
         if (!game.player.isAnonymous) {
             val animationSetId = playerAnimationSetResourceId(animationSetId(SERVER_SIDE_DATA.player.characterId!!))
-            game.resourceLoader.add(
+            game.resourceLoader.loadAsync(
                 ImageResource(
                     animationSetId,
                     game.resolve("/img/player/$animationSetId.png"),
                     1
                 )
             )
-            game.resourceLoader.add(
+            game.resourceLoader.loadAsync(
                 ImageResource(
                     HERO_AVATAR_IMG_ID,
                     game.player.avatarUrl!!,
@@ -138,17 +143,18 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                 false
             )
         }
-        game.resourceLoader.add(
-            I18nTextResource(
-                "common-${game.locale.toLowerCase()}",
-                game.resolve("/i18n/common/${game.locale.toLowerCase()}.json"), 1
+        GlobalScope.launch {
+            val i18nTexts = game.resourceLoader.load(
+                I18nTextResource(
+                    "common-${game.locale.toLowerCase()}",
+                    game.resolve("/i18n/common/${game.locale.toLowerCase()}.json"), 1
+                )
             )
-        ) {
-            game.i18nTextContainer.putAll(it)
+            game.i18nTextContainer.putAll(i18nTexts)
         }
-        game.resourceLoader.add(ImageResource("texture", game.resolve("/img/ui/texture.jpg"), 1))
-        game.resourceLoader.add(GameMapHierarchyResource(game.resolve("/map/hierarchy.json"), 1))
-        game.resourceLoader.add(AudioResource("forest", game.resolve("/audio/forest.ogg"), 1), false)
+        game.resourceLoader.loadAsync(ImageResource("texture", game.resolve("/img/ui/texture.jpg"), 1))
+        game.resourceLoader.loadAsync(GameMapHierarchyResource(game.resolve("/map/hierarchy.json"), 1))
+        game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg"), 1), false)
     }
 
     private fun onWindowResize() {
@@ -157,9 +163,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     }
 
     override fun RBuilder.render() {
-        fadeInFadeOutLayer(game)
-
-        if (game.resourceLoader.isLoading()) {
+        if (state.loading) {
             child(LoadingPage::class) {
                 attrs.eventBus = game.eventBus
             }
@@ -194,12 +198,26 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         }
     }
 
-    fun RBuilder.fadeInFadeOutLayer(
-        game: Game,
-    ): ReactElement {
-        return child(FadeInFadeOutLayer::class) {
-            attrs.game = game
-        }
+    private val gameUiUpdateEventListener: EventListener<Nothing> = {
+        setState { }
+    }
+    private val sceneLoadingStartEventListener: EventListener<Nothing> = {
+        setState { loading = true }
+    }
+    private val sceneLoadingEndEventListener: EventListener<Nothing> = {
+        setState { loading = false }
+    }
+
+    override fun componentDidMount() {
+        game.eventBus.on(GAME_UI_UPDATE_EVENT, gameUiUpdateEventListener)
+        game.eventBus.on(SCENE_LOADING_START_EVENT, sceneLoadingStartEventListener)
+        game.eventBus.on(SCENE_LOADING_END_EVENT, sceneLoadingEndEventListener)
+    }
+
+    override fun componentWillUnmount() {
+        game.eventBus.remove(GAME_UI_UPDATE_EVENT, gameUiUpdateEventListener)
+        game.eventBus.remove(SCENE_LOADING_START_EVENT, sceneLoadingStartEventListener)
+        game.eventBus.remove(SCENE_LOADING_END_EVENT, sceneLoadingEndEventListener)
     }
 
     private fun RDOMBuilder<*>.gameContainer(game: Game, block: RElementBuilder<GameContainerProps>.() -> Unit = {}) {

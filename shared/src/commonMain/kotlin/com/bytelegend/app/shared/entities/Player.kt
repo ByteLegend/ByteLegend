@@ -1,17 +1,11 @@
-package com.bytelegend.app.shared
+package com.bytelegend.app.shared.entities
 
-import DynamoDbBean
-import DynamoDbIgnore
-import DynamoDbPartitionKey
 import JsonIgnore
-import com.bytelegend.app.shared.Replicable
 import kotlinx.serialization.Serializable
 
 @Serializable
-@DynamoDbBean
 class Player : Replicable() {
-    @get: DynamoDbPartitionKey
-    var id: String? = null
+    var _id: String? = null
     var username: String? = null
     var nickname: String? = null
     var mapId: String? = null
@@ -23,11 +17,12 @@ class Player : Replicable() {
     var avatarUrl: String? = null
     var email: String? = null
     var characterId: Int? = null
+    var missions: Map<String, String> = emptyMap()
+    var states: Map<String, String> = emptyMap()
 
-    @get: DynamoDbIgnore
     var lastLoginEpochSecond: Long? = null
 
     @get: JsonIgnore
     val isAnonymous: Boolean
-        get() = id!!.startsWith("anon#")
+        get() = _id!!.startsWith("anon#")
 }

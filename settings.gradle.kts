@@ -15,7 +15,7 @@ include(":server-api")
 when {
     System.getProperty("server.impl") == "opensource" -> useOpensourceServer()
     System.getProperty("server.impl") == "default" -> useDefaultServer()
-    project(":").projectDir.resolve("server/server.gradle.kts").isFile -> useDefaultServer()
+    settingsDir.resolve("server/server.gradle.kts").isFile -> useDefaultServer()
     else -> useOpensourceServer()
 }
 

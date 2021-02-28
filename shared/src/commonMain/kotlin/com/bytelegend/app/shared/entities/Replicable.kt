@@ -1,4 +1,4 @@
-package com.bytelegend.app.shared
+package com.bytelegend.app.shared.entities
 
 abstract class Replicable {
     /**

@@ -4,7 +4,6 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.getAudioElementOrNull
-import com.bytelegend.app.shared.BLOCKER
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER

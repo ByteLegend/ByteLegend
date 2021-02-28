@@ -6,13 +6,17 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
+import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.obj.AbstractCharacter
+import com.bytelegend.client.app.script.effect.fadeInEffect
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
 import react.RHandler
@@ -99,12 +103,18 @@ class DefaultGameDirector(
         builder.action()
 
         val character = gameScene.objects.getById<AbstractCharacter>(builder.objectId!!)
-        scripts.add(DisplayWidgetScript(SpeechBubbleWidget::class) {
-            attrs.game = gameScene.gameRuntime.asDynamic()
-            attrs.speakerCoordinate = character.pixelCoordinate
-            attrs.contentHtml = gameScene.gameRuntime.i(builder.contentHtmlId!!, *builder.args)
-            attrs.arrow = builder.arrow
-        })
+        scripts.add(
+            DisplayWidgetScript(SpeechBubbleWidget::class) {
+                attrs.game = gameScene.gameRuntime.asDynamic()
+                attrs.speakerCoordinate = character.pixelCoordinate
+                attrs.contentHtml = gameScene.gameRuntime.i(builder.contentHtmlId!!, *builder.args)
+                attrs.arrow = builder.arrow
+            }
+        )
+    }
+
+    override fun starFly(fromObjectId: String) {
+        scripts.add(RunNativeJsScript(gameScene.objects.getById<AbstractCharacter>(fromObjectId).pixelCoordinate))
     }
 
     override fun disableUserMouse() {
@@ -114,6 +124,10 @@ class DefaultGameDirector(
                 next()
             }
         })
+    }
+
+    override fun fadeIn() {
+        scripts.add(RunSuspendFunctionScript { fadeInEffect(gameScene.gameContainerSize) })
     }
 
     fun getAndIncrement(): Int {
@@ -133,6 +147,29 @@ class DefaultGameDirector(
         override fun stop() {
             currentWidgets.remove(id)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+        }
+    }
+
+    inner class RunNativeJsScript(
+        val pixelCoordinate: PixelCoordinate
+    ) : GameScript {
+        override fun start() {
+            next()
+//            window.asDynamic().starFly(0, 0, 500, 500, 2).then
+//            , {
+//                next()
+//            })
+        }
+    }
+
+    inner class RunSuspendFunctionScript(
+        private val fn: suspend () -> Unit
+    ) : GameScript {
+        override fun start() {
+            GlobalScope.launch {
+                fn()
+                next()
+            }
         }
     }
 }

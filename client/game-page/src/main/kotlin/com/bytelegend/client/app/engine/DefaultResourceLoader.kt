@@ -6,8 +6,6 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
@@ -41,19 +39,17 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
     private val loadedResourcesInSession: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
     private val loadFailedResourcesInSession: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
 
-    override fun <T> add(
+    override suspend fun <T> load(
         resource: ExpensiveResource<out T>,
-        blockingScene: Boolean,
-        onFailure: (Throwable) -> Unit,
-        onSuccess: (T) -> Unit,
-    ) {
+        blockingScene: Boolean
+    ): T {
         if (allLoadedResources.containsKey(resource.id)) {
             console.warn("${resource.id} already loaded, did you duplicate the resource id?")
         }
         if (blockingScene) {
-            addSceneBlockingResource(resource, onSuccess, onFailure)
+            return loadSceneBlockingResource(resource)
         } else {
-            startLoading(resource, onSuccess, onFailure)
+            return load(resource, {}, {})
         }
     }
 
@@ -63,48 +59,42 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
         loadedResourcesInSession.clear()
     }
 
-    private fun <T> startLoading(
+    private suspend fun <T> load(
         resource: ExpensiveResource<out T>,
         onSuccess: (T) -> Unit,
         onFailure: (Throwable) -> Unit
-    ) {
-        GlobalScope.launch {
-            try {
-                val resourceData = resource.load()
-                allLoadedResources[resource.id] = resourceData.unsafeCast<Any>()
-                onSuccess(resourceData)
-                // load LoadingPage if necessary, otherwise it complains
-                // "Can't perform a React state update on an unmounted component"
-                eventBus.emit(GAME_UI_UPDATE_EVENT, null)
-                eventBus.emit(RESOURCE_LOADING_SUCCESS_EVENT, ResourceLoadingSuccessEvent(resource.id, resourceData))
-            } catch (e: Throwable) {
-                onFailure(e)
-                eventBus.emit(GAME_UI_UPDATE_EVENT, null)
-                eventBus.emit(
-                    RESOURCE_LOADING_FAILURE_EVENT,
-                    ResourceLoadingFailureEvent(resource.id, "Loading resource $resource failed: ${e.message}")
-                )
-                throw e
-            }
+    ): T {
+        try {
+            val resourceData = resource.load()
+            allLoadedResources[resource.id] = resourceData.unsafeCast<Any>()
+            onSuccess(resourceData)
+            // load LoadingPage if necessary, otherwise it complains
+            // "Can't perform a React state update on an unmounted component"
+            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+            eventBus.emit(RESOURCE_LOADING_SUCCESS_EVENT, ResourceLoadingSuccessEvent(resource.id, resourceData))
+            return resourceData
+        } catch (e: Throwable) {
+            onFailure(e)
+            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+            eventBus.emit(
+                RESOURCE_LOADING_FAILURE_EVENT,
+                ResourceLoadingFailureEvent(resource.id, "Loading resource $resource failed: ${e.message}")
+            )
+            throw e
         }
     }
 
-    private fun <T> addSceneBlockingResource(
+    private suspend fun <T> loadSceneBlockingResource(
         resource: ExpensiveResource<out T>,
-        onSuccess: (T) -> Unit,
-        onFailure: (Throwable) -> Unit
-    ) {
+    ): T {
         loadingResourcesInSession[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
-        startLoading(
+        return load(
             resource,
             { resourceData ->
-                // Execute user callback first
-                onSuccess(resourceData)
                 loadingResourcesInSession.remove(resource.id)
                 loadedResourcesInSession[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
             },
             { t ->
-                onFailure(t)
                 loadingResourcesInSession.remove(resource.id)
                 loadFailedResourcesInSession[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
             }

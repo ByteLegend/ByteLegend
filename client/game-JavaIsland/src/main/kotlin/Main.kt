@@ -41,6 +41,8 @@ fun main() {
                             objectId = "JavaIslandNewbieVillageOldMan"
                             contentHtmlId = "PleaseTakeALookAtThatBook"
                         }
+
+                        starFly("JavaIslandNewbieVillageOldMan")
                     }
                 }
             }

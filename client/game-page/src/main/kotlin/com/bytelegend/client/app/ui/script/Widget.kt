@@ -13,7 +13,6 @@ import react.RState
 import react.dom.jsStyle
 import react.dom.p
 import react.dom.span
-import react.dom.sup
 import react.setState
 import kotlin.reflect.KClass
 

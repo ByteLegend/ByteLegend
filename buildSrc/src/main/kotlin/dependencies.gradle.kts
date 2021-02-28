@@ -56,6 +56,8 @@ val inBrowserDownloadVersion = "2.0.0"
 val getImagePixelsVersion = "1.0.1"
 val reactIconsVersion = "3.11.0"
 val bootstrapSwitchButtonReactVersion = "1.2.0"
+val kmongoVersion = "4.2.4"
+val mongodbJavaDriverVersion = "4.2.0"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -188,7 +190,9 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         url = "https://github.com/gitbrent/bootstrap-switch-button-react",
         version = bootstrapSwitchButtonReactVersion,
         license = MIT
-    )
+    ),
+    OpenSourceLibrary("org.litote.kmongo:kmongo-coroutine:$kmongoVersion"),
+    OpenSourceLibrary("org.mongodb:bson:$mongodbJavaDriverVersion")
 )
 
 val nameToLib = mutableMapOf<String, OpenSourceLibrary>()

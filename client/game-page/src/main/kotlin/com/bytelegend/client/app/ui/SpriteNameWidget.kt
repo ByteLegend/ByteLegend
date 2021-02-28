@@ -1,6 +1,6 @@
 package com.bytelegend.client.app.ui
 
-// import com.bytelegend.app.shared.Player
+// import com.bytelegend.app.shared.entities.Player
 import react.RBuilder
 import react.RState
 

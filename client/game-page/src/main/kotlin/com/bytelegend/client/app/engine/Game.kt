@@ -13,9 +13,9 @@ import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.WindowBasedEventBus
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.Player
 import com.bytelegend.app.shared.ServerLocation
 import com.bytelegend.app.shared.ServerSideData
+import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.obj.PlayerCharacter
 import com.bytelegend.client.app.ui.DefaultModalController

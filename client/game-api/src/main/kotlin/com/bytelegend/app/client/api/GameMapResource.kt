@@ -23,7 +23,7 @@ import org.w3c.fetch.Response
 
 class GameMapResource(
     override val id: String,
-    override val url: String,
+    url: String,
     override val weight: Int
 ) : AjaxResource<RawGameMap>(id, url, weight) {
     override suspend fun decode(response: Response): RawGameMap {

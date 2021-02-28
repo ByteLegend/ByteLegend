@@ -185,9 +185,8 @@ interface GameSceneContainer : GameContainerSizeAware {
      *
      * 1. RRBD/map/{mapId}/map.json
      * 2. RRBD/map/{mapId}/tileset.png
-     * 3. RRBD/map/{mapId}/npc.png
-     * 4. RRBD/js/game-{mapId}.js
-     * 5. RRBD/i18n/{mapId}/{locale}.json
+     * 3. RRBD/js/game-{mapId}.js
+     * 4. RRBD/i18n/{mapId}/{locale}.json
      *
      * If {switchAfterLoad} is true, the UI will switch after loading.
      */

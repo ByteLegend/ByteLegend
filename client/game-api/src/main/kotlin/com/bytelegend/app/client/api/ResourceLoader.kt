@@ -6,6 +6,9 @@ import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.PixelSize
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.await
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
@@ -19,7 +22,6 @@ import kotlin.coroutines.suspendCoroutine
 
 interface ExpensiveResource<T> {
     val id: String
-    val url: String
     val weight: Int
 
     suspend fun load(): T
@@ -27,7 +29,7 @@ interface ExpensiveResource<T> {
 
 class I18nTextResource(
     override val id: String,
-    override val url: String,
+    url: String,
     override val weight: Int
 ) : AjaxResource<Map<String, String>>(id, url, weight) {
     override suspend fun decode(response: Response): Map<String, String> {
@@ -42,7 +44,7 @@ object GameMapListSerializer : JsonTransformingSerializer<List<GameMapDefinition
 const val GAME_MAP_HIERARCHY_ID = "game-map-hierarchy"
 
 class GameMapHierarchyResource(
-    override val url: String,
+    url: String,
     override val weight: Int
 ) : AjaxResource<List<GameMapDefinition>>(GAME_MAP_HIERARCHY_ID, url, weight) {
     override suspend fun decode(response: Response): List<GameMapDefinition> {
@@ -88,7 +90,7 @@ fun getOrCreateAudioElement(audioId: String): HTMLAudioElement {
 
 class AudioResource(
     override val id: String,
-    override val url: String,
+    val url: String,
     override val weight: Int
 ) : ExpensiveResource<HTMLAudioElement> {
     override suspend fun load(): HTMLAudioElement = suspendCoroutine { continuation ->
@@ -107,7 +109,7 @@ class AudioResource(
 
 class ImageResource(
     override val id: String,
-    override val url: String,
+    val url: String,
     override val weight: Int
 ) : ExpensiveResource<ImageResourceData> {
     override suspend fun load(): ImageResourceData = suspendCoroutine { continuation ->
@@ -130,7 +132,7 @@ class ImageResource(
 
 abstract class AjaxResource<T>(
     override val id: String,
-    override val url: String,
+    val url: String,
     override val weight: Int
 ) : ExpensiveResource<T> {
     abstract suspend fun decode(response: Response): T
@@ -152,7 +154,7 @@ abstract class AjaxResource<T>(
 
 class TextAjaxResource(
     override val id: String,
-    override val url: String,
+    url: String,
     override val weight: Int
 ) : AjaxResource<String>(id, url, weight) {
     override suspend fun decode(response: Response) = response.text().await()
@@ -165,12 +167,17 @@ interface ResourceLoader {
      * The scene has to wait for all "blockingScene" resources to be loaded.
      *
      */
-    fun <T> add(
+    suspend fun <T> load(
         resource: ExpensiveResource<out T>,
-        blockingScene: Boolean = true,
-        onFailure: (Throwable) -> Unit = {},
-        onSuccess: (T) -> Unit = {}
-    )
+        blockingScene: Boolean = true
+//        onFailure: (Throwable) -> Unit = {},
+//        onSuccess: (T) -> Unit = {}
+    ): T
+
+    fun <T> loadAsync(
+        resource: ExpensiveResource<out T>,
+        blockingScene: Boolean = true
+    ): Deferred<T> = GlobalScope.async { load(resource, blockingScene) }
 
     /**
      * Reset the session (esp. the loading progress).
@@ -195,5 +202,5 @@ interface ResourceLoader {
      */
     fun currentProgress(): Int
 
-    fun isLoading() = currentProgress() < 100
+//    fun isLoading() = currentProgress() < 100
 }

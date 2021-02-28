@@ -2,7 +2,7 @@ package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.Player
+import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.objects.GameObjectRole
 
 class HeroCharacter(

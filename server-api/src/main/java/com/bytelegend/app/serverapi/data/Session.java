@@ -1,5 +1,6 @@
 package com.bytelegend.app.serverapi.data;
 
+import org.bson.codecs.pojo.annotations.BsonId;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
@@ -16,12 +17,14 @@ public class Session extends Mvcc {
     public static final Duration DEFAULT_SESSION_AGE = Duration.ofDays(14);
     public static final Duration DEFAULT_SESSION_RENEW = Duration.ofDays(7);
     public static final Session NULL = new Session();
+    @BsonId
     private String id;
     private String playerId;
     private Instant createdAt;
     private Map<String, String> data = new HashMap<>();
 
     @DynamoDbPartitionKey
+    @BsonId
     public String getId() {
         return id;
     }

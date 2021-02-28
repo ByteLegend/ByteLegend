@@ -1,6 +1,5 @@
 package com.bytelegend.app.client.api
 
-import com.bytelegend.app.client.api.dsl.ObjectsBuilder
 import com.bytelegend.app.shared.Direction
 
 /**
@@ -21,7 +20,7 @@ class GameScriptHelpers(val gameScene: GameScene) {
             npcCoordinate.x == heroCoordinate.x && npcCoordinate.y - 1 == heroCoordinate.y -> Direction.UP
             npcCoordinate.y == heroCoordinate.y && npcCoordinate.x + 1 == heroCoordinate.x -> Direction.RIGHT
             npcCoordinate.y == heroCoordinate.y && npcCoordinate.x - 1 == heroCoordinate.x -> Direction.LEFT
-            else -> throw IllegalStateException("Can't determine direction: ${npcCoordinate}, ${heroCoordinate}")
+            else -> throw IllegalStateException("Can't determine direction: $npcCoordinate, $heroCoordinate")
         }
     }
 

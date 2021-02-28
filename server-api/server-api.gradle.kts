@@ -20,5 +20,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 dependencies {
     implementation(libs("dynamodb-enhanced"))
     implementation(libs("dynamodb"))
+    implementation(libs("bson"))
+
     implementation(project(":shared"))
 }

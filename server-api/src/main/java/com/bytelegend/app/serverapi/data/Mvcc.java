@@ -3,7 +3,7 @@ package com.bytelegend.app.serverapi.data;
 import software.amazon.awssdk.enhanced.dynamodb.extensions.annotations.DynamoDbVersionAttribute;
 
 public abstract class Mvcc {
-    private Integer version;
+    private Integer version = 0;
     private Boolean updateSuccessful;
 
     @DynamoDbVersionAttribute
