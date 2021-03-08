@@ -1,40 +1,30 @@
 package com.bytelegend.app.shared
 
 import com.bytelegend.app.shared.entities.Player
-import com.bytelegend.app.shared.i18n.Locale
 import kotlinx.serialization.Serializable
 
 /**
  * Some data rendered to HTML page directly so it can be used
- * BEFORE AJAX resources are loaded.
+ * BEFORE AJAX resources are loaded. More specifically, everything needed for
+ * loading page (before the main game page is rendered.).
  */
 @Serializable
 data class ServerSideData(
     val serverLocation: ServerLocation,
-    val RRBD: String,
-    val locale: Locale,
+    val rrbd: String,
     val enjoyProgrammingText: String,
-    val mapId: String,
     val player: Player,
-    val playerCoordinate: GridCoordinate?
+    val maps: List<GameMapDefinition>
 ) {
-    fun resolve(path: String) = "$RRBD$path"
-}
-
-
-@Serializable
-data class WebSocketInitData(
-    val player: Player,
-    val gameMapDefinitions: List<GameMapDefinition>
-) {
+    fun resolve(path: String) = "$rrbd$path"
 }
 
 @Serializable
 data class GameMapDefinition(
     val id: String,
-    val submaps: List<GameMapDefinition>,
+    val children: List<GameMapDefinition>,
     /**
      * How many frames in background animation, this value is used to pre-render background.
      */
-    val frameNumber: Int
+    val frames: Int
 )

@@ -5,14 +5,11 @@
   en: Sign out
   zh_hans: 登出
 - id: OnlineCount
-  en: Online
-  zh_hans: 在线人数
-- id: Welcome
-  en: Welcome to ByteLegend!
-  zh_hans: 欢迎来到字节传说！
+  en: "Online "
+  zh_hans: "在线 "
 - id: EnjoyProgramming
   en: Enjoy programming
-  zh_hans: 享受编程
+  zh_hans: 享受编程的乐趣
 - id: JavaNewbieIslandToGitIslandText
   en: To Git Island
   zh_hans: 去往Git岛

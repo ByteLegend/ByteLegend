@@ -12,6 +12,7 @@ import com.bytelegend.app.client.api.TextAjaxResource
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.page.game
+import com.bytelegend.client.app.web.GameSceneInitData
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
@@ -88,11 +89,21 @@ class DefaultGameSceneContainer(
         val map = resourceLoader.loadAsync(GameMapResource(mapJsonResourceId(mapId), "$RRBD/map/$mapId/map.json", 1))
         val tileset = resourceLoader.loadAsync(ImageResource(mapTilesetResourceId(mapId), "$RRBD/map/$mapId/tileset.png", 1))
         val mapScript = resourceLoader.loadAsync(TextAjaxResource(mapScriptResourceId(mapId), "$RRBD/js/game-$mapId.js", 1))
-        val i18nText = resourceLoader.loadAsync(I18nTextResource(mapTextResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.toLowerCase()}.json", 1))
+        val i18nText = resourceLoader.loadAsync(I18nTextResource(mapTextResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.toLowerCase()}.json", 1, game.i18nTextContainer))
+        val playerData = resourceLoader.loadAsync(
+            GameSceneInitData(
+                mapId,
+                game.webSocketClient,
+                eventBus,
+                resourceLoader
+            )
+        )
 
         i18nContainer.putAll(i18nText.await())
 
         val scene = DefaultGameScene(di, map.await(), tileset.await(), gameContainerSize)
+        scene.players = playerData.await()
+        scene.players.gameScene = scene
         scenes[mapId] = scene
         switchScene(oldScene, scene, switchAfterLoading, action)
 

@@ -2,7 +2,6 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.EventBus
-import com.bytelegend.app.client.api.GAME_MAP_HIERARCHY_ID
 import com.bytelegend.app.client.api.GameContainerSizeAware
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
@@ -17,9 +16,10 @@ import com.bytelegend.app.shared.ServerLocation
 import com.bytelegend.app.shared.ServerSideData
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.i18n.Locale
-import com.bytelegend.client.app.obj.PlayerCharacter
+import com.bytelegend.client.app.obj.PlayerSprite
 import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.ModalControllerInternal
+import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import org.kodein.di.DI
@@ -37,13 +37,14 @@ fun init(serverSideData: ServerSideData): Game {
         bind<ResourceLoader>() with singleton { DefaultResourceLoader(di) }
         bind<EventBus>() with instance(WindowBasedEventBus)
         bind<GameSceneContainer>() with singleton { DefaultGameSceneContainer(di, PixelSize(window.innerWidth, window.innerHeight)) }
-        bind<String>(tag = "RRBD") with instance(serverSideData.RRBD)
+        bind<String>(tag = "RRBD") with instance(serverSideData.rrbd)
         bind<ServerLocation>() with instance(serverSideData.serverLocation)
         bind<Locale>() with instance(determineLocale(serverSideData))
         bind<MutableMap<String, String>>(tag = "i18nTextContainer") with instance(JSObjectBackedMap())
         bind<Player>() with instance(serverSideData.player)
-        bind<GameRuntime>() with eagerSingleton { Game(di) }
+        bind<GameRuntime>() with eagerSingleton { Game(di, serverSideData) }
         bind<GameControl>() with singleton { GameControl(di) }
+        bind<WebSocketClient>() with singleton { WebSocketClient(di) }
     }
     val runtime by di.instance<GameRuntime>()
     return runtime as Game
@@ -51,14 +52,15 @@ fun init(serverSideData: ServerSideData): Game {
 
 private fun determineLocale(serverSideData: ServerSideData): Locale {
     return try {
-        Locale.valueOf(localStorage.getItem("locale")!!)
+        Locale.of(localStorage.getItem("locale")!!)
     } catch (e: Exception) {
-        serverSideData.locale
+        Locale.of(serverSideData.player.locale!!)
     }
 }
 
 class Game(
-    override val di: DI
+    override val di: DI,
+    serverSideData: ServerSideData
 ) : DIAware, GameRuntime, GameContainerSizeAware {
     override val RRBD: String by di.instance(tag = "RRBD")
     override val locale: Locale by di.instance()
@@ -73,13 +75,12 @@ class Game(
         }
     override val activeScene: GameScene
         get() = sceneContainer.activeScene!!
-    var _hero: PlayerCharacter? = null
+    val webSocketClient: WebSocketClient by di.instance()
+    var _hero: PlayerSprite? = null
     override val hero: Character?
         get() = _hero
 
-    val mapHierarchy: List<GameMapDefinition> by lazy {
-        resourceLoader.getLoadedResource(GAME_MAP_HIERARCHY_ID)
-    }
+    val mapHierarchy: List<GameMapDefinition> = serverSideData.maps
     val idToMapDefinition: Map<String, GameMapDefinition> by lazy {
         mapHierarchy.toMap()
     }
@@ -88,7 +89,7 @@ class Game(
         DefaultModalController(di)
     }
 
-    val player: Player by di.instance()
+    val heroPlayer: Player by di.instance()
     val serverLocation: ServerLocation by di.instance()
     val startTime: Timestamp = Timestamp.now()
     var lastAnimationFrameTime: Timestamp = startTime
@@ -142,7 +143,7 @@ private fun List<GameMapDefinition>.toMap(): Map<String, GameMapDefinition> {
 
 private fun GameMapDefinition.putIntMap(map: MutableMap<String, GameMapDefinition>) {
     map[id] = this
-    submaps.forEach {
+    children.forEach {
         it.putIntMap(map)
     }
 }

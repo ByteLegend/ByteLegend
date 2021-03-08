@@ -10,8 +10,10 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.math.adjustCanvasCoordinateIfNecessary
+import com.bytelegend.app.shared.math.calculateCanvasCoordinateInMapFromCenterPoint
+import com.bytelegend.app.shared.math.limitIn
 import com.bytelegend.app.shared.objects.GameMapPoint
-import common.utils.limitIn
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
@@ -69,7 +71,7 @@ class DefaultGameCanvasState(
     private fun onResizeGameContainer(newContainerSize: PixelSize, initMapCenterPoint: GridCoordinate? = null) {
         canvasGridSize = calculateCanvasGridSize(newContainerSize)
         canvasPixelSize = calculateCanvasSize(canvasGridSize)
-        canvasCoordinateInMap = adjustCanvasCoordinateIfNecessary(calculateCanvasCoordinateInMap(initMapCenterPoint), canvasPixelSize)
+        canvasCoordinateInMap = adjustCanvasCoordinateIfNecessary(gameMap.pixelSize, tileSize, calculateCanvasCoordinateInMap(initMapCenterPoint), canvasPixelSize)
         canvasCoordinateInGameContainer = calculateCanvasCoordinateInGameContainer(newContainerSize, canvasPixelSize)
         uiContainerSize = calculateUIContainerSize(gameContainerSize, canvasPixelSize)
         uiContainerCoordinateInGameContainer = calculateUIContainerCoordinateInGameContainer(gameContainerSize, uiContainerSize)
@@ -112,12 +114,7 @@ class DefaultGameCanvasState(
         return if (initMapCenterPoint == null) {
             canvasCoordinateInMap
         } else {
-            val leftTopCornerCoordinateInMap = PixelCoordinate(
-                initMapCenterPoint.x * gameMap.tileSize.width - canvasPixelSize.width / 2,
-                initMapCenterPoint.y * gameMap.tileSize.height - canvasPixelSize.height / 2
-            )
-
-            leftTopCornerCoordinateInMap
+            calculateCanvasCoordinateInMapFromCenterPoint(gameMap.tileSize, initMapCenterPoint, canvasPixelSize)
         }
     }
 
@@ -135,32 +132,13 @@ class DefaultGameCanvasState(
     override fun getCanvasGridSize() = canvasGridSize
     override fun moveTo(coordinate: PixelCoordinate) {
         stopScrolling()
-        canvasCoordinateInMap = adjustCanvasCoordinateIfNecessary(coordinate, canvasPixelSize)
+        canvasCoordinateInMap = adjustCanvasCoordinateIfNecessary(gameMap.pixelSize, tileSize, coordinate, canvasPixelSize)
     }
 
     private fun calculateCanvasGridSize(gameContainerSize: PixelSize): GridSize {
         val width = min((gameContainerSize.width / tileSize.width) - 1, gameMapGridSize.width)
         val height = min((gameContainerSize.height / tileSize.height) - 1, gameMapGridSize.height)
         return GridSize(width, height)
-    }
-
-    // In certain cases, the canvas might be out of map, or leave large black gap when user keep increasing browser window
-    private fun adjustCanvasCoordinateIfNecessary(
-        oldCanvasCoordinateInMap: PixelCoordinate,
-        canvasPixelSize: PixelSize
-    ): PixelCoordinate {
-        val newCanvasCoordinateInMapX = when {
-            oldCanvasCoordinateInMap.x < 0 -> 0
-            oldCanvasCoordinateInMap.x > gameMap.pixelSize.width - canvasPixelSize.width -> limitIn(gameMap.pixelSize.width - canvasPixelSize.width)
-            else -> oldCanvasCoordinateInMap.x
-        }
-
-        val newCanvasCoordinateInMapY = when {
-            oldCanvasCoordinateInMap.y < 0 -> 0
-            oldCanvasCoordinateInMap.y > gameMap.pixelSize.height - canvasPixelSize.height -> limitIn(gameMap.pixelSize.height - canvasPixelSize.height)
-            else -> oldCanvasCoordinateInMap.y
-        }
-        return PixelCoordinate(newCanvasCoordinateInMapX, newCanvasCoordinateInMapY).alignToTileBorder(gameMap.tileSize)
     }
 
     private var scrollSpeedPixelPerSecond: Int = 0

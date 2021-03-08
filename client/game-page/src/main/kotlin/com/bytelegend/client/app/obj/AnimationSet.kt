@@ -2,11 +2,18 @@ package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
+import com.bytelegend.app.shared.DOWN_MOVE
+import com.bytelegend.app.shared.DOWN_STILL
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.LEFT_MOVE
+import com.bytelegend.app.shared.LEFT_STILL
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.app.shared.animationSetId
+import com.bytelegend.app.shared.RIGHT_MOVE
+import com.bytelegend.app.shared.RIGHT_STILL
+import com.bytelegend.app.shared.UP_MOVE
+import com.bytelegend.app.shared.UP_STILL
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.playerAnimationSetCoordinate
 import com.bytelegend.app.shared.playerAnimationSetResourceId
@@ -17,21 +24,12 @@ interface AnimationSet {
     fun getFrame(still: Boolean, direction: Direction): Pair<HTMLImageElement, PixelBlock>
 }
 
-val DOWN_STILL = GridCoordinate(1, 0)
-val DOWN_MOVE = listOf(GridCoordinate(0, 0), GridCoordinate(2, 0))
-val UP_STILL = GridCoordinate(1, 3)
-val UP_MOVE = listOf(GridCoordinate(0, 3), GridCoordinate(2, 3))
-val LEFT_STILL = GridCoordinate(1, 1)
-val LEFT_MOVE = listOf(GridCoordinate(0, 1), GridCoordinate(2, 1))
-val RIGHT_STILL = GridCoordinate(1, 2)
-val RIGHT_MOVE = listOf(GridCoordinate(0, 2), GridCoordinate(2, 2))
-
 class TwelveTilesAnimationSet(
     private val gameScene: GameScene,
     characterId: Int
 ) : AnimationSet {
     private val htmlImageElement: HTMLImageElement =
-        gameScene.gameRuntime.unsafeCast<Game>().resourceLoader.getLoadedResource<ImageResourceData>(playerAnimationSetResourceId(animationSetId(characterId))).htmlElement
+        gameScene.gameRuntime.unsafeCast<Game>().resourceLoader.getLoadedResource<ImageResourceData>(playerAnimationSetResourceId(characterId)).htmlElement
     private val topLeftCorner: PixelCoordinate = playerAnimationSetCoordinate(characterId)
     override fun getFrame(still: Boolean, direction: Direction): Pair<HTMLImageElement, PixelBlock> {
         val coordinateIn12Set = if (still) {

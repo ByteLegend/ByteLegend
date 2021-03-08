@@ -565,8 +565,12 @@ class ImageReader {
     fun readAlpha(image: File, x: Int, y: Int): Int = readPixel(image, x, y).a
     fun readPixel(image: File, x: Int, y: Int): RGBA {
         val img = getImage(image)
-        return img.getRGB(x, y).let {
-            if (img.type == BufferedImage.TYPE_BYTE_BINARY)
+        return img.getRGBA(x, y)
+    }
+
+    private fun BufferedImage.getRGBA(x: Int, y: Int): RGBA {
+        return getRGB(x, y).let {
+            if (type == BufferedImage.TYPE_BYTE_BINARY)
                 RGBA(
                     ((it and 0xff0000) ushr 16),
                     ((it and 0xff00) ushr 8),
@@ -581,6 +585,19 @@ class ImageReader {
                     ((it.toLong() and 0xff000000) ushr 24).toInt()
                 )
         }
+    }
+
+    fun read(image: File): List<List<RGBA>> {
+        val img = getImage(image)
+        val ret = ArrayList<List<RGBA>>()
+        for (y in 0 until img.height) {
+            val row = ArrayList<RGBA>()
+            for (x in 0 until img.width) {
+                row.add(img.getRGBA(x, y))
+            }
+            ret.add(row)
+        }
+        return ret
     }
 
     fun isFullyTransparent(imageBlock: ImageBlock): Boolean = imageTransparencyCache.computeIfAbsent(imageBlock) {

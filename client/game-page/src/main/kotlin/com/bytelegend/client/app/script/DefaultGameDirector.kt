@@ -9,7 +9,7 @@ import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.GameControl
-import com.bytelegend.client.app.obj.AbstractCharacter
+import com.bytelegend.client.app.obj.CharacterSprite
 import com.bytelegend.client.app.script.effect.fadeInEffect
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
@@ -102,7 +102,7 @@ class DefaultGameDirector(
         val builder = SpeechBuilder()
         builder.action()
 
-        val character = gameScene.objects.getById<AbstractCharacter>(builder.objectId!!)
+        val character = gameScene.objects.getById<CharacterSprite>(builder.objectId!!)
         scripts.add(
             DisplayWidgetScript(SpeechBubbleWidget::class) {
                 attrs.game = gameScene.gameRuntime.asDynamic()
@@ -114,7 +114,7 @@ class DefaultGameDirector(
     }
 
     override fun starFly(fromObjectId: String) {
-        scripts.add(RunNativeJsScript(gameScene.objects.getById<AbstractCharacter>(fromObjectId).pixelCoordinate))
+        scripts.add(RunNativeJsScript(gameScene.objects.getById<CharacterSprite>(fromObjectId).pixelCoordinate))
     }
 
     override fun disableUserMouse() {

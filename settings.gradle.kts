@@ -11,12 +11,11 @@ include(":client:common")
 include(":client:common-test-fixtures")
 
 include(":server-api")
-
-when {
-    System.getProperty("server.impl") == "opensource" -> useOpensourceServer()
-    System.getProperty("server.impl") == "default" -> useDefaultServer()
-    settingsDir.resolve("server/server.gradle.kts").isFile -> useDefaultServer()
-    else -> useOpensourceServer()
+include(":server-opensource")
+if (settingsDir.resolve("server/server.gradle.kts").isFile) {
+    include(":server:app")
+    include(":server:json-model")
+    include(":server:sync-server")
 }
 
 rootProject.children.forEach { it.configureBuildScriptName() }
@@ -24,14 +23,4 @@ rootProject.children.forEach { it.configureBuildScriptName() }
 fun ProjectDescriptor.configureBuildScriptName() {
     buildFileName = "${name}.gradle.kts"
     children.forEach { it.configureBuildScriptName() }
-}
-
-fun useOpensourceServer() {
-    include(":server-opensource")
-}
-
-fun useDefaultServer() {
-    include(":server:app")
-    include(":server:json-model")
-    include(":server:sync-server")
 }

@@ -60,6 +60,16 @@ class DefaultGameScene(
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
     override val director: DefaultGameDirector = DefaultGameDirector(di, this)
+    lateinit var players: PlayerContainer
+
+    /**
+     * Upon reconnect, reload all data from
+     */
+    fun reload(newPlayers: PlayerContainer) {
+        val oldPlayers = players
+        players = newPlayers
+        oldPlayers.close()
+    }
 
     override fun objects(block: ObjectsBuilder.() -> Unit) {
         block()
@@ -124,7 +134,10 @@ class DefaultGameScene(
 
         val dynamicSprite = objects.getById<GameMapDynamicSprite>(builder.spriteId!!)
 
-        NoticeboardSprite(builder.id!!, this, dynamicSprite).init()
+        NoticeboardSprite(builder.id!!, this, dynamicSprite).apply {
+            objects.add(this)
+            init()
+        }
     }
 
     override fun npc(action: NpcBuilder.() -> Unit) {
@@ -138,7 +151,10 @@ class DefaultGameScene(
             onInitFunction = builder.onInit,
             onTouchFunction = builder.onTouch,
             onClickFunction = builder.onClick
-        ).init()
+        ).apply {
+            objects.add(this)
+            init()
+        }
     }
 
     override fun sprite(action: SpriteBuilder.() -> Unit) {
@@ -164,7 +180,10 @@ class DefaultGameScene(
             onClickFunction = builder.onClick,
             effect = effect,
             roles = roles
-        ).init()
+        ).apply {
+            objects.add(this)
+            init()
+        }
     }
 
     private fun gameMapText(gameMapText: GameMapText) {

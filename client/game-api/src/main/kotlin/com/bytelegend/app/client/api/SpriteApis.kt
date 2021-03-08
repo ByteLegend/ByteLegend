@@ -3,9 +3,9 @@ package com.bytelegend.app.client.api
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.imageBlockOnCanvas
+import com.bytelegend.app.shared.math.imageBlockOnCanvas
+import com.bytelegend.app.shared.math.outOfCanvas
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.app.shared.outOfCanvas
 
 abstract class AbstractMovableSprite : Sprite {
     abstract var pixelCoordinate: PixelCoordinate

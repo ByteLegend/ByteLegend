@@ -8,7 +8,7 @@ import com.bytelegend.app.shared.objects.GameObjectRole
 class HeroCharacter(
     gameScene: GameScene,
     val player: Player,
-) : PlayerCharacter(gameScene, player) {
+) : PlayerSprite(gameScene, player) {
     override val id: String = "hero"
     override val roles: Set<GameObjectRole> = setOf(
         GameObjectRole.Character,

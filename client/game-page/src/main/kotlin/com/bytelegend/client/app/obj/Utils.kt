@@ -11,6 +11,18 @@ fun isFirefox(): Boolean {
     return window.navigator.userAgent.toLowerCase().indexOf("firefox") > -1
 }
 
+fun uuid(): String {
+    // https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
+    return js(
+        """
+        'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        })
+    """
+    )
+}
+
 internal fun PixelCoordinate.outOfCanvas(gameScene: GameScene): Boolean {
     return (this - gameScene.canvasState.getCanvasCoordinateInMap()).let {
         it.x > gameScene.canvasState.getCanvasPixelSize().width ||

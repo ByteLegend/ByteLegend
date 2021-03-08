@@ -1,7 +1,5 @@
 package com.bytelegend.app.client.api
 
-import kotlinx.css.div
-
 class SpeechBuilder {
     /**
      * The person who speaks.
@@ -36,6 +34,7 @@ interface ScriptsBuilder {
             this.arrow = arrow
         }
     }
+
     fun starFly(fromObjectId: String)
 
     fun disableUserMouse()

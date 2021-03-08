@@ -11,7 +11,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.await
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonTransformingSerializer
 import org.w3c.dom.HTMLAudioElement
 import org.w3c.dom.HTMLImageElement
@@ -24,35 +23,34 @@ interface ExpensiveResource<T> {
     val id: String
     val weight: Int
 
+    /**
+     * Load a resource. Implementations must finish all work
+     * before returning,
+     *
+     * For example, we may need to load i18n texts and put them
+     * into a container. This means that putting texts into container
+     * must be done in this method, not `load(XXX).then(put)`.
+     *
+     */
     suspend fun load(): T
 }
 
 class I18nTextResource(
     override val id: String,
     url: String,
-    override val weight: Int
+    override val weight: Int,
+    private val i18nContainer: MutableMap<String, String>
 ) : AjaxResource<Map<String, String>>(id, url, weight) {
     override suspend fun decode(response: Response): Map<String, String> {
         return response.text().await().let {
-            JSObjectBackedMap(JSON.parse(it))
+            val result = JSObjectBackedMap<String>(JSON.parse(it))
+            i18nContainer.putAll(result)
+            result
         }
     }
 }
 
 object GameMapListSerializer : JsonTransformingSerializer<List<GameMapDefinition>>(ListSerializer(GameMapDefinition.serializer()))
-
-const val GAME_MAP_HIERARCHY_ID = "game-map-hierarchy"
-
-class GameMapHierarchyResource(
-    url: String,
-    override val weight: Int
-) : AjaxResource<List<GameMapDefinition>>(GAME_MAP_HIERARCHY_ID, url, weight) {
-    override suspend fun decode(response: Response): List<GameMapDefinition> {
-        return response.text().await().let {
-            Json.decodeFromString(GameMapListSerializer, it)
-        }
-    }
-}
 
 data class ImageResourceData(
     val imageId: String,
@@ -170,8 +168,6 @@ interface ResourceLoader {
     suspend fun <T> load(
         resource: ExpensiveResource<out T>,
         blockingScene: Boolean = true
-//        onFailure: (Throwable) -> Unit = {},
-//        onSuccess: (T) -> Unit = {}
     ): T
 
     fun <T> loadAsync(
@@ -201,6 +197,4 @@ interface ResourceLoader {
      * 100 * (loaded resource weight sum) / (all resource weight sum)
      */
     fun currentProgress(): Int
-
-//    fun isLoading() = currentProgress() < 100
 }

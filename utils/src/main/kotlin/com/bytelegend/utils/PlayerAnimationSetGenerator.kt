@@ -4,7 +4,7 @@ import com.bytelegend.app.shared.ANIMATION_SET_HORIZONTAL_NUMBER
 import com.bytelegend.app.shared.ANIMATION_TILE_HEIGHT
 import com.bytelegend.app.shared.ANIMATION_TILE_WIDTH
 import com.bytelegend.app.shared.PLAYER_ANIMATION_SET_VERTICAL_NUMBER
-import com.bytelegend.app.shared.capacityDivide
+import com.bytelegend.app.shared.math.capacityDivide
 import com.bytelegend.app.shared.playerAnimationSetResourceId
 import java.awt.image.BufferedImage
 import java.io.File

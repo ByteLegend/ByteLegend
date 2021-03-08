@@ -41,7 +41,7 @@ class UserAvatarWidget : GameUIComponent<UserAvatarWidgetProps, UserAvatarWidget
             classes = setOf("picture-frame-border"),
             extraStyleBuilder = styleBuilder
         ) {
-            if (game.player.isAnonymous) {
+            if (game.heroPlayer.isAnonymous) {
                 attrs.title = i("Login")
 
                 img {
@@ -60,12 +60,12 @@ class UserAvatarWidget : GameUIComponent<UserAvatarWidgetProps, UserAvatarWidget
             } else {
                 img {
                     attrs.classes = setOf("avatar-img")
-                    attrs.src = game.player.avatarUrl ?: ""
+                    attrs.src = game.heroPlayer.avatarUrl ?: ""
                 }
             }
         }
 
-        if (!game.player.isAnonymous) {
+        if (!game.heroPlayer.isAnonymous) {
             styledSpan {
                 attrs.classes = setOf("nickname-span")
                 css {
@@ -78,7 +78,7 @@ class UserAvatarWidget : GameUIComponent<UserAvatarWidgetProps, UserAvatarWidget
                     attrs.id = "logout-link"
                     attrs.title = i("Logout")
                     attrs.href = "/logout?redirect=/"
-                    +(game.player.nickname ?: "#Error")
+                    +(game.heroPlayer.nickname ?: "#Error")
                 }
             }
         }

@@ -1,8 +1,4 @@
-//actual annotation class DynamoDbBean()
-
-//actual annotation class DynamoDbPartitionKey()
-
-//actual annotation class DynamoDbIgnore()
-
 actual annotation class JsonIgnore()
+actual annotation class BsonId()
+actual annotation class BsonIgnore()
 

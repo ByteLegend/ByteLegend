@@ -6,7 +6,24 @@ const val ANIMATION_SET_HORIZONTAL_NUMBER = 8
 const val PLAYER_ANIMATION_SET_VERTICAL_NUMBER = 8
 const val NPC_ANIMATION_SET_VERTICAL_NUMBER = 9999
 
-fun playerAnimationSetResourceId(animationSetId: Int) = "animation-set-$animationSetId"
+val DOWN_STILL = GridCoordinate(1, 0)
+val DOWN_MOVE_1 = GridCoordinate(0, 0)
+val DOWN_MOVE_2 = GridCoordinate(2, 0)
+val DOWN_MOVE = listOf(DOWN_MOVE_1, DOWN_MOVE_2)
+val UP_STILL = GridCoordinate(1, 3)
+val UP_MOVE_1 = GridCoordinate(0, 3)
+val UP_MOVE_2 = GridCoordinate(2, 3)
+val UP_MOVE = listOf(UP_MOVE_1, UP_MOVE_2)
+val LEFT_STILL = GridCoordinate(1, 1)
+val LEFT_MOVE_1 = GridCoordinate(0, 1)
+val LEFT_MOVE_2 = GridCoordinate(2, 1)
+val LEFT_MOVE = listOf(LEFT_MOVE_1, LEFT_MOVE_2)
+val RIGHT_STILL = GridCoordinate(1, 2)
+val RIGHT_MOVE_1 = GridCoordinate(0, 2)
+val RIGHT_MOVE_2 = GridCoordinate(2, 2)
+val RIGHT_MOVE = listOf(RIGHT_MOVE_1, RIGHT_MOVE_2)
+
+fun playerAnimationSetResourceId(characterId: Int) = "animation-set-${animationSetId(characterId)}"
 
 fun animationSetId(characterId: Int) = characterId / (ANIMATION_SET_HORIZONTAL_NUMBER * PLAYER_ANIMATION_SET_VERTICAL_NUMBER)
 
@@ -14,8 +31,6 @@ fun animationSetId(characterId: Int) = characterId / (ANIMATION_SET_HORIZONTAL_N
  * The pixel coordinate of animation tile in animation set
  */
 fun playerAnimationSetCoordinate(index: Int) = animationSetCoordinate(index, PLAYER_ANIMATION_SET_VERTICAL_NUMBER)
-
-//fun npcAnimationSetCoordinate(index: Int) = animationSetCoordinate(index, NPC_ANIMATION_SET_VERTICAL_NUMBER)
 
 private fun animationSetCoordinate(characterId: Int, animationSetVerticalNumber: Int): PixelCoordinate {
     val offset = characterId % (ANIMATION_SET_HORIZONTAL_NUMBER * animationSetVerticalNumber)

@@ -48,7 +48,7 @@ class MainMapCanvasRenderer(
         if (canvasCaches.containsKey(mapId)) {
             return
         }
-        val mapBackgroundFrames = game.idToMapDefinition.getValue(mapId).frameNumber
+        val mapBackgroundFrames = game.idToMapDefinition.getValue(mapId).frames
 
         val canvasElements: List<HTMLCanvasElement> = List(mapBackgroundFrames) {
             document.createElement("canvas").apply {
@@ -73,7 +73,7 @@ class MainMapCanvasRenderer(
             for (y in 0 until gameScene.map.size.height) {
                 for (x in 0 until gameScene.map.size.width) {
                     val layers = background[y][x]
-                    // Draw all tiles, no matter they support pre-rendering or not
+                    // Draw all tiles, no matter whether they support pre-rendering or not
                     // to avoid black crack on tile border
                     layers.forEach {
                         it.prerenderFrame(cacheCanvasIndex, context)
@@ -91,7 +91,7 @@ class MainMapCanvasRenderer(
     private fun drawPrerenderedBackgroundLayer() {
         val gameScene = game.activeScene
         val mapId = gameScene.map.id
-        val currentFrameIndex = ((game.currentTimeMillis / 500) % (game.idToMapDefinition.getValue(mapId).frameNumber)).toInt()
+        val currentFrameIndex = ((game.currentTimeMillis / 500) % (game.idToMapDefinition.getValue(mapId).frames)).toInt()
         val canvasElement = canvasCaches.getValue(mapId)[currentFrameIndex]
 
         val canvasPixelSize = gameScene.canvasState.getCanvasPixelSize()
@@ -130,7 +130,7 @@ class MainMapCanvasRenderer(
 
     // TODO only rerendering dirty rectangles
     private fun drawNonPrerenderableTiles() {
-        val gameScene = game.activeScene
+        val gameScene = game.activeScene.unsafeCast<DefaultGameScene>()
         val canvasPixelSize = gameScene.canvasState.getCanvasPixelSize()
         val canvasGridWidth = gameScene.canvasState.getCanvasGridSize().width
         val canvasGridHeight = gameScene.canvasState.getCanvasGridSize().height
@@ -169,6 +169,14 @@ class MainMapCanvasRenderer(
                     layerToSprites.getOrPut(it.layer.toString()) { JSArrayBackedList() }.add(it)
                 }
             }
+
+        gameScene.players.getDrawableCharacters().forEach {
+            if (!it.outOfCanvas()) {
+                indexes.add(it.layer)
+                layerToSprites.getOrPut(it.layer.toString()) { JSArrayBackedList() }.add(it)
+            }
+        }
+
         drawByLayerOrder(indexes, layerToSprites, mapObjectsLayer)
     }
 

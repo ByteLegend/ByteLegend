@@ -1,8 +1,5 @@
 package com.bytelegend.app.shared.objects
 
-import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.PixelCoordinate
-
 /**
  * GameMapObject are objects that are easier to draw in Tiled than in code,
  * for example, a point, a region, etc.

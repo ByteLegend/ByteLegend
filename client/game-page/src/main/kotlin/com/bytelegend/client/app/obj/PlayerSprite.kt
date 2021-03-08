@@ -5,15 +5,17 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.objects.GameObjectRole
 
-open class PlayerCharacter(
+fun playerSpriteId(playerId: String) = "player-$playerId-sprite"
+
+open class PlayerSprite(
     gameScene: GameScene,
     private val player: Player,
-) : AbstractCharacter(
+) : CharacterSprite(
     gameScene,
     GridCoordinate(player.x!!, player.y!!) * gameScene.map.tileSize,
     TwelveTilesAnimationSet(gameScene, player.characterId!!)
 ) {
-    override val id: String = "player-${player._id}"
+    override val id: String = playerSpriteId(player.id!!)
     override val roles: Set<GameObjectRole> = setOf(
         GameObjectRole.Sprite,
         GameObjectRole.Character

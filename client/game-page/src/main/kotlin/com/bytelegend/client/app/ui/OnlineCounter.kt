@@ -1,12 +1,13 @@
 package com.bytelegend.client.app.ui
 
-import kotlinx.html.ButtonType
+import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import kotlinx.html.classes
 import kotlinx.html.id
 import react.RBuilder
 import react.RState
-import react.dom.button
 import react.dom.span
+import react.setState
 
 interface OnlineCounterProps : GameProps
 
@@ -18,22 +19,34 @@ interface OnlineCounterState : RState {
  * Display current FPS. Update upon "window.animate" event.
  */
 class OnlineCounter : GameUIComponent<OnlineCounterProps, OnlineCounterState>() {
+    private val onlineCounterUpdateEventListener: EventListener<Int> = {
+        setState {
+            count = it
+        }
+    }
+
     override fun OnlineCounterState.init() {
         count = 0
     }
 
     @Suppress("UnsafeCastFromDynamic")
     override fun RBuilder.render() {
-        button {
+        span {
             attrs.id = "online-counter"
-            attrs.type = ButtonType.button
-            attrs.classes = setOf("btn", "btn-primary", "map-title-widget")
+            attrs.classes = setOf("map-title-widget")
 
             +i("OnlineCount")
-            span {
-                attrs.classes = setOf("badge", "badge-light")
-                +state.count.toString()
-            }
+            +state.count.toString()
         }
+    }
+
+    override fun componentDidMount() {
+        super.componentDidMount()
+        props.game.eventBus.on(ONLINE_COUNTER_UPDATE_EVENT, onlineCounterUpdateEventListener)
+    }
+
+    override fun componentWillUnmount() {
+        super.componentWillUnmount()
+        props.game.eventBus.remove(ONLINE_COUNTER_UPDATE_EVENT, onlineCounterUpdateEventListener)
     }
 }

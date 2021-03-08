@@ -1,9 +1,5 @@
 package com.bytelegend.app.shared
 
-import com.bytelegend.app.shared.codegen.ToKotlinCode
-import com.bytelegend.app.shared.i18n.DEFAULT_LOCALE
-import com.bytelegend.app.shared.i18n.Locale
-
 //data class LocalizedText(
 //    val key: String,
 //    val locale: Locale,

@@ -1,13 +1,18 @@
 package com.bytelegend.app.shared.entities
 
-abstract class Replicable {
+import kotlinx.serialization.Serializable
+
+@Serializable
+abstract class Replicable(
+    val _id: String,
     /**
-     * The region name where the record is updated recently, e.g. cn-north-1
+     * The region name where the record is updated recently, e.g. BEIJING
      */
-    var lastUpdatedIn: String? = null
+    val lastUpdatedIn: String,
 
     /**
      * Last updated timestamp, in epoch milliseconds.
      */
-    var lastUpdatedTime: Long? = null
+    val lastUpdatedMs: Long,
+) {
 }

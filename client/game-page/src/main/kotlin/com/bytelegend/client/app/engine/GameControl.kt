@@ -9,7 +9,10 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.ui.MAP_SCROLL_EVENT
+import com.bytelegend.client.app.web.WebSocketClient
 import common.utils.search
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.kodein.di.DI
 import org.kodein.di.instance
 
@@ -30,6 +33,7 @@ class GameControl(
     private val game: Game by lazy { gameRuntime.unsafeCast<Game>() }
     private val eventBus: EventBus by di.instance()
     private val gameSceneContainer: GameSceneContainer by di.instance()
+    private val webSocketClient: WebSocketClient by di.instance()
 
     fun start() {
         userMouseEnabled = true
@@ -77,6 +81,9 @@ class GameControl(
             val hero = gameRuntime.hero!!
             val path = search(scene.blockers, hero.gridCoordinate, coordinate)
             if (path.isNotEmpty()) {
+                GlobalScope.async {
+                    webSocketClient.moveTo(coordinate.x, coordinate.y)
+                }
                 hero.movePath = path
             }
         }

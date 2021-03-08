@@ -1,12 +1,11 @@
 import com.bytelegend.buildsupport.OpenSourceLibrary
 import com.bytelegend.buildsupport.OpenSourceLicense.Apache2
-import com.bytelegend.buildsupport.OpenSourceLicense.BSD
 import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
-import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
+import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 
-val forestVersion = "0.3.1-SNAPSHOT"
-val vertxVersion = "4.0.0"
+val forestVersion = "0.3.3-SNAPSHOT"
+val vertxVersion = "4.0.2"
 val guiceVersion = "4.2.3-SNAPSHOT"
 val guavaVersion = "28.2-jre"
 val jacksonVersion = "2.12.1"
@@ -191,7 +190,7 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         version = bootstrapSwitchButtonReactVersion,
         license = MIT
     ),
-    OpenSourceLibrary("org.litote.kmongo:kmongo-coroutine:$kmongoVersion"),
+    OpenSourceLibrary("org.litote.kmongo:kmongo-coroutine-native:$kmongoVersion"),
     OpenSourceLibrary("org.mongodb:bson:$mongodbJavaDriverVersion")
 )
 

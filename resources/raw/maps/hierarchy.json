@@ -1,13 +1,13 @@
 [
   {
     "id": "JavaIsland",
-    "submaps": [
+    "children": [
       {
         "id": "JavaIslandNewbieVillagePub",
-        "submaps": [],
-        "frameNumber": 1
+        "children": [],
+        "frames": 1
       }
     ],
-    "frameNumber": 2
+    "frames": 2
   }
 ]

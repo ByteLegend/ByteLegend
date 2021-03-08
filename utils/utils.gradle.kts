@@ -26,6 +26,10 @@ dependencies {
     implementation(libs("jackson-dataformat-yaml"))
     implementation(libs("opencc4j"))
     implementation(libs("kotlinx-serialization-json"))
+
+    testImplementation(libs("junit-jupiter-api"))
+    testImplementation(libs("junit-jupiter-engine"))
+    testImplementation(libs("junit-jupiter-params"))
 }
 
 repositories {
@@ -33,6 +37,10 @@ repositories {
     maven {
         setUrl("http://oss.sonatype.org/content/repositories/snapshots")
     }
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
 }
 
 fun registerExecTask(name: String, mainClassName: String, vararg args: String, configuration: JavaExec.() -> Unit = {}) =
@@ -95,7 +103,7 @@ processResourcesTasks.add(tasks.register<Copy>("copyStaticResources") {
 
 val i18nInputDir = rootProject.file("i18n")
 val i18nOutputDir = RRBD.resolve("i18n")
-val i18nAllJson = project(":server-api").file("src/main/resources/i18n-all.json")
+val i18nAllJson = RRBD.resolve("i18n/all.json")
 processResourcesTasks.add(registerExecTask(
     "generateI18nJsons",
     "com.bytelegend.utils.I18nGeneratorKt",
@@ -138,24 +146,29 @@ val allMaps: List<String> = rootProject
     .filter { it.isFile && it.name.endsWith(".json") && it.name != "hierarchy.json" }
     .map { it.name.replace(".json", "") }
     .toList()
-processResourcesTasks.add(tasks.register<Copy>("copyGameJs") {
-    if (project.getEnvironment() == "dev") {
-        dependsOn(":client:game-page:browserDevelopmentWebpack")
-        allMaps.forEach {
-            dependsOn(":client:game-$it:browserDevelopmentWebpack")
-        }
-    } else {
-        dependsOn(":client:game-page:browserProductionWebpack")
-        allMaps.forEach {
-            dependsOn(":client:game-$it:browserProductionWebpack")
-        }
+tasks.register<Copy>("processGameDevJs") {
+    dependsOn(":client:game-page:browserDevelopmentWebpack")
+    allMaps.forEach {
+        dependsOn(":client:game-$it:browserDevelopmentWebpack")
     }
     from(project(":client:game-page").file("build/distributions/game-page.js"))
     allMaps.forEach {
         from(project(":client:game-$it").file("build/distributions/game-$it.js"))
     }
     into(RRBD.resolve("js"))
-})
+}
+
+tasks.register<Copy>("processGameProductionJs") {
+    dependsOn(":client:game-page:browserProductionWebpack")
+    allMaps.forEach {
+        dependsOn(":client:game-$it:browserProductionWebpack")
+    }
+    from(project(":client:game-page").file("build/distributions/game-page.js"))
+    allMaps.forEach {
+        from(project(":client:game-$it").file("build/distributions/game-$it.js"))
+    }
+    into(RRBD.resolve("js"))
+}
 
 val ossJson = RRBD.resolve("misc/oss.json")
 processResourcesTasks.add(tasks.register("generateOSSJson") {
@@ -168,7 +181,13 @@ processResourcesTasks.add(tasks.register("generateOSSJson") {
     }
 })
 
-tasks.register("processGameResources") {
+tasks.register("processGameDevResources") {
+    dependsOn("processGameDevJs")
+    dependsOn(processResourcesTasks)
+}
+
+tasks.register("processGameProductionResources") {
+    dependsOn("processGameProductionJs")
     dependsOn(processResourcesTasks)
 }
 

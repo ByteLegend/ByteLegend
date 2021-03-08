@@ -6,6 +6,10 @@ import com.bytelegend.app.shared.HumanReadableCoordinate
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
+import kotlinx.css.TextAlign
+import kotlinx.css.minWidth
+import kotlinx.css.px
+import kotlinx.css.textAlign
 import kotlinx.css.zIndex
 import kotlinx.html.classes
 import kotlinx.html.id
@@ -62,6 +66,8 @@ class MapCoordinateTitleWidget : GameUIComponent<MapCoordinateWidgetProps, MapCo
             attrs.classes = setOf("map-title-widget", "map-title-text")
             css {
                 zIndex = Layer.MapTitle.zIndex()
+                minWidth = 60.px
+                textAlign = TextAlign.center
             }
 
             if (state.humanReadableCoordinate == undefined) {

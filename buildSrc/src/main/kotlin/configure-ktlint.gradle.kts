@@ -1,5 +1,3 @@
-import org.gradle.api.tasks.JavaExec
-
 configurations.create("ktlint")
 dependencies {
     val ktlintVersion = "0.39.0"

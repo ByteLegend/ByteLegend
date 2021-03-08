@@ -4,13 +4,11 @@ package com.bytelegend.client.app.page
 
 import com.bytelegend.app.client.api.AudioResource
 import com.bytelegend.app.client.api.EventListener
-import com.bytelegend.app.client.api.GameMapHierarchyResource
 import com.bytelegend.app.client.api.I18nTextResource
 import com.bytelegend.app.client.api.ImageResource
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.ServerSideData
-import com.bytelegend.app.shared.animationSetId
 import com.bytelegend.app.shared.playerAnimationSetResourceId
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
@@ -60,8 +58,6 @@ import common.ui.CSSTransition
 import common.ui.CSSTransitionProps
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import react.RBuilder
 import react.RComponent
@@ -74,7 +70,7 @@ import react.dom.div
 import react.dom.render
 import react.setState
 
-val SERVER_SIDE_DATA: ServerSideData = Json.decodeFromString(
+val SERVER_SIDE_DATA: ServerSideData = Json { ignoreUnknownKeys = true }.decodeFromString(
     ServerSideData.serializer(),
     window.asDynamic().serverSideData
 )
@@ -104,29 +100,25 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     }
 
     init {
-        addGlobalResources()
-
-        game.sceneContainer.loadScene(SERVER_SIDE_DATA.mapId) { _, newScene ->
-            if (!SERVER_SIDE_DATA.player.isAnonymous) {
-                val obj = HeroCharacter(newScene, SERVER_SIDE_DATA.player)
-                game._hero = obj
-                obj.init()
-            }
-
-            game.start()
-        }
-        window.onresize = {
-            if (!state.loading) {
-                // Do nothing if page is still loading
-                onWindowResize()
-            }
-            null
-        }
+        loadResourcesAndStart()
+        window.onresize = { onWindowResize() }
     }
 
-    private fun addGlobalResources() {
-        if (!game.player.isAnonymous) {
-            val animationSetId = playerAnimationSetResourceId(animationSetId(SERVER_SIDE_DATA.player.characterId!!))
+    private fun loadResourcesAndStart() {
+        game.resourceLoader.loadAsync(
+            I18nTextResource(
+                "common-${game.locale.toLowerCase()}",
+                game.resolve("/i18n/common/${game.locale.toLowerCase()}.json"),
+                1,
+                game.i18nTextContainer
+            )
+        )
+        game.resourceLoader.loadAsync(ImageResource("texture", game.resolve("/img/ui/texture.jpg"), 1))
+        game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg"), 1), false)
+        game.webSocketClient.self = game.resourceLoader.loadAsync(game.webSocketClient)
+
+        if (!game.heroPlayer.isAnonymous) {
+            val animationSetId = playerAnimationSetResourceId(SERVER_SIDE_DATA.player.characterId!!)
             game.resourceLoader.loadAsync(
                 ImageResource(
                     animationSetId,
@@ -137,29 +129,30 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
             game.resourceLoader.loadAsync(
                 ImageResource(
                     HERO_AVATAR_IMG_ID,
-                    game.player.avatarUrl!!,
+                    game.heroPlayer.avatarUrl!!,
                     0
                 ),
                 false
             )
         }
-        GlobalScope.launch {
-            val i18nTexts = game.resourceLoader.load(
-                I18nTextResource(
-                    "common-${game.locale.toLowerCase()}",
-                    game.resolve("/i18n/common/${game.locale.toLowerCase()}.json"), 1
-                )
-            )
-            game.i18nTextContainer.putAll(i18nTexts)
+        game.sceneContainer.loadScene(SERVER_SIDE_DATA.player.map!!) { _, newScene ->
+            if (!SERVER_SIDE_DATA.player.isAnonymous) {
+                val obj = HeroCharacter(newScene, SERVER_SIDE_DATA.player)
+                game._hero = obj
+                obj.init()
+                newScene.objects.add(obj)
+            }
+
+            game.start()
         }
-        game.resourceLoader.loadAsync(ImageResource("texture", game.resolve("/img/ui/texture.jpg"), 1))
-        game.resourceLoader.loadAsync(GameMapHierarchyResource(game.resolve("/map/hierarchy.json"), 1))
-        game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg"), 1), false)
     }
 
     private fun onWindowResize() {
-        game.gameContainerSize = PixelSize(window.innerWidth, window.innerHeight)
-        game.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+        if (!state.loading) {
+            // Do nothing if page is still loading
+            game.gameContainerSize = PixelSize(window.innerWidth, window.innerHeight)
+            game.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+        }
     }
 
     override fun RBuilder.render() {
@@ -179,9 +172,9 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                     userMouseInteractionLayer(attrs)
                     mapTitleWidgets(Direction.LEFT, attrs) {
                         mapNameWidget(attrs)
-                        mapCoordinateTitleWidget(attrs)
                         fpsCounter(attrs)
-//                                    onlineCounter(attrs)
+                        onlineCounter(attrs)
+                        mapCoordinateTitleWidget(attrs)
                     }
                     mapTitleWidgets(Direction.RIGHT, attrs) {
                         audioSwitch(attrs)
@@ -354,13 +347,6 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     ): ReactElement {
         return gameChild(parentProps, ICPServerLocationWidget::class, block)
     }
-
-//    private fun RElementBuilder<InteractableWidgetsLayerProps>.dialogWidgets(
-//        parentProps: InteractableWidgetsLayerProps,
-//        block: RElementBuilder<DialogWidgetsProps>.() -> Unit = {}
-//    ): ReactElement {
-//        return gameChild(parentProps, DialogWidgets::class, block)
-//    }
 
     private fun RBuilder.cssTransition(key: String, block: RElementBuilder<CSSTransitionProps>.() -> Unit) {
         CSSTransition {

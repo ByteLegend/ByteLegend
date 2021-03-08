@@ -78,7 +78,7 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
             eventBus.emit(
                 RESOURCE_LOADING_FAILURE_EVENT,
-                ResourceLoadingFailureEvent(resource.id, "Loading resource $resource failed: ${e.message}")
+                ResourceLoadingFailureEvent(resource.id, "Loading resource ${resource.id} failed: ${e.message}")
             )
             throw e
         }

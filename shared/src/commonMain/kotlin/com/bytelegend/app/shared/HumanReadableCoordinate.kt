@@ -1,12 +1,6 @@
 package com.bytelegend.app.shared
 
-import kotlinx.serialization.SerialInfo
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.jsonPrimitive
 import kotlin.math.abs
 
 /**
@@ -71,6 +65,7 @@ data class PixelSize(val width: Int, val height: Int) {
     operator fun div(gridSize: GridSize) = PixelSize(width / gridSize.width, height / gridSize.height)
     operator fun div(pixelSize: PixelSize) = GridSize(width / pixelSize.width, height / pixelSize.height)
     operator fun times(n: Int): PixelSize = PixelSize(width * n, height * n)
+    operator fun minus(offset: PixelSize) = PixelSize(width - offset.width, height - offset.height)
 }
 
 @Serializable

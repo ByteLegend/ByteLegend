@@ -6,9 +6,9 @@ import com.bytelegend.app.shared.Direction.DOWN
 import com.bytelegend.app.shared.Direction.LEFT
 import com.bytelegend.app.shared.Direction.RIGHT
 import com.bytelegend.app.shared.Direction.UP
-import com.bytelegend.app.shared.imageBlockOnCanvas
+import com.bytelegend.app.shared.math.imageBlockOnCanvas
+import com.bytelegend.app.shared.math.outOfCanvas
 import com.bytelegend.app.shared.objects.GameObject
-import com.bytelegend.app.shared.outOfCanvas
 import com.bytelegend.client.app.engine.GAME_CLOCK_10HZ_EVENT
 import kotlinx.html.js.onClickFunction
 import react.RBuilder

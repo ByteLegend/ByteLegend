@@ -13,7 +13,7 @@ class NPC(
     private val onInitFunction: () -> Unit = {},
     private val onTouchFunction: (GameObject) -> Unit = {},
     private val onClickFunction: () -> Unit = {}
-) : AbstractCharacter(
+) : CharacterSprite(
     gameScene,
     npcSprite.topLeftCorner * gameScene.map.tileSize,
     MapTilesetAnimationSet(gameScene, npcSprite)

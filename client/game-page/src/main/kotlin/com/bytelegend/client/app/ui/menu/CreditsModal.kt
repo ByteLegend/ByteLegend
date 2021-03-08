@@ -6,7 +6,6 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import common.ui.bootstrap.BootstrapModalBody
 import common.ui.bootstrap.BootstrapNav
-import kotlinx.css.h5
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.events.Event
 import react.RBuilder

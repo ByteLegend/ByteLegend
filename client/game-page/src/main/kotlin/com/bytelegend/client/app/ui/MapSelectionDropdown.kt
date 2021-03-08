@@ -23,7 +23,7 @@ class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, RState>(
 
                 dropdownItem(currentMainMap, false)
 
-                it.submaps.filter { it.id != currentMainMap }.forEach {
+                it.children.filter { it.id != currentMainMap }.forEach {
                     dropdownItem(it.id, true)
                 }
                 if (index != game.mapHierarchy.size - 1) {

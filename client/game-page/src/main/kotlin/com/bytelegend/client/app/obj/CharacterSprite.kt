@@ -10,7 +10,6 @@ import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
 import org.w3c.dom.CanvasRenderingContext2D
 
@@ -22,7 +21,7 @@ const val CHARACTER_MOVEMENT_MIN_INTERVAL_MS = 100
 const val CHARACTER_ANIMATION_FPS = 2
 
 @Suppress("UNUSED_PARAMETER")
-abstract class AbstractCharacter(
+abstract class CharacterSprite(
     override val gameScene: GameScene,
     override var pixelCoordinate: PixelCoordinate,
     private val animationSet: AnimationSet
@@ -36,12 +35,10 @@ abstract class AbstractCharacter(
     private val clockEventListener: EventListener<Nothing> = this::onAnimation
 
     override fun init() {
-        gameScene.objects.add(this)
         gameScene.gameRuntime.eventBus.on(GAME_CLOCK_50HZ_EVENT, clockEventListener)
     }
 
     override fun close() {
-        gameScene.objects.remove<GameObject>(this.id)
         gameScene.gameRuntime.eventBus.remove(GAME_CLOCK_50HZ_EVENT, clockEventListener)
     }
 
