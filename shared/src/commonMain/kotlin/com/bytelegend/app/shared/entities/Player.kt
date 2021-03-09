@@ -104,5 +104,6 @@ class Player {
 
     @get: JsonIgnore
     val isAnonymous: Boolean
+        @BsonIgnore
         get() = id!!.startsWith("anon#")
 }

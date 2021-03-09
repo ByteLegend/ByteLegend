@@ -117,9 +117,13 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg"), 1), false)
         game.webSocketClient.self = game.resourceLoader.loadAsync(game.webSocketClient)
 
-        if (!game.heroPlayer.isAnonymous) {
+        if (game.heroPlayer.isAnonymous) {
+            game.sceneContainer.loadScene(SERVER_SIDE_DATA.player.map!!) { _, newScene ->
+                game.start()
+            }
+        } else {
             val animationSetId = playerAnimationSetResourceId(SERVER_SIDE_DATA.player.characterId!!)
-            game.resourceLoader.loadAsync(
+            val animationSetDeferred = game.resourceLoader.loadAsync(
                 ImageResource(
                     animationSetId,
                     game.resolve("/img/player/$animationSetId.png"),
@@ -134,16 +138,16 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                 ),
                 false
             )
-        }
-        game.sceneContainer.loadScene(SERVER_SIDE_DATA.player.map!!) { _, newScene ->
-            if (!SERVER_SIDE_DATA.player.isAnonymous) {
+
+            game.sceneContainer.loadScene(SERVER_SIDE_DATA.player.map!!) { _, newScene ->
+                animationSetDeferred.await()
+
                 val obj = HeroCharacter(newScene, SERVER_SIDE_DATA.player)
                 game._hero = obj
                 obj.init()
                 newScene.objects.add(obj)
+                game.start()
             }
-
-            game.start()
         }
     }
 

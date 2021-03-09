@@ -190,7 +190,7 @@ interface GameSceneContainer : GameContainerSizeAware {
      *
      * If {switchAfterLoad} is true, the UI will switch after loading.
      */
-    fun loadScene(mapId: String, switchAfterLoad: Boolean = true, onFinish: (GameScene?, GameScene) -> Unit = { _, _ -> })
+    fun loadScene(mapId: String, switchAfterLoad: Boolean = true, onFinish: suspend (GameScene?, GameScene) -> Unit = { _, _ -> })
 }
 
 interface ModalController {

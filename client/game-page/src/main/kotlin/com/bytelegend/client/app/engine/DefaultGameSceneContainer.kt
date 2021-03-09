@@ -52,7 +52,7 @@ class DefaultGameSceneContainer(
             scenes.values.forEach { it.gameContainerSize = value }
         }
 
-    override fun loadScene(mapId: String, switchAfterLoad: Boolean, onFinish: (GameScene?, GameScene) -> Unit) {
+    override fun loadScene(mapId: String, switchAfterLoad: Boolean, onFinish: suspend (GameScene?, GameScene) -> Unit) {
         GlobalScope.launch {
             // during loading, activeScene may already changed, so we save the reference
             val oldScene = _activeScene
@@ -75,7 +75,7 @@ class DefaultGameSceneContainer(
         }
     }
 
-    private fun switchScene(oldScene: GameScene?, newScene: GameScene, switch: Boolean, action: (GameScene?, GameScene) -> Unit) {
+    private suspend fun switchScene(oldScene: GameScene?, newScene: GameScene, switch: Boolean, action: suspend (GameScene?, GameScene) -> Unit) {
         action(oldScene, newScene)
         if (switch && _activeScene == oldScene) {
             // the current active scene may be changed during loading
@@ -85,7 +85,7 @@ class DefaultGameSceneContainer(
         }
     }
 
-    private suspend fun createThenSwitchScene(oldScene: GameScene?, mapId: String, switchAfterLoading: Boolean, action: (GameScene?, GameScene) -> Unit) {
+    private suspend fun createThenSwitchScene(oldScene: GameScene?, mapId: String, switchAfterLoading: Boolean, action: suspend (GameScene?, GameScene) -> Unit) {
         val map = resourceLoader.loadAsync(GameMapResource(mapJsonResourceId(mapId), "$RRBD/map/$mapId/map.json", 1))
         val tileset = resourceLoader.loadAsync(ImageResource(mapTilesetResourceId(mapId), "$RRBD/map/$mapId/tileset.png", 1))
         val mapScript = resourceLoader.loadAsync(TextAjaxResource(mapScriptResourceId(mapId), "$RRBD/js/game-$mapId.js", 1))
