@@ -9,9 +9,9 @@ val vertxVersion = "4.0.2"
 val guiceVersion = "4.2.3-SNAPSHOT"
 val guavaVersion = "28.2-jre"
 val jacksonVersion = "2.12.1"
-val kotlinVersion = "1.4.30"
+val kotlinVersion = "1.4.31"
 val kotlinCoroutinesCommonVersion = "1.3.8"
-val kotlinxVersion = "1.4.2"
+val kotlinxVersion = "1.4.3"
 val junitVersion = "5.7.0"
 val junit4Version = "4.13"
 val mockKVersion = "1.9.3"
@@ -38,14 +38,12 @@ val bouncycastleVersion = "1.59"
 val awsSdkVersion = "2.13.39"
 val opencc4jVersion = "1.6.0"
 val kotlinxSerializationVersion = "1.0.1"
-val dynamodbVersion = "2.13.39"
 val caffeineVersion = "2.8.8"
 val testContainersVersion = "1.15.1"
-val dynamodbCrossRegionReplicationVersion = "1.2.1.12"
 val kodeinVersion = "7.2.0"
-val kotlinReactVersion = "17.0.1-pre.146-kotlin-1.4.30"
+val kotlinReactVersion = "17.0.1-pre.148-kotlin-1.4.30"
 val reactVersion = "17.0.1"
-val kotlinStyledVersion = "5.2.1-pre.146-kotlin-1.4.30"
+val kotlinStyledVersion = "5.2.1-pre.148-kotlin-1.4.30"
 val styledComponentsVersion = "5.2.1"
 val reactBootstrapVersion = "1.4.3"
 val materialUIVersion = "4.11.2"
@@ -145,8 +143,6 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("com.auth0:java-jwt:$javaJwtVersion"),
     OpenSourceLibrary("org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion"),
 
-    OpenSourceLibrary("software.amazon.awssdk:dynamodb:$awsSdkVersion"),
-    OpenSourceLibrary("software.amazon.awssdk:dynamodb-enhanced:$awsSdkVersion"),
     OpenSourceLibrary("software.amazon.awssdk:netty-nio-client:$awsSdkVersion"),
 
     OpenSourceLibrary("com.github.houbb:opencc4j:$opencc4jVersion"),
@@ -157,7 +153,6 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("org.testcontainers:testcontainers:$testContainersVersion"),
     OpenSourceLibrary("org.testcontainers:selenium:$testContainersVersion"),
     OpenSourceLibrary("org.testcontainers:junit-jupiter:$testContainersVersion"),
-    OpenSourceLibrary("com.github.blindpirate:dynamodb-cross-region-replication:$dynamodbCrossRegionReplicationVersion"),
     OpenSourceLibrary("org.kodein.di:kodein-di:$kodeinVersion"),
 
     OpenSourceLibrary("GSAP", "https://greensock.com/", GreenSockStanardLicense),
