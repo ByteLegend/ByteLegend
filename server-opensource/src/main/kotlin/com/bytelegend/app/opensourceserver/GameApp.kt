@@ -172,8 +172,16 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
         sessions[session] = PlayerContext.get()
         Thread() {
             Thread.sleep(1000)
-            session.sendMessage(TextMessage(jsonMapper.toJson(PublishMessage(ONLINE_COUNTER_UPDATE_EVENT, sessions.size))))
+            sendMessage(session, PublishMessage(ONLINE_COUNTER_UPDATE_EVENT, sessions.size))
         }.start()
+    }
+
+    /**
+     * Avoid "The remote endpoint was in state [TEXT_PARTIAL_WRITING] which is an invalid state for called method" error
+     */
+    @Synchronized
+    private fun sendMessage(session: WebSocketSession, messageObj: Any) {
+        session.sendMessage(TextMessage(jsonMapper.toJson(messageObj)))
     }
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
@@ -194,11 +202,11 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
                 else -> throw IllegalArgumentException("Unsupported message name: ${message.name}")
             }
             val replyMessage = ReplyMessage(WebSocketMessageType.REPLY, message.replyAddress, if (returnValue == Unit) "" else returnValue)
-            session.sendMessage(TextMessage(jsonMapper.toJson(replyMessage)))
+            sendMessage(session, replyMessage)
         } catch (t: Throwable) {
             t.printStackTrace()
             val replyErrorMessage = ReplyMessage(WebSocketMessageType.REPLY_ERROR, message.replyAddress, t.message ?: "")
-            session.sendMessage(TextMessage(jsonMapper.toJson(replyErrorMessage)))
+            sendMessage(session, replyErrorMessage)
         }
     }
 
