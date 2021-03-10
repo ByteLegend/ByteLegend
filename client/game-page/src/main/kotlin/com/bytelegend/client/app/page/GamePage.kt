@@ -18,6 +18,7 @@ import com.bytelegend.client.app.engine.init
 import com.bytelegend.client.app.obj.HeroCharacter
 import com.bytelegend.client.app.ui.AudioSwitchWidget
 import com.bytelegend.client.app.ui.AudioSwitchWidgetProps
+import com.bytelegend.client.app.ui.BannerUIComponent
 import com.bytelegend.client.app.ui.FpsCounter
 import com.bytelegend.client.app.ui.FpsCounterProps
 import com.bytelegend.client.app.ui.GameContainer
@@ -47,6 +48,7 @@ import com.bytelegend.client.app.ui.SpriteNameWidget
 import com.bytelegend.client.app.ui.SpriteNameWidgetProps
 import com.bytelegend.client.app.ui.TileCursorWidget
 import com.bytelegend.client.app.ui.TileCursorWidgetProps
+import com.bytelegend.client.app.ui.ToastUIComponent
 import com.bytelegend.client.app.ui.UserAvatarWidget
 import com.bytelegend.client.app.ui.UserAvatarWidgetProps
 import com.bytelegend.client.app.ui.UserMouseInteractionLayer
@@ -54,8 +56,6 @@ import com.bytelegend.client.app.ui.UserMouseInteractionLayerProps
 import com.bytelegend.client.app.ui.gameChild
 import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
-import common.ui.CSSTransition
-import common.ui.CSSTransitionProps
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.serialization.json.Json
@@ -169,6 +169,8 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                 gameContainer(game) {
                     heroIndicator(attrs)
                     modalController(attrs)
+                    bannerController(attrs)
+                    toastController(attrs)
                     userAvatarWidget(attrs)
                     icpServerLocationWidget(attrs)
                     gameScriptWidgetDisplayLayer(attrs)
@@ -338,6 +340,20 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         return gameChild(parentProps, GameModal::class, block)
     }
 
+    private fun RElementBuilder<GameContainerProps>.bannerController(
+        parentProps: GameContainerProps,
+        block: RElementBuilder<GameProps>.() -> Unit = {}
+    ): ReactElement {
+        return gameChild(parentProps, BannerUIComponent::class, block)
+    }
+
+    private fun RElementBuilder<GameContainerProps>.toastController(
+        parentProps: GameContainerProps,
+        block: RElementBuilder<GameProps>.() -> Unit = {}
+    ): ReactElement {
+        return gameChild(parentProps, ToastUIComponent::class, block)
+    }
+
     private fun RElementBuilder<GameContainerProps>.userAvatarWidget(
         parentProps: GameContainerProps,
         block: RElementBuilder<UserAvatarWidgetProps>.() -> Unit = {}
@@ -350,14 +366,5 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, ICPServerLocationWidget::class, block)
-    }
-
-    private fun RBuilder.cssTransition(key: String, block: RElementBuilder<CSSTransitionProps>.() -> Unit) {
-        CSSTransition {
-            attrs.key = key
-            attrs.timeout = 1000
-            attrs.classNames = "item"
-            block()
-        }
     }
 }

@@ -4,6 +4,7 @@ import com.bytelegend.app.shared.ServerLocation
 import common.ui.bootstrap.BootstrapModalBody
 import common.ui.bootstrap.BootstrapModalHeader
 import common.ui.bootstrap.BootstrapModalTitle
+import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.title
 import react.RBuilder
@@ -51,19 +52,21 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
                 attrs.src = game.resolve("/img/icon/server.png")
             }
 
-            a {
-                attrs.jsStyle {
-                    color = "white"
-                    fontSize = "14px"
-                    margin = "0 5px 0 0"
-                    cursor = "pointer"
-                }
-                attrs.title = getServerLocationTitle()
-                attrs.onClickFunction = {
-                    showServerLocationModal()
-                }
+            if (game.gameControl.online) {
+                a {
+                    attrs.classes = setOf("server-location-link")
+                    attrs.title = getServerLocationTitle()
+                    attrs.onClickFunction = {
+                        showServerLocationModal()
+                    }
 
-                +getServerLocationDisplayName()
+                    +getServerLocationDisplayName()
+                }
+            } else {
+                span {
+                    attrs.classes = setOf("server-location-link-offline")
+                    +i("OfflineMode")
+                }
             }
         }
     }

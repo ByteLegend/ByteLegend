@@ -15,6 +15,7 @@ import react.RState
 import react.dom.RDOMBuilder
 import react.dom.a
 import react.dom.p
+import react.dom.span
 import react.dom.tbody
 import react.dom.td
 import react.dom.th
@@ -28,7 +29,7 @@ interface AsyncLoadingTableState : RState {
     var data: Array<dynamic>
 }
 
-abstract class AsyncLoadingTable : RComponent<AsyncLoadingTableProps, AsyncLoadingTableState>() {
+abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : RComponent<AsyncLoadingTableProps, S>() {
     abstract val url: String
     var loading = false
     override fun RBuilder.render() {
@@ -78,7 +79,7 @@ abstract class AsyncLoadingTable : RComponent<AsyncLoadingTableProps, AsyncLoadi
     abstract fun RDOMBuilder<TR>.tableRowBuilder(rowData: dynamic)
 }
 
-class OpenSourceSoftwareTable : AsyncLoadingTable() {
+class OpenSourceSoftwareTable : AsyncLoadingTable<AsyncLoadingTableState>() {
     override val url: String
         get() = props.game.resolve("/misc/oss.json")
 
@@ -111,17 +112,31 @@ class OpenSourceSoftwareTable : AsyncLoadingTable() {
     }
 }
 
-class ArtworkTable : AsyncLoadingTable() {
+interface ArtworkTableState : AsyncLoadingTableState {
+    var showAlert: Boolean
+}
+
+class ArtworkTable : AsyncLoadingTable<ArtworkTableState>() {
     override val url: String
         get() = props.game.resolve("/misc/artwork.json")
 
+    override fun ArtworkTableState.init() {
+        showAlert = true
+    }
+
     override fun RBuilder.textBeforeTable() {
-        BootstrapAlert {
-            attrs.show = true
-            attrs.variant = "success"
-            p {
-                consumer.onTagContentUnsafe {
-                    +props.game.i("ContactUsIfYouThinkUsMisuse")
+        if (state.showAlert) {
+            BootstrapAlert {
+                attrs.show = true
+                attrs.variant = "success"
+                attrs.dismissible = "true"
+                attrs.onClose = {
+                    setState { showAlert = false }
+                }
+                span {
+                    consumer.onTagContentUnsafe {
+                        +props.game.i("ContactUsIfYouThinkUsMisuse")
+                    }
                 }
             }
         }

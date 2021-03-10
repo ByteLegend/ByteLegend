@@ -35,12 +35,8 @@ dependencies {
     api(npm("styled-components", libVersions("styled-components")))
 
     api(npm("react-bootstrap", libVersions("react-bootstrap")))
-    api(npm("@material-ui/core", libVersions("@material-ui/core")))
-    api(npm("react-transition-group", libVersions("react-transition-group")))
     api(npm("bootstrap-switch-button-react", libVersions("bootstrap-switch-button-react")))
 
-    api(npm("in-browser-download", libVersions("in-browser-download")))
-    api(npm("get-image-pixels", libVersions("get-image-pixels")))
     api(npm("react-icons", libVersions("react-icons")))
 
     testImplementation(kotlin("test-js"))

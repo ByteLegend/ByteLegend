@@ -30,6 +30,8 @@ interface GameRuntime {
     val currentTimeMillis: Long
     val activeScene: GameScene
     val modalController: ModalController
+    val bannerController: BannerController
+    val toastController: ToastController
 
     fun i(textId: String, vararg args: String): String
 }
@@ -195,6 +197,14 @@ interface GameSceneContainer : GameContainerSizeAware {
 
 interface ModalController {
     fun showModal(contentId: String, titleId: String? = null)
+}
+
+interface BannerController {
+    fun showWarningBanner(content: String)
+}
+
+interface ToastController {
+    fun addToast(header: String, body: String, autoHideMs: Int = 0)
 }
 
 interface GameDirector {

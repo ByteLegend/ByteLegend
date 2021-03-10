@@ -31,12 +31,21 @@ class OnlineCounter : GameUIComponent<OnlineCounterProps, OnlineCounterState>() 
 
     @Suppress("UnsafeCastFromDynamic")
     override fun RBuilder.render() {
-        span {
-            attrs.id = "online-counter"
-            attrs.classes = setOf("map-title-widget")
+        if (gameControl.online) {
+            span {
+                attrs.id = "online-counter"
+                attrs.classes = setOf("map-title-widget")
 
-            +i("OnlineCount")
-            +state.count.toString()
+                +i("OnlineCount")
+                +state.count.toString()
+            }
+        } else {
+            span {
+                attrs.id = "online-counter-offline"
+                attrs.classes = setOf("map-title-widget")
+
+                +i("OfflineMode")
+            }
         }
     }
 

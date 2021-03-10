@@ -7,6 +7,18 @@
 - id: OnlineCount
   en: "Online "
   zh_hans: "在线 "
+- id: OfflineMode
+  en: "Offline mode"
+  zh_hans: "离线模式"
+- id: SeemsToBeDisconnectedFromServer
+  en: "Seems like we're disconnected from server, please refresh the page."
+  zh_hans: "似乎掉线了，请刷新页面"
+- id: YouAreOffline
+  en: "You are offline"
+  zh_hans: "您已处于离线状态"
+- id: PleaseRefreshPage
+  en: "Please refresh the page"
+  zh_hans: "请刷新页面"
 - id: EnjoyProgramming
   en: Enjoy programming
   zh_hans: 享受编程的乐趣

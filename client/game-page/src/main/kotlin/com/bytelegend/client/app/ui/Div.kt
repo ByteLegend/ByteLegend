@@ -69,8 +69,8 @@ fun js(builder1: dynamic.() -> Unit, builder2: dynamic.() -> Unit): dynamic = js
 
 @Suppress("UnsafeCastFromDynamic")
 fun RBuilder.absoluteDiv(
-    left: Int,
-    top: Int,
+    left: Int? = null,
+    top: Int? = null,
     width: Int? = null,
     height: Int? = null,
     zIndex: Int = 0,
@@ -85,8 +85,12 @@ fun RBuilder.absoluteDiv(
 
             jsStyle {
                 position = "absolute"
-                this.left = "${left}px"
-                this.top = "${top}px"
+                if (left != null) {
+                    this.left = "${left}px"
+                }
+                if (top != null) {
+                    this.top = "${top}px"
+                }
                 if (width != null) {
                     this.width = "${width}px"
                 }

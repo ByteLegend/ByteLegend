@@ -17,7 +17,9 @@ import com.bytelegend.app.shared.ServerSideData
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.obj.PlayerSprite
+import com.bytelegend.client.app.ui.DefaultBannerController
 import com.bytelegend.client.app.ui.DefaultModalController
+import com.bytelegend.client.app.ui.DefaultToastController
 import com.bytelegend.client.app.ui.ModalControllerInternal
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.browser.localStorage
@@ -99,6 +101,8 @@ class Game(
 
     val gameControl: GameControl by di.instance()
     val mainMapCanvasRenderer: MainMapCanvasRenderer = MainMapCanvasRenderer(this)
+    override val toastController = DefaultToastController(eventBus)
+    override val bannerController = DefaultBannerController(eventBus)
 
     fun start() {
         gameControl.start()

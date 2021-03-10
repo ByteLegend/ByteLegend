@@ -8,6 +8,29 @@ body {
     text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.1em 0.1em 0.2em;
 }
 
+#online-counter-offline {
+    color: red;
+    text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.1em 0.1em 0.2em;
+}
+
+.toast-container {
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+.server-location-link {
+    color: white;
+    font-size: 14px;
+    margin: 0 5px 0 0;
+    cursor: pointer;
+}
+
+.server-location-link-offline {
+    color: red;
+    font-size: 14px;
+    margin: 0 5px 0 0;
+}
+
 /*.default-link {*/
 /*    color: #007bff*/
 /*}*/
@@ -175,7 +198,7 @@ body {
 }
 
 .brave-people-avatar-tooltip {
-    box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
 }
 
 p.speech-bubble {
@@ -185,7 +208,7 @@ p.speech-bubble {
     padding: 1em 1em;
     font-size: 1em;
     border-radius: 0.5rem;
-    box-shadow:	0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
 }
 
 p.speech-bubble::after {

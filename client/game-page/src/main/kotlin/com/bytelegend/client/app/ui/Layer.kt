@@ -14,8 +14,8 @@ enum class Layer {
     Menu,
     MapTitle,
     HeroIndicator,
-    FadeInFadeOut,
-    DisconnectionIndicator;
+    BannerToast,
+    FadeInFadeOut;
 
     fun zIndex() = 10 * ordinal
 }

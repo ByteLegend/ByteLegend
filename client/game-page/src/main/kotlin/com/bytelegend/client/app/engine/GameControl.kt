@@ -34,6 +34,8 @@ class GameControl(
     private val eventBus: EventBus by di.instance()
     private val gameSceneContainer: GameSceneContainer by di.instance()
     private val webSocketClient: WebSocketClient by di.instance()
+    val online: Boolean
+        get() = webSocketClient.connected
 
     fun start() {
         userMouseEnabled = true
@@ -42,7 +44,6 @@ class GameControl(
     fun onMouseClickOnCanvas(event: GameMouseEvent) {
         if (userMouseEnabled) {
             clickObjectsAndMove(event.mapCoordinate)
-            eventBus.emit(MOUSE_CLICK_EVENT, event)
         } else {
             game.activeScene.director.unsafeCast<DefaultGameDirector>().next()
         }
@@ -66,6 +67,7 @@ class GameControl(
         }
     }
 
+    // In offline mode, everything is still clickable, but hero won't move.
     private fun clickObjectsAndMove(coordinate: GridCoordinate) {
         val scene = gameSceneContainer.activeScene!!
         val gameObjects = scene.objects.getByCoordinate(coordinate)
@@ -74,7 +76,16 @@ class GameControl(
             it.onClick()
         }
 
-        if (gameRuntime.hero != null &&
+        if (!online) {
+            gameRuntime.toastController.addToast(
+                gameRuntime.i("YouAreOffline"),
+                gameRuntime.i("PleaseRefreshPage"),
+                5000
+            )
+        }
+
+        if (online &&
+            gameRuntime.hero != null &&
             gameRuntime.activeScene == game._hero!!.gameScene &&
             !isBlocker(coordinate)
         ) {

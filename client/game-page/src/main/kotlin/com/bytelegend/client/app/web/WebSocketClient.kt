@@ -184,7 +184,10 @@ class WebSocketClient(
             console.error(it)
         }
         client.onclose = {
+            connected = false
             console.warn("Server closed WS connection unexpectedly: ${JSON.stringify(it)}")
+            gameRuntime.bannerController.showWarningBanner(gameRuntime.i("SeemsToBeDisconnectedFromServer"))
+            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
     }
 
