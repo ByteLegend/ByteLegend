@@ -10,11 +10,11 @@ import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.WindowBasedEventBus
+import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.ServerLocation
-import com.bytelegend.app.shared.ServerSideData
 import com.bytelegend.app.shared.entities.Player
+import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.obj.PlayerSprite
 import com.bytelegend.client.app.ui.DefaultBannerController
@@ -34,17 +34,17 @@ import org.kodein.di.singleton
 const val GAME_CLOCK_10HZ = 10 // Hertz
 const val GAME_CLOCK_50HZ = 50 // Hertz
 
-fun init(serverSideData: ServerSideData): Game {
+fun init(gameInitData: GameInitData): Game {
     val di = DI {
         bind<ResourceLoader>() with singleton { DefaultResourceLoader(di) }
         bind<EventBus>() with instance(WindowBasedEventBus)
         bind<GameSceneContainer>() with singleton { DefaultGameSceneContainer(di, PixelSize(window.innerWidth, window.innerHeight)) }
-        bind<String>(tag = "RRBD") with instance(serverSideData.rrbd)
-        bind<ServerLocation>() with instance(serverSideData.serverLocation)
-        bind<Locale>() with instance(determineLocale(serverSideData))
+        bind<String>(tag = "RRBD") with instance(gameInitData.rrbd)
+        bind<ServerLocation>() with instance(gameInitData.serverLocation)
+        bind<Locale>() with instance(determineLocale(gameInitData))
         bind<MutableMap<String, String>>(tag = "i18nTextContainer") with instance(JSObjectBackedMap())
-        bind<Player>() with instance(serverSideData.player)
-        bind<GameRuntime>() with eagerSingleton { Game(di, serverSideData) }
+        bind<Player>() with instance(gameInitData.player)
+        bind<GameRuntime>() with eagerSingleton { Game(di, gameInitData) }
         bind<GameControl>() with singleton { GameControl(di) }
         bind<WebSocketClient>() with singleton { WebSocketClient(di) }
     }
@@ -52,17 +52,17 @@ fun init(serverSideData: ServerSideData): Game {
     return runtime as Game
 }
 
-private fun determineLocale(serverSideData: ServerSideData): Locale {
+private fun determineLocale(gameInitData: GameInitData): Locale {
     return try {
         Locale.of(localStorage.getItem("locale")!!)
     } catch (e: Exception) {
-        Locale.of(serverSideData.player.locale!!)
+        Locale.of(gameInitData.player.locale!!)
     }
 }
 
 class Game(
     override val di: DI,
-    serverSideData: ServerSideData
+    gameInitData: GameInitData
 ) : DIAware, GameRuntime, GameContainerSizeAware {
     override val RRBD: String by di.instance(tag = "RRBD")
     override val locale: Locale by di.instance()
@@ -81,8 +81,9 @@ class Game(
     var _hero: PlayerSprite? = null
     override val hero: Character?
         get() = _hero
+    override val heroPlayer: Player by di.instance()
 
-    val mapHierarchy: List<GameMapDefinition> = serverSideData.maps
+    val mapHierarchy: List<GameMapDefinition> = gameInitData.maps
     val idToMapDefinition: Map<String, GameMapDefinition> by lazy {
         mapHierarchy.toMap()
     }
@@ -91,7 +92,6 @@ class Game(
         DefaultModalController(di)
     }
 
-    val heroPlayer: Player by di.instance()
     val serverLocation: ServerLocation by di.instance()
     val startTime: Timestamp = Timestamp.now()
     var lastAnimationFrameTime: Timestamp = startTime

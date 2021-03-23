@@ -94,7 +94,7 @@ public class Json2JavaTask extends DefaultTask {
         if (baseName.endsWith("GitHubEvent")) {
             File generatedJava = new File(targetDir, targetPackage.replace('.', '/') + "/" + baseName + ".java");
             String generatedJavaContent = new String(Files.readAllBytes(generatedJava.toPath()));
-            generatedJavaContent = generatedJavaContent.replace("class " + baseName, "class " + baseName + " implements com.bytelegend.github.webhook.model.GitHubEvent");
+            generatedJavaContent = generatedJavaContent.replace("class " + baseName, "class " + baseName + " implements com.bytelegend.app.jsonmodel.event.GitHubEvent");
             Files.write(generatedJava.toPath(), generatedJavaContent.getBytes());
         }
     }

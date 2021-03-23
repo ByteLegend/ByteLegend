@@ -6,7 +6,7 @@
 //import com.bytelegend.app.shared.PixelCoordinate
 //import com.bytelegend.app.shared.PixelSize
 //import com.bytelegend.app.shared.StaticImageTileData
-//import com.fasterxml.jackson.annotation.JsonIgnore
+//import com.fasterxml.jackson.annotation.com.bytelegend.app.shared.annotations.JsonIgnore
 //import com.fasterxml.jackson.databind.ObjectMapper
 //import java.io.File
 //import javax.imageio.ImageIO
@@ -63,28 +63,28 @@
 //}
 //
 //abstract class PixelBlockMixIn {
-//    @JsonIgnore
+//    @com.bytelegend.app.shared.annotations.JsonIgnore
 //    abstract fun getX(): Int
 //
-//    @JsonIgnore
+//    @com.bytelegend.app.shared.annotations.JsonIgnore
 //    abstract fun getY(): Int
 //
-//    @JsonIgnore
+//    @com.bytelegend.app.shared.annotations.JsonIgnore
 //    abstract fun getWidth(): Int
 //
-//    @JsonIgnore
+//    @com.bytelegend.app.shared.annotations.JsonIgnore
 //    abstract fun getHeight(): Int
 //}
 //
 //abstract class GameMapMixIn {
-//    @JsonIgnore
+//    @com.bytelegend.app.shared.annotations.JsonIgnore
 //    abstract fun getPixelSize(): PixelSize
 //}
 //
 //abstract class TileDataMixIn {
-//    @JsonIgnore
+//    @com.bytelegend.app.shared.annotations.JsonIgnore
 //    abstract fun getFrames(): List<PixelBlock>
 //
-//    @JsonIgnore
+//    @com.bytelegend.app.shared.annotations.JsonIgnore
 //    abstract fun getFps(): Int
 //}

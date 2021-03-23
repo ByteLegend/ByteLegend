@@ -1,7 +1,7 @@
-package com.bytelegend.app.shared
+package com.bytelegend.app.shared.enums
 
 enum class ServerLocation(
-    val displayNameId: String,
+    val awsRegionId: String,
     /**
      * We generate a unique id for each server atomically based on database,
      * to avoid cross-region id conflict, an offset is assigned to the id generator.
@@ -11,6 +11,8 @@ enum class ServerLocation(
      */
     val serverIdOffset: Int
 ) {
-    BEIJING("BeijingServerDisplayNameId", 0),
-    SEOUL("SeoulServerDisplayNameId", 1_000_000)
+    BEIJING("cn-north-1", 0),
+    SEOUL("ap-northeast-2", 1_000_000);
+
+    fun displayNameId() = "${name.toLowerCase().capitalize()}ServerDisplayNameId"
 }

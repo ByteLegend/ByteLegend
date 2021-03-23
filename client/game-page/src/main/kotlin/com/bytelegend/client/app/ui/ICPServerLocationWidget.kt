@@ -1,6 +1,6 @@
 package com.bytelegend.client.app.ui
 
-import com.bytelegend.app.shared.ServerLocation
+import com.bytelegend.app.shared.enums.ServerLocation
 import common.ui.bootstrap.BootstrapModalBody
 import common.ui.bootstrap.BootstrapModalHeader
 import common.ui.bootstrap.BootstrapModalTitle
@@ -95,7 +95,7 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
         }
     }
 
-    private fun getServerLocationDisplayName() = i(game.serverLocation.displayNameId)
+    private fun getServerLocationDisplayName() = i(game.serverLocation.displayNameId())
     private fun getServerLocationTitle() = i("ServerLocationTitle", getServerLocationDisplayName())
     private fun getServerLocationTitleHtml() = i("ServerLocationTitleHtml", getServerLocationDisplayName())
 }

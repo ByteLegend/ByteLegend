@@ -2,6 +2,7 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
+import com.bytelegend.client.app.page.GAME_INIT_DATA
 import kotlinx.html.classes
 import kotlinx.html.id
 import react.RBuilder
@@ -26,7 +27,7 @@ class OnlineCounter : GameUIComponent<OnlineCounterProps, OnlineCounterState>() 
     }
 
     override fun OnlineCounterState.init() {
-        count = 0
+        count = GAME_INIT_DATA.onlineCount
     }
 
     @Suppress("UnsafeCastFromDynamic")

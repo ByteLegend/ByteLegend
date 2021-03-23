@@ -1,18 +1,14 @@
 package com.bytelegend.app.shared.entities
 
-import BsonId
-import BsonIgnore
-import JsonIgnore
+import com.bytelegend.app.shared.annotations.DynamoDbIgnore
+import com.bytelegend.app.shared.annotations.DynamoDbSecondaryPartitionKey
+import com.bytelegend.app.shared.annotations.JsonIgnore
 import kotlinx.serialization.Serializable
 
+val ANONYMOUS_DUMMY_MAP = "ANONYMOUS_DUMMY_MAP"
+
 @Serializable
-class Player {
-    /**
-     * The auto-generated database id
-     */
-    @JsonIgnore
-    @BsonId
-    var _id: String? = null
+open class Player {
 
     /**
      * ID for human reading, e.g.
@@ -22,6 +18,7 @@ class Player {
      * gt#blindpirate
      * wc#1234567
      */
+    @get: DynamoDbIgnore
     var id: String? = null
 
     /**
@@ -37,7 +34,7 @@ class Player {
     /**
      * The map where player is currently on.
      */
-    var map: String? = null
+    var map: String = ANONYMOUS_DUMMY_MAP
 
     /**
      * The grid coordinate of player on the map.
@@ -54,11 +51,13 @@ class Player {
      * positive number: the id of the server which the player connects to.
      *
      */
+    @get: DynamoDbSecondaryPartitionKey(indexNames = ["serverIndex"])
+    @JsonIgnore
     var server: Int = 0
 
     val online: Boolean
         @JsonIgnore
-        @BsonIgnore
+        @DynamoDbIgnore
         get() = server != 0
 
     /**
@@ -71,39 +70,36 @@ class Player {
     /**
      * The main email.
      */
-    @JsonIgnore
-    var email: String? = null
+    val email: String?
+        @JsonIgnore
+        @DynamoDbIgnore
+        get() = emails.firstOrNull()
 
     /**
      * All possible emails.
      */
     @JsonIgnore
-    val emails: List<String> = emptyList()
+    val emails: MutableList<String> = ArrayList()
 
     /**
      * The character id for display.
      */
     var characterId: Int? = null
-    var missions: Map<String, String> = emptyMap()
-    var states: Map<String, String> = emptyMap()
 
-    /**
-     * The region name where the record is updated recently, e.g. BEIJING
-     */
-    @JsonIgnore
-    var lastUpdatedIn: String? = null
-
-    /**
-     * Last updated timestamp, in epoch milliseconds.
-     */
-    @JsonIgnore
-    var lastUpdatedMs: Long? = null
-
-    @JsonIgnore
-    var lastLoginEpochSecond: Long? = null
-
-    @get: JsonIgnore
     val isAnonymous: Boolean
-        @BsonIgnore
+        @JsonIgnore
+        @DynamoDbIgnore
         get() = id!!.startsWith("anon#")
+
+    @JsonIgnore
+    @DynamoDbIgnore
+    fun getPartialEntity() = Player().apply {
+        this.id = this@Player.id
+        this.username = this@Player.username
+        this.nickname = this@Player.nickname
+        this.map = this@Player.map
+        this.x = this@Player.x
+        this.y = this@Player.y
+        this.characterId = this@Player.characterId
+    }
 }

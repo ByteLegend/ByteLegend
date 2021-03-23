@@ -1,6 +1,6 @@
 package com.bytelegend.app.shared.objects
 
-import JsonIgnore
+import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.map

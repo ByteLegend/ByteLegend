@@ -7,8 +7,8 @@ import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
-import com.bytelegend.app.shared.entities.Player
-import com.bytelegend.app.shared.protocol.GET_ONLINE_PLAYERS
+import com.bytelegend.app.shared.entities.SceneInitData
+import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.GameServerProtocol
 import com.bytelegend.app.shared.protocol.MOVE_TO
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
@@ -25,9 +25,11 @@ import com.bytelegend.app.shared.protocol.WebSocketMessageType.SEND
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.SUBSCRIBE
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.UNSUBSCRIBE
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
+import com.bytelegend.client.app.engine.MissionContainer
 import com.bytelegend.client.app.engine.PlayerContainer
 import com.bytelegend.client.app.engine.RESOURCE_LOADING_FAILURE_EVENT
 import com.bytelegend.client.app.engine.ResourceLoadingFailureEvent
+import com.bytelegend.client.app.engine.StateContainer
 import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.script.effect.disconnectionEffect
 import kotlinext.js.js
@@ -51,7 +53,7 @@ const val GAME_SERVER_RECONNECTING_SUCCESS = "game.server.reconnecting.success"
 // Failed after {DEFAULT_AUTO_RECONNECT_ATTEMPTS} attempts
 const val GAME_SERVER_RECONNECTING_FAIL = "game.server.reconnecting.fail"
 
-typealias ReplyHandler = (ReplyMessage) -> Unit
+typealias ReplyHandler = (ReplyMessage<Any>) -> Unit
 
 const val DEFAULT_REPLY_TIMEOUT_SECONDS = 10
 
@@ -75,7 +77,7 @@ class WebSocketClient(
     private val client: WebSocket by lazy {
         val protocol = if (window.location.protocol.startsWith("https")) "wss" else "ws"
         val port = if (window.location.port == "") "" else ":${window.location.port}"
-        val url = "$protocol://${window.location.hostname}$port/game"
+        val url = "$protocol://${window.location.hostname}$port/game/server"
         WebSocket(url)
     }
 
@@ -151,11 +153,11 @@ class WebSocketClient(
         }
     }
 
-    private fun onServerPublishEvent(eventMessage: PublishMessage) {
+    private fun onServerPublishEvent(eventMessage: PublishMessage<Any>) {
         eventBus.emit(eventMessage.event, eventMessage.payload)
     }
 
-    private fun onServerReply(replyMessage: ReplyMessage) {
+    private fun onServerReply(replyMessage: ReplyMessage<Any>) {
         val handler = replyHandlers[replyMessage.replyAddress]
         if (handler == null) {
             console.warn("Received a reply but can't find handler: ${JSON.stringify(replyMessage)}")
@@ -165,7 +167,7 @@ class WebSocketClient(
     }
 
     /**
-     * This is invoked first to get global init data, e.g. player information, etc.
+     * This is invoked first to get global init data, e.g. player information, mission data on map, etc.
      */
     override suspend fun load(): WebSocketClient = suspendCoroutine { continuation ->
         client.onopen = {
@@ -207,28 +209,13 @@ class WebSocketClient(
         }
     }
 
-    override suspend fun getOnlineNonAnonymousPlayers(mapId: String): List<Player> {
-        val jsonObjectArray: Array<dynamic> = send(GET_ONLINE_PLAYERS, mapId)
-        return jsonObjectArray.map { toPlayer(it) }
+    override suspend fun getSceneInitData(mapId: String): SceneInitData {
+        return toSceneInitData(send(GET_SCENE_INIT_DATA, mapId))
     }
 
     override suspend fun moveTo(x: Int, y: Int) {
         send<Unit>(MOVE_TO, x.toString(), y.toString())
     }
-}
-
-fun toPlayer(it: dynamic) = Player().apply {
-    id = it.id
-    username = it.username
-    nickname = it.nickname
-    map = it.map
-    x = it.x
-    y = it.y
-    server = it.server
-    locale = it.locale
-    characterId = it.characterId
-    missions = it.missions
-    states = it.states
 }
 
 fun WebSocketMessage.toJson(): String {
@@ -274,19 +261,20 @@ object UnrecognizedMessage : WebSocketMessage {
         get() = throw IllegalStateException("Unrecognized message!")
 }
 
-class GameSceneInitData(
+class GameSceneInitResource(
     private val mapId: String,
     private val client: WebSocketClient,
     private val eventBus: EventBus,
     private val resourceLoader: ResourceLoader
-) : ExpensiveResource<PlayerContainer> {
+) : ExpensiveResource<Triple<PlayerContainer, MissionContainer, StateContainer>> {
     override val id: String = "$mapId-players"
     override val weight: Int = 1
 
-    override suspend fun load(): PlayerContainer {
-        val players = client.self.await().getOnlineNonAnonymousPlayers(mapId)
-        return PlayerContainer(mapId, eventBus, client, resourceLoader, players).apply {
-            init()
-        }
+    override suspend fun load(): Triple<PlayerContainer, MissionContainer, StateContainer> {
+        val data = client.self.await().getSceneInitData(mapId)
+        val players = PlayerContainer(mapId, eventBus, client, resourceLoader, data.players).apply { init() }
+        val missions = MissionContainer(data.missions)
+        val states = StateContainer(data.states)
+        return Triple(players, missions, states)
     }
 }

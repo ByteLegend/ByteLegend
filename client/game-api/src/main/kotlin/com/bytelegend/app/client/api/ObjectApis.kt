@@ -17,8 +17,6 @@ interface Character : GameObject, CoordinateMutable {
      * Note this means "how we paint the character", not moving direction.
      */
     var direction: Direction
-
-    var movePath: List<GridCoordinate>
 }
 
 interface CoordinateMutable : CoordinateAware {

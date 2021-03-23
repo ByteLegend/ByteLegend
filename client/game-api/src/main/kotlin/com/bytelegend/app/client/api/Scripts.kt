@@ -36,7 +36,7 @@ interface ScriptsBuilder {
     }
 
     fun starFly(fromObjectId: String)
-
+//    fun characterMove(characterId: String, destMapCoordinate: GridCoordinate)
     fun disableUserMouse()
     fun fadeIn()
 }

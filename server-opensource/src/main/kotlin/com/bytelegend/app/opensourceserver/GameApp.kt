@@ -4,14 +4,16 @@ import com.bytelegend.app.servershared.AbstractIndexPageRenderer
 import com.bytelegend.app.servershared.AbstractRRBDResourceProvider
 import com.bytelegend.app.servershared.JsonMapper
 import com.bytelegend.app.servershared.WebSocketMessageDeserializer
+import com.bytelegend.app.servershared.dal.SESSION_COOKIE_NAME
 import com.bytelegend.app.servershared.install
 import com.bytelegend.app.servershared.mock.anonymousPlayer
 import com.bytelegend.app.servershared.mock.mockPlayer
-import com.bytelegend.app.servershared.session.SESSION_COOKIE_NAME
-import com.bytelegend.app.shared.ServerLocation
 import com.bytelegend.app.shared.entities.Player
+import com.bytelegend.app.shared.entities.SceneInitData
+import com.bytelegend.app.shared.entities.States
+import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
-import com.bytelegend.app.shared.protocol.GET_ONLINE_PLAYERS
+import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.MOVE_TO
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PublishMessage
@@ -68,20 +70,31 @@ class IndexController(
         response: HttpServletResponse
     ) {
         response.writer.apply {
-            write(renderIndexHtml(PlayerContext.get(), Locale.EN, "/static", ServerLocation.SEOUL))
+            write(
+                renderIndexHtml(
+                    "JavaIsland",
+                    1,
+                    PlayerContext.get(),
+                    Locale.EN,
+                    "/static",
+                    ServerLocation.SEOUL
+                )
+            )
             flush()
         }
     }
 
-    @GetMapping("/login")
+    @GetMapping("/game/login")
     fun login(
         response: HttpServletResponse,
         @RequestParam("redirect")
         redirect: String
     ) {
-        if (PlayerContext.get().isAnonymous) {
-            response.addCookie(Cookie(SESSION_COOKIE_NAME, mockPlayer.id))
-        }
+        response.addCookie(
+            Cookie(SESSION_COOKIE_NAME, mockPlayer.id).apply {
+                path = "/"
+            }
+        )
         response.sendRedirect(redirect)
     }
 }
@@ -141,7 +154,7 @@ class Config : WebMvcConfigurer, WebSocketConfigurer {
     }
 
     override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
-        registry.addHandler(GameWebSocketServer(jsonMapper), "/game")
+        registry.addHandler(GameWebSocketServer(jsonMapper), "/game/server")
             .addInterceptors(object : HandshakeInterceptor {
                 override fun beforeHandshake(
                     request: ServerHttpRequest,
@@ -190,6 +203,7 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
             WebSocketMessageType.SUBSCRIBE -> onClientSubscribeMessage(session, wsMessage as SubscribeUnsubscribeMessage)
             WebSocketMessageType.UNSUBSCRIBE -> onClientUnsubscribeMessage(session, wsMessage as SubscribeUnsubscribeMessage)
             WebSocketMessageType.SEND -> onClientSendMessage(session, wsMessage as SendMessage)
+            else -> throw IllegalStateException("Unsupported type: ${wsMessage.type}")
         }
     }
 
@@ -198,7 +212,11 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
             @Suppress("IMPLICIT_CAST_TO_ANY")
             val returnValue = when (message.name) {
                 MOVE_TO -> ""
-                GET_ONLINE_PLAYERS -> emptyList<Player>()
+                GET_SCENE_INIT_DATA -> SceneInitData(
+                    emptyList(),
+                    emptyMap(),
+                    States()
+                )
                 else -> throw IllegalArgumentException("Unsupported message name: ${message.name}")
             }
             val replyMessage = ReplyMessage(WebSocketMessageType.REPLY, message.replyAddress, if (returnValue == Unit) "" else returnValue)

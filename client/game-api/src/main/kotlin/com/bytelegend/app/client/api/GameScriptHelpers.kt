@@ -7,10 +7,12 @@ import com.bytelegend.app.shared.Direction
  */
 class GameScriptHelpers(val gameScene: GameScene) {
     fun distanceOf(character1Id: String, character2Id: String): Int {
-        return gameScene.objects.getById<Character>(character1Id).gridCoordinate.manhattanDistanceTo(
-            gameScene.objects.getById<Character>(character2Id).gridCoordinate
+        return getCharacter(character1Id).gridCoordinate.manhattanDistanceTo(
+            getCharacter(character2Id).gridCoordinate
         )
     }
+
+    fun getCharacter(characterId: String) = gameScene.objects.getById<Character>(characterId)
 
     fun faceDirectionOf(character1: Character, character2: Character): Direction {
         val npcCoordinate = character1.gridCoordinate

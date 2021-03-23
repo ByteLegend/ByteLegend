@@ -60,7 +60,7 @@ abstract class CharacterSprite(
      * Current move path. When it's set, the character will start "moving" along this path
      * (i.e. responding to animation events and change coordinate correspondingly)
      */
-    override var movePath: List<GridCoordinate> = emptyList()
+    var movePath: List<GridCoordinate> = emptyList()
         set(value) {
             field = value
             currentMovePathIndex = value.indexOf(gridCoordinate)

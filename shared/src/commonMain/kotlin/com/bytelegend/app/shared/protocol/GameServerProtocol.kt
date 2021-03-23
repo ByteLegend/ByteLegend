@@ -1,15 +1,15 @@
 package com.bytelegend.app.shared.protocol
 
-import com.bytelegend.app.shared.entities.Player
+import com.bytelegend.app.shared.entities.SceneInitData
 
 fun playerEnterSceneEvent(mapId: String) = "protocol.player.enter.${mapId}"
 fun playerLeaveSceneEvent(mapId: String) = "protocol.player.leave.${mapId}"
 fun playerMoveOnSceneEvent(mapId: String) = "protocol.player.move.${mapId}"
 
 /**
- * Upon switching to a new scene, get all online players.
+ * Upon switching to a new scene, get all online players and missions/states on a map.
  */
-const val GET_ONLINE_PLAYERS = "protocol.get.online.players"
+const val GET_SCENE_INIT_DATA = "protocol.get.scene.init.data"
 
 /**
  * Player move to another point
@@ -26,7 +26,7 @@ interface GameServerProtocol {
      * Upon a scene's initialization, client requests all
      * online players' data on a map, not including the requesting player.
      */
-    suspend fun getOnlineNonAnonymousPlayers(mapId: String): List<Player>
+    suspend fun getSceneInitData(mapId: String): SceneInitData
 
     suspend fun moveTo(x: Int, y: Int)
 }
@@ -55,16 +55,16 @@ data class SendMessage(
  * When type == REPLY, payload is the return value
  * when type == REPLY_ERROR, payload is the error message
  */
-data class ReplyMessage(
+class ReplyMessage<T>(
     override val type: WebSocketMessageType,
     val replyAddress: String,
-    val payload: Any
+    val payload: T
 ) : WebSocketMessage
 
 
-data class PublishMessage(
+data class PublishMessage<T>(
     val event: String,
-    val payload: Any
+    val payload: T
 ) : WebSocketMessage {
     override val type: WebSocketMessageType = WebSocketMessageType.PUBLISH
 }

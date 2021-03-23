@@ -4,7 +4,7 @@ import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 
-val forestVersion = "0.3.3-SNAPSHOT"
+val forestVersion = "0.3.4-SNAPSHOT"
 val vertxVersion = "4.0.2"
 val guiceVersion = "4.2.3-SNAPSHOT"
 val guavaVersion = "28.2-jre"
@@ -14,7 +14,7 @@ val kotlinCoroutinesCommonVersion = "1.3.8"
 val kotlinxVersion = "1.4.3"
 val junitVersion = "5.7.0"
 val junit4Version = "4.13"
-val mockKVersion = "1.9.3"
+val mockKVersion = "1.11.0"
 val apiGuadianVersion = "1.1.0"
 val log4jVersion = "2.13.3"
 val logbackVersion = "1.2.3"
@@ -35,9 +35,11 @@ val postgreVersion = "42.2.18"
 val hikariVersion = "3.4.5"
 val javaJwtVersion = "3.11.0"
 val bouncycastleVersion = "1.59"
-val awsSdkVersion = "2.13.39"
+val awsSdkV1Version = "1.11.978"
+val awsSdkV2Version = "2.16.22"
 val opencc4jVersion = "1.6.0"
 val kotlinxSerializationVersion = "1.0.1"
+val dynamodbCrossRegionReplicationVersion = "1.2.1.16"
 val caffeineVersion = "2.8.8"
 val testContainersVersion = "1.15.1"
 val kodeinVersion = "7.2.0"
@@ -143,7 +145,12 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("com.auth0:java-jwt:$javaJwtVersion"),
     OpenSourceLibrary("org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion"),
 
-    OpenSourceLibrary("software.amazon.awssdk:netty-nio-client:$awsSdkVersion"),
+    // This is for cross region replication and Kinesis, which doesn't support V2
+    OpenSourceLibrary("com.amazonaws:aws-java-sdk:$awsSdkV1Version"),
+    OpenSourceLibrary("software.amazon.awssdk:dynamodb:$awsSdkV2Version"),
+    OpenSourceLibrary("software.amazon.awssdk:dynamodb-enhanced:$awsSdkV2Version"),
+    OpenSourceLibrary("software.amazon.awssdk:netty-nio-client:$awsSdkV2Version"),
+    OpenSourceLibrary("com.github.blindpirate:dynamodb-cross-region-replication:$dynamodbCrossRegionReplicationVersion"),
 
     OpenSourceLibrary("com.github.houbb:opencc4j:$opencc4jVersion"),
 

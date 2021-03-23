@@ -53,7 +53,7 @@ class UserAvatarWidget : GameUIComponent<UserAvatarWidgetProps, UserAvatarWidget
                     attrs.classes = setOf("avatar-login-span")
                     a {
                         attrs.id = "login-link"
-                        attrs.href = "/login?redirect=/"
+                        attrs.href = "/game/login?redirect=/"
                         +i("Login")
                     }
                 }
@@ -77,7 +77,7 @@ class UserAvatarWidget : GameUIComponent<UserAvatarWidgetProps, UserAvatarWidget
                 a {
                     attrs.id = "logout-link"
                     attrs.title = i("Logout")
-                    attrs.href = "/logout?redirect=/"
+                    attrs.href = "/game/logout?redirect=/"
                     +(game.heroPlayer.nickname ?: "#Error")
                 }
             }

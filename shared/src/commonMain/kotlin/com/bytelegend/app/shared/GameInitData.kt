@@ -1,6 +1,7 @@
 package com.bytelegend.app.shared
 
 import com.bytelegend.app.shared.entities.Player
+import com.bytelegend.app.shared.enums.ServerLocation
 import kotlinx.serialization.Serializable
 
 /**
@@ -9,7 +10,9 @@ import kotlinx.serialization.Serializable
  * loading page (before the main game page is rendered.).
  */
 @Serializable
-data class ServerSideData(
+data class GameInitData(
+    val initMapId: String,
+    val onlineCount: Int,
     val serverLocation: ServerLocation,
     val rrbd: String,
     val enjoyProgrammingText: String,

@@ -25,7 +25,7 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                api(libs("bson"))
+                api(libs("dynamodb-enhanced"))
                 api(libs("jackson-annotations"))
             }
         }

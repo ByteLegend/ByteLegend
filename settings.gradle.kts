@@ -16,7 +16,9 @@ include(":server-opensource")
 if (settingsDir.resolve("server/server.gradle.kts").isFile) {
     include(":server:app")
     include(":server:json-model")
-//    include(":server:sync-server")
+    include(":server:sync-server")
+    include(":server:dal-dynamodb")
+    include(":server:dal-api")
 }
 
 rootProject.children.forEach { it.configureBuildScriptName() }

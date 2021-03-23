@@ -7,8 +7,8 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.I18nTextResource
 import com.bytelegend.app.client.api.ImageResource
 import com.bytelegend.app.shared.Direction
+import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.ServerSideData
 import com.bytelegend.app.shared.playerAnimationSetResourceId
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
@@ -70,14 +70,14 @@ import react.dom.div
 import react.dom.render
 import react.setState
 
-val SERVER_SIDE_DATA: ServerSideData = Json { ignoreUnknownKeys = true }.decodeFromString(
-    ServerSideData.serializer(),
+val GAME_INIT_DATA: GameInitData = Json { ignoreUnknownKeys = true }.decodeFromString(
+    GameInitData.serializer(),
     window.asDynamic().serverSideData
 )
 
 val HERO_AVATAR_IMG_ID = "hero-avatar"
 
-val game = init(SERVER_SIDE_DATA).apply {
+val game = init(GAME_INIT_DATA).apply {
     window.asDynamic().gameRuntime = this
 }
 
@@ -118,11 +118,11 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         game.webSocketClient.self = game.resourceLoader.loadAsync(game.webSocketClient)
 
         if (game.heroPlayer.isAnonymous) {
-            game.sceneContainer.loadScene(SERVER_SIDE_DATA.player.map!!) { _, newScene ->
+            game.sceneContainer.loadScene(GAME_INIT_DATA.initMapId) { _, _ ->
                 game.start()
             }
         } else {
-            val animationSetId = playerAnimationSetResourceId(SERVER_SIDE_DATA.player.characterId!!)
+            val animationSetId = playerAnimationSetResourceId(GAME_INIT_DATA.player.characterId!!)
             val animationSetDeferred = game.resourceLoader.loadAsync(
                 ImageResource(
                     animationSetId,
@@ -139,10 +139,10 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                 false
             )
 
-            game.sceneContainer.loadScene(SERVER_SIDE_DATA.player.map!!) { _, newScene ->
+            game.sceneContainer.loadScene(GAME_INIT_DATA.player.map) { _, newScene ->
                 animationSetDeferred.await()
 
-                val obj = HeroCharacter(newScene, SERVER_SIDE_DATA.player)
+                val obj = HeroCharacter(newScene, GAME_INIT_DATA.player)
                 game._hero = obj
                 obj.init()
                 newScene.objects.add(obj)

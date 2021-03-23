@@ -60,7 +60,34 @@ class DefaultGameScene(
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
     override val director: DefaultGameDirector = DefaultGameDirector(di, this)
-    lateinit var players: PlayerContainer
+    private var _players: PlayerContainer? = null
+
+    @Suppress("SetterBackingFieldAssignment")
+    var players: PlayerContainer
+        get() = _players!!
+        set(value) {
+            _players = value
+            _players!!.gameScene = this
+        }
+
+    private var _missions: MissionContainer? = null
+
+    @Suppress("SetterBackingFieldAssignment")
+    var missions: MissionContainer
+        get() = _missions!!
+        set(value) {
+            _missions = value
+            _missions!!.gameScene = this
+        }
+    private var _states: StateContainer? = null
+
+    @Suppress("SetterBackingFieldAssignment")
+    var states: StateContainer
+        get() = _states!!
+        set(value) {
+            _states = value
+            _states!!.gameScene = this
+        }
 
     /**
      * Upon reconnect, reload all data from

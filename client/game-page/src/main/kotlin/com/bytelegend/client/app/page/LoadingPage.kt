@@ -68,7 +68,7 @@ class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
             }
 
             img {
-                attrs.src = "${SERVER_SIDE_DATA.rrbd}/img/logo/logo.png"
+                attrs.src = "${GAME_INIT_DATA.rrbd}/img/logo/logo.png"
             }
         }
         styledDiv {
@@ -84,7 +84,7 @@ class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
                 fontFamily = "\"Courier 10 Pitch\", \"Courier New\", Courier, monospace"
             }
 
-            +SERVER_SIDE_DATA.enjoyProgrammingText
+            +GAME_INIT_DATA.enjoyProgrammingText
 
 //            styledDiv {
 //                css {

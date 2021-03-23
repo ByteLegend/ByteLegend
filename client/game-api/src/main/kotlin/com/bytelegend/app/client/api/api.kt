@@ -6,6 +6,7 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
@@ -23,6 +24,7 @@ interface GameObjectContainer {
 
 interface GameRuntime {
     val hero: Character?
+    val heroPlayer: Player
     val RRBD: String
     val locale: Locale
     val eventBus: EventBus

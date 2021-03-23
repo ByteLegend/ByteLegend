@@ -1,8 +1,8 @@
 package com.bytelegend.app.servershared
 
-import com.bytelegend.app.shared.ServerLocation
-import com.bytelegend.app.shared.ServerSideData
+import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.entities.Player
+import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 
 abstract class AbstractIndexPageRenderer(
@@ -12,6 +12,8 @@ abstract class AbstractIndexPageRenderer(
     private val indexHtml = javaClass.getResource("/index.html").readText()
 
     protected fun renderIndexHtml(
+        initMapId: String,
+        onlinePlayerCount: Int,
         player: Player,
         locale: Locale,
         RRBD: String,
@@ -26,7 +28,9 @@ abstract class AbstractIndexPageRenderer(
             "{LANG}" to locale.language.code,
             "{TITLE}" to enjoyProgrammingText,
             "{serverSideData}" to jsonMapper.toUglyJson(
-                ServerSideData(
+                GameInitData(
+                    initMapId,
+                    onlinePlayerCount,
                     serverLocation,
                     RRBD,
                     enjoyProgrammingText,

@@ -12,7 +12,7 @@ tasks.withType<Test> {
 }
 
 dependencies {
-    add("testImplementation", libs("kotlinx-coroutines-jdk8"))
-    add("testImplementation", libs("kotlinx-coroutines-core"))
-    add("testImplementation", libs("kotlin-stdlib-jdk8"))
+    add("implementation", libs("kotlinx-coroutines-jdk8"))
+    add("implementation", libs("kotlinx-coroutines-core"))
+    add("implementation", libs("kotlin-stdlib-jdk8"))
 }

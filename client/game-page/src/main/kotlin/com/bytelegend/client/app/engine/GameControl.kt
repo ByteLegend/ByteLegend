@@ -85,7 +85,7 @@ class GameControl(
         }
 
         if (online &&
-            gameRuntime.hero != null &&
+            game._hero != null &&
             gameRuntime.activeScene == game._hero!!.gameScene &&
             !isBlocker(coordinate)
         ) {
@@ -95,7 +95,7 @@ class GameControl(
                 GlobalScope.async {
                     webSocketClient.moveTo(coordinate.x, coordinate.y)
                 }
-                hero.movePath = path
+                game._hero!!.movePath = path
             }
         }
     }

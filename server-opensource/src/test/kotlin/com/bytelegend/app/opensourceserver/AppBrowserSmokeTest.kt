@@ -6,6 +6,7 @@ import com.bytelegend.app.testfixtures.startGame
 import com.bytelegend.app.testfixtures.waitUntil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Timeout
 import org.junit.jupiter.api.extension.ExtendWith
 import org.openqa.selenium.By
 import org.openqa.selenium.chrome.ChromeOptions
@@ -28,6 +29,7 @@ class AppBrowserSmokeTest : AbstractBrowserTest() {
         browserWebDriverContainers.add(createBrowser({ ChromeOptions() }, buildTmpDir))
     }
 
+    @Timeout(30)
     @Test
     fun `anonymous access and login`() {
         browserWebDriverContainers[0].start()

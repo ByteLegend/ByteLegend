@@ -1,7 +1,5 @@
-import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScriptHelpers
-import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.objects.GameMapPoint
@@ -49,28 +47,31 @@ fun main() {
 
             npc {
                 val guardId = "JavaIslandNewbieVillagePubGuard"
+                val guardMoveDestPoint = objects.getById<GameMapPoint>("JavaNewbieVilllagePubEntranceGuardDestination").point
                 id = guardId
                 spriteId = "JavaIslandNewbieVillagePubGuard-sprite"
-                onInit = {
-                    objects.getById<Character>(guardId).gridCoordinate =
-                        objects.getById<GameMapPoint>("JavaNewbieVilllagePubEntranceGuardDestination").point
-                }
+//                onInit = {
+//                    if (gameRuntime.heroPlayer.missionAccomplished(START_BYTELEGEND_MISSION_ID)) {
+//                        helpers.getCharacter(guardId).gridCoordinate = guardMoveDestPoint
+//                    }
+//                }
 
-                onClick = helpers.standardNpcSpeech(guardId) {
-                    scripts {
-                        speech {
-                            objectId = guardId
-                            contentHtmlId = "StarCondition"
-                            args = arrayOf("1", "0")
-                            arrow = true
-                        }
-                        speech {
-                            objectId = HERO_ID
-                            contentHtmlId = "WhereToFindStar"
-                            arrow = true
-                        }
-                    }
-                }
+//                onClick = helpers.standardNpcSpeech(guardId) {
+//                    if (!gameRuntime.heroPlayer.missionAccomplished(START_BYTELEGEND_MISSION_ID)) {
+//                        scripts {
+//                            speech(guardId, "StarCondition", arrayOf("1", "0"), true)
+//                            speech(HERO_ID, "WhereToFindStar", arrow = true)
+//                        }
+//                    } else if (helpers.getCharacter(guardId).gridCoordinate == guardMoveDestPoint) {
+//                        scripts {
+//                            speech(guardId, "NiceDayHuh")
+//                        }
+//                    } else {
+//                        scripts {
+//                            characterMove(guardId, guardMoveDestPoint)
+//                        }
+//                    }
+//                }
             }
         }
     }

@@ -2,12 +2,12 @@
 
 package com.bytelegend.app.shared
 
-import JsonIgnore
 import com.bytelegend.app.shared.ConstantPoolType.AnimationFrame
 import com.bytelegend.app.shared.ConstantPoolType.AnimationLayer
 import com.bytelegend.app.shared.ConstantPoolType.BlockerGameTile
 import com.bytelegend.app.shared.ConstantPoolType.NonBlockerGameTile
 import com.bytelegend.app.shared.ConstantPoolType.StaticImageLayer
+import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.objects.CompressedGameMapObject
 import com.bytelegend.app.shared.objects.GameMapObject
 import com.bytelegend.app.shared.objects.compress
