@@ -29,7 +29,7 @@ class AppBrowserSmokeTest : AbstractBrowserTest() {
         browserWebDriverContainers.add(createBrowser({ ChromeOptions() }, buildTmpDir))
     }
 
-    @Timeout(30)
+    @Timeout(60)
     @Test
     fun `anonymous access and login`() {
         browserWebDriverContainers[0].start()
