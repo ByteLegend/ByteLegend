@@ -2,6 +2,8 @@ package com.bytelegend.app.shared.i18n
 
 import kotlinx.serialization.Serializable
 
+const val PREFERRED_LOCALE_COOKIE_NAME = "PREFERRED_LOCALE"
+
 // A language
 // https://en.wikipedia.org/wiki/ISO_639-1
 enum class Language {
@@ -50,7 +52,12 @@ enum class Locale(
     abstract fun accept(acceptLanguageHeader: String): Boolean
 
     companion object {
-        fun of(str: String?, default: Locale = EN): Locale = str?.toUpperCase()?.let { valueOf(it) } ?: default
+        fun of(str: String?, default: Locale = EN): Locale =
+            try {
+                str?.toUpperCase()?.let { valueOf(it) } ?: default
+            } catch (e: Throwable) {
+                default
+            }
     }
 
     fun toLowerCase() = toString().toLowerCase()

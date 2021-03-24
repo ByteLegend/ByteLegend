@@ -2,12 +2,11 @@ package com.bytelegend.client.app.ui
 
 import BootstrapDropdownItem
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.app.shared.i18n.PREFERRED_LOCALE_COOKIE_NAME
 import common.ui.bootstrap.BootstrapDropdownButton
+import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import kotlinx.html.classes
 import react.RBuilder
 import react.RState
@@ -22,17 +21,8 @@ const val LOCALE_SWITCH_WAIT_MS = 500
 class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RState>() {
     private fun onSwitchLocale(target: Locale) {
         localStorage.setItem("locale", target.toString())
-        val switchLocaleResult = GlobalScope.async { game.webSocketClient.switchLocale(target) }
-        GlobalScope.launch {
-            var counter = 0
-            try {
-                while (counter < LOCALE_SWITCH_WAIT_MS && !switchLocaleResult.isCompleted) {
-                    counter += 100
-                }
-            } finally {
-                window.location.reload()
-            }
-        }
+        document.cookie = "$PREFERRED_LOCALE_COOKIE_NAME=$target;path=/;"
+        window.location.reload()
     }
 
     override fun RBuilder.render() {

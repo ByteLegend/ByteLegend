@@ -18,11 +18,6 @@ const val GET_SCENE_INIT_DATA = "protocol.get.scene.init.data"
 const val MOVE_TO = "protocol.move.to"
 
 /**
- * Player selected locale
- */
-const val SWITCH_LOCALE = "protocol.switch.locale"
-
-/**
  * Periodically get online player number
  */
 const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
@@ -35,8 +30,6 @@ interface GameServerProtocol {
     suspend fun getSceneInitData(mapId: String): SceneInitData
 
     suspend fun moveTo(x: Int, y: Int)
-
-    suspend fun switchLocale(locale: Locale)
 }
 
 interface WebSocketMessage {
