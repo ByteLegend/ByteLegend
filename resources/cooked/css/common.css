@@ -42,9 +42,14 @@ body {
 
 .map-title-widget {
     display: inline-block;
+    vertical-align: middle;
     margin-left: 5px;
     margin-right: 5px;
     font-size: 16px;
+}
+
+#online-counter {
+    overflow: hidden;
 }
 
 .locale-selection-widget .btn-primary {

@@ -50,7 +50,7 @@ enum class Locale(
     abstract fun accept(acceptLanguageHeader: String): Boolean
 
     companion object {
-        fun of(str: String): Locale = valueOf(str.toUpperCase())
+        fun of(str: String?, default: Locale = EN): Locale = str?.toUpperCase()?.let { valueOf(it) } ?: default
     }
 
     fun toLowerCase() = toString().toLowerCase()

@@ -42,6 +42,10 @@ fun WebDriver.assertNoErrorInConsoleLog() {
     }
 }
 
+fun WebDriver.clearLocalStorage() {
+    (this as JavascriptExecutor).executeScript("window.localStorage.clear();")
+}
+
 fun WebDriver.getCanvasImageData(canvasId: String): ByteArray {
     val base64 = (this as JavascriptExecutor).executeScript("return document.getElementById('$canvasId').toDataURL('image/png').substring(22)") as String
     return Base64.getDecoder().decode(base64)

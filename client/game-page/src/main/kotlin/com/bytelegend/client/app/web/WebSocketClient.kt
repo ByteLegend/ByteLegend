@@ -8,12 +8,14 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.shared.entities.SceneInitData
+import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.GameServerProtocol
 import com.bytelegend.app.shared.protocol.MOVE_TO
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PublishMessage
 import com.bytelegend.app.shared.protocol.ReplyMessage
+import com.bytelegend.app.shared.protocol.SWITCH_LOCALE
 import com.bytelegend.app.shared.protocol.SendMessage
 import com.bytelegend.app.shared.protocol.SubscribeUnsubscribeMessage
 import com.bytelegend.app.shared.protocol.WebSocketMessage
@@ -215,6 +217,10 @@ class WebSocketClient(
 
     override suspend fun moveTo(x: Int, y: Int) {
         send<Unit>(MOVE_TO, x.toString(), y.toString())
+    }
+
+    override suspend fun switchLocale(locale: Locale) {
+        send<Unit>(SWITCH_LOCALE, locale.toString())
     }
 }
 
