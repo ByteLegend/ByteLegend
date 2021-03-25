@@ -46,6 +46,8 @@ import com.bytelegend.client.app.ui.ScrollButtonsLayer
 import com.bytelegend.client.app.ui.ScrollButtonsProps
 import com.bytelegend.client.app.ui.SpriteNameWidget
 import com.bytelegend.client.app.ui.SpriteNameWidgetProps
+import com.bytelegend.client.app.ui.StarCountWidget
+import com.bytelegend.client.app.ui.StarCountWidgetProps
 import com.bytelegend.client.app.ui.TileCursorWidget
 import com.bytelegend.client.app.ui.TileCursorWidgetProps
 import com.bytelegend.client.app.ui.ToastUIComponent
@@ -186,6 +188,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                         audioSwitch(attrs)
                         localeSelectionDropdown(attrs)
                     }
+                    starCountWidget(attrs)
                     tileCursorWidget(attrs)
                     spriteNameWidget(attrs)
                     miniMapCanvas(attrs)
@@ -264,6 +267,13 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
             attrs.direction = direction
             block()
         }
+    }
+
+    fun RElementBuilder<GameContainerProps>.starCountWidget(
+        parentProps: GameContainerProps,
+        block: RElementBuilder<StarCountWidgetProps>.() -> Unit = {}
+    ): ReactElement {
+        return gameChild(parentProps, StarCountWidget::class, block)
     }
 
     fun RElementBuilder<GameContainerProps>.tileCursorWidget(

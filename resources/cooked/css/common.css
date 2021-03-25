@@ -48,6 +48,10 @@ body {
     font-size: 16px;
 }
 
+#star-count {
+    margin: 10px 10px 10px 10px;
+}
+
 #online-counter {
     overflow: hidden;
 }
