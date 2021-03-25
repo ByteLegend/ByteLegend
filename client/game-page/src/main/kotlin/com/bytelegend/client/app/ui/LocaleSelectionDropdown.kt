@@ -11,12 +11,9 @@ import kotlinx.html.classes
 import react.RBuilder
 import react.RState
 import react.dom.div
-import react.dom.jsStyle
 
 interface LocaleSelectionDropdownProps : GameProps
 
-// wait at most 500 ms then refresh the page
-const val LOCALE_SWITCH_WAIT_MS = 500
 
 class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RState>() {
     private fun onSwitchLocale(target: Locale) {
@@ -28,9 +25,6 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
     override fun RBuilder.render() {
         div {
             attrs.classes = setOf("locale-selection-widget", "map-title-widget")
-            attrs.jsStyle {
-                display = "inline-block"
-            }
             BootstrapDropdownButton {
                 attrs.id = "locale-selection"
                 attrs.title = game.locale.displayName

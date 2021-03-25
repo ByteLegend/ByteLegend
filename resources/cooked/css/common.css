@@ -82,6 +82,7 @@ body {
 
 .locale-selection-widget {
     margin-top: 10px;
+    display : inline-block;
 }
 
 .picture-frame-border {
