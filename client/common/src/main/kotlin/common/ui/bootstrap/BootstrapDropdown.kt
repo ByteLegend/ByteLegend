@@ -7,7 +7,14 @@ import react.RClass
 import react.RProps
 
 @JsName("default")
-external val BootstrapDropdown: RClass<RProps>
+external val BootstrapDropdown: RClass<BootstrapDropdownRProps>
+
+external interface BootstrapDropdownRProps : RProps {
+    var id: String
+    var size: String
+    var show: Boolean
+    var rootCloseEvent: String
+}
 
 // https://react-bootstrap.github.io/components/dropdowns/
 /*

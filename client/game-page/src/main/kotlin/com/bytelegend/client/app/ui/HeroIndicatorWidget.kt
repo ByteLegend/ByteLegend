@@ -212,11 +212,11 @@ class HeroIndicatorWidget : GameUIComponent<GameProps, HeroIndicatorWidgetState>
             return
         }
         absoluteDiv(
-            state.left!!,
-            state.top!!,
-            HERO_INDICATOR_DIV_WIDTH,
-            HERO_INDICATOR_DIV_HEIGHT,
-            Layer.HeroIndicator.zIndex() + 1
+            left = state.left!!,
+            top = state.top!!,
+            width = HERO_INDICATOR_DIV_WIDTH,
+            height = HERO_INDICATOR_DIV_HEIGHT,
+            zIndex = Layer.HeroIndicator.zIndex() + 1
         ) {
             img(src = game.resolve("/img/ui/hero.png")) {
                 attrs.jsStyle {

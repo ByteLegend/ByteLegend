@@ -43,5 +43,16 @@ class AppBrowserSmokeTest : AbstractBrowserTest() {
                 isNotEmpty() && get(0).getAttribute("src") == mockPlayer.avatarUrl
             }
         }
+
+        webDriver.findElement(By.className("avatar-img")).click()
+        for (it in webDriver.findElements(By.className("dropdown-item"))) {
+            if (it.text == "Sign out") {
+                it.click()
+                break
+            }
+        }
+        webDriver.waitUntil(10000) {
+            webDriver.findElements(By.id("login-link")).isNotEmpty()
+        }
     }
 }

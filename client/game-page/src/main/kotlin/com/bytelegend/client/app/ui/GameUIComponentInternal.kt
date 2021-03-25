@@ -118,7 +118,15 @@ abstract class LayeredGameUIComponent<P : GameProps, S : RState> : GameUICompone
 
     @Suppress("UnsafeCastFromDynamic")
     fun RBuilder.containerFillingDiv(zIndex: Int, classes: Set<String> = emptySet(), block: RDOMBuilder<DIV>.() -> Unit = {}) {
-        absoluteDiv(0, 0, gameContainerWidth, gameContainerHeight, zIndex, "1", classes, block = block)
+        absoluteDiv(
+            left = 0,
+            top = 0,
+            width = gameContainerWidth,
+            height = gameContainerHeight,
+            zIndex = zIndex,
+            classes = classes,
+            block = block
+        )
     }
 }
 

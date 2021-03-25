@@ -26,11 +26,11 @@ interface ICPServerLocationWidgetState : RState {
 class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidgetState>() {
     override fun RBuilder.render() {
         absoluteDiv(
-            (gameContainerWidth - ICPServerLocationWidgetWidth) / 2,
-            uiContainerCoordinateInGameContainer.y + uiContainerSize.height - ICPServerLocationWidgetHeight,
-            ICPServerLocationWidgetWidth,
-            ICPServerLocationWidgetHeight,
-            Layer.IcpServerLocationWidget.zIndex(),
+            left = (gameContainerWidth - ICPServerLocationWidgetWidth) / 2,
+            top = uiContainerCoordinateInGameContainer.y + uiContainerSize.height - ICPServerLocationWidgetHeight,
+            width = ICPServerLocationWidgetWidth,
+            height = ICPServerLocationWidgetHeight,
+            zIndex = Layer.IcpServerLocationWidget.zIndex(),
             classes = setOf("flex-center", "white-text-black-shadow-1")
         ) {
             if (game.serverLocation == ServerLocation.BEIJING) {

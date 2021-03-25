@@ -2,45 +2,54 @@ package com.bytelegend.client.app.ui
 
 // package common.ui
 
-import kotlinx.css.Position
-import kotlinx.css.position
-import kotlinx.css.px
-import kotlinx.css.right
-import kotlinx.css.top
-import kotlinx.css.zIndex
+import BootstrapDropdownDivider
+import BootstrapDropdownItem
+import BootstrapDropdownMenu
+import BootstrapDropdownToggle
+import common.ui.bootstrap.BootstrapDropdown
+import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.html.classes
 import kotlinx.html.id
+import kotlinx.html.js.onClickFunction
+import kotlinx.html.js.onMouseMoveFunction
+import kotlinx.html.js.onMouseOutFunction
 import kotlinx.html.title
+import org.w3c.dom.events.Event
 import react.RBuilder
 import react.RState
 import react.dom.a
 import react.dom.img
 import react.dom.span
-import styled.css
-import styled.styledSpan
+import react.setState
 
-val AVATAR_WIDTH = 64
-val AVATAR_HEIGHT = 64
+const val AVATAR_WIDTH = 64
+const val AVATAR_HEIGHT = 64
+const val AVATAR_DROPDOWN_TOGGLE_HEIGHT = 32
 
 interface UserAvatarWidgetProps : GameProps
 
-interface UserAvatarWidgetState : RState
+interface UserAvatarWidgetState : RState {
+    var showDropdownArrow: Boolean
+    var showDropdownMenu: Boolean
+}
 
 class UserAvatarWidget : GameUIComponent<UserAvatarWidgetProps, UserAvatarWidgetState>() {
+    override fun UserAvatarWidgetState.init() {
+        showDropdownArrow = false
+        showDropdownMenu = false
+    }
+
     override fun RBuilder.render() {
-        val styleBuilder: dynamic.() -> Unit = {
-            cursor = "pointer"
-            backgroundColor = "white"
-        }
         absoluteDiv(
-            uiContainerCoordinateInGameContainer.x + uiContainerSize.width - AVATAR_WIDTH + 2,
-            uiContainerCoordinateInGameContainer.y + 2,
-            AVATAR_WIDTH,
-            AVATAR_HEIGHT,
-            Layer.UserAvatarWidget.zIndex(),
-            classes = setOf("picture-frame-border"),
-            extraStyleBuilder = styleBuilder
+            top = uiContainerCoordinateInGameContainer.y,
+            right = uiContainerCoordinateInGameContainer.x,
+            width = AVATAR_WIDTH,
+            height = AVATAR_HEIGHT,
+            zIndex = Layer.UserAvatarWidget.zIndex(),
+            classes = setOf("picture-frame-border")
         ) {
+            attrs.id = "avatar-div"
             if (game.heroPlayer.isAnonymous) {
                 attrs.title = i("Login")
 
@@ -62,51 +71,73 @@ class UserAvatarWidget : GameUIComponent<UserAvatarWidgetProps, UserAvatarWidget
                     attrs.classes = setOf("avatar-img")
                     attrs.src = game.heroPlayer.avatarUrl ?: ""
                 }
-            }
-        }
-
-        if (!game.heroPlayer.isAnonymous) {
-            styledSpan {
-                attrs.classes = setOf("nickname-span")
-                css {
-                    position = Position.absolute
-                    top = (uiContainerCoordinateInGameContainer.y + 2 + AVATAR_HEIGHT).px
-                    right = (gameContainerWidth - uiContainerCoordinateInGameContainer.x - uiContainerSize.width).px
-                    zIndex = Layer.UserAvatarWidget.zIndex()
+                attrs.onMouseMoveFunction = {
+                    setState { showDropdownArrow = true }
                 }
-                a {
-                    attrs.id = "logout-link"
-                    attrs.title = i("Logout")
-                    attrs.href = "/game/logout?redirect=/"
-                    +(game.heroPlayer.nickname ?: "#Error")
+                attrs.onMouseOutFunction = {
+                    setState { showDropdownArrow = false }
+                }
+                attrs.onClickFunction = {
+                    setState { showDropdownMenu = !showDropdownMenu }
                 }
             }
         }
 
-//        if (!currentUser.anonymous) {
-//            styledSpan {
-//                attrs.classes = setOf("nickname-span")
-//                css {
-//                    position = Position.absolute
-//                    top = (canvasCoordinateInGameContainer.y + 2 + AVATAR_HEIGHT).px
-//                    right = (containerWidth - canvasCoordinateInGameContainer.x - canvasPixelSize.width).px
-//                    zIndex = props.layer.zIndex
-//                }
-//                +currentUser.nickname
-//            }
-//
-//            styledSpan {
-//                attrs.classes = setOf("nickname-span")
-//                attrs["role"] = "img"
-//                attrs["aria-label"] = "star"
-//                css {
-//                    position = Position.absolute
-//                    top = (canvasCoordinateInGameContainer.y + 2 + AVATAR_HEIGHT + 32).px
-//                    right = (containerWidth - canvasCoordinateInGameContainer.x - canvasPixelSize.width).px
-//                    zIndex = props.layer.zIndex
-//                }
-//                +"${game.starNumber} ⭐"
-//            }
-//        }
+        if (!game.heroPlayer.isAnonymous && (state.showDropdownArrow || state.showDropdownMenu)) {
+            absoluteDiv(
+                top = uiContainerCoordinateInGameContainer.y + AVATAR_HEIGHT - AVATAR_DROPDOWN_TOGGLE_HEIGHT,
+                left = gameContainerWidth - uiContainerCoordinateInGameContainer.x,
+                zIndex = Layer.UserAvatarWidget.zIndex()
+            ) {
+                attrs.id = "avatar-dropdown"
+                BootstrapDropdown {
+                    attrs.show = state.showDropdownMenu
+                    BootstrapDropdownToggle {
+                        attrs.id = "avatar-dropdown-toggle"
+                        attrs.variant = "primary"
+                        attrs.size = "sm"
+                    }
+                    BootstrapDropdownMenu {
+                        BootstrapDropdownItem {
+                            +(game.heroPlayer.nickname ?: "#Error")
+                            attrs.onClick = {
+                                window.open("https://github.com/${game.heroPlayer.username}", "_blank")
+                            }
+                        }
+                        BootstrapDropdownDivider {}
+                        BootstrapDropdownItem {
+                            +i("Logout")
+                            attrs.href = "/game/logout?redirect=/"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private val outsideEventListener: (Event) -> Unit = this::onClick
+
+    private fun onClick(event: Event) {
+        if (!state.showDropdownMenu) {
+            return
+        }
+        var target = event.target
+        while (target != document) {
+            if (target.asDynamic()?.id == "avatar-div" || target.asDynamic()?.id == "avatar-dropdown") {
+                return
+            }
+            target = target.asDynamic().parentNode
+        }
+        setState { showDropdownMenu = false }
+    }
+
+    override fun componentDidMount() {
+        super.componentDidMount()
+        window.addEventListener("click", outsideEventListener)
+    }
+
+    override fun componentWillUnmount() {
+        super.componentWillUnmount()
+        window.removeEventListener("click", outsideEventListener)
     }
 }

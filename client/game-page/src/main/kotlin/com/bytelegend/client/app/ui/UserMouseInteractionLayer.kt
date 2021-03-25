@@ -59,9 +59,12 @@ interface UserMouseInteractionLayerProps : GameProps
 class UserMouseInteractionLayer : LayeredGameUIComponent<UserMouseInteractionLayerProps, RState>() {
     override fun RBuilder.render() {
         absoluteDiv(
-            canvasCoordinateInGameContainer.x, canvasCoordinateInGameContainer.y,
-            canvasPixelSize.width, canvasPixelSize.height,
-            Layer.UserMouseInteraction.zIndex(), "1", setOf("user-mouse-interaction-layer")
+            left = canvasCoordinateInGameContainer.x,
+            top = canvasCoordinateInGameContainer.y,
+            width = canvasPixelSize.width,
+            height = canvasPixelSize.height,
+            zIndex = Layer.UserMouseInteraction.zIndex(),
+            classes = setOf("user-mouse-interaction-layer")
         ) {
             attrs {
                 id = "user-mouse-interaction-layer"

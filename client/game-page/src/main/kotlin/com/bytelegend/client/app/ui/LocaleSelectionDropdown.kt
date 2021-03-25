@@ -14,7 +14,6 @@ import react.dom.div
 
 interface LocaleSelectionDropdownProps : GameProps
 
-
 class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RState>() {
     private fun onSwitchLocale(target: Locale) {
         localStorage.setItem("locale", target.toString())

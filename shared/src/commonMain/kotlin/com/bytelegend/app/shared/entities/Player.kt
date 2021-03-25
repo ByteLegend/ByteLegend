@@ -65,6 +65,8 @@ open class Player {
      */
     var locale: String? = null
 
+    var star: Int = 0
+
     var avatarUrl: String? = null
 
     /**

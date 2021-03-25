@@ -199,6 +199,7 @@ class MainMapCanvasRenderer(
         return false
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun drawByLayerOrder(
         indexes: dynamic,
         layerToSprites: JSObjectBackedMap<MutableList<Sprite>>,

@@ -8,7 +8,10 @@ val BootstrapDropdownItem: RClass<BootstrapDropdownItemProps> = BootstrapDropdow
 val BootstrapDropdownToggle: RClass<BootstrapDropdownToggleProps> = BootstrapDropdown.asDynamic().Toggle
 val BootstrapDropdownDivider: RClass<BootstrapDropdownMenuProps> = BootstrapDropdown.asDynamic().Divider
 
-external interface BootstrapDropdownMenuProps : RProps
+external interface BootstrapDropdownMenuProps : RProps {
+    var show: Boolean
+    var rootCloseEvent: String
+}
 
 external interface BootstrapDropdownDividerProps : RProps
 
@@ -22,4 +25,5 @@ external interface BootstrapDropdownItemProps : RProps {
 external interface BootstrapDropdownToggleProps : RProps {
     var id: String
     var variant: String
+    var size: String
 }

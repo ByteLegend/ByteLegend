@@ -160,11 +160,11 @@ class MiniMapCanvasLayer : AbstractMapCanvas<MiniMapCanvasState>() {
         // 0 -> 32
 
         absoluteDiv(
-            miniMapX - 16,
-            (miniMapY - 16 + (1 - collapseProgress) * miniMapHeight).toInt(),
-            miniMapWidth + 32,
-            (miniMapHeight * collapseProgress).toInt() + 32,
-            miniMapZIndex + 1
+            left = miniMapX - 16,
+            top = (miniMapY - 16 + (1 - collapseProgress) * miniMapHeight).toInt(),
+            width = miniMapWidth + 32,
+            height = (miniMapHeight * collapseProgress).toInt() + 32,
+            zIndex = miniMapZIndex + 1
         ) {
             if (!isMinimized()) {
                 attrs.jsStyle {

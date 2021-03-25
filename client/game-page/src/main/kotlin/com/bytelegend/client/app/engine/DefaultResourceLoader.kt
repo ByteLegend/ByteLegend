@@ -90,11 +90,11 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
         loadingResourcesInSession[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
         return load(
             resource,
-            { resourceData ->
+            { _ ->
                 loadingResourcesInSession.remove(resource.id)
                 loadedResourcesInSession[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
             },
-            { t ->
+            { _ ->
                 loadingResourcesInSession.remove(resource.id)
                 loadFailedResourcesInSession[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
             }

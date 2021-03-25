@@ -65,14 +65,14 @@ class NoticeboardBuilder {
 }
 
 interface ObjectsBuilder {
-    fun mapEntrance(builder: MapEntranceBuilder.() -> Unit)
+    fun mapEntrance(action: MapEntranceBuilder.() -> Unit)
 
     /**
      * An invisible object
      */
-    fun obj(builder: ObjectBuilder.() -> Unit)
+    fun obj(action: ObjectBuilder.() -> Unit)
 
-    fun sprite(builder: SpriteBuilder.() -> Unit)
+    fun sprite(action: SpriteBuilder.() -> Unit)
 
     /*
     This shouldn't be in API module, but we have to workaround the following issue:
@@ -96,6 +96,6 @@ interface ObjectsBuilder {
     The cause seems to be that react is bundled into game-page and game-JavaIsland,
     i.e. "more than one copy of React in the same app"
      */
-    fun noticeboard(builder: NoticeboardBuilder.() -> Unit)
-    fun npc(builder: NpcBuilder.() -> Unit)
+    fun noticeboard(action: NoticeboardBuilder.() -> Unit)
+    fun npc(action: NpcBuilder.() -> Unit)
 }

@@ -73,24 +73,24 @@ class TileCursorWidget : GameUIComponent<TileCursorWidgetProps, TileCursorWidget
 
             if (state.animationFrameIndex != 0 || borderColor == "red") {
                 absoluteDiv(
-                    coordinateInCanvas.x + 3,
-                    coordinateInCanvas.y + 3,
-                    tileSize.width,
-                    tileSize.height,
-                    Layer.CursorWidget.zIndex(),
-                    "0.7",
+                    left = coordinateInCanvas.x + 3,
+                    top = coordinateInCanvas.y + 3,
+                    width = tileSize.width,
+                    height = tileSize.height,
+                    zIndex = Layer.CursorWidget.zIndex(),
+                    opacity = "0.7",
                     extraStyleBuilder = {
                         border = "$borderColor 4px dashed"
                     }
                 )
             } else {
                 absoluteDiv(
-                    coordinateInCanvas.x + 5,
-                    coordinateInCanvas.y + 5,
-                    tileSize.width - 4,
-                    tileSize.height - 4,
-                    Layer.CursorWidget.zIndex(),
-                    "0.7",
+                    left = coordinateInCanvas.x + 5,
+                    top = coordinateInCanvas.y + 5,
+                    width = tileSize.width - 4,
+                    height = tileSize.height - 4,
+                    zIndex = Layer.CursorWidget.zIndex(),
+                    opacity = "0.7",
                     extraStyleBuilder = {
                         border = "$borderColor 4px dashed"
                     }

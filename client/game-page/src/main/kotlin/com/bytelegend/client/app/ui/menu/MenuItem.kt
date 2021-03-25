@@ -106,11 +106,11 @@ class Menu : GameUIComponent<MenuProps, RState>() {
 
     override fun RBuilder.render() {
         absoluteDiv(
-            uiContainerCoordinateInGameContainer.x + uiContainerSize.width - menuWidth,
-            uiContainerCoordinateInGameContainer.y + uiContainerSize.height - menuHeight - 20,
-            menuWidth,
-            menuHeight,
-            Layer.Menu.zIndex(),
+            left = uiContainerCoordinateInGameContainer.x + uiContainerSize.width - menuWidth,
+            top = uiContainerCoordinateInGameContainer.y + uiContainerSize.height - menuHeight - 20,
+            width = menuWidth,
+            height = menuHeight,
+            zIndex = Layer.Menu.zIndex(),
         ) {
             items.forEachIndexed { index, item ->
                 child(MenuItem::class) {

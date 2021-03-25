@@ -210,7 +210,13 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
         }
 
         absoluteDiv(
-            left, top, width, height, Layer.ScrollButtons.zIndex(), "0", setOf(direction.cursorCssClass()),
+            left = left,
+            top = top,
+            width = width,
+            height = height,
+            zIndex = Layer.ScrollButtons.zIndex(),
+            opacity = "0",
+            classes = setOf(direction.cursorCssClass()),
             block = {
                 attrs {
                     onMouseMoveFunction = scrollEventListener(direction)

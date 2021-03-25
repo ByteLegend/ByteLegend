@@ -26,7 +26,7 @@ fun <T> toTypedList(jsonArray: dynamic, mapper: (dynamic) -> T): List<T> {
 fun <T> toTypedMap(jsonObject: dynamic, mapper: (dynamic) -> T): Map<String, T> {
     return JSObjectBackedMap<dynamic>(jsonObject).apply {
         entries.forEach {
-            it.setValue(toMission(it.value))
+            it.setValue(mapper(it.value))
         }
     }
 }

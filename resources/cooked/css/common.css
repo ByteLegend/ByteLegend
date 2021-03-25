@@ -54,8 +54,18 @@ body {
 
 .locale-selection-widget .btn-primary {
     background: transparent;
-    color: #ffffff;
+    color: white;
     text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.1em 0.1em 0.2em;
+}
+
+#avatar-div {
+    cursor: pointer;
+    background-color: white;
+}
+
+#avatar-dropdown-toggle {
+    background: transparent;
+    border: transparent;
 }
 
 .map-name-selection {
@@ -82,7 +92,7 @@ body {
 
 .locale-selection-widget {
     margin-top: 10px;
-    display : inline-block;
+    display: inline-block;
 }
 
 .picture-frame-border {

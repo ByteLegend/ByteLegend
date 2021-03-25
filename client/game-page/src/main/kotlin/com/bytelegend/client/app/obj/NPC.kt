@@ -32,9 +32,9 @@ class NPC(
         GameObjectRole.Clickable,
     )
 
-    override fun onTouch(obj: GameObject) {
-        super.onTouch(obj)
-        onTouchFunction(obj)
+    override fun onTouch(character: GameObject) {
+        super.onTouch(character)
+        onTouchFunction(character)
     }
 
     override fun onClick() {

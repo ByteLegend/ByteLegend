@@ -97,6 +97,20 @@ class IndexController(
         )
         response.sendRedirect(redirect)
     }
+    @GetMapping("/game/logout")
+    fun logout(
+        response: HttpServletResponse,
+        @RequestParam("redirect")
+        redirect: String
+    ) {
+        response.addCookie(
+            Cookie(SESSION_COOKIE_NAME, mockPlayer.id).apply {
+                path = "/"
+                maxAge = 0
+            }
+        )
+        response.sendRedirect(redirect)
+    }
 }
 
 @Service
@@ -228,9 +242,11 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onClientUnsubscribeMessage(session: WebSocketSession, subscribeUnsubscribeMessage: SubscribeUnsubscribeMessage) {
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onClientSubscribeMessage(session: WebSocketSession, subscribeUnsubscribeMessage: SubscribeUnsubscribeMessage) {
     }
 
