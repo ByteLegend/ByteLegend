@@ -7,7 +7,7 @@ import com.bytelegend.app.shared.map
 
 /**
  * Dynamic objects aren't displayed on the map directly, but added by game script
- * dynamically. It might have outer glow effect, switch animation frames on demaon, etc.
+ * dynamically. It might have outer glow effect, switch animation frames on demand, etc.
  */
 class GameMapDynamicSprite(
     override val id: String,

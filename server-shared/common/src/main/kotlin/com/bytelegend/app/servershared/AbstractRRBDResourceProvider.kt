@@ -16,8 +16,8 @@ abstract class AbstractRRBDResourceProvider(
     }
 
     val maps: List<GameMapDefinition> by lazy {
-        val mapHierarchyJson = File(localRRBD).resolve("map/hierarchy.json").readText()
-        serializer.fromJson(mapHierarchyJson, object : TypeReference<List<GameMapDefinition>>() {})
+        val mapHierarchyYml = File(localRRBD).resolve("map/hierarchy.yml").readText()
+        serializer.fromYaml(mapHierarchyYml, object : TypeReference<List<GameMapDefinition>>() {})
     }
     val idToMaps: Map<String, GameMapDefinition> by lazy {
         mutableMapOf<String, GameMapDefinition>().apply {

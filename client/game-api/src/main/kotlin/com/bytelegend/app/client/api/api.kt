@@ -156,6 +156,8 @@ interface GameSceneAware {
 }
 
 interface GameScene : GameContainerSizeAware, GameRuntimeAware {
+    val isActive: Boolean
+
     /**
      * The map of current scene
      */
@@ -168,14 +170,23 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
 
     val blockers: Array<Array<Int>>
     val objects: GameObjectContainer
-    val director: GameDirector
     val canvasState: GameCanvasState
+    val missions: MissionContainer
+    val states: StateContainer
 
     fun objects(block: ObjectsBuilder.() -> Unit)
     fun scripts(block: ScriptsBuilder.() -> Unit)
 }
 
+interface MissionContainer {
+    fun missionAccomplished(missionId: String): Boolean
+}
+
+interface StateContainer
+
 interface GameSceneContainer : GameContainerSizeAware {
+    fun getSceneByIdOrNull(mapId: String): GameScene?
+
     fun getSceneById(mapId: String): GameScene
 
     /**
@@ -198,6 +209,7 @@ interface GameSceneContainer : GameContainerSizeAware {
 }
 
 interface ModalController {
+    val visible: Boolean
     fun showModal(contentId: String, titleId: String? = null)
 }
 
@@ -207,8 +219,4 @@ interface BannerController {
 
 interface ToastController {
     fun addToast(header: String, body: String, autoHideMs: Int = 0)
-}
-
-interface GameDirector {
-    fun start()
 }

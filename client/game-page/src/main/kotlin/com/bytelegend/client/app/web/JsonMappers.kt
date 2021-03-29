@@ -1,3 +1,5 @@
+@file:Suppress("UnsafeCastFromDynamic")
+
 package com.bytelegend.client.app.web
 
 import com.bytelegend.app.client.api.JSObjectBackedMap
@@ -6,6 +8,39 @@ import com.bytelegend.app.shared.entities.MissionAnswer
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.entities.States
+import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.MissionUpdateEventData
+import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.StarUpdateEventData
+
+// PublishMessage<Any>
+@Suppress("UnsafeCastFromDynamic")
+fun parseServerEvent(eventMessage: dynamic): Any {
+    val event: String = eventMessage.event
+    return when {
+        event.startsWith("protocol.player") -> toPlayer(eventMessage.payload)
+        event == ONLINE_COUNTER_UPDATE_EVENT -> eventMessage.payload
+        event == STAR_UPDATE_EVENT -> toStarUpdateEventData(eventMessage.payload)
+        event == MISSION_UPDATE_EVENT -> toMissionUpdateEventData(eventMessage.payload)
+        else -> throw IllegalStateException("Unsupported event: $event")
+    }
+}
+
+fun toStarUpdateEventData(jsonObject: dynamic) = StarUpdateEventData(
+    jsonObject.playerId,
+    jsonObject.map,
+    jsonObject.missionId,
+    jsonObject.change,
+    jsonObject.newValue
+)
+
+fun toMissionUpdateEventData(jsonObject: dynamic) = MissionUpdateEventData(
+    jsonObject.playerId,
+    jsonObject.map,
+    toMissionAnswer(jsonObject.change),
+    toMission(jsonObject.newValue)
+)
 
 fun toPlayer(jsonObject: dynamic) = Player().apply {
     id = jsonObject.id

@@ -1,5 +1,8 @@
 package com.bytelegend.client.app.ui.menu
 
+import com.bytelegend.app.client.api.GameCanvasState
+import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
@@ -83,12 +86,18 @@ interface MenuProps : GameProps
 data class MenuItemData(
     val iconImageId: String,
     val titleId: String,
-    val onClickFunction: () -> Unit = {}
+    val onClickFunction: UnitFunction = {}
 )
 
+fun GameCanvasState.determineMenuCoordinateInGameContainer(): PixelCoordinate = PixelCoordinate(
+    getUICoordinateInGameContainer().x + getUIContainerSize().width - MENU_WIDTH,
+    getUICoordinateInGameContainer().y + getUIContainerSize().height - MENU_HEIGHT - 20
+)
+
+const val MENU_HEIGHT = 64
+const val MENU_WIDTH = 400
+
 class Menu : GameUIComponent<MenuProps, RState>() {
-    private val menuHeight = 64
-    private val menuWidth = 400
     private val items: List<MenuItemData> = listOf(
         // 1. menu-github: link to github.com/ByteLegend/ByteLegend
         // 2. menu-notification: open notification box
@@ -106,10 +115,10 @@ class Menu : GameUIComponent<MenuProps, RState>() {
 
     override fun RBuilder.render() {
         absoluteDiv(
-            left = uiContainerCoordinateInGameContainer.x + uiContainerSize.width - menuWidth,
-            top = uiContainerCoordinateInGameContainer.y + uiContainerSize.height - menuHeight - 20,
-            width = menuWidth,
-            height = menuHeight,
+            left = gameCanvasState.determineMenuCoordinateInGameContainer().x,
+            top = gameCanvasState.determineMenuCoordinateInGameContainer().y,
+            width = MENU_WIDTH,
+            height = MENU_HEIGHT,
             zIndex = Layer.Menu.zIndex(),
         ) {
             items.forEachIndexed { index, item ->

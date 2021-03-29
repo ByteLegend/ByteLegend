@@ -117,6 +117,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         )
         game.resourceLoader.loadAsync(ImageResource("texture", game.resolve("/img/ui/texture.jpg"), 1))
         game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg"), 1), false)
+        game.resourceLoader.loadAsync(AudioResource("starfly", game.resolve("/audio/starfly.mp3"), 1), false)
         game.webSocketClient.self = game.resourceLoader.loadAsync(game.webSocketClient)
 
         if (game.heroPlayer.isAnonymous) {
@@ -149,6 +150,27 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                 obj.init()
                 newScene.objects.add(obj)
                 game.start()
+
+//                window.setTimeout({
+//                    val canvasState = game.activeScene.canvasState
+//                    val endCoordinateInGameContainer: PixelCoordinate = canvasState.determineStarCountWidgetCoordinateInGameContainerLeftTop()
+//                    val startCoordinateInGameContainer: PixelCoordinate = canvasState.determineMenuCoordinateInGameContainer()
+//                    GlobalScope.launch {
+//                        getAudioElementOrNull("starfly")?.apply {
+//                            loop = false
+//                            play()
+//                        }
+//                        starFlyEffect(
+//                            canvasState.gameContainerSize,
+//                            startCoordinateInGameContainer,
+//                            endCoordinateInGameContainer,
+//                            3
+//                        )
+//                        game.eventBus.emit(STAR_INCREMENT_EVENT, StarUpdateEventData(
+//                            "","","", 1,2
+//                        ))
+//                    }
+//                }, 5000)
             }
         }
     }

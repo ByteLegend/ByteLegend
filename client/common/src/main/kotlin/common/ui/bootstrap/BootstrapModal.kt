@@ -16,5 +16,9 @@ external interface BootstrapModalProps : RProps {
     var ariaLabelledby: Any
     var show: Boolean
     var onHide: Any
+    var onExit: Any
+    var onExited: Any
+    var onExiting: Any
+    var onShow: Any
     var animation: Boolean
 }

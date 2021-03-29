@@ -18,7 +18,6 @@ import react.dom.p
 import react.dom.span
 
 interface ModalControllerInternal : ModalController {
-    val visible: Boolean
     fun hide()
     fun show(modal: RElementBuilder<BootstrapModalProps>.() -> Unit)
 }

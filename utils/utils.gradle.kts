@@ -24,6 +24,7 @@ dependencies {
     implementation(libs("java-jwt"))
     implementation(libs("bcprov-jdk15on"))
     implementation(libs("jackson-dataformat-yaml"))
+    implementation(libs("jackson-module-kotlin"))
     implementation(libs("opencc4j"))
     implementation(libs("kotlinx-serialization-json"))
 
@@ -119,6 +120,24 @@ processResourcesTasks.add(registerExecTask(
 val inputMapDir = rootProject.file("resources/raw/maps")
 val outputMapDataDir = RRBD.resolve("map")
 
+val missionsAllJson = RRBD.resolve("map/missions-all.json")
+processResourcesTasks.add(registerExecTask(
+    "mergeMissionYamls",
+    "com.bytelegend.utils.MissionsMergerKt",
+    inputMapDir.absolutePath,
+    missionsAllJson.absolutePath
+) {
+    inputs.dir(inputMapDir)
+    outputs.file(missionsAllJson)
+})
+
+processResourcesTasks.add(tasks.register<Copy>("copyHierarchyYml") {
+    from(inputMapDir)
+    include("hierarchy.yml")
+
+    into(outputMapDataDir)
+})
+
 processResourcesTasks.add(registerExecTask(
     "generateMapData", "com.bytelegend.utils.MapGeneratorKt",
     inputMapDir.absolutePath,
@@ -143,7 +162,7 @@ processResourcesTasks.add(registerExecTask(
 
 val allMaps: List<String> = rootProject
     .file("resources/raw/maps").walk()
-    .filter { it.isFile && it.name.endsWith(".json") && it.name != "hierarchy.json" }
+    .filter { it.isFile && it.name.endsWith(".json") }
     .map { it.name.replace(".json", "") }
     .toList()
 tasks.register<Copy>("processGameDevJs") {

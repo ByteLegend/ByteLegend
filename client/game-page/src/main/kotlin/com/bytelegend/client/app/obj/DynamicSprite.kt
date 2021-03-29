@@ -3,6 +3,7 @@ package com.bytelegend.client.app.obj
 import com.bytelegend.app.client.api.AbstractStaticLocationSprite
 import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.GameScene
+import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
@@ -21,18 +22,17 @@ open class DynamicSprite(
     override val gameScene: GameScene,
     protected val dynamicSprite: GameMapDynamicSprite,
     private val effect: Effect = NoEffect,
-    private val onInitFunction: () -> Unit = {},
+    private val onInitFunction: UnitFunction = {},
     private val onTouchFunction: (GameObject) -> Unit = {},
-    private val onClickFunction: () -> Unit = {},
+    private val onClickFunction: UnitFunction = {},
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
-) : AbstractStaticLocationSprite(
+) : CoordinateAware, AbstractStaticLocationSprite(
     dynamicSprite.topLeftCorner * gameScene.map.tileSize,
     PixelSize(
         gameScene.map.tileSize.width * dynamicSprite.width,
         gameScene.map.tileSize.height * dynamicSprite.height
     )
-),
-    CoordinateAware {
+) {
     override val layer: Int = dynamicSprite.layer
     override val gridCoordinate: GridCoordinate = dynamicSprite.topLeftCorner
     override val pixelCoordinate: PixelCoordinate = coordinateInMap

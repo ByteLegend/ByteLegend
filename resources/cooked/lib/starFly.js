@@ -1,28 +1,22 @@
-const MAX_PARTICLES = 50000,
+const MAX_PARTICLES = 2000,
     NFIELDS = 5, // x, y, vx, vy, age,
     // size of the array
     PARTICLES_LENGTH = MAX_PARTICLES * NFIELDS;
 
 window.starFly = starFly
 
-function starFly(fromX, fromY, toX, toY, durationSecond, onComplete) {
-    const canvas = document.createElement("canvas")
-    canvas.style.zIndex = 200
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    canvas.style.position = "absolute"
-    document.body.appendChild(canvas)
-
-    const star = document.createElement("div")
-    star.id = "star"
-    star.style.zIndex = 201
-    star.style.top = "0px"
-    star.style.left = "0px"
-    star.style.backgroundColor = "transparent"
-    star.style.position = "absolute"
-    star.appendChild(document.createTextNode("⭐"))
-    document.body.appendChild(star)
-
+/**
+ * @param canvas The canvas to display the animation. Size and zIndex must be set before calling this method.
+ * @param starDiv The div containing star. Size and zIndex must be set before calling this method.
+ * @param fromX
+ * @param fromY
+ * @param toX
+ * @param toY
+ * @param durationSecond
+ * @param onStarFlyComplete star fly completes, but particles are still dropping
+ * @param onComplete everything is done
+ */
+function starFly(canvas, starDiv, fromX, fromY, toX, toY, durationSecond, onStarFlyComplete, onComplete) {
     const context = {
         canvas: canvas,
         ctx: canvas.getContext("2d"),
@@ -33,16 +27,7 @@ function starFly(fromX, fromY, toX, toY, durationSecond, onComplete) {
         t0: new Date() * 1
     }
 
-    // let tl = gsap.timeline({
-    //     onComplete: function () {
-    //         context.x = null
-    //         context.y = null
-    //         context.completed = true
-    //         onComplete()
-    //     }
-    // });
-
-    gsap.fromTo("#star", {
+    gsap.fromTo("#starfly-star", {
         x: fromX,
         y: fromY
     }, {
@@ -59,21 +44,24 @@ function starFly(fromX, fromY, toX, toY, durationSecond, onComplete) {
         onComplete: function () {
             context.x = null
             context.y = null
-            onComplete()
+            // Wait particles to drop down
+            document.getElementById("starfly-star").style.display = "none"
+            onStarFlyComplete()
+            window.setTimeout(onComplete, 3000)
         }
     })
 
     let timeline = gsap.timeline()
-    timeline.to("#star", {
+    timeline.to("#starfly-star", {
         duration: durationSecond / 2,
-        scale: 2
+        scale: 3
     })
-    timeline.to("#star", {
+    timeline.to("#starfly-star", {
         duration: durationSecond / 2,
         scale: 1
     })
 
-    gsap.fromTo("#star",
+    gsap.fromTo("#starfly-star",
         {rotation: 0},
         {rotation: 360, duration: durationSecond / 2, repeat: 1});
 
@@ -98,9 +86,7 @@ function draw(context) {
     // emit particles
     emit(context);
 
-    // context.ctx.clearRect(0, 0, width, height);
     const imgdata = context.ctx.createImageData(width, height),
-            // context.ctx.getImageData(0, 0, width, height),
         data = imgdata.data;
 
     let particlesToDraw = 0
@@ -113,16 +99,8 @@ function draw(context) {
 
         // check bounds
         if (checkBounds(x, y, context.canvas.width, context.canvas.height)) continue;
-
-        // calculate offset
-        const offset = (x + y * context.canvas.width) * 4;
-
         particlesToDraw++
-        // set pixel
-        data[offset] = r;
-        data[offset + 1] = g;
-        data[offset + 2] = b;
-        data[offset + 3] = 255;
+        drawOnCanvas(context.canvas, data, x, y, r, g, b)
     }
 
     context.ctx.putImageData(imgdata, 0, 0);
@@ -130,6 +108,24 @@ function draw(context) {
         requestAnimationFrame(function () {
             draw(context)
         });
+    }
+}
+
+function drawOnCanvas(canvas, data, x, y, r, g, b) {
+    // 50% 9x9 particle, 50% 1x1 particle
+    let small = Math.random() > 0.5
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            if (!small || (i === 0 && j === 0)) {
+                // calculate offset
+                const offset = (x + i + (y + j) * canvas.width) * 4;
+                // set pixel
+                data[offset] = r;
+                data[offset + 1] = g;
+                data[offset + 2] = b;
+                data[offset + 3] = 255;
+            }
+        }
     }
 }
 
@@ -141,24 +137,23 @@ function fuzzy(range, base) {
 
 // Don't render particles which are not on canvas
 function checkBounds(x, y, width, height) {
-    return x < 0 || x >= width || y < 0 || y >= height;
+    return x < 1 || x >= width - 1 || y < 1 || y >= height - 1;
 }
 
+// Emit some particles around current center point
 function emit(context) {
     if (context.x == null || context.y == null) {
         return
     }
-    for (let i = 0; i < 250; i++) {
+    // how many new particles emit from the center per drawing
+    for (let i = 0; i < 20; i++) {
         context.particles_i = (context.particles_i + NFIELDS) % PARTICLES_LENGTH;
         context.particles[context.particles_i] = context.x;
         context.particles[context.particles_i + 1] = context.y;
         const alpha = fuzzy(Math.PI),
-            radius = Math.random() * 100,
-            vx = Math.cos(alpha) * radius,
-            vy = Math.sin(alpha) * radius,
-            age = Math.random();
-        context.particles[context.particles_i + 2] = vx;
-        context.particles[context.particles_i + 3] = vy;
-        context.particles[context.particles_i + 4] = age;
+            radius = Math.random() * 200;
+        context.particles[context.particles_i + 2] = Math.cos(alpha) * radius;
+        context.particles[context.particles_i + 3] = Math.sin(alpha) * radius;
+        context.particles[context.particles_i + 4] = Math.random();
     }
 }

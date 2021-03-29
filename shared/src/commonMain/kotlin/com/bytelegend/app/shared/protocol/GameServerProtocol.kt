@@ -1,11 +1,8 @@
 package com.bytelegend.app.shared.protocol
 
 import com.bytelegend.app.shared.entities.SceneInitData
-import com.bytelegend.app.shared.i18n.Locale
 
-fun playerEnterSceneEvent(mapId: String) = "protocol.player.enter.${mapId}"
-fun playerLeaveSceneEvent(mapId: String) = "protocol.player.leave.${mapId}"
-fun playerMoveOnSceneEvent(mapId: String) = "protocol.player.move.${mapId}"
+
 
 /**
  * Upon switching to a new scene, get all online players and missions/states on a map.
@@ -17,10 +14,19 @@ const val GET_SCENE_INIT_DATA = "protocol.get.scene.init.data"
  */
 const val MOVE_TO = "protocol.move.to"
 
+
+/***************** Events broadcast from server to client-side EventBus ***********************/
+fun playerEnterSceneEvent(mapId: String) = "protocol.player.enter.${mapId}"
+fun playerLeaveSceneEvent(mapId: String) = "protocol.player.leave.${mapId}"
+fun playerMoveOnSceneEvent(mapId: String) = "protocol.player.move.${mapId}"
 /**
  * Periodically get online player number
  */
 const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
+
+/***************** Point-to-point events from server to client-side EventBus ***********************/
+const val STAR_UPDATE_EVENT = "protocol.star.update"
+const val MISSION_UPDATE_EVENT = "protocol.mission.udpate"
 
 interface GameServerProtocol {
     /**

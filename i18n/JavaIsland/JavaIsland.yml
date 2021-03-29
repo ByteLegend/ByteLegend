@@ -6,6 +6,9 @@
 - id: ICantHearYou
   en: I can't hear you! Step closer!
   zh_hans: 你说啥？听不见！离近点！
+- id: StepCloserToOpenTheBook
+  en: Step closer to open the book!
+  zh_hans: 离近点才能打开！
 - id: WhereToFindStar
   en: But where can I get ⭐?
   zh_hans: 但是我去哪弄⭐呢？

@@ -1,11 +1,15 @@
 package com.bytelegend.client.app.script
 
 import com.bytelegend.app.client.api.EventBus
-import com.bytelegend.app.client.api.GameDirector
+import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
+import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.JSObjectBackedMap
+import com.bytelegend.app.client.api.ModalController
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
+import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
+import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.GameControl
@@ -39,23 +43,35 @@ interface GameScript {
 
 class DefaultGameDirector(
     di: DI,
-    private val gameScene: GameScene
-) : ScriptsBuilder, GameDirector {
+) : ScriptsBuilder {
+    private val sceneContainer: GameSceneContainer by di.instance()
     private val gameControl: GameControl by di.instance()
+    private val game: GameRuntime by di.instance()
+    private val modalController: ModalController by lazy { game.modalController }
     private val scripts: MutableList<GameScript> = mutableListOf()
     private val eventBus: EventBus by di.instance()
     private var index = -1
+    private val gameScene: GameScene
+        get() = game.activeScene
 
+    /**
+     * A counter providing unique id for widgets in DOM
+     */
     private var counter = 0
 
     val currentWidgets: MutableMap<String, Widget<out GameProps>> = JSObjectBackedMap()
 
+    private val isRunning
+        get() = index != -1
+
     /**
-     * Start all scripts
+     * Start all scripts, if modal is not shown.
      */
-    override fun start() {
-        index = 0
-        next()
+    fun start() {
+        if (!modalController.visible) {
+            index = 0
+            next()
+        }
     }
 
     /**
@@ -67,9 +83,12 @@ class DefaultGameDirector(
         }
         if (index != 0) {
             scripts[index - 1].stop()
+        } else {
+            gameControl.userMouseEnabled = false
         }
 
         if (index == scripts.size) {
+            gameControl.userMouseEnabled = true
             reset()
             return
         }
@@ -82,20 +101,10 @@ class DefaultGameDirector(
     }
 
     fun scripts(block: ScriptsBuilder.() -> Unit) {
-        require(scripts.isEmpty() && index == -1)
-        disableUserMouse()
         block()
-        enableUserMouse()
-        start()
-    }
-
-    override fun enableUserMouse() {
-        scripts.add(object : GameScript {
-            override fun start() {
-                gameControl.userMouseEnabled = true
-                next()
-            }
-        })
+        if (!isRunning) {
+            start()
+        }
     }
 
     override fun speech(action: SpeechBuilder.() -> Unit) {
@@ -113,21 +122,24 @@ class DefaultGameDirector(
         )
     }
 
-    override fun starFly(fromObjectId: String) {
-        scripts.add(RunNativeJsScript(gameScene.objects.getById<CharacterSprite>(fromObjectId).pixelCoordinate))
+    fun suspendAnimation(fn: SuspendUnitFunction) {
+        scripts.add(RunSuspendFunctionScript(fn))
     }
 
-    override fun disableUserMouse() {
-        scripts.add(object : GameScript {
-            override fun start() {
-                gameControl.userMouseEnabled = false
-                next()
-            }
-        })
+    override fun playAnimate(objectId: String, frames: List<Int>, intervalMs: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override fun characterMove(characterId: String, destMapCoordinate: GridCoordinate) {
+        TODO("Not yet implemented")
     }
 
     override fun fadeIn() {
         scripts.add(RunSuspendFunctionScript { fadeInEffect(gameScene.gameContainerSize) })
+    }
+
+    override fun onComplete(action: () -> Unit) {
+        TODO("Not yet implemented")
     }
 
     fun getAndIncrement(): Int {
