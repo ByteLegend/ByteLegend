@@ -42,6 +42,16 @@ class MissionAnswer {
 
     // Epoch ms
     var createdAt: Long = 0
+
+    companion object {
+        fun create(star: Int, answer: String, accomplished: Boolean, epochMs: Long) = MissionAnswer().apply {
+            this.star = star
+            this.answer = answer
+            this.accomplished = accomplished
+            this.createdAt = epochMs
+        }
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || this::class != other::class) return false

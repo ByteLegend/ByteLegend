@@ -83,7 +83,7 @@ open class Player {
      * All possible emails.
      */
     @JsonIgnore
-    val emails: MutableList<String> = ArrayList()
+    var emails: MutableList<String> = ArrayList()
 
     /**
      * The character id for display.
