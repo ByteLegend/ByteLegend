@@ -8,6 +8,12 @@ body {
     text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.1em 0.1em 0.2em;
 }
 
+.right-sidebar {
+    text-align: right;
+    margin-top: 20px;
+    margin-right: 10px;
+}
+
 #online-counter-offline {
     color: red;
     text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.1em 0.1em 0.2em;
@@ -46,10 +52,6 @@ body {
     margin-left: 5px;
     margin-right: 5px;
     font-size: 16px;
-}
-
-#star-count {
-    margin: 10px 10px 10px 10px;
 }
 
 #online-counter {

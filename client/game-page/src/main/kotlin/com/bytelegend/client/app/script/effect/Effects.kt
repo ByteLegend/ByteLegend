@@ -12,6 +12,7 @@ import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.Node
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlin.js.Date
@@ -44,8 +45,8 @@ fun <T : Element> Document.createAndAppend(tagName: String, configure: T.() -> U
     return tag
 }
 
-suspend fun starIncrementEffect(
-    increment: Int,
+suspend fun numberIncrementEffect(
+    incrementAnimationDiv: Node,
     left: Int,
     top: Int,
     width: Int,
@@ -57,9 +58,8 @@ suspend fun starIncrementEffect(
         className = "map-title-text"
         style.zIndex = Layer.ScriptWidget.zIndex().toString()
         style.position = "absolute"
-        style.width = "${width}px"
         style.height = "${height}px"
-        appendChild(document.createTextNode("+$increment⭐"))
+        appendChild(incrementAnimationDiv)
     }
 
     window.asDynamic().gsap.fromTo(

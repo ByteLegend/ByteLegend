@@ -18,6 +18,7 @@ import styled.styledDiv
  *
  * - Map name
  * - FPS
+ * - Online player number
  * - Coordinate
  *
  */

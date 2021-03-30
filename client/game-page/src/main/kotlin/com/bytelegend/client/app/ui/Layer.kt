@@ -8,7 +8,7 @@ enum class Layer {
     ScrollButtons,
     MiniMapCanvas,
     ScriptWidget,
-    StarWidget,
+    RightSideBar,
     UserAvatarWidget,
     LocaleSelectionDropdown,
     IcpServerLocationWidget,

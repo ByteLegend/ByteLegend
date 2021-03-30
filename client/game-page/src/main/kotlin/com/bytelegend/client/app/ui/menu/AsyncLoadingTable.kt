@@ -112,15 +112,15 @@ class OpenSourceSoftwareTable : AsyncLoadingTable<AsyncLoadingTableState>() {
     }
 }
 
-interface ArtworkTableState : AsyncLoadingTableState {
+interface GameMaterialTableState : AsyncLoadingTableState {
     var showAlert: Boolean
 }
 
-class ArtworkTable : AsyncLoadingTable<ArtworkTableState>() {
+class GameMaterialTable : AsyncLoadingTable<GameMaterialTableState>() {
     override val url: String
-        get() = props.game.resolve("/misc/artwork.json")
+        get() = props.game.resolve("/misc/material.json")
 
-    override fun ArtworkTableState.init() {
+    override fun GameMaterialTableState.init() {
         showAlert = true
     }
 

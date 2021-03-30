@@ -22,7 +22,7 @@ import react.setState
 
 val CREDITS_TAB = "CreditsTab"
 val OPENSOURCE_TAB = "OpenSourceTab"
-val ARTWORK_TAB = "ArtworkTab"
+val MATERIAL_TAB = "MaterialTab"
 
 interface CreditsModalState : RState {
     var activeTabIndex: Int
@@ -46,7 +46,7 @@ class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
     private val tabs: List<CreditsTab> = listOf(
         CreditsTab(CREDITS_TAB, "MenuCreditsTitle", this::creditsTab),
         CreditsTab(OPENSOURCE_TAB, OPENSOURCE_TAB, this::openSourceTab),
-        CreditsTab(ARTWORK_TAB, ARTWORK_TAB, this::artworkTab),
+        CreditsTab(MATERIAL_TAB, MATERIAL_TAB, this::materialTab),
     )
 
     override fun CreditsModalState.init() {
@@ -108,8 +108,8 @@ class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
         }
     }
 
-    private fun artworkTab(builder: RElementBuilder<*>) {
-        builder.child(ArtworkTable::class) {
+    private fun materialTab(builder: RElementBuilder<*>) {
+        builder.child(GameMaterialTable::class) {
             attrs.game = game
         }
     }

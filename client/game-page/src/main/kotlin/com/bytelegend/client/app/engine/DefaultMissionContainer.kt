@@ -18,8 +18,9 @@ import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.effect.starFlyEffect
+import com.bytelegend.client.app.ui.NumberIncrementEvent
 import com.bytelegend.client.app.ui.STAR_INCREMENT_EVENT
-import com.bytelegend.client.app.ui.determineStarCountWidgetCoordinateInGameContainerLeftTop
+import com.bytelegend.client.app.ui.determineRightSideBarCoordinateInGameContainerLeftTop
 import com.bytelegend.client.app.ui.menu.determineMenuCoordinateInGameContainer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -51,7 +52,7 @@ class DefaultMissionContainer(
             // respond to the event
             val missionDefinition = gameScene!!.objects.getById<GameMapMissionDefinition>(eventData.missionId)
             val canvasState = gameScene!!.canvasState
-            val endCoordinateInGameContainer: PixelCoordinate = canvasState.determineStarCountWidgetCoordinateInGameContainerLeftTop()
+            val endCoordinateInGameContainer: PixelCoordinate = canvasState.determineRightSideBarCoordinateInGameContainerLeftTop()
             val startCoordinateInGameContainer: PixelCoordinate = if (missionDefinition.missionDefinition.type == MissionType.Star) {
                 // See MenuItem, from the GitHub menu icon
                 canvasState.determineMenuCoordinateInGameContainer()
@@ -120,7 +121,7 @@ class DefaultMissionContainer(
             endCoordinateInGameContainer,
             3
         )
-        game.eventBus.emit(STAR_INCREMENT_EVENT, eventData)
+        game.eventBus.emit(STAR_INCREMENT_EVENT, NumberIncrementEvent(eventData.change, eventData.newValue))
     }
 
     private suspend fun starIncrement(eventData: StarUpdateEventData) {
