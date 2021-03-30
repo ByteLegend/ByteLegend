@@ -10,7 +10,6 @@ import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.app.shared.entities.Player
-import com.bytelegend.app.shared.objects.Lifecycle
 import com.bytelegend.app.shared.playerAnimationSetResourceId
 import com.bytelegend.app.shared.protocol.playerEnterSceneEvent
 import com.bytelegend.app.shared.protocol.playerLeaveSceneEvent
@@ -27,8 +26,8 @@ class PlayerContainer(
     private val client: WebSocketClient,
     private val resourceLoader: ResourceLoader,
     private val players: List<Player>
-) : Lifecycle {
-    var gameScene: GameScene? = null
+) {
+    lateinit var gameScene: GameScene
     private val idToPlayer: MutableMap<String, Player> = JSObjectBackedMap<Player>().apply {
         players.forEach {
             put(it.id!!, it)
@@ -41,14 +40,15 @@ class PlayerContainer(
         put(playerMoveOnSceneEvent(mapId), this@PlayerContainer::onPlayerMoveOnScene)
     }
 
-    override fun init() {
+    fun init(gameScene: GameScene) {
+        this.gameScene = gameScene
         eventHandlers.forEach { (key: String, value: EventListener<*>) ->
             client.subscribe(key)
             eventBus.on(key, value)
         }
     }
 
-    override fun close() {
+    fun close() {
         eventHandlers.forEach { (key: String, value: EventListener<*>) ->
             client.unsubscribe(key)
             eventBus.remove(key, value)
@@ -61,15 +61,12 @@ class PlayerContainer(
     private fun onPlayerMoveOnScene(player: Player) {
         val currentPlayer = idToPlayer[player.id!!] ?: return
         idToSprite[player.id!!]?.apply {
-            @Suppress("SENSELESS_COMPARISON")
-            if (gameScene != null) {
-                movePath = search(
-                    gameScene.blockers,
-                    GridCoordinate(gridCoordinate.x, gridCoordinate.y),
-                    GridCoordinate(player.x!!, player.y!!),
-                ) {
-                    it != NON_BLOCKER
-                }
+            movePath = search(
+                gameScene.blockers,
+                GridCoordinate(gridCoordinate.x, gridCoordinate.y),
+                GridCoordinate(player.x!!, player.y!!),
+            ) {
+                it != NON_BLOCKER
             }
         }
         currentPlayer.x = player.x!!
@@ -104,12 +101,10 @@ class PlayerContainer(
                         )
                     }
                 } else {
-                    if (gameScene != null) {
-                        val character = PlayerSprite(gameScene!!, it)
-                        character.init()
-                        idToSprite[it.id!!] = character
-                        ret.add(character)
-                    }
+                    val character = PlayerSprite(gameScene, it)
+                    character.init()
+                    idToSprite[it.id!!] = character
+                    ret.add(character)
                 }
             } else {
                 ret.add(sprite)

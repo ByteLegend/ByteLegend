@@ -18,6 +18,7 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.mapToArray
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
+import com.bytelegend.app.shared.objects.GameMapMissionDefinition
 import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
@@ -53,50 +54,19 @@ class DefaultGameScene(
     ObjectsBuilder,
     DIAware,
     GameContainerSizeAware by canvasState {
+    override val isActive: Boolean
+        get() = gameRuntime.activeScene == this
     override val gameRuntime: GameRuntime by di.instance()
     override val blockers: Array<Array<Int>> = map.rawTiles.mapToArray {
         it.blocker
     }
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
-    override val director: DefaultGameDirector = DefaultGameDirector(di, this)
-    private var _players: PlayerContainer? = null
+    val director: DefaultGameDirector = DefaultGameDirector(di)
 
-    @Suppress("SetterBackingFieldAssignment")
-    var players: PlayerContainer
-        get() = _players!!
-        set(value) {
-            _players = value
-            _players!!.gameScene = this
-        }
-
-    private var _missions: MissionContainer? = null
-
-    @Suppress("SetterBackingFieldAssignment")
-    var missions: MissionContainer
-        get() = _missions!!
-        set(value) {
-            _missions = value
-            _missions!!.gameScene = this
-        }
-    private var _states: StateContainer? = null
-
-    @Suppress("SetterBackingFieldAssignment")
-    var states: StateContainer
-        get() = _states!!
-        set(value) {
-            _states = value
-            _states!!.gameScene = this
-        }
-
-    /**
-     * Upon reconnect, reload all data from
-     */
-    fun reload(newPlayers: PlayerContainer) {
-        val oldPlayers = players
-        players = newPlayers
-        oldPlayers.close()
-    }
+    lateinit var players: PlayerContainer
+    override lateinit var missions: DefaultMissionContainer
+    override lateinit var states: DefaultStateContainer
 
     override fun objects(block: ObjectsBuilder.() -> Unit) {
         block()
@@ -114,6 +84,8 @@ class DefaultGameScene(
                 GameMapObjectType.GameMapPoint -> objects.add(it.unsafeCast<GameMapPoint>())
                 GameMapObjectType.GameMapCurve -> gameMapCurve(it.unsafeCast<GameMapCurve>())
                 GameMapObjectType.GameMapDynamicSprite -> objects.add(it.unsafeCast<GameMapDynamicSprite>())
+                GameMapObjectType.GameMapMissionDefinition -> objects.add(it.unsafeCast<GameMapMissionDefinition>())
+                else -> throw IllegalStateException("Unsupported type: ${it.type}")
             }
         }
     }

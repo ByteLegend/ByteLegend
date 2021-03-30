@@ -1,5 +1,6 @@
 package com.bytelegend.app.client.api
 
+import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.Direction
 
 /**
@@ -33,7 +34,7 @@ class GameScriptHelpers(val gameScene: GameScene) {
      * 2. Say "I can't hear you" when hero is far from NPC.
      * 3. Make NPC and hero face to face.
      */
-    fun standardNpcSpeech(npcId: String, onClick: () -> Unit) = click@{
+    fun standardNpcSpeech(npcId: String, onClick: UnitFunction) = click@{
         if (gameScene.gameRuntime.hero == null) {
             return@click
         }

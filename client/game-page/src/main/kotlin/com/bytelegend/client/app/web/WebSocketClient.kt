@@ -6,7 +6,6 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.JSObjectBackedMap
-import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.GameServerProtocol
@@ -25,13 +24,7 @@ import com.bytelegend.app.shared.protocol.WebSocketMessageType.SEND
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.SUBSCRIBE
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.UNSUBSCRIBE
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
-import com.bytelegend.client.app.engine.MissionContainer
-import com.bytelegend.client.app.engine.PlayerContainer
-import com.bytelegend.client.app.engine.RESOURCE_LOADING_FAILURE_EVENT
-import com.bytelegend.client.app.engine.ResourceLoadingFailureEvent
-import com.bytelegend.client.app.engine.StateContainer
 import com.bytelegend.client.app.obj.uuid
-import com.bytelegend.client.app.script.effect.disconnectionEffect
 import kotlinext.js.js
 import kotlinx.browser.window
 import kotlinx.coroutines.Deferred
@@ -153,8 +146,8 @@ class WebSocketClient(
         }
     }
 
-    private fun onServerPublishEvent(eventMessage: PublishMessage<Any>) {
-        eventBus.emit(eventMessage.event, eventMessage.payload)
+    private fun onServerPublishEvent(eventMessage: dynamic /* PublishMessage<Any> */) {
+        eventBus.emit(eventMessage.event, parseServerEvent(eventMessage))
     }
 
     private fun onServerReply(replyMessage: ReplyMessage<Any>) {
@@ -194,19 +187,19 @@ class WebSocketClient(
     }
 
     private fun displayDisconnectionAnimation() {
-        if (gameRuntime.sceneContainer.activeScene == null) {
-            // Loading page
-            eventBus.emit(
-                RESOURCE_LOADING_FAILURE_EVENT,
-                ResourceLoadingFailureEvent("", "Disconnected from game server.")
-            )
-            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
-        } else {
-            gameRuntime.sceneContainer.activeScene!!.scripts {
-                disableUserMouse()
-            }
-            disconnectionEffect(gameRuntime.sceneContainer.activeScene!!.gameContainerSize)
-        }
+//        if (gameRuntime.sceneContainer.activeScene == null) {
+//            // Loading page
+//            eventBus.emit(
+//                RESOURCE_LOADING_FAILURE_EVENT,
+//                ResourceLoadingFailureEvent("", "Disconnected from game server.")
+//            )
+//            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+//        } else {
+//            gameRuntime.sceneContainer.activeScene!!.scripts {
+//                disableUserMouse()
+//            }
+//            disconnectionEffect(gameRuntime.sceneContainer.activeScene!!.gameContainerSize)
+//        }
     }
 
     override suspend fun getSceneInitData(mapId: String): SceneInitData {
@@ -263,18 +256,18 @@ object UnrecognizedMessage : WebSocketMessage {
 
 class GameSceneInitResource(
     private val mapId: String,
-    private val client: WebSocketClient,
-    private val eventBus: EventBus,
-    private val resourceLoader: ResourceLoader
-) : ExpensiveResource<Triple<PlayerContainer, MissionContainer, StateContainer>> {
+    private val client: WebSocketClient
+//    private val eventBus: EventBus,
+//    private val resourceLoader: ResourceLoader
+) : ExpensiveResource<SceneInitData> {
     override val id: String = "$mapId-players"
     override val weight: Int = 1
 
-    override suspend fun load(): Triple<PlayerContainer, MissionContainer, StateContainer> {
-        val data = client.self.await().getSceneInitData(mapId)
-        val players = PlayerContainer(mapId, eventBus, client, resourceLoader, data.players).apply { init() }
-        val missions = MissionContainer(data.missions)
-        val states = StateContainer(data.states)
-        return Triple(players, missions, states)
+    override suspend fun load(): SceneInitData {
+        return client.self.await().getSceneInitData(mapId)
+//        val players = PlayerContainer(mapId, eventBus, client, resourceLoader, data.players).apply { init() }
+//        val missions = DefaultMissionContainer(data.missions)
+//        val states = StateContainer(data.states)
+//        return Triple(players, missions, states)
     }
 }

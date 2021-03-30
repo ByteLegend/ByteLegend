@@ -1,6 +1,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.shared.GameMap
@@ -35,6 +36,8 @@ abstract class GameUIComponent<P : GameAwareProps, S : RState> : RComponent<P, S
 
     protected val gameContainerWidth: Int
         get() = props.game.gameContainerSize.width
+    protected val gameCanvasState: GameCanvasState
+        get() = props.game.activeScene.canvasState
     protected val gameContainerHeight: Int
         get() = props.game.gameContainerSize.height
     protected val tileSize: PixelSize

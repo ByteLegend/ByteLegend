@@ -1,0 +1,12 @@
+- id: StarByteLegend
+  type: Star
+  star: 0
+  data: github.com/ByteLegend/ByteLegend
+- id: JavaVersionQuestion
+  type: Question
+  star: 0
+  data: "(?s).*(jdk|java) version.*"
+- id: CreateFirstPR
+  type: PR
+  star: 0
+  data: github.com/ByteLegendQuest/remember-brave-people

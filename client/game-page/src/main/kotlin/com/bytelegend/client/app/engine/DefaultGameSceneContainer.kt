@@ -40,6 +40,8 @@ class DefaultGameSceneContainer(
 
     private var _activeScene: GameScene? = null
 
+    override fun getSceneByIdOrNull(mapId: String): GameScene? = scenes.get(mapId)
+
     override fun getSceneById(mapId: String): GameScene = scenes.getValue(mapId)
 
     override val activeScene: GameScene?
@@ -66,9 +68,7 @@ class DefaultGameSceneContainer(
             }
 
             _activeScene!!.scripts {
-                disableUserMouse()
                 fadeIn()
-                enableUserMouse()
             }
 
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
@@ -90,22 +90,14 @@ class DefaultGameSceneContainer(
         val tileset = resourceLoader.loadAsync(ImageResource(mapTilesetResourceId(mapId), "$RRBD/map/$mapId/tileset.png", 1))
         val mapScript = resourceLoader.loadAsync(TextAjaxResource(mapScriptResourceId(mapId), "$RRBD/js/game-$mapId.js", 1))
         val i18nText = resourceLoader.loadAsync(I18nTextResource(mapTextResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.toLowerCase()}.json", 1, game.i18nTextContainer))
-        val sceneInitData = resourceLoader.loadAsync(
-            GameSceneInitResource(
-                mapId,
-                game.webSocketClient,
-                eventBus,
-                resourceLoader
-            )
-        )
+        val sceneInitData = resourceLoader.loadAsync(GameSceneInitResource(mapId, game.webSocketClient))
 
         i18nContainer.putAll(i18nText.await())
 
         val scene = DefaultGameScene(di, map.await(), tileset.await(), gameContainerSize)
-        val (players, missions, states) = sceneInitData.await()
-        scene.players = players
-        scene.missions = missions
-        scene.states = states
+        scene.players = PlayerContainer(mapId, eventBus, game.webSocketClient, resourceLoader, sceneInitData.await().players).apply { init(scene) }
+        scene.missions = DefaultMissionContainer(di, sceneInitData.await().missions).apply { init(scene) }
+        scene.states = DefaultStateContainer(sceneInitData.await().states).apply { init(scene) }
         scenes[mapId] = scene
         switchScene(oldScene, scene, switchAfterLoading, action)
 

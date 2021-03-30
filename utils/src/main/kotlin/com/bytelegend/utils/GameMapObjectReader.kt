@@ -3,14 +3,15 @@ package com.bytelegend.utils
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.entities.MissionDefinition
 import com.bytelegend.app.shared.objects.GameMapCurve
+import com.bytelegend.app.shared.objects.GameMapMissionDefinition
 import com.bytelegend.app.shared.objects.GameMapObject
-import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.github.utils.generated.TiledMap
-import com.bytelegend.utils.TiledObjectType.GamePoint
-import com.bytelegend.github.utils.generated.TiledMap.Object as TiledObject
+import com.bytelegend.github.utils.generated.TiledMap.Layer as TiledMapLayer
+import com.bytelegend.github.utils.generated.TiledMap.Object as TiledMapObject
 
 /**
  * The "Type" property of an object on Tiled map.
@@ -20,7 +21,7 @@ enum class TiledObjectType {
      * An i18n text to be displayed on the map.
      * The object's name is the id of i18n text
      */
-    GameLocationText,
+    GameMapText,
 
     /**
      * A polygon on Tiled map.
@@ -31,22 +32,30 @@ enum class TiledObjectType {
     /**
      * A point on the curve. It's name is the curve id.
      */
-    CurvePoint,
+    GameMapCurvePoint,
 
     /**
      * A point on the map. Game script can query the point
      * and add objects on the point.
      */
-    GamePoint,
+    GameMapPoint,
+
+    GameMapMissionDefinition
 }
 
 class TiledObjectReader(
     private val tiledMap: TiledMap,
+    private val missionDefinitions: Map<String, MissionDefinition>,
     private val rawLayerIdToIndexMap: Map<Int, Int>
 ) {
+    private val tileSize = tiledMap.getTileSize()
     fun readRawObjects(): List<GameMapObject> {
         tiledMap.verify()
         return tiledMap.readRawObjects()
+    }
+
+    private fun TiledMap.readRawObjects(): List<GameMapObject> {
+        return readCurves() + readTexts() + readRegions() + readPoints() + readMissions()
     }
 
     private fun TiledMap.verify(): TiledMap {
@@ -56,9 +65,9 @@ class TiledObjectReader(
         return this
     }
 
-    private fun TiledObject.toPixelPoint() = PixelCoordinate(x.toInt(), y.toInt())
+    private fun TiledMapObject.toPixelPoint() = PixelCoordinate(x.toInt(), y.toInt())
 
-    private fun TiledObject.getPolygonCoordinates(tileSize: PixelSize): List<GridCoordinate> {
+    private fun TiledMapObject.getPolygonCoordinates(tileSize: PixelSize): List<GridCoordinate> {
         return polygon.map { relativePoint ->
             // Relative point to absolute pixel point
             val absolutePoint = toPixelPoint() + PixelCoordinate(relativePoint.x.toInt(), relativePoint.y.toInt())
@@ -78,12 +87,12 @@ class TiledObjectReader(
         val objects = layers.flatMap { it.objects }
 
         val layerAndRegions = layerObjectPairs.filter { it.second.type == TiledObjectType.GameMapRegion.toString() }
-        val nameToPoint: Map<String, TiledObject> = objects
-            .filter { it.type == GamePoint.toString() }
+        val nameToPoint: Map<String, TiledMapObject> = objects
+            .filter { it.type == TiledObjectType.GameMapPoint.toString() }
             .map { it.name to it }
             .toMap()
-        val idToPoint: Map<Long, TiledObject> = objects
-            .filter { it.type == GamePoint.toString() }
+        val idToPoint: Map<Long, TiledMapObject> = objects
+            .filter { it.type == TiledObjectType.GameMapPoint.toString() }
             .map { it.id to it }
             .toMap()
 
@@ -115,37 +124,37 @@ class TiledObjectReader(
         return ret
     }
 
-    private fun TiledMap.readRawObjects(): List<GameMapObject> {
-        return readCurves() + readTexts() + readRegions() + readPoints()
+    private fun TiledMapObject.toPoint() = PixelCoordinate(x.toInt(), y.toInt()) / tileSize
+
+    private fun TiledMap.readObjects(type: TiledObjectType, fn: (TiledMapLayer, TiledMapObject) -> GameMapObject): List<GameMapObject> = layers.flatMap { layer ->
+        layer.objects.filter { it.type == type.toString() }
+            .map { fn(layer, it) }
     }
 
-    private fun TiledMap.readPoints(): List<GameMapObject> {
-        return layers.flatMap { layer ->
-            layer.objects.filter { it.type == GamePoint.toString() }
-                .map {
-                    GameMapPoint(
-                        it.name,
-                        rawLayerIdToIndexMap.getValue(layer.id.toInt()),
-                        PixelCoordinate(it.x.toInt(), it.y.toInt()) / getTileSize()
-                    )
-                }
-        }
+    private fun TiledMap.readMissions(): List<GameMapObject> = readObjects(TiledObjectType.GameMapMissionDefinition) { _, obj ->
+        val missionId = obj.name
+        val missionDefinition = missionDefinitions.getValue(missionId)
+        GameMapMissionDefinition(missionDefinition, obj.toPoint())
+    }
+
+    private fun TiledMap.readPoints(): List<GameMapObject> = readObjects(TiledObjectType.GameMapPoint) { layer, obj ->
+        com.bytelegend.app.shared.objects.GameMapPoint(
+            obj.name,
+            rawLayerIdToIndexMap.getValue(layer.id.toInt()),
+            obj.toPoint()
+        )
     }
 
     private fun TiledMap.readCurves(): List<GameMapCurve> {
         return layers.flatMap { layer ->
-            layer.objects.filter { it.type == TiledObjectType.CurvePoint.toString() }
+            layer.objects.filter { it.type == TiledObjectType.GameMapCurvePoint.toString() }
                 .groupBy { it.name }
                 .map { it.value.toCurveObject(it.key, rawLayerIdToIndexMap.getValue(layer.id.toInt())) }
         }
     }
 
-    private fun TiledMap.readTexts(): List<GameMapText> {
-        return layers.flatMap { layer ->
-            layer.objects
-                .filter { it.type == TiledObjectType.GameLocationText.toString() }
-                .map { it.toTextObject(rawLayerIdToIndexMap.getValue(layer.id.toInt())) }
-        }
+    private fun TiledMap.readTexts(): List<GameMapObject> = readObjects(TiledObjectType.GameMapText) { layer, obj ->
+        obj.toTextObject(rawLayerIdToIndexMap.getValue(layer.id.toInt()))
     }
 
     private fun TiledMap.Object.toTextObject(layerIndex: Int): GameMapText = GameMapText(

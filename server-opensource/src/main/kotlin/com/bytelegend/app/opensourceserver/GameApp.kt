@@ -25,6 +25,7 @@ import com.bytelegend.app.shared.protocol.WebSocketMessageType
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -97,6 +98,7 @@ class IndexController(
         )
         response.sendRedirect(redirect)
     }
+
     @GetMapping("/game/logout")
     fun logout(
         response: HttpServletResponse,
@@ -125,12 +127,17 @@ class JacksonJsonMapper : JsonMapper {
         registerModule(KotlinModule())
         install(WebSocketMessage::class.java, WebSocketMessageDeserializer())
     }
+    private val yamlMapper = ObjectMapper(YAMLFactory()).apply {
+        registerModule(KotlinModule())
+    }
 
     override fun toJson(obj: Any): String = objectMapper.writeValueAsString(obj)
     override fun toPrettyJson(obj: Any) = toJson(obj)
     override fun toUglyJson(obj: Any) = toJson(obj)
     override fun <T> fromJson(string: String, klass: Class<T>): T = objectMapper.readValue(string, klass)
     override fun <T> fromJson(string: String, tr: TypeReference<T>): T = objectMapper.readValue(string, tr)
+    override fun <T> fromYaml(string: String, klass: Class<T>): T = yamlMapper.readValue(string, klass)
+    override fun <T> fromYaml(string: String, tr: TypeReference<T>): T = yamlMapper.readValue(string, tr)
 }
 
 @EnableWebSocket

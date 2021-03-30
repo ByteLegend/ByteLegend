@@ -11,12 +11,15 @@ repositories {
     mavenCentral()
 }
 
+val libs: (String) -> String by rootProject.ext
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation(libs("jackson-dataformat-yaml"))
     implementation(project(":shared"))
     implementation(project(":server-shared:common"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")

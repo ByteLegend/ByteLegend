@@ -73,3 +73,4 @@ class SceneInitData(
     val missions: Map<String, Mission>,
     val states: States
 )
+

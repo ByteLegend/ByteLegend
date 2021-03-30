@@ -55,6 +55,10 @@ open class Player {
     @JsonIgnore
     var server: Int = 0
 
+    var star: Int = 0
+    var coin: Int = 0
+    var reputation: Int = 0
+
     val online: Boolean
         @JsonIgnore
         @DynamoDbIgnore
@@ -64,8 +68,6 @@ open class Player {
      * The preferred locale.
      */
     var locale: String? = null
-
-    var star: Int = 0
 
     var avatarUrl: String? = null
 
@@ -105,3 +107,5 @@ open class Player {
         this.characterId = this@Player.characterId
     }
 }
+
+fun ghLoginToPlayerId(ghLogin: String) = "gh#$ghLogin"

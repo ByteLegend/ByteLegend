@@ -12,6 +12,7 @@ import com.bytelegend.app.shared.mapToList
 import com.bytelegend.app.shared.mapToList4
 import com.bytelegend.app.shared.objects.CompressedGameMapCurve
 import com.bytelegend.app.shared.objects.CompressedGameMapDynamicObject
+import com.bytelegend.app.shared.objects.CompressedGameMapMissionDefinition
 import com.bytelegend.app.shared.objects.CompressedGameMapObject
 import com.bytelegend.app.shared.objects.CompressedGameMapPoint
 import com.bytelegend.app.shared.objects.CompressedGameMapRegion
@@ -77,6 +78,13 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
             it.id,
             (it.topLeftCorner as Array<Int>).toList(),
             (it.frames as Array<Array<Array<Array<Int>>>>).mapToList4 { it }
+        )
+        GameMapObjectType.GameMapMissionDefinition -> CompressedGameMapMissionDefinition(
+            it.id,
+            it.missionType,
+            it.star,
+            it.data,
+            (it.point as Array<Int>).toList()
         )
         else -> throw IllegalStateException("Unrecognized type: ${it.type}")
     }

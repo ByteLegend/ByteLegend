@@ -60,7 +60,7 @@ interface GameMap {
 }
 
 interface CompressableElement {
-    /**D
+    /**
      * First round: scan all raw entries
      */
     fun addToRawConstantPool(rawConstantPool: MutableMap<Any, Int>)

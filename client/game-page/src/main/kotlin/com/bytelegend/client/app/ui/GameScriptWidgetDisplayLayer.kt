@@ -7,8 +7,9 @@ import react.RState
 interface GameScriptWidgetDisplayLayerProps : GameProps
 
 class GameScriptWidgetDisplayLayer : GameUIComponent<GameScriptWidgetDisplayLayerProps, RState>() {
+    @Suppress("UnsafeCastFromDynamic")
     override fun RBuilder.render() {
-        activeScene.director.unsafeCast<DefaultGameDirector>().currentWidgets.values.forEach {
+        game.director.unsafeCast<DefaultGameDirector>().currentWidgets.values.forEach {
             child(it.klass.asDynamic(), it.handler)
         }
     }

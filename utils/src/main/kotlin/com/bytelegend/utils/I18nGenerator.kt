@@ -5,9 +5,16 @@ import com.bytelegend.app.shared.i18n.LocalizedText
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.houbb.opencc4j.util.ZhConverterUtil
 import java.io.File
 
+/**
+ * Convert i18n YAMLs to JSONs, with extra work:
+ *
+ * 1. Automatically translate zh-hans to zh-hant.
+ * 2. Merge all data to i18n-all.json for backend.
+ */
 fun main(args: Array<String>) {
     generate(File(args[0]), File(args[1]), File(args[2]))
 }
@@ -28,7 +35,7 @@ fun generateAllJson(mapIdToData: Map<String, List<LocalizedText>>, outputAllJson
         require(idToTextAllMap[it.id] == null) { "Duplicate entry: ${it.id}" }
         idToTextAllMap[it.id] = it
     }
-    outputAllJson.writeText(objectMapper.writeValueAsString(idToTextAllMap))
+    outputAllJson.writeText(jsonReader.writeValueAsString(idToTextAllMap))
 }
 
 fun generate(data: List<LocalizedText>, outputDir: File) {
@@ -37,7 +44,7 @@ fun generate(data: List<LocalizedText>, outputDir: File) {
         val outputJson = outputDir.resolve("${locale.toLowerCase()}.json")
         val outputData = data.map { it.id to it.getText(locale) }.toMap()
 
-        outputJson.writeText(objectMapper.writeValueAsString(outputData))
+        outputJson.writeText(jsonReader.writeValueAsString(outputData))
     }
 }
 
@@ -59,4 +66,4 @@ fun Map<Locale, String>.autoConvertHansHant(): Map<Locale, String> {
     }
 }
 
-val YAML_PARSER = ObjectMapper(YAMLFactory())
+val YAML_PARSER = ObjectMapper(YAMLFactory()).registerModule(KotlinModule())

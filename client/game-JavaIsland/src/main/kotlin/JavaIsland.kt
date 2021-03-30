@@ -1,7 +1,9 @@
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScriptHelpers
+import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
+import com.bytelegend.app.shared.START_BYTELEGEND_MISSION_ID
 import com.bytelegend.app.shared.objects.GameMapPoint
 import kotlinx.browser.window
 
@@ -30,48 +32,62 @@ fun main() {
                 glow = true
             }
 
-            npc {
-                id = "JavaIslandNewbieVillageOldMan"
-                spriteId = "JavaIslandNewbieVillageOldMan-sprite"
+            sprite {
+                id = "GitHubExplanationBook"
+                spriteId = "GitHubExplanationBook-sprite"
                 onClick = {
                     scripts {
-                        speech {
-                            objectId = "JavaIslandNewbieVillageOldMan"
-                            contentHtmlId = "PleaseTakeALookAtThatBook"
-                        }
-
-                        starFly("JavaIslandNewbieVillageOldMan")
                     }
                 }
             }
+
+//            npc {
+//                id = "JavaIslandNewbieVillageOldMan"
+//                spriteId = "JavaIslandNewbieVillageOldMan-sprite"
+//                onClick = {
+//                    scripts {
+//                        speech {
+//                            objectId = "JavaIslandNewbieVillageOldMan"
+//                            contentHtmlId = "PleaseTakeALookAtThatBook"
+//                        }
+//
+//                        starFly("JavaIslandNewbieVillageOldMan")
+//                    }
+//                }
+//            }
 
             npc {
                 val guardId = "JavaIslandNewbieVillagePubGuard"
                 val guardMoveDestPoint = objects.getById<GameMapPoint>("JavaNewbieVilllagePubEntranceGuardDestination").point
                 id = guardId
                 spriteId = "JavaIslandNewbieVillagePubGuard-sprite"
-//                onInit = {
-//                    if (gameRuntime.heroPlayer.missionAccomplished(START_BYTELEGEND_MISSION_ID)) {
-//                        helpers.getCharacter(guardId).gridCoordinate = guardMoveDestPoint
-//                    }
-//                }
+                onInit = {
+                    if (missions.missionAccomplished(START_BYTELEGEND_MISSION_ID)) {
+                        helpers.getCharacter(guardId).gridCoordinate = guardMoveDestPoint
+                    }
+                }
 
-//                onClick = helpers.standardNpcSpeech(guardId) {
-//                    if (!gameRuntime.heroPlayer.missionAccomplished(START_BYTELEGEND_MISSION_ID)) {
-//                        scripts {
-//                            speech(guardId, "StarCondition", arrayOf("1", "0"), true)
-//                            speech(HERO_ID, "WhereToFindStar", arrow = true)
-//                        }
-//                    } else if (helpers.getCharacter(guardId).gridCoordinate == guardMoveDestPoint) {
-//                        scripts {
-//                            speech(guardId, "NiceDayHuh")
-//                        }
-//                    } else {
-//                        scripts {
-//                            characterMove(guardId, guardMoveDestPoint)
-//                        }
-//                    }
-//                }
+                onClick = helpers.standardNpcSpeech(guardId) {
+                    when {
+                        !missions.missionAccomplished(START_BYTELEGEND_MISSION_ID) -> {
+                            scripts {
+                                speech(guardId, "StarCondition", arrayOf("1", "0"), true)
+                                speech(HERO_ID, "WhereToFindStar", arrow = true)
+                            }
+                        }
+                        helpers.getCharacter(guardId).gridCoordinate == guardMoveDestPoint -> {
+                            scripts {
+                                speech(guardId, "NiceDayHuh")
+                            }
+                        }
+                        else -> {
+//                            scripts {
+//                                starFly(HERO_ID, 1)
+//                                characterMove(guardId, guardMoveDestPoint)
+//                            }
+                        }
+                    }
+                }
             }
         }
     }

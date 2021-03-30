@@ -7,7 +7,6 @@ import com.bytelegend.app.client.api.getAudioElementOrNull
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
-import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.ui.MAP_SCROLL_EVENT
 import com.bytelegend.client.app.web.WebSocketClient
 import common.utils.search
@@ -45,7 +44,7 @@ class GameControl(
         if (userMouseEnabled) {
             clickObjectsAndMove(event.mapCoordinate)
         } else {
-            game.activeScene.director.unsafeCast<DefaultGameDirector>().next()
+            game.director.next()
         }
     }
 

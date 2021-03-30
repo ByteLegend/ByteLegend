@@ -1,6 +1,7 @@
 package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.CoordinateAware
+import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.INVISIBLE_OBJECT_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
@@ -9,7 +10,7 @@ import com.bytelegend.app.shared.objects.GameObjectRole
 
 open class GenericGameObject(
     override val id: String,
-    private val onClickFunction: () -> Unit = {},
+    private val onClickFunction: UnitFunction = {},
     override val roles: Set<GameObjectRole> = emptySet()
 ) : GameObject {
     override val layer: Int = INVISIBLE_OBJECT_LAYER
@@ -23,11 +24,10 @@ class GenericCoordinateAwareGameObject(
     id: String,
     override val gridCoordinate: GridCoordinate,
     override val pixelCoordinate: PixelCoordinate,
-    onClickFunction: () -> Unit = {},
+    onClickFunction: UnitFunction = {},
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.CoordinateAware)
-) : GenericGameObject(
+) : CoordinateAware, GenericGameObject(
     id,
     onClickFunction,
     roles
-),
-    CoordinateAware
+)

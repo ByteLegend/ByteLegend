@@ -15,6 +15,8 @@ interface JsonMapper {
 
     fun <T> fromJson(string: String, klass: Class<T>): T
     fun <T> fromJson(string: String, tr: TypeReference<T>): T
+    fun <T> fromYaml(string: String, klass: Class<T>): T
+    fun <T> fromYaml(string: String, tr: TypeReference<T>): T
 }
 
 fun <T> ObjectMapper.install(klass: Class<T>, deserializer: JsonDeserializer<T>) {
