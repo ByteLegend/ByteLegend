@@ -9,7 +9,7 @@ fun playerSpriteId(playerId: String) = "player-$playerId-sprite"
 
 open class PlayerSprite(
     gameScene: GameScene,
-    private val player: Player,
+    val player: Player,
 ) : CharacterSprite(
     gameScene,
     GridCoordinate(player.x!!, player.y!!) * gameScene.map.tileSize,

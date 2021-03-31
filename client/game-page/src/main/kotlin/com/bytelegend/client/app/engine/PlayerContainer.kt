@@ -104,10 +104,14 @@ class PlayerContainer(
                     val character = PlayerSprite(gameScene, it)
                     character.init()
                     idToSprite[it.id!!] = character
-                    ret.add(character)
+                    if (!character.outOfCanvas()) {
+                        ret.add(character)
+                    }
                 }
             } else {
-                ret.add(sprite)
+                if (!sprite.outOfCanvas()) {
+                    ret.add(sprite)
+                }
             }
         }
         return ret

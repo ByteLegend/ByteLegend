@@ -14,6 +14,7 @@ import com.bytelegend.app.shared.math.adjustCanvasCoordinateIfNecessary
 import com.bytelegend.app.shared.math.calculateCanvasCoordinateInMapFromCenterPoint
 import com.bytelegend.app.shared.math.limitIn
 import com.bytelegend.app.shared.objects.GameMapPoint
+import com.bytelegend.client.app.page.game
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
@@ -65,7 +66,16 @@ class DefaultGameCanvasState(
     lateinit var uiContainerCoordinateInGameContainer: PixelCoordinate
 
     init {
-        onResizeGameContainer(gameContainerSize, getInitMapCenterPoint())
+        /**
+         * Calculate the initial canvas coordinate in map, based on:
+         * The logged-in user's location as center point;
+         * If user is anonymous, determine from map predefined location ("XInitCenterPoint")
+         */
+        if (!game.heroPlayer.isAnonymous && game.heroPlayer.map == gameMap.id) {
+            onResizeGameContainer(gameContainerSize, GridCoordinate(game.heroPlayer.x!!, game.heroPlayer.y!!))
+        } else {
+            onResizeGameContainer(gameContainerSize, getDefaultMapCenterPoint())
+        }
     }
 
     private fun onResizeGameContainer(newContainerSize: PixelSize, initMapCenterPoint: GridCoordinate? = null) {
@@ -99,12 +109,7 @@ class DefaultGameCanvasState(
         )
     }
 
-    /**
-     * Calculate the initial canvas coordinate in map, based on:
-     * The logged-in user's location as center point;
-     * If user is anonymous, determine from map predefined location ("XInitCenterPoint")
-     */
-    private fun getInitMapCenterPoint(): GridCoordinate {
+    private fun getDefaultMapCenterPoint(): GridCoordinate {
         return gameMap.objects.first {
             it.id == "${gameMap.id}InitCenterPoint"
         }.unsafeCast<GameMapPoint>().point

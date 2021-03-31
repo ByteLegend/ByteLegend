@@ -44,14 +44,14 @@ import com.bytelegend.client.app.ui.MapTitleWidgetsProps
 import com.bytelegend.client.app.ui.MiniMapCanvasLayer
 import com.bytelegend.client.app.ui.OnlineCounter
 import com.bytelegend.client.app.ui.OnlineCounterProps
+import com.bytelegend.client.app.ui.PlayerNames
+import com.bytelegend.client.app.ui.PlayerNamesProps
 import com.bytelegend.client.app.ui.ReputationCountWidget
 import com.bytelegend.client.app.ui.ReputationCountWidgetProps
 import com.bytelegend.client.app.ui.RightSideBar
 import com.bytelegend.client.app.ui.RightSideBarProps
 import com.bytelegend.client.app.ui.ScrollButtonsLayer
 import com.bytelegend.client.app.ui.ScrollButtonsProps
-import com.bytelegend.client.app.ui.SpriteNameWidget
-import com.bytelegend.client.app.ui.SpriteNameWidgetProps
 import com.bytelegend.client.app.ui.StarCountWidget
 import com.bytelegend.client.app.ui.StarCountWidgetProps
 import com.bytelegend.client.app.ui.TileCursorWidget
@@ -315,9 +315,9 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
     private fun RElementBuilder<GameContainerProps>.spriteNameWidget(
         parentProps: GameContainerProps,
-        block: RElementBuilder<SpriteNameWidgetProps>.() -> Unit = {}
+        block: RElementBuilder<PlayerNamesProps>.() -> Unit = {}
     ): ReactElement {
-        return gameChild(parentProps, SpriteNameWidget::class, block)
+        return gameChild(parentProps, PlayerNames::class, block)
     }
 
     private fun RElementBuilder<MapTitleWidgetsProps>.mapNameWidget(

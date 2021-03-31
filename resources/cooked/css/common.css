@@ -101,6 +101,10 @@ body {
     display: inline-block;
 }
 
+.nickname-span {
+    transform: translate(-50%, -50%);
+}
+
 .picture-frame-border {
     border: 3px solid transparent;
     border-image: url("../img/ui/border.png") 3 repeat;

@@ -236,22 +236,22 @@ class HeroIndicatorWidget : GameUIComponent<GameProps, HeroIndicatorWidgetState>
         }
 
         absoluteDiv(
-            state.left!!,
-            state.top!!,
-            HERO_INDICATOR_DIV_WIDTH,
-            HERO_INDICATOR_DIV_HEIGHT,
-            Layer.HeroIndicator.zIndex(),
+            left = state.left!!,
+            top = state.top!!,
+            width = HERO_INDICATOR_DIV_WIDTH,
+            height = HERO_INDICATOR_DIV_HEIGHT,
+            zIndex = Layer.HeroIndicator.zIndex(),
             extraStyleBuilder = {
                 transform = "rotate(" + state.triangleRad.asDynamic().toFixed(2) + "rad)"
             }
         ) {
             // by default upward triangle
             absoluteDiv(
-                24, // Don't ask me why, it's trial and error
-                -8,
-                0,
-                0,
-                Layer.HeroIndicator.zIndex(),
+                left = 24, // Don't ask me why, it's trial and error
+                top = -8,
+                width = 0,
+                height = 0,
+                zIndex = Layer.HeroIndicator.zIndex(),
                 extraStyleBuilder = {
                     border = "8px solid transparent"
                     borderBottom = "8px solid red"

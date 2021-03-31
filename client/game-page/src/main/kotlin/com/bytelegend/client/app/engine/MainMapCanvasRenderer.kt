@@ -171,10 +171,8 @@ class MainMapCanvasRenderer(
             }
 
         gameScene.players.getDrawableCharacters().forEach {
-            if (!it.outOfCanvas()) {
-                indexes.add(it.layer)
-                layerToSprites.getOrPut(it.layer.toString()) { JSArrayBackedList() }.add(it)
-            }
+            indexes.add(it.layer)
+            layerToSprites.getOrPut(it.layer.toString()) { JSArrayBackedList() }.add(it)
         }
 
         drawByLayerOrder(indexes, layerToSprites, mapObjectsLayer)
