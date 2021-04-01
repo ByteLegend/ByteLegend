@@ -1,6 +1,6 @@
 configurations.create("ktlint")
 dependencies {
-    val ktlintVersion = "0.39.0"
+    val ktlintVersion = "0.41.0"
     "ktlint"("com.pinterest:ktlint:$ktlintVersion")
 }
 
