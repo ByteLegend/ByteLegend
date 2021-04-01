@@ -7,7 +7,7 @@ import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 val forestVersion = "0.3.5-SNAPSHOT"
 val vertxVersion = "4.0.3"
 val guiceVersion = "4.2.3-SNAPSHOT"
-val guavaVersion = "28.2-jre"
+val guavaVersion = "30.1.1-jre"
 val jacksonVersion = "2.12.1"
 val kotlinVersion = "1.4.31"
 val kotlinCoroutinesCommonVersion = "1.3.8"
@@ -57,6 +57,7 @@ val reactIconsVersion = "3.11.0"
 val bootstrapSwitchButtonReactVersion = "1.2.0"
 val kmongoVersion = "4.2.4"
 val mongodbJavaDriverVersion = "4.2.0"
+val batikVersion = "1.14"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -193,7 +194,15 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         license = MIT
     ),
     OpenSourceLibrary("org.litote.kmongo:kmongo-coroutine-native:$kmongoVersion"),
-    OpenSourceLibrary("org.mongodb:bson:$mongodbJavaDriverVersion")
+    OpenSourceLibrary("org.mongodb:bson:$mongodbJavaDriverVersion"),
+    OpenSourceLibrary(
+        name = "batik-svggen",
+        groupArtifactId = "org.apache.xmlgraphics:batik-svggen",
+        version = batikVersion,
+        creditName = "Apache Batik Svggen",
+        url = "https://github.com/apache/xmlgraphics-batik",
+        license = Apache2
+    )
 )
 
 val nameToLib = mutableMapOf<String, OpenSourceLibrary>()
