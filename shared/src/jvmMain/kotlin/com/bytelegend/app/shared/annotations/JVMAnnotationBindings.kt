@@ -6,4 +6,5 @@ actual typealias DynamoDbVersionAttribute = software.amazon.awssdk.enhanced.dyna
 actual typealias DynamoDbSortKey = software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey
 actual typealias DynamoDbIgnore = software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbIgnore
 actual typealias JsonIgnore = com.fasterxml.jackson.annotation.JsonIgnore
+actual typealias JsonCreator = com.fasterxml.jackson.annotation.JsonCreator
 actual typealias DynamoDbSecondaryPartitionKey = software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSecondaryPartitionKey

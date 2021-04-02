@@ -171,14 +171,14 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
     val blockers: Array<Array<Int>>
     val objects: GameObjectContainer
     val canvasState: GameCanvasState
-    val missions: MissionContainer
+    val playerMissions: PlayerMissionContainer
     val states: StateContainer
 
     fun objects(block: ObjectsBuilder.() -> Unit)
     fun scripts(block: ScriptsBuilder.() -> Unit)
 }
 
-interface MissionContainer {
+interface PlayerMissionContainer {
     fun missionAccomplished(missionId: String): Boolean
 }
 

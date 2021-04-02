@@ -79,8 +79,8 @@ abstract class AbstractBrowserTest {
 fun WebDriver.startGame(port: Int) {
     get("http://host.testcontainers.internal:$port")
     waitUntil(10000) {
+        assertNoErrorInConsoleLog()
         findElements(By.id("background-canvas-layer")).isNotEmpty() &&
             findElements(By.id("objects-canvas-layer")).isNotEmpty()
     }
-    assertNoErrorInConsoleLog()
 }

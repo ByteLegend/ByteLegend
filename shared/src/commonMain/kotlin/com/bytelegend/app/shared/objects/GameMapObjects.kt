@@ -46,8 +46,8 @@ enum class GameMapObjectType(
     GameMapCurve(4),
 
     GameMapDynamicSprite(5),
-
-    GameMapMissionDefinition(6);
+    GameMapCheckpoint(6),
+    GameMapMission(7);
 
     companion object {
         fun fromIndex(index: Int): GameMapObjectType = values()[index - 1]

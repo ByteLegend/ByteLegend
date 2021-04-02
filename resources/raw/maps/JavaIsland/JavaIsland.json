@@ -1,11 +1,4 @@
 { "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "target":"."
-        }
-    },
  "height":100,
  "infinite":false,
  "layers":[
@@ -1807,19 +1800,7 @@
          "draworder":"topdown",
          "id":53,
          "name":"MissionDefinitions",
-         "objects":[
-                {
-                 "height":0,
-                 "id":88,
-                 "name":"StarByteLegend",
-                 "point":true,
-                 "rotation":0,
-                 "type":"GameMapMissionDefinition",
-                 "visible":true,
-                 "width":0,
-                 "x":109.5,
-                 "y":2935
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -1830,7 +1811,7 @@
  "nextobjectid":89,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.4.2",
+ "tiledversion":"1.5.0",
  "tileheight":32,
  "tilesets":[
         {
@@ -1919,6 +1900,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":1.4,
+ "version":1.5,
  "width":100
 }

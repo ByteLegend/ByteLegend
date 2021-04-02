@@ -4,14 +4,14 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.MissionContainer
 import com.bytelegend.app.client.api.ModalController
+import com.bytelegend.app.client.api.PlayerMissionContainer
 import com.bytelegend.app.client.api.getAudioElementOrNull
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.entities.Mission
 import com.bytelegend.app.shared.entities.MissionType
-import com.bytelegend.app.shared.objects.GameMapMissionDefinition
+import com.bytelegend.app.shared.entities.PlayerMission
+import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
@@ -27,10 +27,10 @@ import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
 
-class DefaultMissionContainer(
+class DefaultPlayerMissionContainer(
     di: DI,
-    private val missions: Map<String, Mission>
-) : MissionContainer {
+    private val missions: Map<String, PlayerMission>
+) : PlayerMissionContainer {
     private val eventBus: EventBus by di.instance()
     private val game: GameRuntime by di.instance()
     private val modalController: ModalController by lazy {
@@ -50,15 +50,18 @@ class DefaultMissionContainer(
         if (currentMap == eventData.map) {
             // star/mission change happens on current map
             // respond to the event
-            val missionDefinition = gameScene!!.objects.getById<GameMapMissionDefinition>(eventData.missionId)
+            val mission = gameScene!!.objects.getById<GameMapMission>(eventData.missionId)
             val canvasState = gameScene!!.canvasState
             val endCoordinateInGameContainer: PixelCoordinate = canvasState.determineRightSideBarCoordinateInGameContainerLeftTop()
-            val startCoordinateInGameContainer: PixelCoordinate = if (missionDefinition.missionDefinition.type == MissionType.Star) {
-                // See MenuItem, from the GitHub menu icon
-                canvasState.determineMenuCoordinateInGameContainer()
-            } else {
-                missionDefinition.point * gameScene!!.map.tileSize -
-                    canvasState.getCanvasCoordinateInMap() + canvasState.getCanvasCoordinateInGameContainer()
+            val startCoordinateInGameContainer: PixelCoordinate = when (mission.missionType) {
+                MissionType.Star -> {
+                    // See MenuItem, from the GitHub menu icon
+                    canvasState.determineMenuCoordinateInGameContainer()
+                }
+                else -> {
+                    mission.point * gameScene!!.map.tileSize -
+                        canvasState.getCanvasCoordinateInMap() + canvasState.getCanvasCoordinateInGameContainer()
+                }
             }
 
             if (modalController.visible) {
@@ -124,7 +127,7 @@ class DefaultMissionContainer(
         game.eventBus.emit(STAR_INCREMENT_EVENT, NumberIncrementEvent(eventData.change, eventData.newValue))
     }
 
-    private suspend fun starIncrement(eventData: StarUpdateEventData) {
+    private fun starIncrement(eventData: StarUpdateEventData) {
         getAudioElementOrNull("starfly")?.apply {
             loop = false
             play()

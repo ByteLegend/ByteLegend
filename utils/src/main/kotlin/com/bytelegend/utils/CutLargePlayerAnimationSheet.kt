@@ -37,9 +37,9 @@ fun cutTo(largeAnimationSheetPng: File, outputDir: File) {
 
             if (!imageReader.isFullyTransparent(
                     ImageBlock(
-                        largeAnimationSheetPng,
-                        PixelBlock(x * DEFAULT_SHEET_WIDTH, y * DEFAULT_SHEET_HEIGHT, DEFAULT_SHEET_WIDTH, DEFAULT_SHEET_HEIGHT)
-                    )
+                            largeAnimationSheetPng,
+                            PixelBlock(x * DEFAULT_SHEET_WIDTH, y * DEFAULT_SHEET_HEIGHT, DEFAULT_SHEET_WIDTH, DEFAULT_SHEET_HEIGHT)
+                        )
                 )
             ) {
                 val outputImage = BufferedImage(DEFAULT_SHEET_WIDTH, DEFAULT_SHEET_HEIGHT, BufferedImage.TYPE_INT_ARGB)

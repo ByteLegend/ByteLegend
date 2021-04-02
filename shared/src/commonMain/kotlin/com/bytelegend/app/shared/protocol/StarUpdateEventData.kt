@@ -1,6 +1,6 @@
 package com.bytelegend.app.shared.protocol
 
-import com.bytelegend.app.shared.entities.Mission
+import com.bytelegend.app.shared.entities.PlayerMission
 import com.bytelegend.app.shared.entities.MissionAnswer
 
 interface UnicastEventData {
@@ -19,5 +19,5 @@ data class MissionUpdateEventData(
     override val playerId: String,
     val map: String,
     val change: MissionAnswer,
-    val newValue: Mission
+    val newValue: PlayerMission
 ) : UnicastEventData

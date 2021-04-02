@@ -16,9 +16,10 @@ import com.bytelegend.app.client.api.dsl.SpriteBuilder
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.mapToArray
+import com.bytelegend.app.shared.objects.GameMapCheckpoint
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
-import com.bytelegend.app.shared.objects.GameMapMissionDefinition
+import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
@@ -65,7 +66,8 @@ class DefaultGameScene(
     val director: DefaultGameDirector = DefaultGameDirector(di)
 
     lateinit var players: PlayerContainer
-    override lateinit var missions: DefaultMissionContainer
+
+    override lateinit var playerMissions: DefaultPlayerMissionContainer
     override lateinit var states: DefaultStateContainer
 
     override fun objects(block: ObjectsBuilder.() -> Unit) {
@@ -84,7 +86,8 @@ class DefaultGameScene(
                 GameMapObjectType.GameMapPoint -> objects.add(it.unsafeCast<GameMapPoint>())
                 GameMapObjectType.GameMapCurve -> gameMapCurve(it.unsafeCast<GameMapCurve>())
                 GameMapObjectType.GameMapDynamicSprite -> objects.add(it.unsafeCast<GameMapDynamicSprite>())
-                GameMapObjectType.GameMapMissionDefinition -> objects.add(it.unsafeCast<GameMapMissionDefinition>())
+                GameMapObjectType.GameMapCheckpoint -> objects.add(it.unsafeCast<GameMapCheckpoint>())
+                GameMapObjectType.GameMapMission -> objects.add(it.unsafeCast<GameMapMission>())
                 else -> throw IllegalStateException("Unsupported type: ${it.type}")
             }
         }

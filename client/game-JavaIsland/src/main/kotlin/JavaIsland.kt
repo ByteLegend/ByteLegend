@@ -62,14 +62,14 @@ fun main() {
                 id = guardId
                 spriteId = "JavaIslandNewbieVillagePubGuard-sprite"
                 onInit = {
-                    if (missions.missionAccomplished(START_BYTELEGEND_MISSION_ID)) {
+                    if (playerMissions.missionAccomplished(START_BYTELEGEND_MISSION_ID)) {
                         helpers.getCharacter(guardId).gridCoordinate = guardMoveDestPoint
                     }
                 }
 
                 onClick = helpers.standardNpcSpeech(guardId) {
                     when {
-                        !missions.missionAccomplished(START_BYTELEGEND_MISSION_ID) -> {
+                        !playerMissions.missionAccomplished(START_BYTELEGEND_MISSION_ID) -> {
                             scripts {
                                 speech(guardId, "StarCondition", arrayOf("1", "0"), true)
                                 speech(HERO_ID, "WhereToFindStar", arrow = true)

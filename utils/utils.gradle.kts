@@ -1,12 +1,14 @@
 import com.bytelegend.buildsrc.json2java.Json2JavaConversion
 import com.bytelegend.buildsrc.json2java.Json2JavaTask
 import com.bytelegend.buildsupport.OpenSourceLibrary
+import com.bytelegend.buildsupport.getAllMaps
 import com.bytelegend.buildsupport.getEnvironment
 import com.bytelegend.buildsupport.toJsonString
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
+    id("configure-ktlint")
 }
 
 tasks.withType<KotlinCompile> {
@@ -102,52 +104,68 @@ processResourcesTasks.add(tasks.register<Copy>("copyStaticResources") {
     into(RRBD)
 })
 
-val i18nInputDir = rootProject.file("i18n")
+val tiledMapsDir = rootProject.file("resources/raw/maps")
+val gameDataDir = rootProject.file("game-data")
+val rrbdMapDataDir = RRBD.resolve("map")
 val i18nOutputDir = RRBD.resolve("i18n")
 val i18nAllJson = RRBD.resolve("i18n/all.json")
+
 processResourcesTasks.add(registerExecTask(
     "generateI18nJsons",
     "com.bytelegend.utils.I18nGeneratorKt",
-    i18nInputDir.absolutePath,
+    gameDataDir.absolutePath,
     i18nOutputDir.absolutePath,
     i18nAllJson.absolutePath
 ) {
-    inputs.dir(i18nInputDir)
+    // TODO filter out i18n.yml & i18n-common.yml
+    inputs.dir(gameDataDir).withPathSensitivity(PathSensitivity.RELATIVE)
     outputs.dir(i18nOutputDir)
     outputs.file(i18nAllJson)
 })
 
-val inputMapDir = rootProject.file("resources/raw/maps")
-val outputMapDataDir = RRBD.resolve("map")
-
-val missionsAllJson = RRBD.resolve("map/missions-all.json")
+val checkpointsAllJson = RRBD.resolve("map/checkpoints-all.json")
 processResourcesTasks.add(registerExecTask(
-    "mergeMissionYamls",
-    "com.bytelegend.utils.MissionsMergerKt",
-    inputMapDir.absolutePath,
-    missionsAllJson.absolutePath
+    "mergeCheckpointYamls",
+    "com.bytelegend.utils.CheckpointsMergerKt",
+    gameDataDir.absolutePath,
+    checkpointsAllJson.absolutePath
 ) {
-    inputs.dir(inputMapDir)
-    outputs.file(missionsAllJson)
+    // TODO filter out checkpoints dir
+    inputs.dir(gameDataDir).withPathSensitivity(PathSensitivity.RELATIVE)
+    outputs.file(checkpointsAllJson)
 })
 
 processResourcesTasks.add(tasks.register<Copy>("copyHierarchyYml") {
-    from(inputMapDir)
+    from(gameDataDir)
     include("hierarchy.yml")
 
-    into(outputMapDataDir)
+    into(rrbdMapDataDir)
 })
 
-processResourcesTasks.add(registerExecTask(
-    "generateMapData", "com.bytelegend.utils.MapGeneratorKt",
-    inputMapDir.absolutePath,
-    outputMapDataDir.absolutePath
-) {
-    inputs.dir(inputMapDir)
-    inputs.dir(rootProject.file("resources/raw/tilesets"))
-    inputs.dir(rootProject.file("resources/raw/tileset-jsons"))
-    outputs.dir(outputMapDataDir)
-})
+val mapHierarchyYaml = rootProject.file("game-data/hierarchy.yml").apply {
+    if (!isFile) {
+        throw IllegalStateException("game-data/hierarchy.yml not found. Did you run `git submodule update game-data`?")
+    }
+}
+val allMaps: List<String> = getAllMaps(mapHierarchyYaml)
+allMaps.forEach { map ->
+    val inputTiledJson = tiledMapsDir.resolve("$map/${map}.json")
+    val inputGameDataMapDir = gameDataDir.resolve(map)
+    val outputMapJsonsDir = rrbdMapDataDir.resolve(map)
+    processResourcesTasks.add(registerExecTask(
+        "generate${map}Map", "com.bytelegend.utils.MapGeneratorKt",
+        map,
+        inputTiledJson.absolutePath,
+        gameDataDir.absolutePath,
+        outputMapJsonsDir.absolutePath
+    ) {
+        inputs.file(inputTiledJson).withPathSensitivity(PathSensitivity.RELATIVE)
+        inputs.dir(inputGameDataMapDir).withPathSensitivity(PathSensitivity.RELATIVE)
+        inputs.dir(rootProject.file("resources/raw/tilesets")).withPathSensitivity(PathSensitivity.RELATIVE)
+        inputs.dir(rootProject.file("resources/raw/tileset-jsons")).withPathSensitivity(PathSensitivity.RELATIVE)
+        outputs.dir(outputMapJsonsDir)
+    })
+}
 
 val inputAnimationsDir = rootProject.file("resources/raw/player-animations")
 val outputAnimationSetDir = RRBD.resolve("img/player")
@@ -160,11 +178,6 @@ processResourcesTasks.add(registerExecTask(
     outputs.dir(outputAnimationSetDir)
 })
 
-val allMaps: List<String> = rootProject
-    .file("resources/raw/maps").walk()
-    .filter { it.isFile && it.name.endsWith(".json") }
-    .map { it.name.replace(".json", "") }
-    .toList()
 tasks.register<Copy>("processGameDevJs") {
     dependsOn(":client:game-page:browserDevelopmentWebpack")
     allMaps.forEach {

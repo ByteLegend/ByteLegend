@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "compressionlevel",
-    "editorsettings",
     "height",
     "infinite",
     "layers",
@@ -35,8 +34,6 @@ public class TiledMap {
 
     @JsonProperty("compressionlevel")
     private Long compressionlevel;
-    @JsonProperty("editorsettings")
-    private TiledMap.Editorsettings editorsettings;
     @JsonProperty("height")
     private Long height;
     @JsonProperty("infinite")
@@ -87,17 +84,15 @@ public class TiledMap {
      * @param tilewidth
      * @param tiledversion
      * @param tileheight
-     * @param editorsettings
      * @param layers
      * @param tilesets
      * @param width
      * @param compressionlevel
      * @param height
      */
-    public TiledMap(Long compressionlevel, TiledMap.Editorsettings editorsettings, Long height, Boolean infinite, List<TiledMap.Layer> layers, Long nextlayerid, Long nextobjectid, String orientation, String renderorder, String tiledversion, Long tileheight, List<TiledMap.Tileset> tilesets, Long tilewidth, String type, Double version, Long width) {
+    public TiledMap(Long compressionlevel, Long height, Boolean infinite, List<TiledMap.Layer> layers, Long nextlayerid, Long nextobjectid, String orientation, String renderorder, String tiledversion, Long tileheight, List<TiledMap.Tileset> tilesets, Long tilewidth, String type, Double version, Long width) {
         super();
         this.compressionlevel = compressionlevel;
-        this.editorsettings = editorsettings;
         this.height = height;
         this.infinite = infinite;
         this.layers = layers;
@@ -122,16 +117,6 @@ public class TiledMap {
     @JsonProperty("compressionlevel")
     public void setCompressionlevel(Long compressionlevel) {
         this.compressionlevel = compressionlevel;
-    }
-
-    @JsonProperty("editorsettings")
-    public TiledMap.Editorsettings getEditorsettings() {
-        return editorsettings;
-    }
-
-    @JsonProperty("editorsettings")
-    public void setEditorsettings(TiledMap.Editorsettings editorsettings) {
-        this.editorsettings = editorsettings;
     }
 
     @JsonProperty("height")
@@ -292,10 +277,6 @@ public class TiledMap {
         sb.append('=');
         sb.append(((this.compressionlevel == null)?"<null>":this.compressionlevel));
         sb.append(',');
-        sb.append("editorsettings");
-        sb.append('=');
-        sb.append(((this.editorsettings == null)?"<null>":this.editorsettings));
-        sb.append(',');
         sb.append("height");
         sb.append('=');
         sb.append(((this.height == null)?"<null>":this.height));
@@ -377,7 +358,6 @@ public class TiledMap {
         result = ((result* 31)+((this.tilewidth == null)? 0 :this.tilewidth.hashCode()));
         result = ((result* 31)+((this.tiledversion == null)? 0 :this.tiledversion.hashCode()));
         result = ((result* 31)+((this.tileheight == null)? 0 :this.tileheight.hashCode()));
-        result = ((result* 31)+((this.editorsettings == null)? 0 :this.editorsettings.hashCode()));
         result = ((result* 31)+((this.layers == null)? 0 :this.layers.hashCode()));
         result = ((result* 31)+((this.tilesets == null)? 0 :this.tilesets.hashCode()));
         result = ((result* 31)+((this.width == null)? 0 :this.width.hashCode()));
@@ -396,185 +376,7 @@ public class TiledMap {
             return false;
         }
         TiledMap rhs = ((TiledMap) other);
-        return ((((((((((((((((((this.orientation == rhs.orientation)||((this.orientation!= null)&&this.orientation.equals(rhs.orientation)))&&((this.nextlayerid == rhs.nextlayerid)||((this.nextlayerid!= null)&&this.nextlayerid.equals(rhs.nextlayerid))))&&((this.renderorder == rhs.renderorder)||((this.renderorder!= null)&&this.renderorder.equals(rhs.renderorder))))&&((this.infinite == rhs.infinite)||((this.infinite!= null)&&this.infinite.equals(rhs.infinite))))&&((this.type == rhs.type)||((this.type!= null)&&this.type.equals(rhs.type))))&&((this.version == rhs.version)||((this.version!= null)&&this.version.equals(rhs.version))))&&((this.nextobjectid == rhs.nextobjectid)||((this.nextobjectid!= null)&&this.nextobjectid.equals(rhs.nextobjectid))))&&((this.tilewidth == rhs.tilewidth)||((this.tilewidth!= null)&&this.tilewidth.equals(rhs.tilewidth))))&&((this.tiledversion == rhs.tiledversion)||((this.tiledversion!= null)&&this.tiledversion.equals(rhs.tiledversion))))&&((this.tileheight == rhs.tileheight)||((this.tileheight!= null)&&this.tileheight.equals(rhs.tileheight))))&&((this.editorsettings == rhs.editorsettings)||((this.editorsettings!= null)&&this.editorsettings.equals(rhs.editorsettings))))&&((this.layers == rhs.layers)||((this.layers!= null)&&this.layers.equals(rhs.layers))))&&((this.tilesets == rhs.tilesets)||((this.tilesets!= null)&&this.tilesets.equals(rhs.tilesets))))&&((this.width == rhs.width)||((this.width!= null)&&this.width.equals(rhs.width))))&&((this.compressionlevel == rhs.compressionlevel)||((this.compressionlevel!= null)&&this.compressionlevel.equals(rhs.compressionlevel))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.height == rhs.height)||((this.height!= null)&&this.height.equals(rhs.height))));
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonPropertyOrder({
-        "export"
-    })
-    public static class Editorsettings {
-
-        @JsonProperty("export")
-        private TiledMap.Export export;
-        @JsonIgnore
-        private Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
-
-        /**
-         * No args constructor for use in serialization
-         * 
-         */
-        public Editorsettings() {
-        }
-
-        /**
-         * 
-         * @param export
-         */
-        public Editorsettings(TiledMap.Export export) {
-            super();
-            this.export = export;
-        }
-
-        @JsonProperty("export")
-        public TiledMap.Export getExport() {
-            return export;
-        }
-
-        @JsonProperty("export")
-        public void setExport(TiledMap.Export export) {
-            this.export = export;
-        }
-
-        @JsonAnyGetter
-        public Map<String, java.lang.Object> getAdditionalProperties() {
-            return this.additionalProperties;
-        }
-
-        @JsonAnySetter
-        public void setAdditionalProperty(String name, java.lang.Object value) {
-            this.additionalProperties.put(name, value);
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(TiledMap.Editorsettings.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-            sb.append("export");
-            sb.append('=');
-            sb.append(((this.export == null)?"<null>":this.export));
-            sb.append(',');
-            sb.append("additionalProperties");
-            sb.append('=');
-            sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
-            sb.append(',');
-            if (sb.charAt((sb.length()- 1)) == ',') {
-                sb.setCharAt((sb.length()- 1), ']');
-            } else {
-                sb.append(']');
-            }
-            return sb.toString();
-        }
-
-        @Override
-        public int hashCode() {
-            int result = 1;
-            result = ((result* 31)+((this.export == null)? 0 :this.export.hashCode()));
-            result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
-            return result;
-        }
-
-        @Override
-        public boolean equals(java.lang.Object other) {
-            if (other == this) {
-                return true;
-            }
-            if ((other instanceof TiledMap.Editorsettings) == false) {
-                return false;
-            }
-            TiledMap.Editorsettings rhs = ((TiledMap.Editorsettings) other);
-            return (((this.export == rhs.export)||((this.export!= null)&&this.export.equals(rhs.export)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))));
-        }
-
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonPropertyOrder({
-        "target"
-    })
-    public static class Export {
-
-        @JsonProperty("target")
-        private String target;
-        @JsonIgnore
-        private Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
-
-        /**
-         * No args constructor for use in serialization
-         * 
-         */
-        public Export() {
-        }
-
-        /**
-         * 
-         * @param target
-         */
-        public Export(String target) {
-            super();
-            this.target = target;
-        }
-
-        @JsonProperty("target")
-        public String getTarget() {
-            return target;
-        }
-
-        @JsonProperty("target")
-        public void setTarget(String target) {
-            this.target = target;
-        }
-
-        @JsonAnyGetter
-        public Map<String, java.lang.Object> getAdditionalProperties() {
-            return this.additionalProperties;
-        }
-
-        @JsonAnySetter
-        public void setAdditionalProperty(String name, java.lang.Object value) {
-            this.additionalProperties.put(name, value);
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            sb.append(TiledMap.Export.class.getName()).append('@').append(Integer.toHexString(System.identityHashCode(this))).append('[');
-            sb.append("target");
-            sb.append('=');
-            sb.append(((this.target == null)?"<null>":this.target));
-            sb.append(',');
-            sb.append("additionalProperties");
-            sb.append('=');
-            sb.append(((this.additionalProperties == null)?"<null>":this.additionalProperties));
-            sb.append(',');
-            if (sb.charAt((sb.length()- 1)) == ',') {
-                sb.setCharAt((sb.length()- 1), ']');
-            } else {
-                sb.append(']');
-            }
-            return sb.toString();
-        }
-
-        @Override
-        public int hashCode() {
-            int result = 1;
-            result = ((result* 31)+((this.target == null)? 0 :this.target.hashCode()));
-            result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
-            return result;
-        }
-
-        @Override
-        public boolean equals(java.lang.Object other) {
-            if (other == this) {
-                return true;
-            }
-            if ((other instanceof TiledMap.Export) == false) {
-                return false;
-            }
-            TiledMap.Export rhs = ((TiledMap.Export) other);
-            return (((this.target == rhs.target)||((this.target!= null)&&this.target.equals(rhs.target)))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))));
-        }
-
+        return (((((((((((((((((this.orientation == rhs.orientation)||((this.orientation!= null)&&this.orientation.equals(rhs.orientation)))&&((this.nextlayerid == rhs.nextlayerid)||((this.nextlayerid!= null)&&this.nextlayerid.equals(rhs.nextlayerid))))&&((this.renderorder == rhs.renderorder)||((this.renderorder!= null)&&this.renderorder.equals(rhs.renderorder))))&&((this.infinite == rhs.infinite)||((this.infinite!= null)&&this.infinite.equals(rhs.infinite))))&&((this.type == rhs.type)||((this.type!= null)&&this.type.equals(rhs.type))))&&((this.version == rhs.version)||((this.version!= null)&&this.version.equals(rhs.version))))&&((this.nextobjectid == rhs.nextobjectid)||((this.nextobjectid!= null)&&this.nextobjectid.equals(rhs.nextobjectid))))&&((this.tilewidth == rhs.tilewidth)||((this.tilewidth!= null)&&this.tilewidth.equals(rhs.tilewidth))))&&((this.tiledversion == rhs.tiledversion)||((this.tiledversion!= null)&&this.tiledversion.equals(rhs.tiledversion))))&&((this.tileheight == rhs.tileheight)||((this.tileheight!= null)&&this.tileheight.equals(rhs.tileheight))))&&((this.layers == rhs.layers)||((this.layers!= null)&&this.layers.equals(rhs.layers))))&&((this.tilesets == rhs.tilesets)||((this.tilesets!= null)&&this.tilesets.equals(rhs.tilesets))))&&((this.width == rhs.width)||((this.width!= null)&&this.width.equals(rhs.width))))&&((this.compressionlevel == rhs.compressionlevel)||((this.compressionlevel!= null)&&this.compressionlevel.equals(rhs.compressionlevel))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.height == rhs.height)||((this.height!= null)&&this.height.equals(rhs.height))));
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -1194,7 +996,7 @@ public class TiledMap {
     public static class Object {
 
         @JsonProperty("height")
-        private Long height;
+        private Double height;
         @JsonProperty("id")
         private Long id;
         @JsonProperty("name")
@@ -1212,7 +1014,7 @@ public class TiledMap {
         @JsonProperty("x")
         private Double x;
         @JsonProperty("y")
-        private Long y;
+        private Double y;
         @JsonProperty("text")
         private TiledMap.Text text;
         @JsonProperty("point")
@@ -1245,7 +1047,7 @@ public class TiledMap {
          * @param properties
          * @param height
          */
-        public Object(Long height, Long id, String name, List<TiledMap.Polygon> polygon, Long rotation, String type, Boolean visible, Long width, Double x, Long y, TiledMap.Text text, Boolean point, List<TiledMap.Property> properties) {
+        public Object(Double height, Long id, String name, List<TiledMap.Polygon> polygon, Long rotation, String type, Boolean visible, Long width, Double x, Double y, TiledMap.Text text, Boolean point, List<TiledMap.Property> properties) {
             super();
             this.height = height;
             this.id = id;
@@ -1263,12 +1065,12 @@ public class TiledMap {
         }
 
         @JsonProperty("height")
-        public Long getHeight() {
+        public Double getHeight() {
             return height;
         }
 
         @JsonProperty("height")
-        public void setHeight(Long height) {
+        public void setHeight(Double height) {
             this.height = height;
         }
 
@@ -1353,12 +1155,12 @@ public class TiledMap {
         }
 
         @JsonProperty("y")
-        public Long getY() {
+        public Double getY() {
             return y;
         }
 
         @JsonProperty("y")
-        public void setY(Long y) {
+        public void setY(Double y) {
             this.y = y;
         }
 

@@ -3,9 +3,9 @@ package com.bytelegend.utils
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.entities.MissionDefinition
+import com.bytelegend.app.shared.objects.GameMapCheckpoint
 import com.bytelegend.app.shared.objects.GameMapCurve
-import com.bytelegend.app.shared.objects.GameMapMissionDefinition
+import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameMapObject
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
@@ -40,12 +40,21 @@ enum class TiledObjectType {
      */
     GameMapPoint,
 
-    GameMapMissionDefinition
+    /**
+     * A reference to Checkpoint defined in `game-data/` directory.
+     */
+    GameMapCheckpoint,
+
+    /**
+     * A reference to Mission defined in `game-data/` directory.
+     */
+    GameMapMission
 }
 
 class TiledObjectReader(
+    private val mapId: String,
     private val tiledMap: TiledMap,
-    private val missionDefinitions: Map<String, MissionDefinition>,
+    private val checkpointDataReader: CheckpointDataReader,
     private val rawLayerIdToIndexMap: Map<Int, Int>
 ) {
     private val tileSize = tiledMap.getTileSize()
@@ -55,7 +64,12 @@ class TiledObjectReader(
     }
 
     private fun TiledMap.readRawObjects(): List<GameMapObject> {
-        return readCurves() + readTexts() + readRegions() + readPoints() + readMissions()
+        return readCurves() +
+            readTexts() +
+            readRegions() +
+            readPoints() +
+            readCheckpoints() +
+            readMissions()
     }
 
     private fun TiledMap.verify(): TiledMap {
@@ -96,7 +110,6 @@ class TiledObjectReader(
             .map { it.id to it }
             .toMap()
 
-
         // First pass, instantiate all regions
         val ret = layerAndRegions.map {
             val regionId = it.second.name
@@ -126,15 +139,38 @@ class TiledObjectReader(
 
     private fun TiledMapObject.toPoint() = PixelCoordinate(x.toInt(), y.toInt()) / tileSize
 
-    private fun TiledMap.readObjects(type: TiledObjectType, fn: (TiledMapLayer, TiledMapObject) -> GameMapObject): List<GameMapObject> = layers.flatMap { layer ->
+    private fun <T> TiledMap.readObjects(type: TiledObjectType, fn: (TiledMapLayer, TiledMapObject) -> T): List<T> = layers.flatMap { layer ->
         layer.objects.filter { it.type == type.toString() }
             .map { fn(layer, it) }
     }
 
-    private fun TiledMap.readMissions(): List<GameMapObject> = readObjects(TiledObjectType.GameMapMissionDefinition) { _, obj ->
-        val missionId = obj.name
-        val missionDefinition = missionDefinitions.getValue(missionId)
-        GameMapMissionDefinition(missionDefinition, obj.toPoint())
+    private fun TiledMap.readCheckpoints(): List<GameMapObject> {
+        val idToRawCheckpoints: Map<String, TiledMapObject> =
+            readObjects(TiledObjectType.GameMapCheckpoint) { _, obj -> obj }
+                .map { it.name to it }
+                .toMap()
+        return checkpointDataReader.getCheckpointsOnMap(mapId).map {
+            GameMapCheckpoint(
+                it.id,
+                it.title,
+                idToRawCheckpoints[it.id]?.toPoint() ?: GridCoordinate(-1, -1)
+            )
+        }
+    }
+
+    private fun TiledMap.readMissions(): List<GameMapObject> {
+        val idToRawMissions: Map<String, TiledMapObject> =
+            readObjects(TiledObjectType.GameMapMission) { _, obj -> obj }
+                .map { it.name to it }
+                .toMap()
+        return checkpointDataReader.getMissionsOnMap(mapId).map {
+            GameMapMission(
+                it.id,
+                it.type,
+                it.title,
+                idToRawMissions[it.id]?.toPoint() ?: GridCoordinate(-1, -1)
+            )
+        }
     }
 
     private fun TiledMap.readPoints(): List<GameMapObject> = readObjects(TiledObjectType.GameMapPoint) { layer, obj ->

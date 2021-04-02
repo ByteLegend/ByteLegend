@@ -9,9 +9,11 @@ repositories {
 }
 
 dependencies {
-    implementation("com.fasterxml.jackson.core:jackson-core:2.12.1")
+    val jacksonVersion = "2.12.2"
+    implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("org.jsonschema2pojo:jsonschema2pojo-core:1.0.2")
-    implementation("org.postgresql:postgresql:42.2.18")
 
     implementation(gradleApi())
 }

@@ -3,9 +3,9 @@
 package com.bytelegend.client.app.web
 
 import com.bytelegend.app.client.api.JSObjectBackedMap
-import com.bytelegend.app.shared.entities.Mission
 import com.bytelegend.app.shared.entities.MissionAnswer
 import com.bytelegend.app.shared.entities.Player
+import com.bytelegend.app.shared.entities.PlayerMission
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.entities.States
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
@@ -78,7 +78,7 @@ fun toStates(jsonObject: dynamic) = States().apply {
     states.putAll(JSObjectBackedMap(jsonObject.states))
 }
 
-fun toMission(jsonObject: dynamic) = Mission().apply {
+fun toMission(jsonObject: dynamic) = PlayerMission().apply {
     id = jsonObject.id
     playerId = jsonObject.id
     map = jsonObject.map

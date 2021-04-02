@@ -8,8 +8,8 @@ import kotlinx.serialization.json.Json.Default.encodeToString
 
 object JacksonConstantPoolSerializer : StdSerializer<ConstantPoolEntry>(ConstantPoolEntry::class.java) {
     override fun serialize(value: ConstantPoolEntry, gen: JsonGenerator, provider: SerializerProvider) {
-        gen.writeStartObject();
-        gen.writeNumberField("t", value.type.index);
+        gen.writeStartObject()
+        gen.writeNumberField("t", value.type.index)
         gen.writeRaw(",\"v\":" + encodeToString(value.type.serializer, value.value))
         gen.writeEndObject()
     }

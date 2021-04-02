@@ -63,7 +63,6 @@ fun authenticateAsInstallation() {
     println(response.body())
 }
 
-
 private fun getPrivateKey(keyBytes: ByteArray, algorithm: String): PrivateKey {
     val kf: KeyFactory = KeyFactory.getInstance(algorithm)
     val keySpec: EncodedKeySpec = PKCS8EncodedKeySpec(keyBytes)
