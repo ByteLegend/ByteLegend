@@ -1,57 +1,68 @@
 - id: StarCondition
-  en: |
-    I only allow people with more than <span style='color:red'>{0} ⭐</span> to pass,
-    but you only have <span style='color:red'>{1} ⭐</span>.
-  zh_hans: 我只允许拥有<span style='color:red'>{0}颗⭐</span>的人通过，但是你只有<span style='color:red'>{1}颗⭐</span>。
+  data:
+    EN: |
+      I only allow people with more than <span style='color:red'>{0} ⭐</span> to pass,
+      but you only have <span style='color:red'>{1} ⭐</span>.
+    ZH_HANS: 我只允许拥有<span style='color:red'>{0}颗⭐</span>的人通过，但是你只有<span style='color:red'>{1}颗⭐</span>。
 - id: ICantHearYou
-  en: I can't hear you! Step closer!
-  zh_hans: 你说啥？听不见！离近点！
+  data:
+    EN: I can't hear you! Step closer!
+    ZH_HANS: 你说啥？听不见！离近点！
 - id: StepCloserToOpenTheBook
-  en: Step closer to open the book!
-  zh_hans: 离近点才能打开！
+  data:
+    EN: Step closer to open the book!
+    ZH_HANS: 离近点才能打开！
 - id: WhereToFindStar
-  en: But where can I get ⭐?
-  zh_hans: 但是我去哪弄⭐呢？
+  data:
+    EN: But where can I get ⭐?
+    ZH_HANS: 但是我去哪弄⭐呢？
 - id: PubGuardAfterStar
-  en: Nice job!
-  zh_hans: 干的漂亮！
+  data:
+    EN: Nice job!
+    ZH_HANS: 干的漂亮！
 - id: BravePeopleDedication
-  en: |
-    This is dedicated to the brave people below, <br>
-    who know the tough journey ahead but still set out without hesitation, <br>
-    and you, if you have stuck with programming until the very end. <br>
-    <b>Finish <a href="https://github.com/ByteLegendQuest/remember-brave-people" target="_blank">the challenge</a> to leave your name.</b>
-  zh_hans: |
-    谨献给下列的勇士们，他们明知前路艰难险阻却依然选择义无反顾；<br>
-    也献给你——如果你能始终对编程保持热爱，直到最后的最后。<br>
-    <b>完成<a href="https://github.com/ByteLegendQuest/remember-brave-people" target="_blank">这里的挑战</a>，留下你的名字。</b>
+  data:
+    EN: |
+      This is dedicated to the brave people below, <br>
+      who know the tough journey ahead but still set out without hesitation, <br>
+      and you, if you have stuck with programming until the very end. <br>
+      <b>Finish <a href="https://github.com/ByteLegendQuest/remember-brave-people" target="_blank">the challenge</a> to leave your name.</b>
+    ZH_HANS: |
+      谨献给下列的勇士们，他们明知前路艰难险阻却依然选择义无反顾；<br>
+      也献给你——如果你能始终对编程保持热爱，直到最后的最后。<br>
+      <b>完成<a href="https://github.com/ByteLegendQuest/remember-brave-people" target="_blank">这里的挑战</a>，留下你的名字。</b>
 - id: JoinedAt
-  en: Joined at
-  zh_hans: 加入于
+  data:
+    EN: Joined at
+    ZH_HANS: 加入于
 - id: WhyGitHubTitle
-  en: "<span style='text-align: center'>Why using Git/GitHub in ByteLegend challenges? 🤔<span>"
-  zh_hans: "<span style='text-align: center'>为什么要使用Git/GitHub完成挑战？ 🤔<span>"
+  data:
+    EN: "<span style='text-align: center'>Why using Git/GitHub in ByteLegend challenges? 🤔<span>"
+    ZH_HANS: "<span style='text-align: center'>为什么要使用Git/GitHub完成挑战？ 🤔<span>"
 - id: WhyGitHubContentHtml
-  en: |
-    Git is the most popular collaborative tool in the world, which is used by top companies all over the world: Google/Apple/Microsoft, etc.<br>
-    If you know how to use Git, you are actually able to work at any top company in the world.<br>
-    <br>
-    GitHub is the largest and most advanced development platform on this planet. All companies in the world
-    will open the door for you, as long as you can finish our chanllenges.<br>
-    <br>
-    With Git/GitHub, you are able to obtain real-world top programming skills while playing the game.<br>
-  zh_hans: |
-    Git是这个世界上使用最广泛的团队协作工具，全世界的顶尖公司都在使用：Google/Apple/Microsoft……<br>
-    如果你能掌握Git的用法，你就拥有了在任何一家顶尖公司工作的能力。<br>
-    <br>
-    GitHub是这个星球上最大、最先进的代码分享平台，只要你能完成我们的挑战，那么全世界的公司都会对你敞开大门。<br>
-    <br>
-    使用Git/GitHub，你就能在游戏中获得真实世界中的顶尖技能。
+  data:
+    EN: |
+      Git is the most popular collaborative tool in the world, which is used by top companies all over the world: Google/Apple/Microsoft, etc.<br>
+      If you know how to use Git, you are actually able to work at any top company in the world.<br>
+      <br>
+      GitHub is the largest and most advanced development platform on this planet. All companies in the world
+      will open the door for you, as long as you can finish our chanllenges.<br>
+      <br>
+      With Git/GitHub, you are able to obtain real-world top programming skills while playing the game.<br>
+    ZH_HANS: |
+      Git是这个世界上使用最广泛的团队协作工具，全世界的顶尖公司都在使用：Google/Apple/Microsoft……<br>
+      如果你能掌握Git的用法，你就拥有了在任何一家顶尖公司工作的能力。<br>
+      <br>
+      GitHub是这个星球上最大、最先进的代码分享平台，只要你能完成我们的挑战，那么全世界的公司都会对你敞开大门。<br>
+      <br>
+      使用Git/GitHub，你就能在游戏中获得真实世界中的顶尖技能。
 - id: PleaseTakeALookAtThatBook
-  en: |
-    I have no idea, please take a look at <span style='color:red'>(E, 240)</span>
-  zh_hans: |
-    我不知道，请看一下<span style='color:red'>(E, 240)</span>坐标
+  data:
+    EN: |
+      I have no idea, please take a look at <span style='color:red'>(E, 240)</span>
+    ZH_HANS: |
+      我不知道，请看一下<span style='color:red'>(E, 240)</span>坐标
 - id: TestCheckpointTitle
-  en: Test test test
-  zh_hans: 测试测试测试测试
+  data:
+    EN: Test test test
+    ZH_HANS: 测试测试测试测试

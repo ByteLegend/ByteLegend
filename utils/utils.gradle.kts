@@ -22,6 +22,8 @@ val oss: List<OpenSourceLibrary> by rootProject.ext
 
 dependencies {
     implementation(project(":shared"))
+    implementation(platform(libs("libraries-bom")))
+    implementation("com.google.cloud:google-cloud-translate")
     implementation(libs("core-kotlin"))
     implementation(libs("java-jwt"))
     implementation(libs("bcprov-jdk15on"))
@@ -118,7 +120,12 @@ processResourcesTasks.add(registerExecTask(
     i18nAllJson.absolutePath
 ) {
     // TODO filter out i18n.yml & i18n-common.yml
-    inputs.dir(gameDataDir).withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.files(fileTree(gameDataDir) {
+        include("**/i18n*.yml")
+    }).withPathSensitivity(PathSensitivity.RELATIVE)
+    outputs.files(fileTree(gameDataDir) {
+        include("**/i18n*.json")
+    })
     outputs.dir(i18nOutputDir)
     outputs.file(i18nAllJson)
 })

@@ -58,6 +58,7 @@ val bootstrapSwitchButtonReactVersion = "1.2.0"
 val kmongoVersion = "4.2.4"
 val mongodbJavaDriverVersion = "4.2.0"
 val batikVersion = "1.14"
+val googleTranslationSdkVersion = "19.2.1"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -195,6 +196,7 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     ),
     OpenSourceLibrary("org.litote.kmongo:kmongo-coroutine-native:$kmongoVersion"),
     OpenSourceLibrary("org.mongodb:bson:$mongodbJavaDriverVersion"),
+    OpenSourceLibrary("com.google.cloud:libraries-bom:$googleTranslationSdkVersion"),
     OpenSourceLibrary(
         name = "batik-svggen",
         groupArtifactId = "org.apache.xmlgraphics:batik-svggen",

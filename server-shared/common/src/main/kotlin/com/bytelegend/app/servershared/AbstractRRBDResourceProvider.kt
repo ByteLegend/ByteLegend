@@ -32,5 +32,5 @@ abstract class AbstractRRBDResourceProvider(
         }
     }
 
-    fun getI18nText(id: String, locale: Locale) = localizedText.getValue(id).getText(locale)
+    fun getI18nText(id: String, locale: Locale) = localizedText.getValue(id).getTextOrDefaultLocale(locale)
 }

@@ -1,52 +1,68 @@
 - id: HiBroCoolOutfit
-  en: Hi bro, cool outfit! I've never seen you before.
-  zh_hans: 哥们挺酷啊，我好像从来没见过你？
+  data:
+    EN: Hi bro, cool outfit! I've never seen you before.
+    ZH_HANS: 哥们挺酷啊，我好像从来没见过你？
 - id: ImAProgrammer
-  en: I'm a programmer.
-  zh_hans: 我是一个程序员。
+  data:
+    EN: I'm a programmer.
+    ZH_HANS: 我是一个程序员。
 - id: WhatIsProgrammer
-  en: What is programmer?
-  zh_hans: 程序员是啥？
+  data:
+    EN: What is programmer?
+    ZH_HANS: 程序员是啥？
 - id: ProgrammerNeedsLogic
-  en: Well... programmer is a job where you need to be a "logic thinker".
-  zh_hans: 嗯……程序员是一个需要很多逻辑思考的职业。
+  data:
+    EN: Well... programmer is a job where you need to be a "logic thinker".
+    ZH_HANS: 嗯……程序员是一个需要很多逻辑思考的职业。
 - id: LogicThinker
-  en: Logic thinker?
-  zh_hans: 逻辑思考？
+  data:
+    EN: Logic thinker?
+    ZH_HANS: 逻辑思考？
 - id: HardToExplain
-  en: It's kind of hard to explain, let's practise... do you have a dog?
-  zh_hans: 解释起来有点难，我们来举个例子，你养狗么？
+  data:
+    EN: It's kind of hard to explain, let's practise... do you have a dog?
+    ZH_HANS: 解释起来有点难，我们来举个例子，你养狗么？
 - id: YesIHaveDog
-  en: Yes!
-  zh_hans: 养啊。
+  data:
+    EN: Yes!
+    ZH_HANS: 养啊。
 - id: YouLoveAnimal
-  en: So that means you love animal.
-  zh_hans: 所以你肯定喜欢小动物。
+  data:
+    EN: So that means you love animal.
+    ZH_HANS: 所以你肯定喜欢小动物。
 - id: OfCourse
-  en: Of course!
-  zh_hans: 那当然！
+  data:
+    EN: Of course!
+    ZH_HANS: 那当然！
 - id: YouMustLoveYourKids
-  en: If you love animal, you must be really love your kid.
-  zh_hans: 如果你喜欢小动物，你肯定喜欢自己的孩子。
+  data:
+    EN: If you love animal, you must be really love your kid.
+    ZH_HANS: 如果你喜欢小动物，你肯定喜欢自己的孩子。
 - id: Right
-  en: Right!
-  zh_hans: 对！
+  data:
+    EN: Right!
+    ZH_HANS: 对！
 - id: YouHaveAWife
-  en: So, if you have a kid, you have a wife.
-  zh_hans: 所以，如果你有一个孩子，那你肯定有一个老婆。
+  data:
+    EN: So, if you have a kid, you have a wife.
+    ZH_HANS: 所以，如果你有一个孩子，那你肯定有一个老婆。
 - id: YesIHaveAWife
-  en: Yes, I have a beautiful wife, is this logical? Interesting.
-  zh_hans: 是啊，我有一个漂亮老婆，这就是逻辑？真神奇。
+  data:
+    EN: Yes, I have a beautiful wife, is this logical? Interesting.
+    ZH_HANS: 是啊，我有一个漂亮老婆，这就是逻辑？真神奇。
 - id: NowItsYourTurnToPractise
-  en: Now it's your turn to be logical thinker.
-  zh_hans: 现在轮到你来进行逻辑思考了。
+  data:
+    EN: Now it's your turn to be logical thinker.
+    ZH_HANS: 现在轮到你来进行逻辑思考了。
 - id: DoYouHaveADog
-  en: OK, do you have a dog?
-  zh_hans: 好，你养狗么？
+  data:
+    EN: OK, do you have a dog?
+    ZH_HANS: 好，你养狗么？
 - id: NoIDontHaveDog
-  en: No.
-  zh_hans: 不养。
+  data:
+    EN: No.
+    ZH_HANS: 不养。
 - id: YouAreGay
-  en: That means... you are a gay.
-  zh_hans: 这说明……你是一个gay。
-
+  data:
+    EN: That means... you are a gay.
+    ZH_HANS: 这说明……你是一个gay。

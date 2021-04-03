@@ -20,6 +20,7 @@ import com.bytelegend.github.utils.generated.TiledMap
 import com.bytelegend.github.utils.generated.TiledTileset
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
@@ -53,6 +54,7 @@ val module = SimpleModule().apply {
 }
 val objectMapper = ObjectMapper().apply {
     registerModule(module)
+    registerModule(KotlinModule())
 }
 
 class MapGenerator(

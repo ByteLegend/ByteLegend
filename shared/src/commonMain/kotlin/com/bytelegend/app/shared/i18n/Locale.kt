@@ -7,8 +7,41 @@ const val PREFERRED_LOCALE_COOKIE_NAME = "PREFERRED_LOCALE"
 // A language
 // https://en.wikipedia.org/wiki/ISO_639-1
 enum class Language {
+    // English
     EN,
-    ZH;
+
+    // Chinese
+    ZH,
+
+    // Spanish
+    ES,
+
+    // Arabic
+    AR,
+
+    // Portuguese
+    PT,
+
+    // Indonesian
+    ID,
+
+    // French
+    FR,
+
+    // Japanese
+    JA,
+
+    // Russian
+    RU,
+
+    // Germany
+    DE,
+
+    // Korean
+    KO,
+
+    // Italian
+    IT;
 
     val code: String
         get() = toString().toLowerCase()
@@ -36,20 +69,65 @@ enum class CountryRegion {
 enum class Locale(
     val displayName: String,
     val language: Language,
+    // Whether the translation is performed by machine.
+    // If so, we don't select the language by Accept-Language header automatically, users need to do that manually.
+    val byMachine: Boolean,
     val languageScript: LanguageScript?,
     val countryRegion: CountryRegion?
 ) {
-    EN("English", Language.EN, null, null) {
+    EN("English", Language.EN, false, null, null) {
         override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.toLowerCase().startsWith("en")
     },
-    ZH_HANS("简体中文", Language.ZH, LanguageScript.HANS, CountryRegion.CN) {
+    ZH_HANS("简体中文", Language.ZH, false, LanguageScript.HANS, CountryRegion.CN) {
         override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.toLowerCase() == "zh-cn" || acceptLanguageHeader.toLowerCase() == "zh"
     },
-    ZH_HANT("繁體中文", Language.ZH, LanguageScript.HANT, CountryRegion.TW) {
+    ZH_HANT("繁體中文", Language.ZH, false, LanguageScript.HANT, CountryRegion.TW) {
         override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.toLowerCase() == "zh-tw"
-    };
+    },
 
-    abstract fun accept(acceptLanguageHeader: String): Boolean
+    // Spanish
+    ES("Español", Language.ES, true, null, null),
+
+    // Arabic
+    AR("العربية", Language.AR, true, null, null),
+
+    // Portuguese
+    PT("Português", Language.PT, true, null, null),
+
+    // Indonesian
+    ID("Bahasa Indonesia", Language.ID, true, null, null),
+
+    // French
+    FR("Français", Language.FR, true, null, null),
+
+    // Japanese
+    JA("日本語", Language.JA, true, null, null),
+
+    // Russian
+    RU("Русский", Language.RU, true, null, null),
+
+    // Germany
+    DE("Deutsch", Language.DE, true, null, null),
+
+    // Korean
+    KO("한국어", Language.KO, true, null, null),
+
+    // Italian
+    IT("Italiano", Language.IT, true, null, null);
+
+    open fun accept(acceptLanguageHeader: String): Boolean {
+        if (byMachine) {
+            return false
+        } else {
+            throw IllegalStateException("This should be overridden by subclasses!")
+        }
+    }
+
+    val googleTranslateApiCode: String
+        get() =
+            if (countryRegion == null) this.toLowerCase()
+            // zh-CN, zh-TW
+            else "${language.code.toLowerCase()}-${countryRegion}"
 
     companion object {
         fun of(str: String?, default: Locale = EN): Locale =
@@ -70,5 +148,6 @@ data class LocalizedText(
     val id: String,
     val data: Map<Locale, String>
 ) {
-    fun getText(locale: Locale) = data[locale] ?: data.getValue(DEFAULT_LOCALE)
+    fun getTextOrDefaultLocale(locale: Locale) = data[locale] ?: data.getValue(DEFAULT_LOCALE)
+    fun getTextOrNull(locale: Locale) = data[locale]
 }

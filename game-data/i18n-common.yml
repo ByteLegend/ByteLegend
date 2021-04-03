@@ -1,204 +1,262 @@
 - id: Login
-  en: Sign in
-  zh_hans: 登录
+  data:
+    EN: Sign in
+    ZH_HANS: 登录
 - id: Logout
-  en: Sign out
-  zh_hans: 登出
+  data:
+    EN: Sign out
+    ZH_HANS: 登出
 - id: OnlineCount
-  en: "Online "
-  zh_hans: "在线 "
+  data:
+    EN: "Online "
+    ZH_HANS: "在线 "
 - id: OfflineMode
-  en: "Offline mode"
-  zh_hans: "离线模式"
+  data:
+    EN: "Offline mode"
+    ZH_HANS: "离线模式"
 - id: SeemsToBeDisconnectedFromServer
-  en: "Seems like we're disconnected from server, please refresh the page."
-  zh_hans: "似乎掉线了，请刷新页面"
+  data:
+    EN: "Seems like we're disconnected from server, please refresh the page."
+    ZH_HANS: "似乎掉线了，请刷新页面"
 - id: YouAreOffline
-  en: "You are offline"
-  zh_hans: "您已处于离线状态"
+  data:
+    EN: "You are offline"
+    ZH_HANS: "您已处于离线状态"
 - id: PleaseRefreshPage
-  en: "Please refresh the page"
-  zh_hans: "请刷新页面"
+  data:
+    EN: "Please refresh the page"
+    ZH_HANS: "请刷新页面"
 - id: EnjoyProgramming
-  en: Enjoy programming
-  zh_hans: 享受编程的乐趣
+  data:
+    EN: Enjoy programming
+    ZH_HANS: 享受编程的乐趣
 - id: JavaNewbieIslandToGitIslandText
-  en: To Git Island
-  zh_hans: 去往Git岛
+  data:
+    EN: To Git Island
+    ZH_HANS: 去往Git岛
 - id: BeijingServerDisplayNameId
-  en: Beijing Server
-  zh_hans: 北京服务器
-  zh_hant: 北京伺服器
+  data:
+    EN: Beijing Server
+    ZH_HANS: 北京服务器
+    ZH_HANT: 北京伺服器
 - id: SeoulServerDisplayNameId
-  en: Seoul Server
-  zh_hans: 首尔服务器
-  zh_hant: 首爾伺服器
+  data:
+    EN: Seoul Server
+    ZH_HANS: 首尔服务器
+    ZH_HANT: 首爾伺服器
 - id: ServerLocationTitle
-  en: You're accessing {0}
-  zh_hans: 您正在访问{0}
-  zh_hant: 您正在訪問{0}
+  data:
+    EN: You're accessing {0}
+    ZH_HANS: 您正在访问{0}
+    ZH_HANT: 您正在訪問{0}
 - id: ServerLocationTitleHtml
-  en: You're accessing <span class="badge badge-primary">{0}</span>
-  zh_hans: 您正在访问<span class="badge badge-primary">{0}</span>
-  zh_hant: 您正在訪問<span class="badge badge-primary">{0}</span>
+  data:
+    EN: You're accessing <span class="badge badge-primary">{0}</span>
+    ZH_HANS: 您正在访问<span class="badge badge-primary">{0}</span>
+    ZH_HANT: 您正在訪問<span class="badge badge-primary">{0}</span>
 - id: WhatIsTheServerLocation
-  en: What's the server location?
-  zh_hans: 服务器位置是啥？
-  zh_hant: 伺服器位置是什麽？
+  data:
+    EN: What's the server location?
+    ZH_HANS: 服务器位置是啥？
+    ZH_HANT: 伺服器位置是什麽？
 - id: ServerLocationExplanation
-  en: |
-    ByteLegend is a globally distributed system with unified player data.
-    It helps our team troubleshoot issues to display server location.
-  zh_hans: |
-    字节传说是一个全球分布式系统，所有玩家的数据不分区。
-    显示服务器位置有助于团队发现和处理服务器问题。
+  data:
+    EN: |
+      ByteLegend is a globally distributed system with unified player data.
+      It helps our team troubleshoot issues to display server location.
+    ZH_HANS: |
+      字节传说是一个全球分布式系统，所有玩家的数据不分区。
+      显示服务器位置有助于团队发现和处理服务器问题。
 - id: MenuHelpTitle
-  en: Help
-  zh_hans: 帮助
+  data:
+    EN: Help
+    ZH_HANS: 帮助
 - id: MenuCreditsTitle
-  en: Credits
-  zh_hans: 致谢
+  data:
+    EN: Credits
+    ZH_HANS: 致谢
 - id: SpecialThanks
-  en: Special Thanks
-  zh_hans: 特别感谢
+  data:
+    EN: Special Thanks
+    ZH_HANS: 特别感谢
 - id: Thanks
-  en: Thanks
-  zh_hans: 感谢
+  data:
+    EN: Thanks
+    ZH_HANS: 感谢
 - id: OpenSourceTab
-  en: Open Source Software
-  zh_hans: 开源软件
-  zh_hant: 開源軟體
+  data:
+    EN: Open Source Software
+    ZH_HANS: 开源软件
+    ZH_HANT: 開源軟體
 - id: MaterialTab
-  en: Materials
-  zh_hans: 素材
+  data:
+    EN: Materials
+    ZH_HANS: 素材
 - id: ContactUsIfYouThinkUsMisuse
-  en: |
-    The game materials are collected from Internet, which are usually not properly licensed.
-    Please contact us if you see us misusing any: <a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>.
-    We'll take care of it immediately.
-  zh_hans: |
-    游戏素材来自互联网，很多时候并没有明确的版权声明，如果您发现我们误用了任何素材，请联系：<a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>。
-    我们会第一时间处理。
+  data:
+    EN: |
+      The game materials are collected from Internet, which are usually not properly licensed.
+      Please contact us if you see us misusing any: <a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>.
+      We'll take care of it immediately.
+    ZH_HANS: |
+      游戏素材来自互联网，很多时候并没有明确的版权声明，如果您发现我们误用了任何素材，请联系：<a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>。
+      我们会第一时间处理。
 - id: ClickHere
-  en: Click here
-  zh_hans: 点击这里
+  data:
+    EN: Click here
+    ZH_HANS: 点击这里
 - id: Software
-  en: Software
-  zh_hans: 软件
-  zh_hant: 軟體
+  data:
+    EN: Software
+    ZH_HANS: 软件
+    ZH_HANT: 軟體
 - id: License
-  en: License
-  zh_hans: 协议
-  zh_hant: 協議
+  data:
+    EN: License
+    ZH_HANS: 协议
+    ZH_HANT: 協議
 - id: ThisGameWouldNotExistWithoutOpenSourceSoftware
-  en: "This game would not exist without the following open source software:"
-  zh_hans: "这个游戏的诞生离不开以下开源软件："
+  data:
+    EN: "This game would not exist without the following open source software:"
+    ZH_HANS: "这个游戏的诞生离不开以下开源软件："
 - id: ThisGameWouldNotExistWithoutArtwork
-  en: "This game would not exist without the following artwork:"
-  zh_hans: "这个游戏的诞生离不开以下素材："
+  data:
+    EN: "This game would not exist without the following artwork:"
+    ZH_HANS: "这个游戏的诞生离不开以下素材："
 - id: ClickHereToSeeOpenSourceSoftware
-  en: " to see the open source software we used."
-  zh_hans: "查看我们使用的开源软件。"
+  data:
+    EN: " to see the open source software we used."
+    ZH_HANS: "查看我们使用的开源软件。"
 - id: ClickHereToSeeArtwork
-  en: " to see the artwork we used."
-  zh_hans: "查看我们使用的素材。"
+  data:
+    EN: " to see the artwork we used."
+    ZH_HANS: "查看我们使用的素材。"
 - id: SpecialThanksMyDaughter
-  en: This game is dedicated to my cute daughter Kitty, without whom it would have been completed much earlier. 🤦
-  zh_hans: 谨以本游戏献给我的萌闺女Kitty，要不是她我早就写完了…… 🤦
+  data:
+    EN: This game is dedicated to my cute daughter Kitty, without whom it would have been completed much earlier. 🤦
+    ZH_HANS: 谨以本游戏献给我的萌闺女Kitty，要不是她我早就写完了…… 🤦
 - id: SpecialThanksGradleParagraph
-  en: |
-    <a href="https://gradle.org" target="_blank" class="badge badge-success">Gradle</a>: an awesome automated tool, by which the game is built.
-  zh_hans: |
-    <a href="https://gradle.org" target="_blank" class="badge badge-success">Gradle</a>：非常好用的自动化工具，这个游戏使用它进行构建。
+  data:
+    EN: |
+      <a href="https://gradle.org" target="_blank" class="badge badge-success">Gradle</a>: an awesome automated tool, by which the game is built.
+    ZH_HANS: |
+      <a href="https://gradle.org" target="_blank" class="badge badge-success">Gradle</a>：非常好用的自动化工具，这个游戏使用它进行构建。
 - id: SpecialThanksKotlinParagraph
-  en: |
-    <a href="https://kotlinlang.org/" target="_blank" class="badge badge-primary">Kotlin</a>: Everything you see in the game is written in Kotlin: frontend, backend, game script.
-  zh_hans: |
-    <a href="https://kotlinlang.org/" target="_blank" class="badge badge-primary">Kotlin</a>: 游戏的一切都是用Kotlin实现的，包括前端、后端以及游戏脚本。
+  data:
+    EN: |
+      <a href="https://kotlinlang.org/" target="_blank" class="badge badge-primary">Kotlin</a>: Everything you see in the game is written in Kotlin: frontend, backend, game script.
+    ZH_HANS: |
+      <a href="https://kotlinlang.org/" target="_blank" class="badge badge-primary">Kotlin</a>: 游戏的一切都是用Kotlin实现的，包括前端、后端以及游戏脚本。
 - id: SpecialThanksTiledParagraph
-  en: |
-    <a href="https://www.mapeditor.org/" target="_blank" class="badge badge-info">Tiled</a>: a free, easy-to-use map editor. All maps in the game are created with it.
-  zh_hans: |
-    <a href="https://www.mapeditor.org/" target="_blank" class="badge badge-info">Tiled</a>：游戏的所有地图都是通过它创建的。
+  data:
+    EN: |
+      <a href="https://www.mapeditor.org/" target="_blank" class="badge badge-info">Tiled</a>: a free, easy-to-use map editor. All maps in the game are created with it.
+    ZH_HANS: |
+      <a href="https://www.mapeditor.org/" target="_blank" class="badge badge-info">Tiled</a>：游戏的所有地图都是通过它创建的。
 #- id: WeAreUsingOpenSourceSoftwareParagraph
 - id: MenuAboutTitle
-  en: Contact & About
-  zh_hans: 联系&关于
+  data:
+    EN: Contact & About
+    ZH_HANS: 联系&关于
 - id: MenuSettingsTitle
-  en: Settings
-  zh_hans: 设置
+  data:
+    EN: Settings
+    ZH_HANS: 设置
 - id: MenuNotificationTitle
-  en: Notifications
-  zh_hans: 通知
+  data:
+    EN: Notifications
+    ZH_HANS: 通知
 - id: MenuGitHubTitle
-  en: GitHub
-  zh_hans: GitHub
+  data:
+    EN: GitHub
+    ZH_HANS: GitHub
 - id: Collapse
-  en: collapse
-  zh_hans: 收起
+  data:
+    EN: collapse
+    ZH_HANS: 收起
 - id: Expand
-  en: expand
-  zh_hans: 展开
+  data:
+    EN: expand
+    ZH_HANS: 展开
 - id: Maximize
-  en: maximize
-  zh_hans: 最大化
+  data:
+    EN: maximize
+    ZH_HANS: 最大化
 - id: MyAchievement
-  en: My achievement
-  zh_hans: 我的成就
+  data:
+    EN: My achievement
+    ZH_HANS: 我的成就
 - id: JavaBasicStructureRegionName
-  en: Java Basic Structure
-  zh_hans: Java程序的基本结构
+  data:
+    EN: Java Basic Structure
+    ZH_HANS: Java程序的基本结构
 - id: JavaNewbieVillageRegionName
-  en: Newbie Village
-  zh_hans: 新手村
+  data:
+    EN: Newbie Village
+    ZH_HANS: 新手村
 - id: JavaMethodFieldRegionName
-  en: Method and Field
-  zh_hans: Java的方法和字段
+  data:
+    EN: Method and Field
+    ZH_HANS: Java的方法和字段
 - id: JavaDataStructureRegionName
-  en: Java's Data Structure
-  zh_hans: Java的数据结构
+  data:
+    EN: Java's Data Structure
+    ZH_HANS: Java的数据结构
 - id: JavaOperatorRegionName
-  en: Java's Operator
-  zh_hans: Java的运算符
+  data:
+    EN: Java's Operator
+    ZH_HANS: Java的运算符
 - id: JavaControlFlowRegionName
-  en: Control Flow
-  zh_hans: Java的控制流
+  data:
+    EN: Control Flow
+    ZH_HANS: Java的控制流
 - id: JavaAccessControlRegionName
-  en: "OOP: Encapsulation"
-  zh_hans: "面向对象：封装"
+  data:
+    EN: "OOP: Encapsulation"
+    ZH_HANS: "面向对象：封装"
 - id: JavaInheritanceRegionName
-  en: "OOP: Inheritance"
-  zh_hans: "面向对象：继承"
+  data:
+    EN: "OOP: Inheritance"
+    ZH_HANS: "面向对象：继承"
 - id: JavaPolymorphismRegionName
-  en: "OOP: Polymorphism"
-  zh_hans: "面向对象：多态"
+  data:
+    EN: "OOP: Polymorphism"
+    ZH_HANS: "面向对象：多态"
 - id: JavaCollectionRegionName
-  en: Collection Framework
-  zh_hans: Java的集合框架
+  data:
+    EN: Collection Framework
+    ZH_HANS: Java的集合框架
 - id: MenuContactTitle
-  en: About & Contact
-  zh_hans: 关于 & 联系
+  data:
+    EN: About & Contact
+    ZH_HANS: 关于 & 联系
 - id: AboutByteLegendTitle
-  en: About ByteLegend
-  zh_hans: 关于字节传说
+  data:
+    EN: About ByteLegend
+    ZH_HANS: 关于字节传说
 - id: AboutByteLegendParagraph
-  en: |
-    ByteLegend is a MMORPG game in which you can learn programming skills.
-    It's a little hobby project in my free time.
-  zh_hans: |
-    字节传说是一个用于学习编程技能的多人在线RPG游戏，是我在业余时间的一个小作品。
+  data:
+    EN: |
+      ByteLegend is a MMORPG game in which you can learn programming skills.
+      It's a little hobby project in my free time.
+    ZH_HANS: |
+      字节传说是一个用于学习编程技能的多人在线RPG游戏，是我在业余时间的一个小作品。
 - id: ContactUsTitle
-  en: Contact us
-  zh_hans: 联系我们
+  data:
+    EN: Contact us
+    ZH_HANS: 联系我们
 - id: ContactUsParagraph
-  en: |
-    If you have any questions, suggestions or coorperation opportunities,
-    please feel free to contact us at <a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>.
-  zh_hans: |
-    如果有任何问题、建议或者合作机会，请联系<a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>。
+  data:
+    EN: |
+      If you have any questions, suggestions or coorperation opportunities,
+      please feel free to contact us at <a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>.
+    ZH_HANS: |
+      如果有任何问题、建议或者合作机会，请联系<a href="mailto:contact@bytelegend.com">contact@bytelegend.com</a>。
 - id: JavaIsland
-  en: Java Island
-  zh_hans: 爪哇岛
+  data:
+    EN: Java Island
+    ZH_HANS: 爪哇岛
 - id: JavaIslandNewbieVillagePub
-  en: Foo Bar
-  zh_hans: 福报酒吧
+  data:
+    EN: Foo Bar
+    ZH_HANS: 福报酒吧

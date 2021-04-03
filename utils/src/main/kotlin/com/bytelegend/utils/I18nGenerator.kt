@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.github.houbb.opencc4j.util.ZhConverterUtil
 import java.io.File
 
 /**
@@ -24,58 +23,102 @@ fun main(args: Array<String>) {
     generate(File(args[0]), File(args[1]), File(args[2]))
 }
 
+class I18nResource(
+    // mapId or "common"
+    val mapId: String,
+    val yamlFile: File
+) {
+    val autoJsonFile: File = yamlFile.parentFile.resolve(yamlFile.name.replace(".yml", "-auto.json"))
+    val localizedTextsInYaml: LinkedHashMap<String, LocalizedText> by lazy {
+        yamlFile.yamlToLocalizedTexts()
+    }
+    val localizedTextsInJson: LinkedHashMap<String, LocalizedText> by lazy {
+        if (autoJsonFile.isFile) {
+            autoJsonFile.jsonToLocalizedTexts()
+        } else {
+            LinkedHashMap()
+        }
+    }
+
+    // Merge i18n.yml and i18n-auto.json, with the following rules:
+    // For each entry E, language L in i18n.yaml:
+    //   We assert en/zh-hans is written by human.
+    //   If E/L exists in i18n.yml, use it directly. We trust human unconditionally.
+    //   Else if E exists in i18n-auto.json and E's en/zh-hans versions are same as i18n.yml:
+    //      Do nothing. We did the translation before and nothing changes.
+    //   Else if google cloud translation API is not configured:
+    //      1. Copy en version in yml as all other language versions except zh-hans/zh-hant to JSON.
+    //      2. Use machine to convert zh-hans to zh-hant
+    //   Else invoke google cloud translation API to translate:
+    //      1. en to all other language versions as zh-hans/zh-hant
+    //      2. zh-hans to zh-hant
+    fun generate(): List<LocalizedText> =
+        localizedTextsInYaml.map { (textId, i18nTexts) ->
+            val result = mutableMapOf<Locale, String>()
+            val enIsSame = localizedTextsInYaml[textId]?.getTextOrNull(Locale.EN) == localizedTextsInJson[textId]?.getTextOrNull(Locale.EN)
+            val zhHansIsSame = localizedTextsInYaml[textId]?.getTextOrNull(Locale.ZH_HANS) == localizedTextsInYaml[textId]?.getTextOrNull(Locale.ZH_HANS)
+
+            Locale.values().forEach { locale ->
+                when {
+                    i18nTexts.getTextOrNull(locale) != null -> result[locale] = i18nTexts.getTextOrNull(locale)!!
+                    // zh-hans is same and target is zh-hant, just use the translated text in json
+                    zhHansIsSame && locale == Locale.ZH_HANT &&
+                        localizedTextsInJson[textId]?.getTextOrNull(locale) != null -> result[locale] = localizedTextsInJson[textId]?.getTextOrNull(locale)!!
+                    // en is same, just use the translated text in json
+                    enIsSame && localizedTextsInJson[textId]?.getTextOrNull(locale) != null -> result[locale] = localizedTextsInJson[textId]?.getTextOrNull(locale)!!
+                    locale == Locale.ZH_HANT -> result[locale] = DEFAULT_TRANSLATOR.translate(
+                        localizedTextsInYaml[textId]?.getTextOrNull(Locale.ZH_HANS)!!,
+                        Locale.ZH_HANS, Locale.ZH_HANT
+                    )
+                    else -> result[locale] = DEFAULT_TRANSLATOR.translate(
+                        localizedTextsInYaml[textId]?.getTextOrNull(Locale.EN)!!,
+                        Locale.EN, locale
+                    )
+                }
+            }
+            LocalizedText(textId, result)
+        }
+}
+
 fun generate(gameDataDir: File, outputI18nDir: File, outputAllJson: File) {
-    val mapIdToData: MutableMap<String, List<LocalizedText>> = gameDataDir.listFiles()
+    val i18nResources: List<I18nResource> = gameDataDir.listFiles()
         .filter { it.isDirectory }
-        .map { it.name to it.resolve("i18n.yml").toLocalizedTexts() }
-        .onEach { generate(it.second, outputI18nDir.resolve(it.first)) }
-        .toMap()
-        .toMutableMap()
+        .map { I18nResource(it.name, it.resolve("i18n.yml")) }
+        .toMutableList()
         .apply {
-            val common = gameDataDir.resolve("i18n-common.yml").toLocalizedTexts()
-            generate(common, outputI18nDir.resolve("common"))
-            put("common", common)
+            add(I18nResource("common", gameDataDir.resolve("i18n-common.yml")))
         }
 
-    generateAllJson(mapIdToData, outputAllJson)
-}
-
-fun generateAllJson(mapIdToData: Map<String, List<LocalizedText>>, outputAllJson: File) {
     val idToTextAllMap: MutableMap<String, LocalizedText> = mutableMapOf()
-    mapIdToData.entries.flatMap { it.value }.forEach {
-        require(idToTextAllMap[it.id] == null) { "Duplicate entry: ${it.id}" }
-        idToTextAllMap[it.id] = it
+    val uniqueIdChecker = mutableSetOf<String>()
+    i18nResources.forEach { i18ResourceOfOneMap ->
+        val textsOnOneMap: List<LocalizedText> = i18ResourceOfOneMap.generate()
+        // check id uniqueness
+        textsOnOneMap.forEach {
+            require(uniqueIdChecker.add(it.id)) { "Duplicate i18n text: ${it.id}" }
+            idToTextAllMap[it.id] = it
+        }
+
+        objectMapper.writeValue(i18ResourceOfOneMap.autoJsonFile, textsOnOneMap)
+
+        val outputDir = outputI18nDir.resolve(i18ResourceOfOneMap.mapId).apply { mkdirs() }
+        Locale.values().forEach { locale ->
+            val outputJson = outputDir.resolve("${locale.toLowerCase()}.json")
+            val outputData = textsOnOneMap.map { it.id to it.getTextOrDefaultLocale(locale) }.toMap()
+
+            objectMapper.writeValue(outputJson, outputData)
+        }
     }
-    outputAllJson.writeText(objectMapper.writeValueAsString(idToTextAllMap))
+    objectMapper.writeValue(outputAllJson, idToTextAllMap)
 }
 
-fun generate(data: List<LocalizedText>, outputDir: File) {
-    outputDir.mkdirs()
-    Locale.values().forEach { locale ->
-        val outputJson = outputDir.resolve("${locale.toLowerCase()}.json")
-        val outputData = data.map { it.id to it.getText(locale) }.toMap()
+private fun File.yamlToLocalizedTexts(): LinkedHashMap<String, LocalizedText> =
+    YAML_PARSER.readValue(this, object : TypeReference<List<LocalizedText>>() {})
+        .map { it.id to it }.toMap() as LinkedHashMap<String, LocalizedText>
 
-        outputJson.writeText(objectMapper.writeValueAsString(outputData))
-    }
-}
-
-fun File.toLocalizedTexts(): List<LocalizedText> {
-    val data = YAML_PARSER.readValue(this, object : TypeReference<List<Map<String, String>>>() {})
-    return data.map {
-        LocalizedText(
-            it.getValue("id"),
-            it.entries.filter { it.key != "id" }.map { Locale.of(it.key) to it.value }.toMap().autoConvertHansHant()
-        )
-    }
-}
-
-fun Map<Locale, String>.autoConvertHansHant(): Map<Locale, String> {
-    return when {
-        containsKey(Locale.ZH_HANS) && !containsKey(Locale.ZH_HANT) -> plus(Locale.ZH_HANT to ZhConverterUtil.toTraditional(get(Locale.ZH_HANS)))
-        containsKey(Locale.ZH_HANT) && !containsKey(Locale.ZH_HANS) -> plus(Locale.ZH_HANS to ZhConverterUtil.toSimple(get(Locale.ZH_HANT)))
-        else -> this
-    }
-}
+private fun File.jsonToLocalizedTexts(): LinkedHashMap<String, LocalizedText> =
+    objectMapper.readValue(this, object : TypeReference<List<LocalizedText>>() {})
+        .map { it.id to it }.toMap() as LinkedHashMap<String, LocalizedText>
 
 val YAML_FACTORY = YAMLFactory()
 val YAML_PARSER = ObjectMapper(YAML_FACTORY).registerModule(KotlinModule())
