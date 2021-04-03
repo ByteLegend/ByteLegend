@@ -1,12 +1,4 @@
 { "columns":12,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"",
-         "target":"."
-        }
-    },
  "image":"..\/tilesets\/book-bottle-coffee.png",
  "imageheight":512,
  "imagewidth":384,
@@ -14,9 +6,33 @@
  "name":"book-bottle-coffee",
  "spacing":0,
  "tilecount":192,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.5.0",
  "tileheight":32,
  "tiles":[
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":99
+                }, 
+                {
+                 "duration":500,
+                 "tileid":101
+                }],
+         "id":125
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":123
+                }, 
+                {
+                 "duration":500,
+                 "tileid":135
+                }],
+         "id":136
+        }, 
         {
          "animation":[
                 {
@@ -63,5 +79,5 @@
         }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.4
+ "version":1.5
 }

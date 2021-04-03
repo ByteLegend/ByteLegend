@@ -9,6 +9,7 @@ import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameMapObject
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
+import com.bytelegend.app.shared.objects.INVISIBLE_COORDINATE
 import com.bytelegend.github.utils.generated.TiledMap
 import com.bytelegend.github.utils.generated.TiledMap.Layer as TiledMapLayer
 import com.bytelegend.github.utils.generated.TiledMap.Object as TiledMapObject
@@ -153,7 +154,7 @@ class TiledObjectReader(
             GameMapCheckpoint(
                 it.id,
                 it.title,
-                idToRawCheckpoints[it.id]?.toPoint() ?: GridCoordinate(-1, -1)
+                idToRawCheckpoints[it.id]?.toPoint() ?: INVISIBLE_COORDINATE
             )
         }
     }
@@ -168,7 +169,7 @@ class TiledObjectReader(
                 it.id,
                 it.type,
                 it.title,
-                idToRawMissions[it.id]?.toPoint() ?: GridCoordinate(-1, -1)
+                idToRawMissions[it.id]?.toPoint() ?: INVISIBLE_COORDINATE
             )
         }
     }

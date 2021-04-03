@@ -75,7 +75,7 @@ abstract class GameUIComponent<P : GameAwareProps, S : RState> : RComponent<P, S
         props.game.activeScene.canvasState.moveTo(coordinate)
     }
 
-    private val gameUiUpdateEventListener: EventListener<Nothing> = {
+    protected val gameUiUpdateEventListener: EventListener<Nothing> = {
         setState({ it })
     }
 

@@ -19,6 +19,8 @@ import com.bytelegend.client.app.obj.HeroCharacter
 import com.bytelegend.client.app.ui.AudioSwitchWidget
 import com.bytelegend.client.app.ui.AudioSwitchWidgetProps
 import com.bytelegend.client.app.ui.BannerUIComponent
+import com.bytelegend.client.app.ui.CheckpointTitles
+import com.bytelegend.client.app.ui.CheckpointTitlesProps
 import com.bytelegend.client.app.ui.CoinCountWidget
 import com.bytelegend.client.app.ui.CoinCountWidgetProps
 import com.bytelegend.client.app.ui.FpsCounter
@@ -200,6 +202,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                         coinCountWidget(attrs)
                         reputationCountWidget(attrs)
                     }
+                    checkpointTitleWidgets(attrs)
                     tileCursorWidget(attrs)
                     spriteNameWidget(attrs)
                     miniMapCanvas(attrs)
@@ -311,6 +314,13 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         block: RElementBuilder<TileCursorWidgetProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, TileCursorWidget::class, block)
+    }
+
+    private fun RElementBuilder<GameContainerProps>.checkpointTitleWidgets(
+        parentProps: GameContainerProps,
+        block: RElementBuilder<CheckpointTitlesProps>.() -> Unit = {}
+    ): ReactElement {
+        return gameChild(parentProps, CheckpointTitles::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.spriteNameWidget(

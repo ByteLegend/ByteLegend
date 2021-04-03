@@ -2,6 +2,10 @@ package com.bytelegend.app.shared.objects
 
 import com.bytelegend.app.shared.GridCoordinate
 
+// Dummy value for the checkpoints/missions which are invisible on map
+// Far from canvas so it will not be displayed anyway
+val INVISIBLE_COORDINATE = GridCoordinate(-9, -9)
+
 /**
  * GameMapMission doesn't contain all information of missions, just partial of them
  * (id, title) to display them. The whole information is loaded via AJAX.

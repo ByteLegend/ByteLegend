@@ -32,3 +32,6 @@ missions:
     spec: github.com/ByteLegendQuest/remember-brave-people
 tutorials: [ ]
 discussions: github.com/ByteLegendQuest/remember-brave-people/discussions
+---
+id: TestCheckpoint
+title: TestCheckpointTitle

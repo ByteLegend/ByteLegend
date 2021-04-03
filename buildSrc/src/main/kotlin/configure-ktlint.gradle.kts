@@ -17,6 +17,8 @@ val ktlintTask = tasks.register<JavaExec>("ktlint") {
         include("**/*.kt")
     })
     outputs.file(output)
+
+    mustRunAfter(tasks.withType<AbstractCompile>())
 }
 
 tasks.named("check").configure { dependsOn(ktlintTask) }

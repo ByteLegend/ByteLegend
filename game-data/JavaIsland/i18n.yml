@@ -52,4 +52,6 @@
     I have no idea, please take a look at <span style='color:red'>(E, 240)</span>
   zh_hans: |
     我不知道，请看一下<span style='color:red'>(E, 240)</span>坐标
-
+- id: TestCheckpointTitle
+  en: Test test test
+  zh_hans: 测试测试测试测试

@@ -1,6 +1,5 @@
 package com.bytelegend.client.app.ui
 
-import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
@@ -9,18 +8,11 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
-import react.setState
 
 interface PlayerNamesProps : GameProps
 interface PlayerNamesState : RState
 
 class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
-    private val on50HzClockEventListener: EventListener<Nothing> = this::on50HzClock
-
-    private fun on50HzClock(nothing: Nothing) {
-        setState { }
-    }
-
     override fun RBuilder.render() {
         if (!game.heroPlayer.isAnonymous && !game._hero!!.outOfCanvas()) {
             renderOne(game.heroPlayer, game._hero!!)
@@ -48,16 +40,17 @@ class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
 
     override fun componentDidMount() {
         super.componentDidMount()
-        props.game.eventBus.on(GAME_CLOCK_50HZ_EVENT, on50HzClockEventListener)
+        props.game.eventBus.on(GAME_CLOCK_50HZ_EVENT, gameUiUpdateEventListener)
     }
 
     override fun componentWillUnmount() {
         super.componentWillUnmount()
-        props.game.eventBus.remove(GAME_CLOCK_50HZ_EVENT, on50HzClockEventListener)
+        props.game.eventBus.remove(GAME_CLOCK_50HZ_EVENT, gameUiUpdateEventListener)
     }
 }
 
 interface PlayerNameSpanProps : RProps {
+    // coordinate in game container
     var x: Int
     var y: Int
     var name: String

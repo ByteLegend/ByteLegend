@@ -91,16 +91,4 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
             }
         }
     }
-
-    private fun getArrowString(): String {
-        return if (props.arrow) {
-            if (state.arrowUp) {
-                "<sup>\uD83D\uDD3B</sup>"
-            } else {
-                "\uD83D\uDD3B"
-            }
-        } else {
-            ""
-        }
-    }
 }

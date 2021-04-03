@@ -11,6 +11,7 @@ import kotlinx.css.top
 import kotlinx.css.width
 import kotlinx.html.DIV
 import kotlinx.html.IMG
+import kotlinx.html.SPAN
 import kotlinx.html.classes
 import react.Component
 import react.RBuilder
@@ -21,21 +22,12 @@ import react.dom.RDOMBuilder
 import react.dom.div
 import react.dom.img
 import react.dom.jsStyle
+import react.dom.span
 import styled.StyledBuilder
 import styled.StyledDOMBuilder
 import styled.css
 import styled.styledDiv
 import kotlin.reflect.KClass
-
-// class TimeStamp {
-//    operator fun minus(other: TimeStamp): Long = epochTimeMs - other.epochTimeMs
-//    operator fun compareTo(other: TimeStamp) = epochTimeMs.compareTo(other.epochTimeMs)
-//    val epochTimeMs = Date().getTime().toLong()
-//
-//    companion object {
-//        fun now() = TimeStamp()
-//    }
-// }
 
 fun StyledBuilder<*>.absolutePosition(left: Int, top: Int, width: Int, height: Int) {
     css {
@@ -109,6 +101,56 @@ fun RBuilder.absoluteDiv(
                 this.opacity = opacity
             }
             jsStyle(extraStyleBuilder)
+            block()
+        }
+    }
+}
+
+@Suppress("UnsafeCastFromDynamic")
+fun RBuilder.absoluteSpan(
+    left: Int? = null,
+    top: Int? = null,
+    right: Int? = null,
+    bottom: Int? = null,
+    width: Int? = null,
+    height: Int? = null,
+    zIndex: Int = 0,
+    opacity: String = "1",
+    classes: Set<String> = emptySet(),
+    extraStyleBuilder: dynamic.() -> Unit = {},
+    content: String = "UNDEFINED",
+    block: RDOMBuilder<SPAN>.() -> Unit = {}
+) {
+    span {
+        attrs {
+            this.classes = classes
+
+            jsStyle {
+                position = "absolute"
+                if (left != null) {
+                    this.left = "${left}px"
+                }
+                if (right != null) {
+                    this.right = "${right}px"
+                }
+                if (top != null) {
+                    this.top = "${top}px"
+                }
+                if (bottom != null) {
+                    this.bottom = "${bottom}px"
+                }
+                if (width != null) {
+                    this.width = "${width}px"
+                }
+                if (height != null) {
+                    this.height = "${height}px"
+                }
+                this.zIndex = zIndex.toString()
+                this.opacity = opacity
+            }
+            jsStyle(extraStyleBuilder)
+            +content
+
             block()
         }
     }

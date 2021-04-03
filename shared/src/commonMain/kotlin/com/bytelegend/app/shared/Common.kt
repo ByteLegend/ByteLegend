@@ -1,19 +1,23 @@
 package com.bytelegend.app.shared
 
+import com.bytelegend.app.shared.annotations.JsonIgnore
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class PixelBlock(
-    var x: Int,
-    var y: Int,
-    var width: Int,
-    var height: Int
+    val x: Int,
+    val y: Int,
+    val width: Int,
+    val height: Int
 ) {
     constructor(coordinate: PixelCoordinate, tileSize: PixelSize) :
         this(coordinate.x, coordinate.y, tileSize.width, tileSize.height)
 
     constructor(coordinate: GridCoordinate, tileSize: PixelSize) :
         this(coordinate.x * tileSize.width, coordinate.y * tileSize.height, tileSize.width, tileSize.height)
+
+    @get:JsonIgnore
+    val coordinate: PixelCoordinate = PixelCoordinate(x, y)
 }
 
 enum class Direction {

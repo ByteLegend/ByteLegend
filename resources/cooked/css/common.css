@@ -47,6 +47,7 @@ body {
 /*}*/
 
 .map-title-widget {
+    user-select: none;
     display: inline-block;
     vertical-align: middle;
     margin-left: 5px;
@@ -103,6 +104,29 @@ body {
 
 .nickname-span {
     transform: translate(-50%, -50%);
+}
+
+.checkpoint-title {
+    user-select: none;
+    cursor: pointer;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    border: white 1px solid;
+    padding: 4px;
+    transform: translate(-50%, 0%);
+}
+
+.checkpoint-title-triangle-container {
+    width: 16px;
+    height: 16px;
+    transform: translate(-50%, 0%);
+}
+
+.checkpoint-title-triangle {
+    transform: rotate(180deg);
+    border: 8px solid transparent;
+    border-bottom: 8px solid rgba(0, 0, 0, 0.5);
 }
 
 .picture-frame-border {
