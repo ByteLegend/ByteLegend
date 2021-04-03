@@ -3,7 +3,6 @@ subprojects {
     apply(plugin = "configure-ktlint")
 
     repositories {
-        jcenter()
         mavenCentral()
         maven { setUrl("https://oss.sonatype.org/content/repositories/snapshots") }
     }

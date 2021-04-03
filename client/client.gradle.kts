@@ -1,7 +1,8 @@
 subprojects {
     repositories {
-        maven("https://kotlin.bintray.com/kotlin-js-wrappers/")
-        maven("https://dl.bintray.com/samgarasx/kotlin-js-wrappers/")
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/kotlin-js-wrappers/")
+        maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
+
         mavenCentral()
         jcenter()
     }
