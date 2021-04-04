@@ -21,6 +21,7 @@
     EN: Nice job!
     ZH_HANS: 干的漂亮！
 - id: BravePeopleDedication
+  format: HTML
   data:
     EN: |
       This is dedicated to the brave people below, <br>
@@ -36,10 +37,12 @@
     EN: Joined at
     ZH_HANS: 加入于
 - id: WhyGitHubTitle
+  format: HTML
   data:
     EN: "<span style='text-align: center'>Why using Git/GitHub in ByteLegend challenges? 🤔<span>"
     ZH_HANS: "<span style='text-align: center'>为什么要使用Git/GitHub完成挑战？ 🤔<span>"
 - id: WhyGitHubContentHtml
+  format: HTML
   data:
     EN: |
       Git is the most popular collaborative tool in the world, which is used by top companies all over the world: Google/Apple/Microsoft, etc.<br>
@@ -57,6 +60,7 @@
       <br>
       使用Git/GitHub，你就能在游戏中获得真实世界中的顶尖技能。
 - id: PleaseTakeALookAtThatBook
+  format: HTML
   data:
     EN: |
       I have no idea, please take a look at <span style='color:red'>(E, 240)</span>

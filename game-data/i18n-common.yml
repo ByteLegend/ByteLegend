@@ -50,6 +50,7 @@
     ZH_HANS: 您正在访问{0}
     ZH_HANT: 您正在訪問{0}
 - id: ServerLocationTitleHtml
+  format: HTML
   data:
     EN: You're accessing <span class="badge badge-primary">{0}</span>
     ZH_HANS: 您正在访问<span class="badge badge-primary">{0}</span>
@@ -93,6 +94,7 @@
     EN: Materials
     ZH_HANS: 素材
 - id: ContactUsIfYouThinkUsMisuse
+  format: HTML
   data:
     EN: |
       The game materials are collected from Internet, which are usually not properly licensed.
@@ -136,24 +138,26 @@
     EN: This game is dedicated to my cute daughter Kitty, without whom it would have been completed much earlier. 🤦
     ZH_HANS: 谨以本游戏献给我的萌闺女Kitty，要不是她我早就写完了…… 🤦
 - id: SpecialThanksGradleParagraph
+  format: HTML
   data:
     EN: |
       <a href="https://gradle.org" target="_blank" class="badge badge-success">Gradle</a>: an awesome automated tool, by which the game is built.
     ZH_HANS: |
       <a href="https://gradle.org" target="_blank" class="badge badge-success">Gradle</a>：非常好用的自动化工具，这个游戏使用它进行构建。
 - id: SpecialThanksKotlinParagraph
+  format: HTML
   data:
     EN: |
       <a href="https://kotlinlang.org/" target="_blank" class="badge badge-primary">Kotlin</a>: Everything you see in the game is written in Kotlin: frontend, backend, game script.
     ZH_HANS: |
       <a href="https://kotlinlang.org/" target="_blank" class="badge badge-primary">Kotlin</a>: 游戏的一切都是用Kotlin实现的，包括前端、后端以及游戏脚本。
 - id: SpecialThanksTiledParagraph
+  format: HTML
   data:
     EN: |
       <a href="https://www.mapeditor.org/" target="_blank" class="badge badge-info">Tiled</a>: a free, easy-to-use map editor. All maps in the game are created with it.
     ZH_HANS: |
       <a href="https://www.mapeditor.org/" target="_blank" class="badge badge-info">Tiled</a>：游戏的所有地图都是通过它创建的。
-#- id: WeAreUsingOpenSourceSoftwareParagraph
 - id: MenuAboutTitle
   data:
     EN: Contact & About
@@ -246,6 +250,7 @@
     EN: Contact us
     ZH_HANS: 联系我们
 - id: ContactUsParagraph
+  format: HTML
   data:
     EN: |
       If you have any questions, suggestions or coorperation opportunities,
@@ -260,3 +265,23 @@
   data:
     EN: Foo Bar
     ZH_HANS: 福报酒吧
+- id: HelpUsImproveTheTranslationQuality
+  data:
+    EN: Help us improve the translation quality
+    ZH_HANS: 帮助我们改进翻译的质量
+- id: HelpUsImproveTheTranslationQualityBody
+  format: HTML
+  data:
+    EN: |
+      <p>As you may know, most of the languages supported by <span class="notranslate">ByteLegend</span>
+      are translated by machine.
+      The good news is that almost all code and game data in <span class="notranslate">ByteLegend</span>
+      is open-source. You can create a GitHub pull request to help us improve the translation quality.</p>
+      <p>Click here to see how to contribute to our codebase.</p>
+      <p>We sincerely appreciate your contribution.</p>
+    ZH_HANS:
+      <p>您可能已经知道，<span class="notranslate">字节传说</span>所支持的大多数语言是由机器所翻译的。
+      好消息是，<span class="notranslate">字节传说</span>的
+      几乎全部代码（包括所有的游戏数据）都是开源的，因此您可以通过提交GitHub的pull request帮助我们改进翻译的质量。
+      <p>点击这里查看如何向我们的代码仓库贡献您的智慧。</p>
+      <p>我们对您的贡献感激不尽。</p>

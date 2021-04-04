@@ -17,6 +17,7 @@ external interface BootstrapDropdownDividerProps : RProps
 
 external interface BootstrapDropdownItemProps : RProps {
     var className: String
+    var style: dynamic
     var href: String
     var onClick: (Event) -> Unit
     var onSelect: (Event) -> Unit

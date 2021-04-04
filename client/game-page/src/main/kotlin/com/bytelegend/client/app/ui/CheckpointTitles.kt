@@ -143,7 +143,7 @@ class CheckpointTitle : RComponent<CheckpointTitleProps, CheckPointTitleState>()
         absoluteDiv(
             left = props.x + 2, // triangle self's width
             top = props.y + TITLE_HEIGHT + getOffsetY(),
-            zIndex = Layer.CheckpointTitle.zIndex(),
+            zIndex = Layer.CheckpointTitle.zIndex() + 1,
             classes = setOf("checkpoint-title-triangle-container")
         ) {
             absoluteDiv(

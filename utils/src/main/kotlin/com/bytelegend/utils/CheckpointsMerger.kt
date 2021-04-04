@@ -15,5 +15,5 @@ fun main(args: Array<String>) {
         .map { it.name to it.resolve("checkpoints") }
         .toMap()
     val checkpointReader = CheckpointDataReader(mapIdToCheckpointDir)
-    objectMapper.writeValue(File(args[1]), checkpointReader.getAllCheckpoints())
+    uglyObjectMapper.writeValue(File(args[1]), checkpointReader.getAllCheckpoints())
 }

@@ -102,6 +102,20 @@ body {
     display: inline-block;
 }
 
+.locale-selection-dropdown-item-span {
+    max-width: 120px;
+    /* Force long language name to wrap, like Bahasa Indonesia*/
+    white-space: normal;
+}
+
+.locale-selection-dropdown-item-global-svg {
+    float: right
+}
+
+.locale-selection-dropdown-item-global-svg:hover {
+    color: #007bff;
+}
+
 .nickname-span {
     transform: translate(-50%, -50%);
 }
@@ -110,9 +124,8 @@ body {
     user-select: none;
     cursor: pointer;
     color: white;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     border-radius: 4px;
-    border: white 1px solid;
     padding: 4px;
     transform: translate(-50%, 0%);
 }
@@ -126,7 +139,7 @@ body {
 .checkpoint-title-triangle {
     transform: rotate(180deg);
     border: 8px solid transparent;
-    border-bottom: 8px solid rgba(0, 0, 0, 0.5);
+    border-bottom: 8px solid rgba(0, 0, 0, 0.7);
 }
 
 .picture-frame-border {
@@ -200,8 +213,8 @@ body {
 }
 
 .avatar-img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .avatar-login-span {

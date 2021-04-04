@@ -4,13 +4,21 @@ import BootstrapDropdownItem
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.PREFERRED_LOCALE_COOKIE_NAME
 import common.ui.bootstrap.BootstrapDropdownButton
+import common.ui.bootstrap.BootstrapModalBody
+import common.ui.bootstrap.BootstrapModalHeader
+import common.ui.bootstrap.BootstrapModalTitle
+import common.ui.icons.aiOutlineGlobal
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.html.classes
+import org.w3c.dom.events.Event
 import react.RBuilder
 import react.RState
 import react.dom.div
+import react.dom.img
+import react.dom.jsStyle
+import react.dom.span
 
 interface LocaleSelectionDropdownProps : GameProps
 
@@ -21,6 +29,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
         window.location.reload()
     }
 
+    @Suppress("UnsafeCastFromDynamic")
     override fun RBuilder.render() {
         div {
             attrs.classes = setOf("locale-selection-widget", "map-title-widget")
@@ -30,10 +39,50 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
 
                 Locale.values().forEach { locale ->
                     BootstrapDropdownItem {
-                        +locale.displayName
+                        span {
+                            attrs.classes = setOf("locale-selection-dropdown-item-span")
+                            +locale.displayName
+                        }
+
+                        if (locale.byMachine) {
+                            aiOutlineGlobal {
+                                attrs.className = "locale-selection-dropdown-item-global-svg"
+                                attrs.title = "Contribute"
+                                attrs.onClick = { event: Event ->
+                                    event.stopPropagation()
+                                    showHelpUsImproveModal()
+                                }
+                            }
+                        }
                         attrs.onClick = stateUpdatingEventHandler {
                             onSwitchLocale(locale)
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showHelpUsImproveModal() {
+        game.modalController.show {
+            BootstrapModalHeader {
+                attrs.closeButton = true
+                BootstrapModalTitle {
+                    +i("HelpUsImproveTheTranslationQuality")
+                }
+            }
+
+            BootstrapModalBody {
+                div {
+                    consumer.onTagContentUnsafe {
+                        +i("HelpUsImproveTheTranslationQualityBody")
+                    }
+                }
+
+                img {
+                    attrs.src = game.resolve("/img/attribution/google-translate.png")
+                    attrs.jsStyle {
+                        height = "16px"
                     }
                 }
             }

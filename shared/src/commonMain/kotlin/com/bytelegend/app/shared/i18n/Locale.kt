@@ -81,7 +81,7 @@ enum class Locale(
     ZH_HANS("简体中文", Language.ZH, false, LanguageScript.HANS, CountryRegion.CN) {
         override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.toLowerCase() == "zh-cn" || acceptLanguageHeader.toLowerCase() == "zh"
     },
-    ZH_HANT("繁體中文", Language.ZH, false, LanguageScript.HANT, CountryRegion.TW) {
+    ZH_HANT("繁體中文", Language.ZH, true, LanguageScript.HANT, CountryRegion.TW) {
         override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.toLowerCase() == "zh-tw"
     },
 
@@ -146,8 +146,14 @@ val DEFAULT_LOCALE = Locale.EN
 @Serializable
 data class LocalizedText(
     val id: String,
-    val data: Map<Locale, String>
+    val data: Map<Locale, String>,
+    val format: LocalizedTextFormat = LocalizedTextFormat.TEXT
 ) {
     fun getTextOrDefaultLocale(locale: Locale) = data[locale] ?: data.getValue(DEFAULT_LOCALE)
     fun getTextOrNull(locale: Locale) = data[locale]
+}
+
+enum class LocalizedTextFormat {
+    TEXT,
+    HTML
 }

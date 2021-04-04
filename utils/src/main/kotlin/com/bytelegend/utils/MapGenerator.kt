@@ -52,9 +52,15 @@ fun main(args: Array<String>) {
 val module = SimpleModule().apply {
     addSerializer(ConstantPoolEntry::class.java, JacksonConstantPoolSerializer)
 }
-val objectMapper = ObjectMapper().apply {
+val uglyObjectMapper = ObjectMapper().apply {
     registerModule(module)
     registerModule(KotlinModule())
+}
+
+val prettyObjectMapper = ObjectMapper().apply {
+    registerModule(module)
+    registerModule(KotlinModule())
+    writerWithDefaultPrettyPrinter()
 }
 
 class MapGenerator(
@@ -77,11 +83,11 @@ class MapGenerator(
 
     private val outputRawMapJson = outputDir.resolve("map.raw.json")
     private val outputCompressedMapJson = outputDir.resolve("map.json")
-    private val tiledMap: TiledMap = objectMapper.readValue(tiledMapJson.readText(), TiledMap::class.java)
+    private val tiledMap: TiledMap = uglyObjectMapper.readValue(tiledMapJson.readText(), TiledMap::class.java)
     private val mapDataReader = CheckpointDataReader(mapOf(mapId to mapCheckpointDataDir))
     private val tilesets: List<TilesetAndImage> = tiledMap.tilesets.map {
         val tilesetFile = tiledMapJson.parentFile.resolve(it.source)
-        val tileset: TiledTileset = objectMapper.readValue(tilesetFile.readText(), TiledTileset::class.java)
+        val tileset: TiledTileset = uglyObjectMapper.readValue(tilesetFile.readText(), TiledTileset::class.java)
         val image = tilesetFile.parentFile.resolve(tileset.image)
         TilesetAndImage(tileset, image, it.firstgid.toInt())
     }
@@ -166,10 +172,10 @@ class MapGenerator(
 
         if ("dev" == System.getProperty("environment")) {
             // TODO: this might be an issue if the region is circular
-            outputRawMapJson.writeText(objectMapper.writeValueAsString(rawMap))
+            outputRawMapJson.writeText(uglyObjectMapper.writeValueAsString(rawMap))
         }
 
-        outputCompressedMapJson.writeText(objectMapper.writeValueAsString(compressedMap))
+        outputCompressedMapJson.writeText(uglyObjectMapper.writeValueAsString(compressedMap))
     }
 
     private fun initDestTilesetImage() {

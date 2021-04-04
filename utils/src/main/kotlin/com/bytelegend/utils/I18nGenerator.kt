@@ -55,8 +55,8 @@ class I18nResource(
     fun generate(): List<LocalizedText> =
         localizedTextsInYaml.map { (textId, i18nTexts) ->
             val result = mutableMapOf<Locale, String>()
-            val enIsSame = localizedTextsInYaml[textId]?.getTextOrNull(Locale.EN) == localizedTextsInJson[textId]?.getTextOrNull(Locale.EN)
-            val zhHansIsSame = localizedTextsInYaml[textId]?.getTextOrNull(Locale.ZH_HANS) == localizedTextsInYaml[textId]?.getTextOrNull(Locale.ZH_HANS)
+            val enIsSame = i18nTexts.getTextOrNull(Locale.EN) == localizedTextsInJson[textId]?.getTextOrNull(Locale.EN)
+            val zhHansIsSame = i18nTexts.getTextOrNull(Locale.ZH_HANS) == localizedTextsInJson[textId]?.getTextOrNull(Locale.ZH_HANS)
 
             Locale.values().forEach { locale ->
                 when {
@@ -67,16 +67,18 @@ class I18nResource(
                     // en is same, just use the translated text in json
                     enIsSame && localizedTextsInJson[textId]?.getTextOrNull(locale) != null -> result[locale] = localizedTextsInJson[textId]?.getTextOrNull(locale)!!
                     locale == Locale.ZH_HANT -> result[locale] = DEFAULT_TRANSLATOR.translate(
-                        localizedTextsInYaml[textId]?.getTextOrNull(Locale.ZH_HANS)!!,
+                        i18nTexts.format,
+                        i18nTexts.getTextOrNull(Locale.ZH_HANS)!!,
                         Locale.ZH_HANS, Locale.ZH_HANT
                     )
                     else -> result[locale] = DEFAULT_TRANSLATOR.translate(
-                        localizedTextsInYaml[textId]?.getTextOrNull(Locale.EN)!!,
+                        i18nTexts.format,
+                        i18nTexts.getTextOrNull(Locale.EN)!!,
                         Locale.EN, locale
                     )
                 }
             }
-            LocalizedText(textId, result)
+            LocalizedText(textId, result, i18nTexts.format)
         }
 }
 
@@ -99,17 +101,17 @@ fun generate(gameDataDir: File, outputI18nDir: File, outputAllJson: File) {
             idToTextAllMap[it.id] = it
         }
 
-        objectMapper.writeValue(i18ResourceOfOneMap.autoJsonFile, textsOnOneMap)
+        prettyObjectMapper.writeValue(i18ResourceOfOneMap.autoJsonFile, textsOnOneMap)
 
         val outputDir = outputI18nDir.resolve(i18ResourceOfOneMap.mapId).apply { mkdirs() }
         Locale.values().forEach { locale ->
             val outputJson = outputDir.resolve("${locale.toLowerCase()}.json")
             val outputData = textsOnOneMap.map { it.id to it.getTextOrDefaultLocale(locale) }.toMap()
 
-            objectMapper.writeValue(outputJson, outputData)
+            uglyObjectMapper.writeValue(outputJson, outputData)
         }
     }
-    objectMapper.writeValue(outputAllJson, idToTextAllMap)
+    uglyObjectMapper.writeValue(outputAllJson, idToTextAllMap)
 }
 
 private fun File.yamlToLocalizedTexts(): LinkedHashMap<String, LocalizedText> =
@@ -117,7 +119,7 @@ private fun File.yamlToLocalizedTexts(): LinkedHashMap<String, LocalizedText> =
         .map { it.id to it }.toMap() as LinkedHashMap<String, LocalizedText>
 
 private fun File.jsonToLocalizedTexts(): LinkedHashMap<String, LocalizedText> =
-    objectMapper.readValue(this, object : TypeReference<List<LocalizedText>>() {})
+    uglyObjectMapper.readValue(this, object : TypeReference<List<LocalizedText>>() {})
         .map { it.id to it }.toMap() as LinkedHashMap<String, LocalizedText>
 
 val YAML_FACTORY = YAMLFactory()

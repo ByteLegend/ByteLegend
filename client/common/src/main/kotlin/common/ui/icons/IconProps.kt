@@ -4,6 +4,8 @@ import react.RProps
 
 interface IconProps : RProps {
     var onClick: Any
-    var style: Any
+    var style: dynamic
     var size: Int
+    var className: String
+    var title: String
 }
