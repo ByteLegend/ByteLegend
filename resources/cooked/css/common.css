@@ -128,6 +128,9 @@ body {
     border-radius: 4px;
     padding: 4px;
     transform: translate(-50%, 0%);
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-top: 1px solid white;
 }
 
 .checkpoint-title-triangle-container {
@@ -140,6 +143,20 @@ body {
     transform: rotate(180deg);
     border: 8px solid transparent;
     border-bottom: 8px solid rgba(0, 0, 0, 0.7);
+}
+
+.checkpoint-title-bottom-border {
+    height: 1px;
+    width: calc(50% - 9px);
+    bottom: 0;
+    border-bottom: 1px solid white;
+}
+.checkpoint-title-bottom-border-left {
+    left: 1px
+}
+
+.checkpoint-title-bottom-border-right {
+    right: 1px
 }
 
 .picture-frame-border {

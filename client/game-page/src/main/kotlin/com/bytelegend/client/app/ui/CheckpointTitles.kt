@@ -48,7 +48,7 @@ class CheckpointTitles : GameUIComponent<CheckpointTitlesProps, CheckpointTitles
                 child(CheckpointTitle::class) {
                     val coordinateInGameContainer = calculateCoordinateInCanvas(it.point).coordinate + canvasCoordinateInGameContainer
                     attrs.eventBus = game.eventBus
-                    attrs.x = coordinateInGameContainer.x
+                    attrs.x = coordinateInGameContainer.x + 2 // maybe border?
                     attrs.y = coordinateInGameContainer.y
                     attrs.offsetY = if (state.counter % 20 < 10) 0 else -2
                     attrs.title = i(it.title)
@@ -119,14 +119,14 @@ class CheckpointTitle : RComponent<CheckpointTitleProps, CheckPointTitleState>()
     private fun getOffsetY() = if (state.hovered) 0 else props.offsetY
 
     override fun RBuilder.render() {
-        absoluteSpan(
+        absoluteDiv(
             left = props.x,
             top = props.y + getOffsetY(),
             height = TITLE_HEIGHT,
             zIndex = Layer.CheckpointTitle.zIndex(),
-            classes = setOf("checkpoint-title"),
-            content = props.title
+            classes = setOf("checkpoint-title")
         ) {
+            +props.title
             attrs.onMouseOutFunction = {
                 setState { hovered = false }
             }
@@ -138,12 +138,20 @@ class CheckpointTitle : RComponent<CheckpointTitleProps, CheckPointTitleState>()
                     boxShadow = "0 0 20px white"
                 }
             }
+            absoluteDiv(
+                zIndex = Layer.CheckpointTitle.zIndex(),
+                classes = setOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-left")
+            )
+            absoluteDiv(
+                zIndex = Layer.CheckpointTitle.zIndex(),
+                classes = setOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-right")
+            )
         }
 
         absoluteDiv(
-            left = props.x + 2, // triangle self's width
+            left = props.x,
             top = props.y + TITLE_HEIGHT + getOffsetY(),
-            zIndex = Layer.CheckpointTitle.zIndex() + 1,
+            zIndex = Layer.CheckpointTitle.zIndex() + 2,
             classes = setOf("checkpoint-title-triangle-container")
         ) {
             absoluteDiv(

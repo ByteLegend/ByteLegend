@@ -4,6 +4,8 @@ import com.bytelegend.app.servershared.mock.mockPlayer
 import com.bytelegend.app.testfixtures.AbstractBrowserTest
 import com.bytelegend.app.testfixtures.startGame
 import com.bytelegend.app.testfixtures.waitUntil
+import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Timeout
@@ -34,6 +36,13 @@ class AppBrowserSmokeTest : AbstractBrowserTest() {
     fun `anonymous access and login`() {
         browserWebDriverContainers[0].start()
         webDriver.startGame(gameServerPort)
+
+        val pageSource = webDriver.pageSource
+        assertThat(pageSource, containsString("Helfen Sie uns, die Übersetzungsqualität zu verbessern"))
+        assertThat(pageSource, containsString("Ayúdanos a mejorar la calidad de la traducción"))
+        assertThat(pageSource, containsString("번역 품질을 개선 할 수 있도록 도와주세요"))
+        assertThat(pageSource, containsString("Помогите нам улучшить качество перевода"))
+        assertThat(pageSource, containsString("翻訳品質の向上にご協力ください"))
 
         Thread.sleep(1000) // wait for fade in
         webDriver.findElement(By.id("login-link")).click()

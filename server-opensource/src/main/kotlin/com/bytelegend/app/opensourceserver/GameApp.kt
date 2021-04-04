@@ -70,6 +70,7 @@ class IndexController(
         request: HttpServletRequest,
         response: HttpServletResponse
     ) {
+        response.characterEncoding = "UTF-8"
         response.writer.apply {
             write(
                 renderIndexHtml(
