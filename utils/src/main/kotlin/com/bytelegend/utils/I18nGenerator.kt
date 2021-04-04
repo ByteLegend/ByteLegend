@@ -54,31 +54,31 @@ class I18nResource(
     //      2. zh-hans to zh-hant
     fun generate(): List<LocalizedText> =
         localizedTextsInYaml.map { (textId, i18nTexts) ->
-            val result = mutableMapOf<Locale, String>()
+            val localeToText = mutableMapOf<String, String>()
             val enIsSame = i18nTexts.getTextOrNull(Locale.EN) == localizedTextsInJson[textId]?.getTextOrNull(Locale.EN)
             val zhHansIsSame = i18nTexts.getTextOrNull(Locale.ZH_HANS) == localizedTextsInJson[textId]?.getTextOrNull(Locale.ZH_HANS)
 
             Locale.values().forEach { locale ->
                 when {
-                    i18nTexts.getTextOrNull(locale) != null -> result[locale] = i18nTexts.getTextOrNull(locale)!!
+                    i18nTexts.getTextOrNull(locale) != null -> localeToText[locale.toString()] = i18nTexts.getTextOrNull(locale)!!
                     // zh-hans is same and target is zh-hant, just use the translated text in json
                     zhHansIsSame && locale == Locale.ZH_HANT &&
-                        localizedTextsInJson[textId]?.getTextOrNull(locale) != null -> result[locale] = localizedTextsInJson[textId]?.getTextOrNull(locale)!!
+                        localizedTextsInJson[textId]?.getTextOrNull(locale) != null -> localeToText[locale.toString()] = localizedTextsInJson[textId]?.getTextOrNull(locale)!!
                     // en is same, just use the translated text in json
-                    enIsSame && localizedTextsInJson[textId]?.getTextOrNull(locale) != null -> result[locale] = localizedTextsInJson[textId]?.getTextOrNull(locale)!!
-                    locale == Locale.ZH_HANT -> result[locale] = DEFAULT_TRANSLATOR.translate(
+                    enIsSame && localizedTextsInJson[textId]?.getTextOrNull(locale) != null -> localeToText[locale.toString()] = localizedTextsInJson[textId]?.getTextOrNull(locale)!!
+                    locale == Locale.ZH_HANT -> localeToText[locale.toString()] = DEFAULT_TRANSLATOR.translate(
                         i18nTexts.format,
                         i18nTexts.getTextOrNull(Locale.ZH_HANS)!!,
                         Locale.ZH_HANS, Locale.ZH_HANT
                     )
-                    else -> result[locale] = DEFAULT_TRANSLATOR.translate(
+                    else -> localeToText[locale.toString()] = DEFAULT_TRANSLATOR.translate(
                         i18nTexts.format,
                         i18nTexts.getTextOrNull(Locale.EN)!!,
                         Locale.EN, locale
                     )
                 }
             }
-            LocalizedText(textId, result, i18nTexts.format)
+            LocalizedText(textId, localeToText, i18nTexts.format)
         }
 }
 

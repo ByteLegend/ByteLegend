@@ -4,12 +4,19 @@ import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.app.shared.i18n.LocalizedText
 
 abstract class AbstractIndexPageRenderer(
     private val rrbdResourceProvider: AbstractRRBDResourceProvider,
     private val jsonMapper: JsonMapper
 ) {
     private val indexHtml = javaClass.getResource("/index.html").readText()
+    private val preRenderedLocalizedTexts: List<LocalizedText> by lazy {
+        listOf(
+            rrbdResourceProvider.localizedText.getValue("HelpUsImproveTheTranslationQuality"),
+            rrbdResourceProvider.localizedText.getValue("HelpUsImproveTheTranslationQualityBody")
+        )
+    }
 
     protected fun renderIndexHtml(
         initMapId: String,
@@ -27,7 +34,7 @@ abstract class AbstractIndexPageRenderer(
             "{RRBD}" to RRBD,
             "{LANG}" to locale.language.code,
             "{TITLE}" to enjoyProgrammingText,
-            "{serverSideData}" to jsonMapper.toUglyJson(
+            "{gameInitData}" to jsonMapper.toUglyJson(
                 GameInitData(
                     initMapId,
                     onlinePlayerCount,
@@ -35,7 +42,8 @@ abstract class AbstractIndexPageRenderer(
                     RRBD,
                     enjoyProgrammingText,
                     player,
-                    rrbdResourceProvider.maps
+                    rrbdResourceProvider.maps,
+                    preRenderedLocalizedTexts
                 )
             )
         )

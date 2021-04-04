@@ -3,6 +3,7 @@ package com.bytelegend.client.app.ui
 import BootstrapDropdownItem
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.PREFERRED_LOCALE_COOKIE_NAME
+import com.bytelegend.client.app.page.GAME_INIT_DATA
 import common.ui.bootstrap.BootstrapDropdownButton
 import common.ui.bootstrap.BootstrapModalBody
 import common.ui.bootstrap.BootstrapModalHeader
@@ -50,7 +51,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
                                 attrs.title = "Contribute"
                                 attrs.onClick = { event: Event ->
                                     event.stopPropagation()
-                                    showHelpUsImproveModal()
+                                    showHelpUsImproveModal(locale)
                                 }
                             }
                         }
@@ -63,19 +64,19 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
         }
     }
 
-    private fun showHelpUsImproveModal() {
+    private fun showHelpUsImproveModal(selectedLocale: Locale) {
         game.modalController.show {
             BootstrapModalHeader {
                 attrs.closeButton = true
                 BootstrapModalTitle {
-                    +i("HelpUsImproveTheTranslationQuality")
+                    +GAME_INIT_DATA.getI18nText("HelpUsImproveTheTranslationQuality", selectedLocale)
                 }
             }
 
             BootstrapModalBody {
                 div {
                     consumer.onTagContentUnsafe {
-                        +i("HelpUsImproveTheTranslationQualityBody")
+                        +GAME_INIT_DATA.getI18nText("HelpUsImproveTheTranslationQualityBody", selectedLocale)
                     }
                 }
 

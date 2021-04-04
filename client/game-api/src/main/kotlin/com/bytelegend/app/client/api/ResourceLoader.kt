@@ -2,7 +2,6 @@
 
 package com.bytelegend.app.client.api
 
-import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.PixelSize
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -10,8 +9,6 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.await
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.json.JsonTransformingSerializer
 import org.w3c.dom.HTMLAudioElement
 import org.w3c.dom.HTMLImageElement
 import org.w3c.fetch.Response
@@ -49,8 +46,6 @@ class I18nTextResource(
         }
     }
 }
-
-object GameMapListSerializer : JsonTransformingSerializer<List<GameMapDefinition>>(ListSerializer(GameMapDefinition.serializer()))
 
 data class ImageResourceData(
     val imageId: String,

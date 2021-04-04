@@ -66,9 +66,9 @@ import com.bytelegend.client.app.ui.UserMouseInteractionLayerProps
 import com.bytelegend.client.app.ui.gameChild
 import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
+import com.bytelegend.client.app.web.toGameInitData
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.serialization.json.Json
 import react.RBuilder
 import react.RComponent
 import react.RElementBuilder
@@ -80,11 +80,7 @@ import react.dom.div
 import react.dom.render
 import react.setState
 
-val GAME_INIT_DATA: GameInitData = Json { ignoreUnknownKeys = true }.decodeFromString(
-    GameInitData.serializer(),
-    window.asDynamic().serverSideData
-)
-
+val GAME_INIT_DATA: GameInitData = toGameInitData(window.asDynamic().gameInitData)
 const val HERO_AVATAR_IMG_ID = "hero-avatar"
 
 val game = init(GAME_INIT_DATA).apply {

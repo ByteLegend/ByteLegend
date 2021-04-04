@@ -3,11 +3,16 @@
 package com.bytelegend.client.app.web
 
 import com.bytelegend.app.client.api.JSObjectBackedMap
+import com.bytelegend.app.shared.GameInitData
+import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.entities.MissionAnswer
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.entities.PlayerMission
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.entities.States
+import com.bytelegend.app.shared.enums.ServerLocation
+import com.bytelegend.app.shared.i18n.LocalizedText
+import com.bytelegend.app.shared.i18n.LocalizedTextFormat
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
@@ -52,16 +57,17 @@ fun toPlayer(jsonObject: dynamic) = Player().apply {
     server = jsonObject.server
     locale = jsonObject.locale
     characterId = jsonObject.characterId
+    avatarUrl = jsonObject.avatarUrl
 }
 
 fun <T> toTypedList(jsonArray: dynamic, mapper: (dynamic) -> T): List<T> {
     return jsonArray.unsafeCast<Array<dynamic>>().map(mapper)
 }
 
-fun <T> toTypedMap(jsonObject: dynamic, mapper: (dynamic) -> T): Map<String, T> {
+fun <T> toTypedMap(jsonObject: dynamic, valueMapper: (dynamic) -> T): Map<String, T> {
     return JSObjectBackedMap<dynamic>(jsonObject).apply {
         entries.forEach {
-            it.setValue(mapper(it.value))
+            it.setValue(valueMapper(it.value))
         }
     }
 }
@@ -91,3 +97,26 @@ fun toMissionAnswer(jsonObject: dynamic) = MissionAnswer().apply {
     accomplished = jsonObject.accomplished
     createdAt = jsonObject.createdAt
 }
+
+fun toGameMapDefinition(jsonObject: dynamic): GameMapDefinition = GameMapDefinition(
+    jsonObject.id,
+    toTypedList(jsonObject.children, ::toGameMapDefinition),
+    jsonObject.frames
+)
+
+fun toGameInitData(jsonObject: dynamic) = GameInitData(
+    jsonObject.initMapId,
+    jsonObject.onlineCount,
+    ServerLocation.valueOf(jsonObject.serverLocation),
+    jsonObject.rrbd,
+    jsonObject.enjoyProgrammingText,
+    toPlayer(jsonObject.player),
+    toTypedList(jsonObject.maps, ::toGameMapDefinition),
+    toTypedList(jsonObject.localizedTexts, ::toLocalizedText),
+)
+
+fun toLocalizedText(jsonObject: dynamic) = LocalizedText(
+    jsonObject.id,
+    toTypedMap(jsonObject.data) { it },
+    LocalizedTextFormat.valueOf(jsonObject.format)
+)

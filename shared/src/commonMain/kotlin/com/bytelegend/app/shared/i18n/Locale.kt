@@ -143,14 +143,14 @@ enum class Locale(
 
 val DEFAULT_LOCALE = Locale.EN
 
-@Serializable
 data class LocalizedText(
     val id: String,
-    val data: Map<Locale, String>,
+    // string-key is front-end friendly
+    val data: Map<String, String>,
     val format: LocalizedTextFormat = LocalizedTextFormat.TEXT
 ) {
-    fun getTextOrDefaultLocale(locale: Locale) = data[locale] ?: data.getValue(DEFAULT_LOCALE)
-    fun getTextOrNull(locale: Locale) = data[locale]
+    fun getTextOrDefaultLocale(locale: Locale) = data[locale.toString()] ?: data.getValue(DEFAULT_LOCALE.toString())
+    fun getTextOrNull(locale: Locale) = data[locale.toString()]
 }
 
 enum class LocalizedTextFormat {
