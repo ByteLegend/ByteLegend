@@ -2,14 +2,14 @@ package com.bytelegend.client.app.ui.menu
 
 import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
-import common.ui.bootstrap.BootstrapModalBody
-import common.ui.bootstrap.BootstrapModalHeader
-import common.ui.bootstrap.BootstrapModalTitle
 import kotlinx.browser.window
 import kotlinx.html.classes
 import kotlinx.html.js.onBlurFunction

@@ -1,9 +1,9 @@
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.enums.ServerLocation
-import common.ui.bootstrap.BootstrapModalBody
-import common.ui.bootstrap.BootstrapModalHeader
-import common.ui.bootstrap.BootstrapModalTitle
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.title

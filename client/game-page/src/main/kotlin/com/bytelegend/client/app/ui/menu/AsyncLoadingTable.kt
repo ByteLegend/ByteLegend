@@ -1,9 +1,9 @@
 package com.bytelegend.client.app.ui.menu
 
+import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
+import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
+import com.bytelegend.app.client.ui.bootstrap.BootstrapTable
 import com.bytelegend.client.app.ui.GameProps
-import common.ui.bootstrap.BootstrapAlert
-import common.ui.bootstrap.BootstrapSpinner
-import common.ui.bootstrap.BootstrapTable
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await

@@ -7,6 +7,7 @@ import com.bytelegend.app.client.api.ImageResource
 import com.bytelegend.app.client.api.JSArrayBackedList
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
+import com.bytelegend.app.client.misc.search
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.app.shared.entities.Player
@@ -18,7 +19,6 @@ import com.bytelegend.client.app.obj.AnimationSet
 import com.bytelegend.client.app.obj.PlayerSprite
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.web.WebSocketClient
-import common.utils.search
 
 class PlayerContainer(
     private val mapId: String,

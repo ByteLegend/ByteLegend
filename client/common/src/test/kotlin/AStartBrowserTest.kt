@@ -1,12 +1,9 @@
+import com.bytelegend.app.client.misc.search
 import com.bytelegend.app.shared.GridCoordinate
-import common.utils.search
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.promise
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class AStartBrowserTest {
-    private fun runTest(block: suspend () -> Unit): dynamic = GlobalScope.promise { block() }
 
     /**
      * Run multiple times to avoid state leftover

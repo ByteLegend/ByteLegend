@@ -10,6 +10,8 @@ class Timestamp(
     operator fun minus(other: Timestamp): Long = epochTimeMs - other.epochTimeMs
     operator fun compareTo(other: Timestamp) = epochTimeMs.compareTo(other.epochTimeMs)
 
+    fun elapsedTimeMs() = Date().getTime().toLong() - this.epochTimeMs
+
     companion object {
         fun now() = Timestamp()
     }

@@ -1,6 +1,6 @@
 package com.bytelegend.client.app.ui
 
-import common.ui.bootstrap.BootstrapSwitchButton
+import com.bytelegend.app.client.ui.bootstrap.BootstrapSwitchButton
 import kotlinx.html.classes
 import react.RBuilder
 import react.RState

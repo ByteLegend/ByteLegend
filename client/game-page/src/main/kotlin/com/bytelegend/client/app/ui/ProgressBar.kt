@@ -2,10 +2,10 @@ package common.widget
 
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.ui.bootstrap.BootstrapProgressBar
 import com.bytelegend.client.app.engine.RESOURCE_LOADING_FAILURE_EVENT
 import com.bytelegend.client.app.engine.RESOURCE_LOADING_SUCCESS_EVENT
 import com.bytelegend.client.app.page.game
-import common.ui.bootstrap.BootstrapProgressBar
 import kotlinx.browser.window
 import react.RBuilder
 import react.RComponent

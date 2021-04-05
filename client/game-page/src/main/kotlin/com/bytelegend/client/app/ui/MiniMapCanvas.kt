@@ -6,6 +6,10 @@ import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.api.JSArrayBackedList
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.getImageElement
+import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
@@ -16,10 +20,6 @@ import com.bytelegend.client.app.obj.disableShadow
 import com.bytelegend.client.app.obj.quadraticCurveTo
 import com.bytelegend.client.app.obj.setShadow
 import com.bytelegend.client.app.page.HERO_AVATAR_IMG_ID
-import common.ui.bootstrap.BootstrapButton
-import common.ui.bootstrap.BootstrapModalBody
-import common.ui.bootstrap.BootstrapModalHeader
-import common.ui.bootstrap.BootstrapModalTitle
 import kotlinx.html.id
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction

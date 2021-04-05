@@ -2,7 +2,7 @@ package com.bytelegend.client.app.ui
 
 import BootstrapDropdownDivider
 import BootstrapDropdownItem
-import common.ui.bootstrap.BootstrapDropdownButton
+import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdownButton
 import react.RBuilder
 import react.RElementBuilder
 import react.RState

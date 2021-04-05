@@ -3,7 +3,7 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.BannerController
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
-import common.ui.bootstrap.BootstrapAlert
+import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import react.RBuilder
 import react.RState
 import react.setState

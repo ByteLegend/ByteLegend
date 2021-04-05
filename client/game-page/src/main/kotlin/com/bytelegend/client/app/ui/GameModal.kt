@@ -3,12 +3,12 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.ModalController
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModal
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalProps
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
-import common.ui.bootstrap.BootstrapModal
-import common.ui.bootstrap.BootstrapModalBody
-import common.ui.bootstrap.BootstrapModalHeader
-import common.ui.bootstrap.BootstrapModalProps
-import common.ui.bootstrap.BootstrapModalTitle
 import org.kodein.di.DI
 import org.kodein.di.instance
 import react.RBuilder

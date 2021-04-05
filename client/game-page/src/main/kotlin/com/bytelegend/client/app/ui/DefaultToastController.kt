@@ -3,9 +3,9 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.ToastController
-import common.ui.bootstrap.BootstrapToast
-import common.ui.bootstrap.BootstrapToastBody
-import common.ui.bootstrap.BootstrapToastHeader
+import com.bytelegend.app.client.ui.bootstrap.BootstrapToast
+import com.bytelegend.app.client.ui.bootstrap.BootstrapToastBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapToastHeader
 import kotlinx.browser.window
 import kotlinx.html.classes
 import react.RBuilder

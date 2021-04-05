@@ -2,10 +2,10 @@ package com.bytelegend.client.app.ui.menu
 
 import BootstrapNavItem
 import BootstrapNavLink
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
-import common.ui.bootstrap.BootstrapModalBody
-import common.ui.bootstrap.BootstrapNav
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.events.Event
 import react.RBuilder

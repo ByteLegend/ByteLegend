@@ -1,14 +1,14 @@
 package com.bytelegend.client.app.ui
 
 import BootstrapDropdownItem
+import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdownButton
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
+import com.bytelegend.app.client.ui.icons.aiOutlineGlobal
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.PREFERRED_LOCALE_COOKIE_NAME
 import com.bytelegend.client.app.page.GAME_INIT_DATA
-import common.ui.bootstrap.BootstrapDropdownButton
-import common.ui.bootstrap.BootstrapModalBody
-import common.ui.bootstrap.BootstrapModalHeader
-import common.ui.bootstrap.BootstrapModalTitle
-import common.ui.icons.aiOutlineGlobal
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window

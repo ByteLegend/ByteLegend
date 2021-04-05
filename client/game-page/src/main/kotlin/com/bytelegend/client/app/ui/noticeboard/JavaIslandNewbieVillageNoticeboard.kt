@@ -1,8 +1,8 @@
 package com.bytelegend.client.app.ui.noticeboard
 
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.client.app.ui.GameAwareProps
-import common.ui.bootstrap.BootstrapModalBody
-import common.ui.bootstrap.BootstrapSpinner
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await

@@ -6,7 +6,7 @@ import BootstrapDropdownDivider
 import BootstrapDropdownItem
 import BootstrapDropdownMenu
 import BootstrapDropdownToggle
-import common.ui.bootstrap.BootstrapDropdown
+import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdown
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.classes
