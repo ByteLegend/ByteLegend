@@ -6,9 +6,22 @@
  "name":"misc8",
  "spacing":0,
  "tilecount":824,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.5.0",
  "tileheight":32,
+ "tiles":[
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":41
+                }, 
+                {
+                 "duration":500,
+                 "tileid":40
+                }],
+         "id":130
+        }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.4
+ "version":1.5
 }

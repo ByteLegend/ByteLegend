@@ -5,8 +5,8 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.math.outOfCanvas
-import com.bytelegend.app.shared.objects.GameMapCheckpoint
-import com.bytelegend.app.shared.objects.GameObjectRole.Checkpoint
+import com.bytelegend.app.shared.objects.GameMapMission
+import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
@@ -18,10 +18,11 @@ import react.RComponent
 import react.RProps
 import react.RState
 import react.dom.jsStyle
+import react.dom.span
 import react.setState
 
-interface CheckpointTitlesProps : GameProps
-interface CheckpointTitlesState : RState {
+interface MissionTitlesProps : GameProps
+interface MissionTitlesState : RState {
     var counter: Int
 }
 
@@ -29,11 +30,11 @@ interface CheckpointTitlesState : RState {
 const val ESTIMATE_WIDTH = 100
 const val TITLE_HEIGHT = 32
 
-class CheckpointTitles : GameUIComponent<CheckpointTitlesProps, CheckpointTitlesState>() {
+class MissionTitles : GameUIComponent<MissionTitlesProps, MissionTitlesState>() {
     private val on50HzClockListener: EventListener<Nothing> = this::on50HzClock
 
     // counter increment on 50Hz clock
-    override fun CheckpointTitlesState.init() {
+    override fun MissionTitlesState.init() {
         counter = 0
     }
 
@@ -42,14 +43,14 @@ class CheckpointTitles : GameUIComponent<CheckpointTitlesProps, CheckpointTitles
     }
 
     override fun RBuilder.render() {
-        activeScene.objects.getByRole<GameMapCheckpoint>(Checkpoint)
+        activeScene.objects.getByRole<GameMapMission>(GameObjectRole.Mission)
             .filter { insideCanvas(it) && it.title.isNotBlank() }
             .forEach {
-                child(CheckpointTitle::class) {
+                child(MissionTile::class) {
                     val coordinateInGameContainer = calculateCoordinateInCanvas(it.point).coordinate + canvasCoordinateInGameContainer
                     attrs.eventBus = game.eventBus
-                    attrs.x = coordinateInGameContainer.x + 2 // maybe border?
-                    attrs.y = coordinateInGameContainer.y
+                    attrs.left = coordinateInGameContainer.x + 2 // maybe border?
+                    attrs.bottom = gameContainerHeight - coordinateInGameContainer.y + 32
                     attrs.offsetY = if (state.counter % 20 < 10) 0 else -2
                     attrs.title = i(it.title)
                     attrs.tileCoordinate = it.point
@@ -57,15 +58,15 @@ class CheckpointTitles : GameUIComponent<CheckpointTitlesProps, CheckpointTitles
             }
     }
 
-    private fun insideCanvas(checkpoint: GameMapCheckpoint): Boolean {
-        return !calculateCoordinateInCanvas(checkpoint.point).outOfCanvas(activeScene.canvasState.getCanvasPixelSize())
+    private fun insideCanvas(mission: GameMapMission): Boolean {
+        return !calculateCoordinateInCanvas(mission.point).outOfCanvas(activeScene.canvasState.getCanvasPixelSize())
     }
 
     private fun calculateCoordinateInCanvas(point: GridCoordinate): PixelBlock {
         val tileSize = activeScene.map.tileSize
         val targetTilePixelCoordinate = point * tileSize
         val widgetLeftTopCornerXInCanvas = targetTilePixelCoordinate.x + tileSize.width / 2 - canvasCoordinateInMap.x
-        val widgetLeftTopCornerYInCanvas = targetTilePixelCoordinate.y - TITLE_HEIGHT - canvasCoordinateInMap.y
+        val widgetLeftTopCornerYInCanvas = targetTilePixelCoordinate.y - canvasCoordinateInMap.y
         return PixelBlock(
             widgetLeftTopCornerXInCanvas, widgetLeftTopCornerYInCanvas, ESTIMATE_WIDTH, TITLE_HEIGHT
         )
@@ -84,8 +85,8 @@ class CheckpointTitles : GameUIComponent<CheckpointTitlesProps, CheckpointTitles
 
 interface CheckpointTitleProps : RProps {
     // coordinate in game container
-    var x: Int
-    var y: Int
+    var left: Int
+    var bottom: Int
 
     // for animation
     var offsetY: Int
@@ -98,7 +99,7 @@ interface CheckPointTitleState : RState {
     var hovered: Boolean
 }
 
-class CheckpointTitle : RComponent<CheckpointTitleProps, CheckPointTitleState>() {
+class MissionTile : RComponent<CheckpointTitleProps, CheckPointTitleState>() {
     private val mouseMoveListener: MouseEventListener = {
         if (it.mapCoordinate == props.tileCoordinate) {
             setState { hovered = true }
@@ -120,13 +121,16 @@ class CheckpointTitle : RComponent<CheckpointTitleProps, CheckPointTitleState>()
 
     override fun RBuilder.render() {
         absoluteDiv(
-            left = props.x,
-            top = props.y + getOffsetY(),
-            height = TITLE_HEIGHT,
+            left = props.left,
+            bottom = props.bottom + getOffsetY(),
             zIndex = Layer.CheckpointTitle.zIndex(),
             classes = setOf("checkpoint-title")
         ) {
-            +props.title
+            span {
+                consumer.onTagContentUnsafe {
+                    +props.title
+                }
+            }
             attrs.onMouseOutFunction = {
                 setState { hovered = false }
             }
@@ -149,8 +153,8 @@ class CheckpointTitle : RComponent<CheckpointTitleProps, CheckPointTitleState>()
         }
 
         absoluteDiv(
-            left = props.x,
-            top = props.y + TITLE_HEIGHT + getOffsetY(),
+            left = props.left,
+            bottom = props.bottom + getOffsetY() - 16,
             zIndex = Layer.CheckpointTitle.zIndex() + 2,
             classes = setOf("checkpoint-title-triangle-container")
         ) {
@@ -165,8 +169,8 @@ class CheckpointTitle : RComponent<CheckpointTitleProps, CheckPointTitleState>()
     }
 
     override fun shouldComponentUpdate(nextProps: CheckpointTitleProps, nextState: CheckPointTitleState): Boolean {
-        return props.x != nextProps.x ||
-            props.y != nextProps.y ||
+        return props.left != nextProps.left ||
+            props.bottom != nextProps.bottom ||
             props.title != nextProps.title ||
             props.offsetY != nextProps.offsetY ||
             state.hovered != nextState.hovered

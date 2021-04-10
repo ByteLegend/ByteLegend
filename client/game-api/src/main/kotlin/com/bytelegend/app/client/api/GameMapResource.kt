@@ -10,7 +10,6 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.RawGameMap
 import com.bytelegend.app.shared.mapToList
 import com.bytelegend.app.shared.mapToList4
-import com.bytelegend.app.shared.objects.CompressedGameMapCheckpoint
 import com.bytelegend.app.shared.objects.CompressedGameMapCurve
 import com.bytelegend.app.shared.objects.CompressedGameMapDynamicObject
 import com.bytelegend.app.shared.objects.CompressedGameMapMission
@@ -61,9 +60,7 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
         GameMapObjectType.GameMapRegion -> CompressedGameMapRegion(
             it.id,
             it.layer,
-            (it.center as Array<Int>).toList(),
-            (it.vertices as Array<Array<Int>>).mapToList { it },
-            (it.next as Array<String>).toList()
+            (it.vertices as Array<Array<Int>>).mapToList { it }
         )
         GameMapObjectType.GameMapCurve -> CompressedGameMapCurve(
             it.id,
@@ -82,14 +79,11 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
         )
         GameMapObjectType.GameMapMission -> CompressedGameMapMission(
             it.id,
+            it.title,
+            it.sprite,
             it.missionType,
-            it.title,
-            (it.point as Array<Int>).toList()
-        )
-        GameMapObjectType.GameMapCheckpoint -> CompressedGameMapCheckpoint(
-            it.id,
-            it.title,
-            (it.point as Array<Int>).toList()
+            (it.point as Array<Int>).toList(),
+            it.next
         )
         else -> throw IllegalStateException("Unrecognized type: ${it.type}")
     }

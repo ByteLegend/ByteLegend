@@ -9,7 +9,7 @@ import kotlinx.browser.window
 
 val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
 
-fun main() {
+fun main2() {
     gameRuntime.sceneContainer.getSceneById(JAVA_ISLAND).apply {
         val helpers = GameScriptHelpers(this)
         objects {
@@ -33,7 +33,7 @@ fun main() {
             }
 
             sprite {
-                id = "GitHubExplanationBook"
+                id = "StarByteLegendBookMission"
                 spriteId = "GitHubExplanationBook-sprite"
                 onClick = {
                     scripts {

@@ -1,0 +1,5 @@
+id: install-java
+title: install-java-title
+spec:
+  type: Question
+  spec: "(?s).*(jdk|java) version.*"

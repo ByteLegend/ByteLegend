@@ -19,8 +19,6 @@ import com.bytelegend.client.app.obj.HeroCharacter
 import com.bytelegend.client.app.ui.AudioSwitchWidget
 import com.bytelegend.client.app.ui.AudioSwitchWidgetProps
 import com.bytelegend.client.app.ui.BannerUIComponent
-import com.bytelegend.client.app.ui.CheckpointTitles
-import com.bytelegend.client.app.ui.CheckpointTitlesProps
 import com.bytelegend.client.app.ui.CoinCountWidget
 import com.bytelegend.client.app.ui.CoinCountWidgetProps
 import com.bytelegend.client.app.ui.FpsCounter
@@ -43,7 +41,8 @@ import com.bytelegend.client.app.ui.MapSelectionDropdown
 import com.bytelegend.client.app.ui.MapSelectionDropdownProps
 import com.bytelegend.client.app.ui.MapTitleWidgets
 import com.bytelegend.client.app.ui.MapTitleWidgetsProps
-import com.bytelegend.client.app.ui.MiniMapCanvasLayer
+import com.bytelegend.client.app.ui.MissionTitles
+import com.bytelegend.client.app.ui.MissionTitlesProps
 import com.bytelegend.client.app.ui.OnlineCounter
 import com.bytelegend.client.app.ui.OnlineCounterProps
 import com.bytelegend.client.app.ui.PlayerNames
@@ -201,7 +200,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                     checkpointTitleWidgets(attrs)
                     tileCursorWidget(attrs)
                     spriteNameWidget(attrs)
-                    miniMapCanvas(attrs)
+//                    miniMapCanvas(attrs)
                     mapCanvas(attrs)
 
                     menu(attrs)
@@ -259,10 +258,10 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         block: RElementBuilder<MapCanvasProps>.() -> Unit = {}
     ) = gameChild(parentProps, MainMapCanvasLayer::class, block)
 
-    private fun RElementBuilder<GameContainerProps>.miniMapCanvas(
-        parentProps: GameContainerProps,
-        block: RElementBuilder<MapCanvasProps>.() -> Unit = {}
-    ) = gameChild(parentProps, MiniMapCanvasLayer::class, block)
+//    private fun RElementBuilder<GameContainerProps>.miniMapCanvas(
+//        parentProps: GameContainerProps,
+//        block: RElementBuilder<MapCanvasProps>.() -> Unit = {}
+//    ) = gameChild(parentProps, MiniMapCanvasLayer::class, block)
 
     private fun RElementBuilder<GameContainerProps>.mapTitleWidgets(
         direction: Direction,
@@ -314,9 +313,9 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
     private fun RElementBuilder<GameContainerProps>.checkpointTitleWidgets(
         parentProps: GameContainerProps,
-        block: RElementBuilder<CheckpointTitlesProps>.() -> Unit = {}
+        block: RElementBuilder<MissionTitlesProps>.() -> Unit = {}
     ): ReactElement {
-        return gameChild(parentProps, CheckpointTitles::class, block)
+        return gameChild(parentProps, MissionTitles::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.spriteNameWidget(

@@ -66,7 +66,44 @@
       I have no idea, please take a look at <span style='color:red'>(E, 240)</span>
     ZH_HANS: |
       我不知道，请看一下<span style='color:red'>(E, 240)</span>坐标
-- id: TestCheckpointTitle
+- id: star-bytelegend-title
   data:
-    EN: Test test test
-    ZH_HANS: 测试测试测试测试
+    EN: <span class="notranslate">Star ByteLegend</span>
+    ZH_HANS: 给字节传说一个Star
+- id: remember-brave-people-title
+  data:
+    EN: Learn GitHub pull request
+    ZH_HANS: 学习创建GitHub的<br>pull request
+- id: clone-and-run-java-project-title
+  data:
+    EN: Clone and run a Java project
+    ZH_HANS: Clone并运行一个Java项目
+- id: clone-and-switch-branch-title
+  data:
+    EN: Learn switching branch
+    ZH_HANS: 学习切换分支
+- id: fix-simple-add-title
+  data:
+    EN: Fix simple issue with GitHub pull request
+    ZH_HANS: 使用GitHub的pull request解决一个简单问题
+- id: JavaBasicStructure-title
+  data:
+    EN: "Java basic structure: class and package"
+    ZH_HANS: Java的基本结构：类与包
+- id: create-a-new-class-in-package-title
+  data:
+    EN: Create a new class in specific package
+    ZH_HANS: 在指定的包中创建一个类
+- id: import-class-in-other-package-title
+  data:
+    EN: Import a class in another package
+    ZH_HANS: 导入另外一个包的类
+- id: import-third-party-package-title
+  data:
+    EN: Import a class from third party package
+    ZH_HANS: 导入第三方包的类
+- id: install-ide-title
+  data:
+    EN: Install a <span class="notranslate">Java IDE</span class="notranslate">
+    ZH_HANS: 安装一个<span class="notranslate">Java IDE</span class="notranslate">
+

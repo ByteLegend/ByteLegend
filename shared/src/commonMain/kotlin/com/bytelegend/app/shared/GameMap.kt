@@ -10,8 +10,6 @@ import com.bytelegend.app.shared.ConstantPoolType.StaticImageLayer
 import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.objects.CompressedGameMapObject
 import com.bytelegend.app.shared.objects.GameMapObject
-import com.bytelegend.app.shared.objects.compress
-import com.bytelegend.app.shared.objects.decompress
 import com.bytelegend.app.shared.util.HashBiMap
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
@@ -102,7 +100,7 @@ data class RawGameMap(
             tileSize,
             constantPool.toList(),
             flattenedTiles.mapToConstantPoolIndex(rawConstantPool),
-            objects.compress()
+            objects.map { it.compress() }
         )
     }
 }
@@ -203,7 +201,7 @@ data class CompressedGameMap(
 
         val decompressedTiles = tiles.chunked(size.width)
             .map { constantPoolTable.getValue(it).decompress(constantPoolTable) as RawGameMapTile }
-        return RawGameMap(id, size, tileSize, decompressedTiles, compressedObjects.decompress())
+        return RawGameMap(id, size, tileSize, decompressedTiles, compressedObjects.map { it.decompress() })
     }
 }
 

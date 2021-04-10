@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.processing.Generated;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "type",
     "version"
 })
+@Generated("jsonschema2pojo")
 public class TiledTileset {
 
     @JsonProperty("columns")
@@ -364,6 +366,7 @@ public class TiledTileset {
         "duration",
         "tileid"
     })
+    @Generated("jsonschema2pojo")
     public static class Animation {
 
         @JsonProperty("duration")
@@ -473,6 +476,7 @@ public class TiledTileset {
         "animation",
         "id"
     })
+    @Generated("jsonschema2pojo")
     public static class Tile {
 
         @JsonProperty("animation")

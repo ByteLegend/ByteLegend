@@ -1,0 +1,35 @@
+id: star-bytelegend
+title: star-bytelegend-title
+tutorials:
+  - id: HowToStarByteLegendEn
+    title: Get the first star
+    href: https://www.youtube.com/watch?v=17Xmu99vP4c
+    type: video/youtube
+    language: EN
+  - id: HowToStarByteLegendZhHans
+    title: 获得第一颗星
+    href: https://www.youtube.com/watch?v=17Xmu99vP4c
+    type: video/bilibili
+    language: ZH_HANS
+spec:
+  type: Star
+  star: 1
+  spec: github.com/ByteLegend/ByteLegend
+next: remember-brave-people
+---
+id: remember-brave-people
+title: remember-brave-people-title
+spec:
+  type: PR
+  star: 1
+  spec: github.com/ByteLegendQuest/remember-brave-people
+discussions: github.com/ByteLegendQuest/remember-brave-people/discussions
+next: install-ide
+---
+id: install-ide
+title: install-ide-title
+spec:
+  type: Question
+  star: 1
+  spec: "(?s).*"
+next: clone-and-run-java-project

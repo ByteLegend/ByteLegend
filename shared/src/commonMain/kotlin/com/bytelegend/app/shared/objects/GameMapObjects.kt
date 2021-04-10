@@ -46,31 +46,9 @@ enum class GameMapObjectType(
     GameMapCurve(4),
 
     GameMapDynamicSprite(5),
-    GameMapCheckpoint(6),
-    GameMapMission(7);
+    GameMapMission(6);
 
     companion object {
         fun fromIndex(index: Int): GameMapObjectType = values()[index - 1]
     }
-}
-
-fun List<CompressedGameMapObject>.decompress(): List<GameMapObject> {
-    val ret = map { it.decompress() }
-    val idToCompressedRegion = this.filter { it.type == GameMapObjectType.GameMapRegion.index }
-        .map { it.id to (it as CompressedGameMapRegion) }
-        .toMap()
-    val idToRegion = ret.filter { it.type == GameMapObjectType.GameMapRegion }
-        .map { it.id to (it as GameMapRegion) }
-        .toMap()
-    idToRegion.values.forEach { region ->
-        idToCompressedRegion.getValue(region.id).next
-            .forEach { nextRegionId ->
-                ((region.nextRegions) as MutableList).add(idToRegion.getValue(nextRegionId))
-            }
-    }
-    return ret
-}
-
-fun List<GameMapObject>.compress(): List<CompressedGameMapObject> {
-    return map { it.compress() }
 }

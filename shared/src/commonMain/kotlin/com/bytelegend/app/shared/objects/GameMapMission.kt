@@ -9,34 +9,43 @@ import com.bytelegend.app.shared.entities.MissionType
  */
 class GameMapMission(
     override val id: String,
-    val missionType: MissionType,
     val title: String,
-    val point: GridCoordinate
+    val sprite: String,
+    val missionType: MissionType,
+    val point: GridCoordinate,
+    // Next mission id
+    val next: String?
 ) : GameMapObject, GameObject {
     override val layer: Int = 0
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Mission)
     override val type: GameMapObjectType = GameMapObjectType.GameMapMission
     override fun compress() = CompressedGameMapMission(
         id,
-        missionType.toString(),
         title,
-        point.toCompressedList()
+        sprite,
+        missionType.toString(),
+        point.toCompressedList(),
+        next
     )
 }
 
 data class CompressedGameMapMission(
     override val id: String,
-    val missionType: String,
     val title: String,
-    val point: List<Int>
+    val sprite: String,
+    val missionType: String,
+    val point: List<Int>,
+    val next: String?
 ) : CompressedGameMapObject {
     override val layer: Int = 0
     override val type: Int = GameMapObjectType.GameMapMission.index
 
     override fun decompress() = GameMapMission(
         id,
-        MissionType.valueOf(missionType),
         title,
-        GridCoordinate(point)
+        sprite,
+        MissionType.valueOf(missionType),
+        GridCoordinate(point),
+        next
     )
 }

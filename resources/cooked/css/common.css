@@ -121,6 +121,8 @@ body {
 }
 
 .checkpoint-title {
+    text-align: center;
+    max-width: 200px;
     user-select: none;
     cursor: pointer;
     color: white;

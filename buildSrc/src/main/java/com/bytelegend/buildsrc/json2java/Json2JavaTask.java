@@ -41,11 +41,6 @@ public class Json2JavaTask extends DefaultTask {
     private void generate(File srcJson, File targetDir, String targetPackage) {
         GenerationConfig config = new DefaultGenerationConfig() {
             @Override
-            public Class<? extends RuleFactory> getCustomRuleFactory() {
-                return Json2JavaPlugin.MyRuleFactory.class;
-            }
-
-            @Override
             public File getTargetDirectory() {
                 return targetDir;
             }

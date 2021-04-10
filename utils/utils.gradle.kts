@@ -130,10 +130,10 @@ processResourcesTasks.add(registerExecTask(
     outputs.file(i18nAllJson)
 })
 
-val checkpointsAllJson = RRBD.resolve("map/checkpoints-all.json")
+val checkpointsAllJson = RRBD.resolve("map/missions-all.json")
 processResourcesTasks.add(registerExecTask(
-    "mergeCheckpointYamls",
-    "com.bytelegend.utils.CheckpointsMergerKt",
+    "mergeMissionYamls",
+    "com.bytelegend.utils.MissionMergerKt",
     gameDataDir.absolutePath,
     checkpointsAllJson.absolutePath
 ) {

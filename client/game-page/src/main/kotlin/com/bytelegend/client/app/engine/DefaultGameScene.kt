@@ -16,7 +16,6 @@ import com.bytelegend.app.client.api.dsl.SpriteBuilder
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.mapToArray
-import com.bytelegend.app.shared.objects.GameMapCheckpoint
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameMapMission
@@ -86,7 +85,6 @@ class DefaultGameScene(
                 GameMapObjectType.GameMapPoint -> objects.add(it.unsafeCast<GameMapPoint>())
                 GameMapObjectType.GameMapCurve -> gameMapCurve(it.unsafeCast<GameMapCurve>())
                 GameMapObjectType.GameMapDynamicSprite -> objects.add(it.unsafeCast<GameMapDynamicSprite>())
-                GameMapObjectType.GameMapCheckpoint -> objects.add(it.unsafeCast<GameMapCheckpoint>())
                 GameMapObjectType.GameMapMission -> objects.add(it.unsafeCast<GameMapMission>())
                 else -> throw IllegalStateException("Unsupported type: ${it.type}")
             }

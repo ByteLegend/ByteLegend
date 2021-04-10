@@ -12,7 +12,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-    implementation("org.jsonschema2pojo:jsonschema2pojo-core:1.0.2")
+    implementation("com.github.blindpirate:jsonschema2pojo-core:1.1.0.4")
 
     implementation(gradleApi())
 }

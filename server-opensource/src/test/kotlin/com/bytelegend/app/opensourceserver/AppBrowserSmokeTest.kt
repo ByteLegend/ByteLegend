@@ -53,6 +53,7 @@ class AppBrowserSmokeTest : AbstractBrowserTest() {
             }
         }
 
+        Thread.sleep(1000) // wait for fade in
         webDriver.findElement(By.className("avatar-img")).click()
         for (it in webDriver.findElements(By.className("dropdown-item"))) {
             if (it.text == "Sign out") {
