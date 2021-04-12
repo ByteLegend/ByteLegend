@@ -118,7 +118,6 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                 game.i18nTextContainer
             )
         )
-        game.resourceLoader.loadAsync(ImageResource("texture", game.resolve("/img/ui/texture.jpg"), 1))
         game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg"), 1), false)
         game.resourceLoader.loadAsync(AudioResource("starfly", game.resolve("/audio/starfly.mp3"), 1), false)
         game.webSocketClient.self = game.resourceLoader.loadAsync(game.webSocketClient)

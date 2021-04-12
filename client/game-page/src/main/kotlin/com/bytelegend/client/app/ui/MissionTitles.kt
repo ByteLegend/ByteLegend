@@ -54,6 +54,8 @@ class MissionTitles : GameUIComponent<MissionTitlesProps, MissionTitlesState>() 
                     attrs.offsetY = if (state.counter % 20 < 10) 0 else -2
                     attrs.title = i(it.title)
                     attrs.tileCoordinate = it.point
+                    attrs.totalStar = 5
+                    attrs.currentStar = 2
                 }
             }
     }
@@ -93,6 +95,9 @@ interface CheckpointTitleProps : RProps {
     var title: String
     var tileCoordinate: GridCoordinate
     var eventBus: EventBus
+
+    var totalStar: Int
+    var currentStar: Int
 }
 
 interface CheckPointTitleState : RState {
@@ -150,21 +155,29 @@ class MissionTile : RComponent<CheckpointTitleProps, CheckPointTitleState>() {
                 zIndex = Layer.CheckpointTitle.zIndex(),
                 classes = setOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-right")
             )
-        }
 
-        absoluteDiv(
-            left = props.left,
-            bottom = props.bottom + getOffsetY() - 16,
-            zIndex = Layer.CheckpointTitle.zIndex() + 2,
-            classes = setOf("checkpoint-title-triangle-container")
-        ) {
             absoluteDiv(
-                left = 0,
-                top = 0,
-                width = 0,
-                height = 0,
-                classes = setOf("checkpoint-title-triangle")
-            )
+                zIndex = Layer.CheckpointTitle.zIndex() + 2,
+                classes = setOf("checkpoint-title-triangle-container")
+            ) {
+                absoluteDiv(
+                    left = 0,
+                    top = 0,
+                    width = 0,
+                    height = 0,
+                    classes = setOf("checkpoint-title-triangle")
+                )
+            }
+
+            absoluteDiv(
+                zIndex = Layer.CheckpointTitle.zIndex() + 3,
+                classes = setOf("title-star-box")
+            ) {
+                child(TitleStarCounter::class) {
+                    attrs.total = props.totalStar
+                    attrs.current = props.currentStar
+                }
+            }
         }
     }
 

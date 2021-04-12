@@ -31,6 +31,10 @@ body {
     cursor: pointer;
 }
 
+.server-location-link:hover {
+    color: white;
+}
+
 .server-location-link-offline {
     color: red;
     font-size: 14px;
@@ -135,7 +139,16 @@ body {
     border-top: 1px solid white;
 }
 
+.title-star-box {
+    left: 50%;
+    bottom: 100%;
+    white-space: nowrap;
+    transform: translate(-50%, 0%);
+}
+
 .checkpoint-title-triangle-container {
+    left: 50%;
+    bottom: -16px;
     width: 16px;
     height: 16px;
     transform: translate(-50%, 0%);
