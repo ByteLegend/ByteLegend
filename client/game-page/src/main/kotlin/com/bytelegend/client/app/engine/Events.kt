@@ -31,6 +31,7 @@ typealias GameAnimationEventListener = (Timestamp) -> Unit
 typealias MouseEventListener = (GameMouseEvent) -> Unit
 
 const val MOUSE_MOVE_EVENT = "mouse.move"
+const val MOUSE_CLICK_EVENT = "mouse.click"
 const val MOUSE_OUT_OF_MAP_EVENT = "mouse.out.of.map"
 
 data class GameMouseEvent(

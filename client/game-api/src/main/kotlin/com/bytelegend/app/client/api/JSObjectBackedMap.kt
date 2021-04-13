@@ -153,7 +153,7 @@ internal class JSObjectBackedEntrySet<V>(
     }
 
     override val size: Int
-        get() = TODO("Not yet implemented")
+        get() = Object.keys(delegate).size
 
     override fun contains(element: MutableMap.MutableEntry<String, V>): Boolean {
         TODO("Not yet implemented")
@@ -171,6 +171,8 @@ internal class JSObjectBackedEntrySet<V>(
 internal class JSObjectBackedKeySet(
     private val delegate: dynamic
 ) : MutableSet<String> {
+    override val size: Int
+        get() = Object.keys(delegate).size
     override fun add(element: String): Boolean {
         TODO("Not yet implemented")
     }
@@ -196,9 +198,6 @@ internal class JSObjectBackedKeySet(
     override fun retainAll(elements: Collection<String>): Boolean {
         TODO("Not yet implemented")
     }
-
-    override val size: Int
-        get() = TODO("Not yet implemented")
 
     override fun contains(element: String): Boolean {
         TODO("Not yet implemented")

@@ -109,4 +109,8 @@
   data:
     EN: Install a <span class="notranslate">Java IDE</span class="notranslate">
     ZH_HANS: 安装一个<span class="notranslate">Java IDE</span class="notranslate">
-
+- id: IDontKnowTakeALookAtStarBytelegend
+  format: HTML
+  data:
+    EN: I don't know, maybe take a look at coordinate <span style='color:red'>{0}</span>?
+    ZH_HANS: 我不知道，看一下<span style='color:red'>{0}</span>坐标？

@@ -3,7 +3,6 @@ package com.bytelegend.client.app.script
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ModalController
 import com.bytelegend.app.client.api.ScriptsBuilder
@@ -13,6 +12,8 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.GameControl
+import com.bytelegend.client.app.engine.GameMouseEvent
+import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.obj.CharacterSprite
 import com.bytelegend.client.app.script.effect.fadeInEffect
 import com.bytelegend.client.app.ui.GameProps
@@ -43,16 +44,17 @@ interface GameScript {
 
 class DefaultGameDirector(
     di: DI,
+    private val gameScene: GameScene
 ) : ScriptsBuilder {
-    private val sceneContainer: GameSceneContainer by di.instance()
     private val gameControl: GameControl by di.instance()
     private val game: GameRuntime by di.instance()
     private val modalController: ModalController by lazy { game.modalController }
     private val scripts: MutableList<GameScript> = mutableListOf()
     private val eventBus: EventBus by di.instance()
+    private var respondToClick: Boolean = false
+
+    // Point to next script to run
     private var index = -1
-    private val gameScene: GameScene
-        get() = game.activeScene
 
     /**
      * A counter providing unique id for widgets in DOM
@@ -64,12 +66,22 @@ class DefaultGameDirector(
     private val isRunning
         get() = index != -1
 
+    init {
+        eventBus.on(MOUSE_CLICK_EVENT, this::onMouseClickOnCanvas)
+    }
+
     /**
      * Start all scripts, if modal is not shown.
      */
     fun start() {
         if (!modalController.visible) {
             index = 0
+            next()
+        }
+    }
+
+    private fun onMouseClickOnCanvas(event: GameMouseEvent) {
+        if (respondToClick) {
             next()
         }
     }
@@ -84,15 +96,15 @@ class DefaultGameDirector(
         if (index != 0) {
             scripts[index - 1].stop()
         } else {
-            gameControl.userMouseEnabled = false
+            gameControl.mapMouseClickEnabled = false
         }
 
         if (index == scripts.size) {
-            gameControl.userMouseEnabled = true
+            gameControl.mapMouseClickEnabled = true
             reset()
-            return
+        } else {
+            scripts[index++].start()
         }
-        scripts[index++].start()
     }
 
     private fun reset() {
@@ -152,11 +164,13 @@ class DefaultGameDirector(
     ) : GameScript {
         private val id = "${gameScene.map.id}-ScriptWidget-${getAndIncrement()}"
         override fun start() {
+            respondToClick = true
             currentWidgets[id] = Widget(klass, handler)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
 
         override fun stop() {
+            respondToClick = false
             currentWidgets.remove(id)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }

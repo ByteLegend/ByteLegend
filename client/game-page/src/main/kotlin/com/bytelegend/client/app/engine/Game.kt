@@ -17,7 +17,6 @@ import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.obj.PlayerSprite
-import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.ui.DefaultBannerController
 import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.DefaultToastController
@@ -48,7 +47,6 @@ fun init(gameInitData: GameInitData): Game {
         bind<GameRuntime>() with eagerSingleton { Game(di, gameInitData) }
         bind<GameControl>() with singleton { GameControl(di) }
         bind<WebSocketClient>() with singleton { WebSocketClient(di) }
-        bind<DefaultGameDirector>() with singleton { DefaultGameDirector(di) }
     }
     val runtime by di.instance<GameRuntime>()
     return runtime as Game
@@ -81,7 +79,6 @@ class Game(
         get() = sceneContainer.activeScene!!
     val webSocketClient: WebSocketClient by di.instance()
     var _hero: PlayerSprite? = null
-    val director: DefaultGameDirector by di.instance()
     override val hero: Character?
         get() = _hero
     override val heroPlayer: Player by di.instance()

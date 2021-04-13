@@ -1,9 +1,11 @@
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
+import com.bytelegend.app.shared.HumanReadableCoordinate
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.START_BYTELEGEND_MISSION_ID
+import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameMapPoint
 import kotlinx.browser.window
 
@@ -74,8 +76,15 @@ fun main() {
                     when {
                         !playerMissions.missionAccomplished(START_BYTELEGEND_MISSION_ID) -> {
                             scripts {
-                                speech(guardId, "StarCondition", arrayOf("1", "0"), true)
-                                speech(HERO_ID, "WhereToFindStar", arrow = true)
+                                speech(guardId, "StarCondition", arrayOf("1", "0"))
+                                speech(HERO_ID, "WhereToFindStar")
+                                speech(
+                                    guardId, "IDontKnowTakeALookAtStarBytelegend",
+                                    arrayOf(
+                                        HumanReadableCoordinate(objects.getById<GameMapMission>("star-bytelegend").point).toString()
+                                    ),
+                                    arrow = false
+                                )
                             }
                         }
 //                        helpers.getCharacter(guardId).gridCoordinate == guardMoveDestPoint -> {

@@ -5,10 +5,8 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.getAudioElementOrNull
 import com.bytelegend.app.client.misc.search
-import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
-import com.bytelegend.client.app.ui.MAP_SCROLL_EVENT
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -16,7 +14,7 @@ import org.kodein.di.DI
 import org.kodein.di.instance
 
 class GameControl(
-    private val di: DI
+    di: DI
 ) {
     var audioEnabled: Boolean = false
         set(value) {
@@ -27,7 +25,12 @@ class GameControl(
                 getAudioElementOrNull("forest")?.pause()
             }
         }
-    var userMouseEnabled = false
+
+    /**
+     * During the scripts, e.g. speech with NPC, you can scroll the map, move cursor, but can't click
+     * on map elements.
+     */
+    var mapMouseClickEnabled = false
     private val gameRuntime: GameRuntime by di.instance()
     private val game: Game by lazy { gameRuntime.unsafeCast<Game>() }
     private val eventBus: EventBus by di.instance()
@@ -37,32 +40,13 @@ class GameControl(
         get() = webSocketClient.connected
 
     fun start() {
-        userMouseEnabled = true
+        mapMouseClickEnabled = true
+        eventBus.on(MOUSE_CLICK_EVENT, this::onMouseClickOnCanvas)
     }
 
-    fun onMouseClickOnCanvas(event: GameMouseEvent) {
-        if (userMouseEnabled) {
+    private fun onMouseClickOnCanvas(event: GameMouseEvent) {
+        if (mapMouseClickEnabled) {
             clickObjectsAndMove(event.mapCoordinate)
-        } else {
-            game.director.next()
-        }
-    }
-
-    fun onMouseMoveOnCanvas(event: GameMouseEvent) {
-        if (userMouseEnabled) {
-            eventBus.emit(MOUSE_MOVE_EVENT, event)
-        }
-    }
-
-    fun onMouseMoveOutOfCanvas() {
-        if (userMouseEnabled) {
-            eventBus.emit(MOUSE_OUT_OF_MAP_EVENT, null)
-        }
-    }
-
-    fun onScroll(direction: Direction) {
-        if (userMouseEnabled) {
-            eventBus.emit(MAP_SCROLL_EVENT, direction)
         }
     }
 

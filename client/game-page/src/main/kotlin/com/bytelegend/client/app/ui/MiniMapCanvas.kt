@@ -169,12 +169,12 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
 
             mapCanvas {
                 attrs {
-                    onMouseDownFunction = gameControlAwareEventHandler(this@MiniMap::onMouseDown)
-                    onMouseUpFunction = gameControlAwareEventHandler(this@MiniMap::onMouseUp)
-                    onMouseMoveFunction = gameControlAwareEventHandler(this@MiniMap::onMouseMove)
-                    onMouseOutFunction = gameControlAwareEventHandler(this@MiniMap::onMouseOutOfCanvas)
-                    onBlurFunction = gameControlAwareEventHandler(this@MiniMap::onMouseOutOfCanvas)
-                    onClickFunction = gameControlAwareEventHandler(this@MiniMap::onMouseClick)
+                    onMouseDownFunction = this@MiniMap::onMouseDown
+                    onMouseUpFunction = this@MiniMap::onMouseUp
+                    onMouseMoveFunction = this@MiniMap::onMouseMove
+                    onMouseOutFunction = this@MiniMap::onMouseOutOfCanvas
+                    onBlurFunction = this@MiniMap::onMouseOutOfCanvas
+                    onClickFunction = this@MiniMap::onMouseClick
                     id = "minimap-canvas-layer"
                     width = miniMapWidth.toString()
                     height = miniMapHeight.toString()

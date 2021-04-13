@@ -62,7 +62,7 @@ class DefaultGameScene(
     }
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
-    val director: DefaultGameDirector = DefaultGameDirector(di)
+    val director: DefaultGameDirector = DefaultGameDirector(di, this)
 
     lateinit var players: PlayerContainer
 

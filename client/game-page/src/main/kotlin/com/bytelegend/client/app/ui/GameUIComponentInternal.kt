@@ -100,7 +100,7 @@ abstract class GameUIComponent<P : GameAwareProps, S : RState> : RComponent<P, S
 
     protected fun gameControlAwareEventHandler(fn: (Event) -> Unit): (Event) -> Unit {
         return {
-            if (game.gameControl.userMouseEnabled) {
+            if (game.gameControl.mapMouseClickEnabled) {
                 fn(it)
             }
         }

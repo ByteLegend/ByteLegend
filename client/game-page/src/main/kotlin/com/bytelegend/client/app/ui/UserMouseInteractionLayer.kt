@@ -1,5 +1,8 @@
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
+import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
+import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import kotlinx.html.id
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onMouseMoveFunction
@@ -69,13 +72,13 @@ class UserMouseInteractionLayer : LayeredGameUIComponent<UserMouseInteractionLay
             attrs {
                 id = "user-mouse-interaction-layer"
                 onClickFunction = {
-                    gameControl.onMouseClickOnCanvas(toGameMouseEvent(it))
+                    game.eventBus.emit(MOUSE_CLICK_EVENT, toGameMouseEvent(it))
                 }
                 onMouseMoveFunction = {
-                    gameControl.onMouseMoveOnCanvas(toGameMouseEvent(it))
+                    game.eventBus.emit(MOUSE_MOVE_EVENT, toGameMouseEvent(it))
                 }
                 onMouseOutFunction = {
-                    gameControl.onMouseMoveOutOfCanvas()
+                    game.eventBus.emit(MOUSE_OUT_OF_MAP_EVENT, null)
                 }
             }
         }

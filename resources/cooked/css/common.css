@@ -312,7 +312,7 @@ p.speech-bubble {
     padding: 1em 1em;
     font-size: 1em;
     border-radius: 0.5rem;
-    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
+    box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .3), 0 0.5rem 0.5rem rgba(0, 0, 0, .2);
 }
 
 p.speech-bubble::after {
@@ -326,7 +326,7 @@ p.speech-bubble::after {
     border-bottom: none;
 
     border-top-color: #fff;
-    filter: drop-shadow(0 0.0625rem 0.0625rem rgba(0, 0, 0, .1));
+    filter: drop-shadow(0 0.5rem 0.05rem rgba(0, 0, 0, .1));
 
     line-height: 1.5;
     font-weight: 300;
