@@ -42,9 +42,7 @@ dependencies {
 
 repositories {
     mavenCentral()
-    maven {
-        setUrl("http://oss.sonatype.org/content/repositories/snapshots")
-    }
+    maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
 }
 
 tasks.named<Test>("test") {
