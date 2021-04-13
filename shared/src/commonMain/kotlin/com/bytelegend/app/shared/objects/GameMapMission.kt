@@ -15,9 +15,8 @@ class GameMapMission(
     val point: GridCoordinate,
     // Next mission id
     val next: String?
-) : GameMapObject, GameObject {
+) : GameMapObject {
     override val layer: Int = 0
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Mission)
     override val type: GameMapObjectType = GameMapObjectType.GameMapMission
     override fun compress() = CompressedGameMapMission(
         id,

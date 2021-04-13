@@ -8,6 +8,7 @@ import com.bytelegend.app.shared.math.outOfCanvas
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
+import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
@@ -43,17 +44,17 @@ class MissionTitles : GameUIComponent<MissionTitlesProps, MissionTitlesState>() 
     }
 
     override fun RBuilder.render() {
-        activeScene.objects.getByRole<GameMapMission>(GameObjectRole.Mission)
-            .filter { insideCanvas(it) && it.title.isNotBlank() }
+        activeScene.objects.getByRole<GameMission>(GameObjectRole.Mission)
+            .filter { insideCanvas(it.gameMapMission) && it.gameMapMission.title.isNotBlank() }
             .forEach {
                 child(MissionTile::class) {
-                    val coordinateInGameContainer = calculateCoordinateInCanvas(it.point).coordinate + canvasCoordinateInGameContainer
+                    val coordinateInGameContainer = calculateCoordinateInCanvas(it.gridCoordinate).coordinate + canvasCoordinateInGameContainer
                     attrs.eventBus = game.eventBus
                     attrs.left = coordinateInGameContainer.x + 2 // maybe border?
-                    attrs.bottom = gameContainerHeight - coordinateInGameContainer.y + 32
+                    attrs.bottom = gameContainerHeight - coordinateInGameContainer.y + 8
                     attrs.offsetY = if (state.counter % 20 < 10) 0 else -2
-                    attrs.title = i(it.title)
-                    attrs.tileCoordinate = it.point
+                    attrs.title = i(it.gameMapMission.title)
+                    attrs.tileCoordinate = it.gridCoordinate
                     attrs.totalStar = 5
                     attrs.currentStar = 2
                 }

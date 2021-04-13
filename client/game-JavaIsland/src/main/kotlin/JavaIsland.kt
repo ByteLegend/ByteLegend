@@ -1,3 +1,4 @@
+import com.bytelegend.app.client.api.AbstractStaticLocationSprite
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
@@ -5,7 +6,6 @@ import com.bytelegend.app.shared.HumanReadableCoordinate
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.START_BYTELEGEND_MISSION_ID
-import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameMapPoint
 import kotlinx.browser.window
 
@@ -73,31 +73,32 @@ fun main() {
                 }
 
                 onClick = helpers.standardNpcSpeech(guardId) {
-                    when {
-                        !playerMissions.missionAccomplished(START_BYTELEGEND_MISSION_ID) -> {
+                    if (playerMissions.missionAccomplished(START_BYTELEGEND_MISSION_ID)) {
+                        if (helpers.getCharacter(guardId).gridCoordinate == guardStartPoint) {
+                            // mission accomplished, let's celebrate!
+                            scripts {
+                                speech(guardId, "NiceJob", arrayOf("1", "0"))
+                                characterMove(guardId, guardMoveDestPoint)
+                            }
+                        } else {
+                            scripts {
+                                speech(guardId, "NiceDayHub", arrow = false)
+                            }
+                        }
+                    } else {
+                        if (helpers.getCharacter(guardId).gridCoordinate == guardStartPoint) {
                             scripts {
                                 speech(guardId, "StarCondition", arrayOf("1", "0"))
                                 speech(HERO_ID, "WhereToFindStar")
                                 speech(
                                     guardId, "IDontKnowTakeALookAtStarBytelegend",
                                     arrayOf(
-                                        HumanReadableCoordinate(objects.getById<GameMapMission>("star-bytelegend").point).toString()
+                                        HumanReadableCoordinate(objects.getById<AbstractStaticLocationSprite>("star-bytelegend").gridCoordinate).toString()
                                     ),
                                     arrow = false
                                 )
                             }
                         }
-//                        helpers.getCharacter(guardId).gridCoordinate == guardMoveDestPoint -> {
-//                            scripts {
-//                                speech(guardId, "NiceDayHuh")
-//                            }
-//                        }
-//                        else -> {
-// //                            scripts {
-// //                                starFly(HERO_ID, 1)
-// //                                characterMove(guardId, guardMoveDestPoint)
-// //                            }
-//                        }
                     }
                 }
             }

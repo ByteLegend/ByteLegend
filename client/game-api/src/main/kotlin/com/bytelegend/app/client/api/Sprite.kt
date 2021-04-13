@@ -3,6 +3,9 @@ package com.bytelegend.app.client.api
 import com.bytelegend.app.shared.objects.GameObject
 import org.w3c.dom.CanvasRenderingContext2D
 
+/**
+ * Sprite is an object which can be drawn on the canvas.
+ */
 interface Sprite : GameObject {
     val gameScene: GameScene
 

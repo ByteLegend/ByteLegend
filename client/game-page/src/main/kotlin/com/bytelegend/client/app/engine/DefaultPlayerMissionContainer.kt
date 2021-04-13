@@ -11,7 +11,6 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.MissionType
 import com.bytelegend.app.shared.entities.PlayerMission
-import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
@@ -50,7 +49,7 @@ class DefaultPlayerMissionContainer(
         if (currentMap == eventData.map) {
             // star/mission change happens on current map
             // respond to the event
-            val mission = gameScene!!.objects.getById<GameMapMission>(eventData.missionId)
+            val mission = gameScene!!.objects.getById<GameMission>(eventData.missionId).gameMapMission
             val canvasState = gameScene!!.canvasState
             val endCoordinateInGameContainer: PixelCoordinate = canvasState.determineRightSideBarCoordinateInGameContainerLeftTop()
             val startCoordinateInGameContainer: PixelCoordinate = when (mission.missionType) {

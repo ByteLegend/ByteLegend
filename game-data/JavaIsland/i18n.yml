@@ -17,10 +17,14 @@
   data:
     EN: But where can I get ⭐?
     ZH_HANS: 但是我去哪弄⭐呢？
-- id: PubGuardAfterStar
+- id: NiceJob
   data:
     EN: Nice job!
     ZH_HANS: 干的漂亮！
+- id: NiceDayHub
+  data:
+    EN: Nice day, huh?
+    ZH_HANS: 今天天气不错！
 - id: BravePeopleDedication
   format: HTML
   data:

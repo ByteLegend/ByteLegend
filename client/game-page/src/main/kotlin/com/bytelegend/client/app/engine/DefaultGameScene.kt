@@ -23,16 +23,11 @@ import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
-import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.obj.DynamicSprite
 import com.bytelegend.client.app.obj.GameCurveSprite
 import com.bytelegend.client.app.obj.GameTextSprite
 import com.bytelegend.client.app.obj.GenericCoordinateAwareGameObject
 import com.bytelegend.client.app.obj.MapEntrance
 import com.bytelegend.client.app.obj.NPC
-import com.bytelegend.client.app.obj.NoEffect
-import com.bytelegend.client.app.obj.NoticeboardSprite
-import com.bytelegend.client.app.obj.RectangleOuterGlowEffect
 import com.bytelegend.client.app.obj.defaultMapEntranceId
 import com.bytelegend.client.app.obj.defaultMapEntrancePointId
 import com.bytelegend.client.app.script.DefaultGameDirector
@@ -85,9 +80,14 @@ class DefaultGameScene(
                 GameMapObjectType.GameMapPoint -> objects.add(it.unsafeCast<GameMapPoint>())
                 GameMapObjectType.GameMapCurve -> gameMapCurve(it.unsafeCast<GameMapCurve>())
                 GameMapObjectType.GameMapDynamicSprite -> objects.add(it.unsafeCast<GameMapDynamicSprite>())
-                GameMapObjectType.GameMapMission -> objects.add(it.unsafeCast<GameMapMission>())
+                GameMapObjectType.GameMapMission -> {
+                    // it may reference dynamic sprite so we need a second pass
+                }
                 else -> throw IllegalStateException("Unsupported type: ${it.type}")
             }
+        }
+        map.objects.filter { it.type == GameMapObjectType.GameMapMission }.forEach {
+            objects.add(GameMission(this, it.unsafeCast<GameMapMission>()))
         }
     }
 
@@ -129,15 +129,15 @@ class DefaultGameScene(
     }
 
     override fun noticeboard(action: NoticeboardBuilder.() -> Unit) {
-        val builder = NoticeboardBuilder()
-        builder.action()
-
-        val dynamicSprite = objects.getById<GameMapDynamicSprite>(builder.spriteId!!)
-
-        NoticeboardSprite(builder.id!!, this, dynamicSprite).apply {
-            objects.add(this)
-            init()
-        }
+//        val builder = NoticeboardBuilder()
+//        builder.action()
+//
+//        val dynamicSprite = objects.getById<GameMapDynamicSprite>(builder.spriteId!!)
+//
+//        NoticeboardSprite(builder.id!!, this, dynamicSprite).apply {
+//            objects.add(this)
+//            init()
+//        }
     }
 
     override fun npc(action: NpcBuilder.() -> Unit) {
@@ -158,32 +158,32 @@ class DefaultGameScene(
     }
 
     override fun sprite(action: SpriteBuilder.() -> Unit) {
-        val builder = SpriteBuilder()
-        builder.action()
-
-        val effect = if (builder.glow)
-            RectangleOuterGlowEffect(4, 10, 24, 12, 10, "white")
-        else
-            NoEffect
-
-        val roles = if (builder.clickable)
-            setOf(GameObjectRole.Clickable, GameObjectRole.CoordinateAware, GameObjectRole.Sprite)
-        else
-            setOf(GameObjectRole.CoordinateAware, GameObjectRole.Sprite)
-
-        DynamicSprite(
-            builder.id!!,
-            this,
-            objects.getById(builder.spriteId!!),
-            onInitFunction = builder.onInit,
-            onTouchFunction = builder.onTouch,
-            onClickFunction = builder.onClick,
-            effect = effect,
-            roles = roles
-        ).apply {
-            objects.add(this)
-            init()
-        }
+//        val builder = SpriteBuilder()
+//        builder.action()
+//
+//        val effect = if (builder.glow)
+//            RectangleOuterGlowEffect(4, 10, 24, 12, 10, "white")
+//        else
+//            NoEffect
+//
+//        val roles = if (builder.clickable)
+//            setOf(GameObjectRole.Clickable, GameObjectRole.CoordinateAware, GameObjectRole.Sprite)
+//        else
+//            setOf(GameObjectRole.CoordinateAware, GameObjectRole.Sprite)
+//
+//        DynamicSprite(
+//            builder.id!!,
+//            this,
+//            objects.getById(builder.spriteId!!),
+//            onInitFunction = builder.onInit,
+//            onTouchFunction = builder.onTouch,
+//            onClickFunction = builder.onClick,
+//            effect = effect,
+//            roles = roles
+//        ).apply {
+//            objects.add(this)
+//            init()
+//        }
     }
 
     private fun gameMapText(gameMapText: GameMapText) {

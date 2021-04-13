@@ -4,6 +4,7 @@
  "imagewidth":384,
  "margin":0,
  "name":"book-bottle-coffee",
+ "objectalignment":"topleft",
  "spacing":0,
  "tilecount":192,
  "tiledversion":"1.5.0",

@@ -8,7 +8,6 @@ import com.bytelegend.app.client.api.Static
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
-import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
@@ -22,6 +21,7 @@ import org.w3c.dom.CanvasRenderingContext2D
 open class DynamicSprite(
     override val id: String,
     override val gameScene: GameScene,
+    override val gridCoordinate: GridCoordinate,
     protected val dynamicSprite: GameMapDynamicSprite,
     private val effect: Effect = NoEffect,
     private val onInitFunction: UnitFunction = {},
@@ -29,16 +29,14 @@ open class DynamicSprite(
     private val onClickFunction: UnitFunction = {},
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
 ) : CoordinateAware, AbstractStaticLocationSprite(
-    dynamicSprite.topLeftCorner * gameScene.map.tileSize,
+    gridCoordinate,
+    gridCoordinate * gameScene.map.tileSize,
     PixelSize(
         gameScene.map.tileSize.width * dynamicSprite.width,
         gameScene.map.tileSize.height * dynamicSprite.height
     )
 ) {
     override val layer: Int = dynamicSprite.layer
-    override val gridCoordinate: GridCoordinate = dynamicSprite.topLeftCorner
-    override val pixelCoordinate: PixelCoordinate = coordinateInMap
-
     var animation: Animation = Static
 
     override fun init() {
@@ -62,7 +60,7 @@ open class DynamicSprite(
     }
 
     override fun draw(canvas: CanvasRenderingContext2D) {
-        val coordinateInCanvas = coordinateInMap - gameScene.canvasState.getCanvasCoordinateInMap()
+        val coordinateInCanvas = pixelCoordinate - gameScene.canvasState.getCanvasCoordinateInMap()
         effect.draw(coordinateInCanvas, gameScene, canvas)
 
         for (y in 0 until dynamicSprite.height) {
