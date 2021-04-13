@@ -221,14 +221,29 @@ processResourcesTasks.add(tasks.register("generateOSSJson") {
 })
 
 tasks.register("processGameDevResources") {
+    shouldRunAfter("compressPng")
     dependsOn("processGameDevJs")
     dependsOn(processResourcesTasks)
 }
 
 tasks.register("processGameProductionResources") {
+    shouldRunAfter("compressPng")
     dependsOn("processGameProductionJs")
     dependsOn(processResourcesTasks)
 }
+
+tasks.register<Exec>("compressPng") {
+    dependsOn(processResourcesTasks)
+    val pngFiles = rrbdMapDataDir.walk()
+        .filter { it.name.endsWith(".png") }
+        .map { rrbdMapDataDir.toPath().relativize(it.absoluteFile.toPath()) }
+        .toList()
+
+    commandLine("docker", "run", "-v", "${rrbdMapDataDir.absolutePath}:/var/workdir/", "kolyadin/pngquant", "-f")
+    args(pngFiles)
+    args("--ext", ".png")
+}
+
 
 
 
