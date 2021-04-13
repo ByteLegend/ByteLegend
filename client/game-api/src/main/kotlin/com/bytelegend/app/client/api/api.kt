@@ -199,7 +199,7 @@ interface GameSceneContainer : GameContainerSizeAware {
      * Load a scene, the following resources will be loaded before proceeding:
      *
      * 1. RRBD/map/{mapId}/map.json
-     * 2. RRBD/map/{mapId}/tileset.webp
+     * 2. RRBD/map/{mapId}/tileset.png
      * 3. RRBD/js/game-{mapId}.js
      * 4. RRBD/i18n/{mapId}/{locale}.json
      *

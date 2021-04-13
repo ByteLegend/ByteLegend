@@ -40,7 +40,6 @@ enum class OpenSourceLicense(val url: String) {
     GPL("https://www.gnu.org/licenses/gpl-3.0.en.html"),
     BSD("https://en.wikipedia.org/wiki/BSD_licenses"),
     Apache2("https://www.apache.org/licenses/LICENSE-2.0"),
-    AGPL3("https://www.gnu.org/licenses/agpl-3.0.en.html"),
     LGPL("https://www.gnu.org/licenses/lgpl-3.0.en.html"),
     MIT("https://en.wikipedia.org/wiki/MIT_License"),
     WTFPL("https://en.wikipedia.org/wiki/WTFPL"),

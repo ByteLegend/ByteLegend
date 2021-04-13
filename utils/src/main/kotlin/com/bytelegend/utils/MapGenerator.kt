@@ -73,7 +73,7 @@ class MapGenerator(
      * |_ JavaIsland
      *    |_ map.raw.json
      *    |_ map.json
-     *    |_ tileset.webp
+     *    |_ tileset.png
      */
     private val outputDir: File
 ) {
@@ -93,7 +93,7 @@ class MapGenerator(
     }
 
     private val imageReader: ImageReader = ImageReader()
-    private val tilesetWriter: TilesetImageWriter = TilesetImageWriter(outputDir.resolve("tileset.webp"))
+    private val tilesetWriter: TilesetImageWriter = TilesetImageWriter(outputDir.resolve("tileset.png"))
 
     private val srcTiles: LinkedHashMap<GridCoordinate, RawTileLayers> = LinkedHashMap()
     private val blockers: MutableMap<GridCoordinate, Int> = mutableMapOf()
@@ -304,7 +304,7 @@ class MapGenerator(
                 }
             }
             graphics.dispose()
-            ImageIO.write(outputImage, "webp", tilesetImage)
+            ImageIO.write(outputImage, "PNG", tilesetImage)
         }
     }
 

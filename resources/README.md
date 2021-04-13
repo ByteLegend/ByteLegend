@@ -32,7 +32,7 @@ RRBD
   ├── map/
   │   ├── JavaIsland/
   │   │   ├── map.json
-  │   │   ├── tileset.webp
+  │   │   ├── tileset.png
   │   │
   │   │
   │   └── JavaIslandNewbieVillageBar/

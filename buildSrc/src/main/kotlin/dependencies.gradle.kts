@@ -1,5 +1,4 @@
 import com.bytelegend.buildsupport.OpenSourceLibrary
-import com.bytelegend.buildsupport.OpenSourceLicense.AGPL3
 import com.bytelegend.buildsupport.OpenSourceLicense.Apache2
 import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
@@ -59,7 +58,6 @@ val bootstrapSwitchButtonReactVersion = "1.2.0"
 val kmongoVersion = "4.2.4"
 val mongodbJavaDriverVersion = "4.2.0"
 val batikVersion = "1.14"
-val libimagequantJavaVersion = "0.1.6"
 val googleTranslationSdkVersion = "19.2.1"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
@@ -206,14 +204,6 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         creditName = "Apache Batik Svggen",
         url = "https://github.com/apache/xmlgraphics-batik",
         license = Apache2
-    ),
-    OpenSourceLibrary(
-        name = "webp-imageio",
-        groupArtifactId = "org.sejda.imageio:webp-imageio",
-        version = libimagequantJavaVersion,
-        creditName = "libimagequant-java",
-        url = "https://github.com/badlogic/libimagequant-java",
-        license = AGPL3
     )
 )
 
