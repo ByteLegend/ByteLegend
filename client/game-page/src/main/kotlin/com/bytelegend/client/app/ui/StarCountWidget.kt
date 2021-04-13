@@ -2,10 +2,12 @@ package com.bytelegend.client.app.ui
 
 import kotlinx.browser.document
 import kotlinx.html.DIV
+import kotlinx.html.classes
 import kotlinx.html.id
 import org.w3c.dom.Node
 import react.RState
 import react.dom.RDOMBuilder
+import react.dom.span
 
 interface StarCountWidgetProps : GameProps
 interface StarCountWidgetState : RState
@@ -16,7 +18,11 @@ class StarCountWidget : AbstractIncrementAnimatableWidget<StarCountWidgetProps, 
     override val eventName: String = STAR_INCREMENT_EVENT
     override fun RDOMBuilder<DIV>.renderDiv() {
         attrs.id = "star-count"
-        +"${game.heroPlayer.star} ⭐"
+        span {
+            attrs.classes = setOf("map-title-text")
+            +game.heroPlayer.star.toString()
+        }
+        +" ⭐"
     }
 
     override fun getIncrementAnimationDiv(event: NumberIncrementEvent): Node = document.createTextNode("+${event.inc}⭐")

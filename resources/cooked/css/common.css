@@ -179,10 +179,19 @@ body {
     border-image: url("../img/ui/border.png") 3 repeat;
 }
 
-/*.modal-content {*/
-/*    background-image: url("../img/ui/minimap.png");*/
-/*    background-size: 100% 100%;*/
-/*}*/
+.roadmap-dialog .modal-dialog {
+    /* overwrite max-width 800px */
+    max-width: 100%;
+    width: fit-content;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.roadmap-dialog .modal-content {
+    /* overwrite background white */
+    background: none;
+    border: none;
+}
 
 .canvas-border {
     border: 2px solid #2a3cad;

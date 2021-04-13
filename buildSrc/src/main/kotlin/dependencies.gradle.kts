@@ -204,7 +204,9 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         creditName = "Apache Batik Svggen",
         url = "https://github.com/apache/xmlgraphics-batik",
         license = Apache2
-    )
+    ),
+    OpenSourceLibrary("org.apache.xmlgraphics:batik-dom:$batikVersion"),
+    OpenSourceLibrary("org.apache.xmlgraphics:batik-swing:$batikVersion")
 )
 
 val nameToLib = mutableMapOf<String, OpenSourceLibrary>()

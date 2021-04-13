@@ -41,6 +41,7 @@ import com.bytelegend.client.app.ui.MapSelectionDropdown
 import com.bytelegend.client.app.ui.MapSelectionDropdownProps
 import com.bytelegend.client.app.ui.MapTitleWidgets
 import com.bytelegend.client.app.ui.MapTitleWidgetsProps
+import com.bytelegend.client.app.ui.MiniMap
 import com.bytelegend.client.app.ui.MissionTitles
 import com.bytelegend.client.app.ui.MissionTitlesProps
 import com.bytelegend.client.app.ui.OnlineCounter
@@ -199,7 +200,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                     checkpointTitleWidgets(attrs)
                     tileCursorWidget(attrs)
                     spriteNameWidget(attrs)
-//                    miniMapCanvas(attrs)
+                    miniMap(attrs)
                     mapCanvas(attrs)
 
                     menu(attrs)
@@ -257,10 +258,10 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         block: RElementBuilder<MapCanvasProps>.() -> Unit = {}
     ) = gameChild(parentProps, MainMapCanvasLayer::class, block)
 
-//    private fun RElementBuilder<GameContainerProps>.miniMapCanvas(
-//        parentProps: GameContainerProps,
-//        block: RElementBuilder<MapCanvasProps>.() -> Unit = {}
-//    ) = gameChild(parentProps, MiniMapCanvasLayer::class, block)
+    private fun RElementBuilder<GameContainerProps>.miniMap(
+        parentProps: GameContainerProps,
+        block: RElementBuilder<MapCanvasProps>.() -> Unit = {}
+    ) = gameChild(parentProps, MiniMap::class, block)
 
     private fun RElementBuilder<GameContainerProps>.mapTitleWidgets(
         direction: Direction,

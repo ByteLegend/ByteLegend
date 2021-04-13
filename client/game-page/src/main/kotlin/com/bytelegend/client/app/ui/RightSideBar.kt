@@ -24,7 +24,7 @@ class RightSideBar : GameUIComponent<RightSideBarProps, RState>() {
             right = gameCanvasState.determineRightSideBarCoordinateInGameContainerRightTop().x,
             top = gameCanvasState.determineRightSideBarCoordinateInGameContainerRightTop().y,
             zIndex = Layer.RightSideBar.zIndex(),
-            classes = setOf("map-title-text", "right-sidebar")
+            classes = setOf("right-sidebar")
         ) {
             children()
         }

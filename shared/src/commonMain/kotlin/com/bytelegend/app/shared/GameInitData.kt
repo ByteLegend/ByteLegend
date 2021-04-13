@@ -41,5 +41,6 @@ data class GameMapDefinition(
     /**
      * How many frames in background animation, this value is used to pre-render background.
      */
-    val frames: Int
+    val frames: Int,
+    val roadmap: Boolean = true
 )

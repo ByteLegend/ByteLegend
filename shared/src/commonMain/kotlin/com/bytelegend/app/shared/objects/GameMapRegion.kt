@@ -1,6 +1,7 @@
 package com.bytelegend.app.shared.objects
 
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.PixelCoordinate
 
 data class CompressedGameMapRegion(
     override val id: String,
@@ -12,14 +13,14 @@ data class CompressedGameMapRegion(
     override fun decompress() = GameMapRegion(
         id,
         layer,
-        vertices.map { GridCoordinate(it) },
+        vertices.map { PixelCoordinate(it) },
     )
 }
 
 class GameMapRegion(
     override val id: String,
     override val layer: Int,
-    val vertices: List<GridCoordinate>
+    val vertices: List<PixelCoordinate>
 ) : GameMapObject, GameObject {
     override val type: GameMapObjectType = GameMapObjectType.GameMapRegion
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.MapRegion)

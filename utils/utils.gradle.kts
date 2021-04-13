@@ -31,6 +31,9 @@ dependencies {
     implementation(libs("jackson-module-kotlin"))
     implementation(libs("opencc4j"))
     implementation(libs("kotlinx-serialization-json"))
+    implementation(libs("batik-svggen"))
+    implementation(libs("batik-dom"))
+    implementation(libs("batik-swing"))
 
     testImplementation(libs("junit-jupiter-api"))
     testImplementation(libs("junit-jupiter-engine"))

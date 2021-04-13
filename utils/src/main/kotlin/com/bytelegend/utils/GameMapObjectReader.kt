@@ -1,8 +1,6 @@
 package com.bytelegend.utils
 
-import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameMapObject
@@ -57,6 +55,8 @@ class TiledObjectReader(
         return tiledMap.readRawObjects()
     }
 
+    fun readRegions() = tiledMap.readRegions()
+
     private fun TiledMap.readRawObjects(): List<GameMapObject> {
         return readCurves() +
             readTexts() +
@@ -74,11 +74,10 @@ class TiledObjectReader(
 
     private fun TiledMapObject.toPixelPoint() = PixelCoordinate(x.toInt(), y.toInt())
 
-    private fun TiledMapObject.getPolygonCoordinates(tileSize: PixelSize): List<GridCoordinate> {
+    private fun TiledMapObject.getPolygonCoordinates(): List<PixelCoordinate> {
         return polygon.map { relativePoint ->
             // Relative point to absolute pixel point
-            val absolutePoint = toPixelPoint() + PixelCoordinate(relativePoint.x.toInt(), relativePoint.y.toInt())
-            absolutePoint / tileSize
+            toPixelPoint() + PixelCoordinate(relativePoint.x.toInt(), relativePoint.y.toInt())
         }
     }
 
@@ -90,7 +89,7 @@ class TiledObjectReader(
         GameMapRegion(
             obj.name,
             rawLayerIdToIndexMap.getValue(layer.id.toInt()),
-            obj.getPolygonCoordinates(tileSize)
+            obj.getPolygonCoordinates()
         )
     }
 

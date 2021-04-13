@@ -24,6 +24,7 @@ const val SCENE_LOADING_END_EVENT = "scene.switch.end"
 
 fun mapJsonResourceId(mapId: String) = "$mapId-map"
 fun mapTilesetResourceId(mapId: String) = "$mapId-tileset"
+fun mapRoadmapResourceId(mapId: String) = "$mapId-roadmap"
 fun mapScriptResourceId(mapId: String) = "$mapId-script"
 fun mapTextResourceId(mapId: String, locale: Locale) = "$mapId-${locale.toLowerCase()}"
 
@@ -91,6 +92,10 @@ class DefaultGameSceneContainer(
         val mapScript = resourceLoader.loadAsync(TextAjaxResource(mapScriptResourceId(mapId), "$RRBD/js/game-$mapId.js", 1))
         val i18nText = resourceLoader.loadAsync(I18nTextResource(mapTextResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.toLowerCase()}.json", 1, game.i18nTextContainer))
         val sceneInitData = resourceLoader.loadAsync(GameSceneInitResource(mapId, game.webSocketClient))
+
+        if (game.idToMapDefinition.getValue(mapId).roadmap) {
+            resourceLoader.loadAsync(ImageResource(mapRoadmapResourceId(mapId), "$RRBD/map/$mapId/roadmap.svg", 1))
+        }
 
         i18nContainer.putAll(i18nText.await())
 

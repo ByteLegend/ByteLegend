@@ -2,11 +2,13 @@ package com.bytelegend.client.app.ui
 
 import kotlinx.browser.document
 import kotlinx.html.DIV
+import kotlinx.html.classes
 import org.w3c.dom.HTMLImageElement
 import org.w3c.dom.Node
 import react.RState
 import react.dom.RDOMBuilder
 import react.dom.img
+import react.dom.span
 
 interface CoinCountWidgetProps : GameProps
 interface CoinCountWidgetState : RState
@@ -17,7 +19,10 @@ class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, 
     override val eventName: String = COIN_INCREMENT_EVENT
 
     override fun RDOMBuilder<DIV>.renderDiv() {
-        +"${game.heroPlayer.coin} "
+        span {
+            attrs.classes = setOf("map-title-text")
+            +"${game.heroPlayer.coin} "
+        }
         img {
             attrs.height = "16px"
             attrs.width = "16px"

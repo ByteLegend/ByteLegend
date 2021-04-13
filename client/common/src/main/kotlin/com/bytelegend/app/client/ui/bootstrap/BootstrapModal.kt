@@ -12,6 +12,7 @@ external val BootstrapModal: RClass<BootstrapModalProps>
 // https://react-bootstrap.github.io/components/badge/
 external interface BootstrapModalProps : RProps {
     var size: String
+    var className: String
     var centered: Boolean
     var ariaLabelledby: Any
     var show: Boolean

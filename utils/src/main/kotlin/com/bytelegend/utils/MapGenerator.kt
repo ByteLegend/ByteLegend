@@ -74,6 +74,7 @@ class MapGenerator(
      *    |_ map.raw.json
      *    |_ map.json
      *    |_ tileset.png
+     *    |_ roadmap.svg
      */
     private val outputDir: File
 ) {
@@ -83,6 +84,7 @@ class MapGenerator(
 
     private val outputRawMapJson = outputDir.resolve("map.raw.json")
     private val outputCompressedMapJson = outputDir.resolve("map.json")
+    private val outputRoadmapSvg = outputDir.resolve("roadmap.svg")
     private val tiledMap: TiledMap = uglyObjectMapper.readValue(tiledMapJson.readText(), TiledMap::class.java)
     private val mapDataReader = MissionDataReader(mapOf(mapId to mapMissionDataDir))
     private val tilesets: List<TilesetAndImage> = tiledMap.tilesets.map {
@@ -145,6 +147,16 @@ class MapGenerator(
         tilesetWriter.generateDestTilesetImage()
 
         generateDestGameMap(outputRawMapJson, outputCompressedMapJson)
+        generateRoadmapSvg()
+    }
+
+    private fun generateRoadmapSvg() {
+        RoadmapSvgGenerator(
+            tiledMap,
+            tiledObjectReader.readRegions(),
+            emptyList(),
+            outputRoadmapSvg
+        ).generate()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -171,7 +183,6 @@ class MapGenerator(
         require(compressedMap.decompress().compress() == compressedMap)
 
         if ("dev" == System.getProperty("environment")) {
-            // TODO: this might be an issue if the region is circular
             outputRawMapJson.writeText(uglyObjectMapper.writeValueAsString(rawMap))
         }
 

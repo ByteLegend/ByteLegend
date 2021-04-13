@@ -82,28 +82,45 @@ abstract class AbstractMapCanvas<S : RState> : GameUIComponent<MapCanvasProps, S
         super.componentWillUnmount()
         props.game.eventBus.remove(GAME_ANIMATION_EVENT, windowAnimationEventListener)
     }
+}
 
-    fun CanvasRenderingContext2D.drawImage(
-        imageId: String,
-        sx: Int,
-        sy: Int,
-        sw: Int,
-        sh: Int,
-        dx: Int,
-        dy: Int,
-        dw: Int,
-        dh: Int,
-        opacity: Double = 1.0
-    ) {
-        save()
-        globalAlpha = opacity
-        drawImage(
-            getImageElement(imageId),
-            sx.toDouble(), sy.toDouble(), sw.toDouble(), sh.toDouble(),
-            dx.toDouble(), dy.toDouble(), dw.toDouble(), dh.toDouble()
-        )
-        restore()
-    }
+fun CanvasRenderingContext2D.drawImage(
+    imageId: String,
+    dx: Int,
+    dy: Int,
+    dw: Int,
+    dh: Int,
+    opacity: Double = 1.0
+) {
+    save()
+    globalAlpha = opacity
+    drawImage(
+        getImageElement(imageId),
+        dx.toDouble(), dy.toDouble(), dw.toDouble(), dh.toDouble()
+    )
+    restore()
+}
+
+fun CanvasRenderingContext2D.drawImage(
+    imageId: String,
+    sx: Int,
+    sy: Int,
+    sw: Int,
+    sh: Int,
+    dx: Int,
+    dy: Int,
+    dw: Int,
+    dh: Int,
+    opacity: Double = 1.0
+) {
+    save()
+    globalAlpha = opacity
+    drawImage(
+        getImageElement(imageId),
+        sx.toDouble(), sy.toDouble(), sw.toDouble(), sh.toDouble(),
+        dx.toDouble(), dy.toDouble(), dw.toDouble(), dh.toDouble()
+    )
+    restore()
 }
 
 class MainMapCanvasLayer : GameUIComponent<MapCanvasProps, RState>() {

@@ -4,3 +4,4 @@
   - id: JavaIslandNewbieVillagePub
     children: [ ]
     frames: 1
+    roadmap: false
