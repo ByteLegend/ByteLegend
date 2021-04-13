@@ -146,7 +146,7 @@ class DefaultGameScene(
 
         NPC(
             builder.id!!,
-            objects.getById(builder.spriteId!!),
+            objects.getById(builder.sprite!!),
             this,
             onInitFunction = builder.onInit,
             onTouchFunction = builder.onTouch,

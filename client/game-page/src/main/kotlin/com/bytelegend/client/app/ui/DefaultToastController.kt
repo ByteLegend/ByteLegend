@@ -10,6 +10,7 @@ import kotlinx.browser.window
 import kotlinx.html.classes
 import react.RBuilder
 import react.RState
+import react.dom.span
 import react.dom.strong
 import react.setState
 
@@ -19,8 +20,8 @@ val TOASTS_UPDATE_EVENT = "toasts.update.event"
 val MAX_TOASTS = 3
 
 class Toast(
-    val headerText: String,
-    val bodyText: String,
+    val headerHtml: String,
+    val bodyHtml: String,
     // How long it will be auto-hidden, 0 means no autohide
     val autoHideMs: Int
 ) {
@@ -31,8 +32,8 @@ class DefaultToastController(
     val eventBus: EventBus
 ) : ToastController {
     private val toasts: ArrayDeque<Toast> = ArrayDeque()
-    override fun addToast(header: String, body: String, autoHideMs: Int) {
-        val toast = Toast(header, body, autoHideMs)
+    override fun addToast(headerHtml: String, bodyHtml: String, autoHideMs: Int) {
+        val toast = Toast(headerHtml, bodyHtml, autoHideMs)
         toasts.add(toast)
         if (toasts.size > MAX_TOASTS) {
             toasts.removeFirst()
@@ -97,11 +98,17 @@ class ToastUIComponent : GameUIComponent<GameProps, ToastUIComponentRState>() {
                     BootstrapToastHeader {
                         strong {
                             attrs.classes = setOf("mr-auto")
-                            +t.headerText
+                            consumer.onTagContentUnsafe {
+                                +t.headerHtml
+                            }
                         }
                     }
                     BootstrapToastBody {
-                        +t.bodyText
+                        span {
+                            consumer.onTagContentUnsafe {
+                                +t.bodyHtml
+                            }
+                        }
                     }
                 }
             }

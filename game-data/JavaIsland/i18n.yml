@@ -1,4 +1,5 @@
 - id: StarCondition
+  format: HTML
   data:
     EN: |
       I only allow people with more than <span style='color:red'>{0} ⭐</span> to pass,
@@ -67,6 +68,7 @@
     ZH_HANS: |
       我不知道，请看一下<span style='color:red'>(E, 240)</span>坐标
 - id: star-bytelegend-title
+  format: HTML
   data:
     EN: <span class="notranslate">Star ByteLegend</span>
     ZH_HANS: 给字节传说一个Star
@@ -103,6 +105,7 @@
     EN: Import a class from third party package
     ZH_HANS: 导入第三方包的类
 - id: install-ide-title
+  format: HTML
   data:
     EN: Install a <span class="notranslate">Java IDE</span class="notranslate">
     ZH_HANS: 安装一个<span class="notranslate">Java IDE</span class="notranslate">

@@ -19,7 +19,7 @@ fun main() {
             npc {
                 val girlId = "JavaIslandNewbieVillagePubGirl"
                 id = girlId
-                spriteId = "JavaIslandNewbieVillagePubGirl-sprite"
+                sprite = "JavaIslandNewbieVillagePubGirl-sprite"
                 onClick = helpers.standardNpcSpeech(girlId) {
                     scripts {
                         speech {
@@ -33,7 +33,7 @@ fun main() {
             npc {
                 val engineerId = "JavaIslandNewbieVillagePubTestEngineer"
                 id = engineerId
-                spriteId = "JavaIslandNewbieVillagePubTestEngineer-sprite"
+                sprite = "JavaIslandNewbieVillagePubTestEngineer-sprite"
                 onClick = helpers.standardNpcSpeech(engineerId) {
                     scripts {
                         speech(HERO_ID, "HiBroCoolOutfit")
@@ -60,7 +60,7 @@ fun main() {
             npc {
                 val bartenderId = "JavaIslandNewbieVillagePubBartender"
                 id = bartenderId
-                spriteId = "JavaIslandNewbieVillagePubBartender-sprite"
+                sprite = "JavaIslandNewbieVillagePubBartender-sprite"
                 onClick = click@{
                     if (gameRuntime.hero == null) {
                         return@click

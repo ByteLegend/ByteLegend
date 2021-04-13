@@ -48,7 +48,6 @@ enum class GameObjectRole {
     }
 }
 
-
 interface Lifecycle {
     fun init() {
     }

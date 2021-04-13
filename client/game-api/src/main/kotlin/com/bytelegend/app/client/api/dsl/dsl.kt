@@ -34,7 +34,10 @@ class MapEntranceBuilder {
 
 class NpcBuilder {
     var id: String? = null
-    var spriteId: String? = null
+    /**
+     * The dynamic sprite id, see GameMapDynamicSprite
+     */
+    var sprite: String? = null
     var onInit: UnitFunction = {}
     var onTouch: (GameObject) -> Unit = {}
     var onClick: UnitFunction = {}

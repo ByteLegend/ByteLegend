@@ -1007,8 +1007,8 @@
                  "type":"GameMapPoint",
                  "visible":true,
                  "width":32,
-                 "x":259,
-                 "y":2882.66666666667
+                 "x":258.666666666667,
+                 "y":2853.33333333334
                 }, 
                 {
                  "gid":24639,
@@ -1019,8 +1019,8 @@
                  "type":"GameMapPoint",
                  "visible":true,
                  "width":32,
-                 "x":227,
-                 "y":2883.33333333333
+                 "x":226,
+                 "y":2853.66666666666
                 }, 
                 {
                  "gid":2656,
@@ -1709,7 +1709,7 @@
          "y":0
         }],
  "nextlayerid":71,
- "nextobjectid":126,
+ "nextobjectid":128,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.5.0",

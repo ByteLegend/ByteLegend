@@ -3,21 +3,22 @@ package com.bytelegend.client.app.obj
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 
 class NPC(
     override val id: String,
-    npcSprite: GameMapDynamicSprite,
+    dynamicSprite: GameMapDynamicSprite,
     gameScene: GameScene,
     private val onInitFunction: UnitFunction = {},
     private val onTouchFunction: (GameObject) -> Unit = {},
     private val onClickFunction: UnitFunction = {}
 ) : CharacterSprite(
     gameScene,
-    npcSprite.topLeftCorner * gameScene.map.tileSize,
-    MapTilesetAnimationSet(gameScene, npcSprite)
+    PixelCoordinate(0, 0),
+    MapTilesetAnimationSet(gameScene, dynamicSprite)
 ) {
     override fun init() {
         super.init()

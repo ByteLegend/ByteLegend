@@ -4,6 +4,7 @@
  "imagewidth":640,
  "margin":0,
  "name":"sea_animation_32x32",
+ "objectalignment":"topleft",
  "spacing":0,
  "tilecount":400,
  "tiledversion":"1.5.0",

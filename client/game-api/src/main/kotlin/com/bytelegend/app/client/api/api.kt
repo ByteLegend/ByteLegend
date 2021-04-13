@@ -218,5 +218,5 @@ interface BannerController {
 }
 
 interface ToastController {
-    fun addToast(header: String, body: String, autoHideMs: Int = 0)
+    fun addToast(headerHtml: String, bodyHtml: String, autoHideMs: Int = 0)
 }

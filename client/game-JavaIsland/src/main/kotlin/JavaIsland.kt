@@ -9,7 +9,7 @@ import kotlinx.browser.window
 
 val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
 
-fun main2() {
+fun main() {
     gameRuntime.sceneContainer.getSceneById(JAVA_ISLAND).apply {
         val helpers = GameScriptHelpers(this)
         objects {
@@ -17,29 +17,29 @@ fun main2() {
                 destMapId = JAVA_ISLAND_NEWBIE_VILLAGE_PUB
             }
 
-            noticeboard {
-                id = "JavaIslandNewbieVillageNoticeboard"
-                spriteId = "Noticeboard-sprite"
-            }
-
-            sprite {
-                id = "GitHubNoticeboard"
-                spriteId = "GitHubNoticeboard-sprite"
-                onClick = {
-                    gameRuntime.modalController.showModal("WhyGitHubContentHtml", "WhyGitHubTitle")
-                }
-                clickable = true
-                glow = true
-            }
-
-            sprite {
-                id = "StarByteLegendBookMission"
-                spriteId = "GitHubExplanationBook-sprite"
-                onClick = {
-                    scripts {
-                    }
-                }
-            }
+//            noticeboard {
+//                id = "JavaIslandNewbieVillageNoticeboard"
+//                spriteId = "Noticeboard-sprite"
+//            }
+//
+//            sprite {
+//                id = "GitHubNoticeboard"
+//                spriteId = "GitHubNoticeboard-sprite"
+//                onClick = {
+//                    gameRuntime.modalController.showModal("WhyGitHubContentHtml", "WhyGitHubTitle")
+//                }
+//                clickable = true
+//                glow = true
+//            }
+//
+//            sprite {
+//                id = "StarByteLegendBookMission"
+//                spriteId = "GitHubExplanationBook-sprite"
+//                onClick = {
+//                    scripts {
+//                    }
+//                }
+//            }
 
 //            npc {
 //                id = "JavaIslandNewbieVillageOldMan"
@@ -58,12 +58,15 @@ fun main2() {
 
             npc {
                 val guardId = "JavaIslandNewbieVillagePubGuard"
-                val guardMoveDestPoint = objects.getById<GameMapPoint>("JavaNewbieVilllagePubEntranceGuardDestination").point
+                val guardStartPoint = objects.getById<GameMapPoint>("JavaNewbieVilllagePubEntranceGuard-point").point
+                val guardMoveDestPoint = objects.getById<GameMapPoint>("JavaNewbieVilllagePubEntranceGuard-destination").point
                 id = guardId
-                spriteId = "JavaIslandNewbieVillagePubGuard-sprite"
+                sprite = "JavaIslandNewbieVillagePubGuard-sprite"
                 onInit = {
                     if (playerMissions.missionAccomplished(START_BYTELEGEND_MISSION_ID)) {
                         helpers.getCharacter(guardId).gridCoordinate = guardMoveDestPoint
+                    } else {
+                        helpers.getCharacter(guardId).gridCoordinate = guardStartPoint
                     }
                 }
 
@@ -75,17 +78,17 @@ fun main2() {
                                 speech(HERO_ID, "WhereToFindStar", arrow = true)
                             }
                         }
-                        helpers.getCharacter(guardId).gridCoordinate == guardMoveDestPoint -> {
-                            scripts {
-                                speech(guardId, "NiceDayHuh")
-                            }
-                        }
-                        else -> {
+//                        helpers.getCharacter(guardId).gridCoordinate == guardMoveDestPoint -> {
 //                            scripts {
-//                                starFly(HERO_ID, 1)
-//                                characterMove(guardId, guardMoveDestPoint)
+//                                speech(guardId, "NiceDayHuh")
 //                            }
-                        }
+//                        }
+//                        else -> {
+// //                            scripts {
+// //                                starFly(HERO_ID, 1)
+// //                                characterMove(guardId, guardMoveDestPoint)
+// //                            }
+//                        }
                     }
                 }
             }

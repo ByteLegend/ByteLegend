@@ -40,7 +40,7 @@ class AppBrowserSmokeTest : AbstractBrowserTest() {
         val pageSource = webDriver.pageSource
         assertThat(pageSource, containsString("Helfen Sie uns, die Übersetzungsqualität zu verbessern"))
         assertThat(pageSource, containsString("Ayúdanos a mejorar la calidad de la traducción"))
-        assertThat(pageSource, containsString("번역 품질을 개선 할 수 있도록 도와주세요"))
+        assertThat(pageSource, containsString("지원하는 대부분의 언어는 기계로 번역됩니다"))
         assertThat(pageSource, containsString("Помогите нам улучшить качество перевода"))
         assertThat(pageSource, containsString("翻訳品質の向上にご協力ください"))
 

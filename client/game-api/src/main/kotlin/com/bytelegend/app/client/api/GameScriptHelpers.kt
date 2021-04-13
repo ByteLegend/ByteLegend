@@ -30,12 +30,17 @@ class GameScriptHelpers(val gameScene: GameScene) {
     /**
      * Standard NPC speech behaviour when clicked, including:
      *
-     * 1. Ignore anonymous user.
+     * 1. Display toast "you are not login" for anonymous user.
      * 2. Say "I can't hear you" when hero is far from NPC.
      * 3. Make NPC and hero face to face.
      */
     fun standardNpcSpeech(npcId: String, onClick: UnitFunction) = click@{
         if (gameScene.gameRuntime.hero == null) {
+            gameScene.gameRuntime.toastController.addToast(
+                gameScene.gameRuntime.i("YouAreNotLoggedIn"),
+                gameScene.gameRuntime.i("ClickHereToLogin"),
+                5000
+            )
             return@click
         }
         if (distanceOf(HERO_ID, npcId) > 1) {

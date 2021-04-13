@@ -149,6 +149,12 @@ data class LocalizedText(
     val data: Map<String, String>,
     val format: LocalizedTextFormat = LocalizedTextFormat.TEXT
 ) {
+    fun validate() {
+        if (data.values.any { it.contains("</") } && format == LocalizedTextFormat.TEXT) {
+            throw IllegalStateException("$id should have HTML format!")
+        }
+    }
+
     fun getTextOrDefaultLocale(locale: Locale) = data[locale.toString()] ?: data.getValue(DEFAULT_LOCALE.toString())
     fun getTextOrNull(locale: Locale) = data[locale.toString()]
 }

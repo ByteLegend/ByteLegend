@@ -29,10 +29,12 @@ class I18nResource(
     val yamlFile: File
 ) {
     val autoJsonFile: File = yamlFile.parentFile.resolve(yamlFile.name.replace(".yml", "-auto.json"))
-    val localizedTextsInYaml: LinkedHashMap<String, LocalizedText> by lazy {
-        yamlFile.yamlToLocalizedTexts()
+    private val localizedTextsInYaml: LinkedHashMap<String, LocalizedText> by lazy {
+        yamlFile.yamlToLocalizedTexts().apply {
+            values.forEach(LocalizedText::validate)
+        }
     }
-    val localizedTextsInJson: LinkedHashMap<String, LocalizedText> by lazy {
+    private val localizedTextsInJson: LinkedHashMap<String, LocalizedText> by lazy {
         if (autoJsonFile.isFile) {
             autoJsonFile.jsonToLocalizedTexts()
         } else {

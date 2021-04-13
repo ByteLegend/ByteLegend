@@ -262,9 +262,19 @@
     EN: Java Island
     ZH_HANS: 爪哇岛
 - id: JavaIslandNewbieVillagePub
+  format: HTML
   data:
-    EN: Foo Bar
+    EN: <span class="notranslate">Foo Bar</span>
     ZH_HANS: 福报酒吧
+- id: YouAreNotLoggedIn
+  data:
+    EN: You are not logged in
+    ZH_HANS: 未登录
+- id: ClickHereToLogin
+  format: HTML
+  data:
+    EN: Click <a href="/game/login?redirect=/">here</a> to log in.
+    ZH_HANS: 点击<a href="/game/login?redirect=/">这里</a>登录。
 - id: HelpUsImproveTheTranslationQuality
   data:
     EN: Help us improve the translation quality
