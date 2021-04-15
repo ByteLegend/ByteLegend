@@ -19,7 +19,6 @@ import react.RComponent
 import react.RProps
 import react.RState
 import react.dom.jsStyle
-import react.dom.span
 import react.setState
 
 interface MissionTitlesProps : GameProps
@@ -132,11 +131,7 @@ class MissionTile : RComponent<CheckpointTitleProps, CheckPointTitleState>() {
             zIndex = Layer.CheckpointTitle.zIndex(),
             classes = setOf("checkpoint-title")
         ) {
-            span {
-                consumer.onTagContentUnsafe {
-                    +props.title
-                }
-            }
+            unsafeHtml(props.title)
             attrs.onMouseOutFunction = {
                 setState { hovered = false }
             }

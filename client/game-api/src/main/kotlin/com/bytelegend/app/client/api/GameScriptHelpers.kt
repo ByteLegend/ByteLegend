@@ -15,7 +15,7 @@ class GameScriptHelpers(val gameScene: GameScene) {
 
     fun getCharacter(characterId: String) = gameScene.objects.getById<Character>(characterId)
 
-    fun faceDirectionOf(character1: Character, character2: Character): Direction {
+    fun faceDirectionOf(character1: CoordinateAware, character2: CoordinateAware): Direction {
         val npcCoordinate = character1.gridCoordinate
         val heroCoordinate = character2.gridCoordinate
         return when {

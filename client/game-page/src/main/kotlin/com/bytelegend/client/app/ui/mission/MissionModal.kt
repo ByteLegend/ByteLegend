@@ -67,6 +67,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                     MissionTabType.QuestionChallenge -> child(QuestionChallengeTab::class) {
                     }
                     MissionTabType.StarChallenge -> child(StarChallengeTab::class) {
+                        attrs.game = game
                     }
                     MissionTabType.PRChallenge -> child(PRChallengeTab::class) {
                     }

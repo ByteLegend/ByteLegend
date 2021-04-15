@@ -210,3 +210,11 @@ fun <PARENT : GameProps, CHILD : GameProps> RElementBuilder<PARENT>.gameChild(
         handler()
     }
 }
+
+fun RBuilder.unsafeHtml(html: String) {
+    span {
+        consumer.onTagContentUnsafe {
+            +html
+        }
+    }
+}

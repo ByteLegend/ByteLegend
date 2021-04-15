@@ -6,6 +6,7 @@ import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameScene
+import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.Static
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
@@ -54,6 +55,9 @@ class GameMission(
     }
 
     override fun onClick() {
+        if (!game.heroPlayer.isAnonymous && gridCoordinate.manhattanDistanceTo(game.hero!!.gridCoordinate) == 1) {
+            game.hero!!.direction = GameScriptHelpers(gameScene).faceDirectionOf(game.hero!!, this)
+        }
         if ("Book" == dynamicSprite.id) {
             animation = FramePlayingAnimation(listOf(AnimationFrame(1, 500)), false)
             gameScene.unsafeCast<DefaultGameScene>().missions.refresh(id)

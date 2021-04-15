@@ -15,7 +15,6 @@ import react.RBuilder
 import react.RElementBuilder
 import react.RState
 import react.dom.p
-import react.dom.span
 
 interface ModalControllerInternal : ModalController {
     fun hide()
@@ -45,20 +44,14 @@ class DefaultModalController(
                 BootstrapModalHeader {
                     attrs.closeButton = true
                     BootstrapModalTitle {
-                        span {
-                            consumer.onTagContentUnsafe {
-                                +gameRuntime.i(titleId)
-                            }
-                        }
+                        unsafeHtml(gameRuntime.i(titleId))
                     }
                 }
             }
 
             BootstrapModalBody {
                 p {
-                    consumer.onTagContentUnsafe {
-                        +gameRuntime.i(contentId)
-                    }
+                    unsafeHtml(gameRuntime.i(contentId))
                 }
             }
         }

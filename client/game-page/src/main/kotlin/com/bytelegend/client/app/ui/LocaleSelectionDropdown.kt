@@ -75,9 +75,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
 
             BootstrapModalBody {
                 div {
-                    consumer.onTagContentUnsafe {
-                        +GAME_INIT_DATA.getI18nText("HelpUsImproveTheTranslationQualityBody", selectedLocale)
-                    }
+                    unsafeHtml(GAME_INIT_DATA.getI18nText("HelpUsImproveTheTranslationQualityBody", selectedLocale))
                 }
 
                 img {

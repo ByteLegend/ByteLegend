@@ -10,6 +10,7 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
+import com.bytelegend.client.app.ui.unsafeHtml
 import kotlinx.browser.window
 import kotlinx.html.classes
 import kotlinx.html.js.onBlurFunction
@@ -21,6 +22,7 @@ import kotlinx.html.js.onMouseOverFunction
 import org.w3c.dom.events.Event
 import react.RBuilder
 import react.RState
+import react.dom.a
 import react.dom.div
 import react.dom.h5
 import react.dom.img
@@ -86,7 +88,7 @@ interface MenuProps : GameProps
 data class MenuItemData(
     val iconImageId: String,
     val titleId: String,
-    val onClickFunction: UnitFunction = {}
+    val onClickFunction: UnitFunction
 )
 
 fun GameCanvasState.determineMenuCoordinateInGameContainer(): PixelCoordinate = PixelCoordinate(
@@ -107,9 +109,9 @@ class Menu : GameUIComponent<MenuProps, RState>() {
         // 6. menu-help: help page
         MenuItemData("menu-credits", "MenuCreditsTitle", this::onClickCreditsMenu),
         MenuItemData("menu-about", "MenuAboutTitle", this::onClickContactAboutMenu),
-        MenuItemData("menu-settings", "MenuSettingsTitle"),
-        MenuItemData("menu-help", "MenuHelpTitle"),
-        MenuItemData("menu-notification", "MenuNotificationTitle"),
+        MenuItemData("menu-settings", "MenuSettingsTitle", this::onClickUnfinishedMenu),
+        MenuItemData("menu-help", "MenuHelpTitle", this::onClickUnfinishedMenu),
+        MenuItemData("menu-notification", "MenuNotificationTitle", this::onClickUnfinishedMenu),
         MenuItemData("menu-github", "MenuGitHubTitle", this::onClickGitHubMenu),
     )
 
@@ -147,6 +149,29 @@ class Menu : GameUIComponent<MenuProps, RState>() {
         window.open("https://github.com/ByteLegend/ByteLegend", "_blank")
     }
 
+    private fun onClickUnfinishedMenu() {
+        game.modalController.show {
+            BootstrapModalHeader {
+                attrs.closeButton = true
+                BootstrapModalTitle {
+                    +i("UnfinishedTitle")
+                }
+            }
+            BootstrapModalBody {
+                p {
+                    a {
+                        attrs.onClickFunction = {
+                            onClickContactAboutMenu()
+                        }
+                        attrs.href = "#"
+                        +i("ClickHere")
+                    }
+                    unsafeHtml(i("UnfinishedText"))
+                }
+            }
+        }
+    }
+
     private fun onClickContactAboutMenu() {
         game.modalController.show {
             BootstrapModalHeader {
@@ -160,16 +185,22 @@ class Menu : GameUIComponent<MenuProps, RState>() {
             BootstrapModalBody {
                 h5 { +i("AboutByteLegendTitle") }
                 p {
-                    consumer.onTagContentUnsafe {
-                        +i("AboutByteLegendParagraph")
-                    }
+                    unsafeHtml(i("AboutByteLegendParagraph"))
+                }
+
+                h5 { +i("ReportBugFeatureRequestTitle") }
+                p {
+                    unsafeHtml(i("ReportBugFeatureRequestParagraph"))
+                }
+
+                h5 { +i("DiscussHowToPlayTitle") }
+                p {
+                    unsafeHtml(i("DiscussHowToPlayParagraph"))
                 }
 
                 h5 { +i("ContactUsTitle") }
                 p {
-                    consumer.onTagContentUnsafe {
-                        +i("ContactUsParagraph")
-                    }
+                    unsafeHtml(i("ContactUsParagraph"))
                 }
             }
         }

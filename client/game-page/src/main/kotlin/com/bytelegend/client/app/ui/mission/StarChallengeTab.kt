@@ -1,13 +1,24 @@
 package com.bytelegend.client.app.ui.mission
 
+import com.bytelegend.client.app.page.game
+import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.unsafeHtml
+import kotlinx.html.classes
 import react.RBuilder
 import react.RComponent
-import react.RProps
 import react.RState
 import react.dom.div
+import react.dom.img
 
-class StarChallengeTab : RComponent<RProps, RState>() {
+class StarChallengeTab : RComponent<GameProps, RState>() {
     override fun RBuilder.render() {
-        div { }
+        div {
+            attrs.classes = setOf("mission-tab-content")
+            unsafeHtml(game.i("StarByteLegendChallengeText"))
+
+            img {
+                attrs.src = game.resolve("/gif/star-bytelegend.gif")
+            }
+        }
     }
 }

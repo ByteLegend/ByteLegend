@@ -166,6 +166,7 @@ body {
     bottom: 0;
     border-bottom: 1px solid white;
 }
+
 .checkpoint-title-bottom-border-left {
     left: 1px
 }
@@ -219,6 +220,10 @@ body {
     height: 20px;
     cursor: pointer;
     z-index: 999;
+}
+
+.mission-tab-content {
+    margin: 0.5rem 0.5rem 0.5rem 0.5rem;
 }
 
 .user-mouse-interaction-layer {

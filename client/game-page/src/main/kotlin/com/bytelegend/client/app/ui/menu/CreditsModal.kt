@@ -6,6 +6,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.unsafeHtml
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.events.Event
 import react.RBuilder
@@ -68,19 +69,13 @@ class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
 
         builder.ul {
             li {
-                consumer.onTagContentUnsafe {
-                    +i("SpecialThanksGradleParagraph")
-                }
+                unsafeHtml(i("SpecialThanksGradleParagraph"))
             }
             li {
-                consumer.onTagContentUnsafe {
-                    +i("SpecialThanksKotlinParagraph")
-                }
+                unsafeHtml(i("SpecialThanksKotlinParagraph"))
             }
             li {
-                consumer.onTagContentUnsafe {
-                    +i("SpecialThanksTiledParagraph")
-                }
+                unsafeHtml(i("SpecialThanksTiledParagraph"))
             }
             li {
                 aTag(i("ClickHere")) {
@@ -88,7 +83,7 @@ class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
                         activeTabIndex = 1
                     }
                 }
-                +i("ClickHereToSeeOpenSourceSoftware")
+                unsafeHtml(i("ClickHereToSeeOpenSourceSoftware"))
             }
 
             li {

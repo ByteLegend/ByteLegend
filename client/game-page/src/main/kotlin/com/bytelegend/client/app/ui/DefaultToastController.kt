@@ -10,7 +10,6 @@ import kotlinx.browser.window
 import kotlinx.html.classes
 import react.RBuilder
 import react.RState
-import react.dom.span
 import react.dom.strong
 import react.setState
 
@@ -98,17 +97,11 @@ class ToastUIComponent : GameUIComponent<GameProps, ToastUIComponentRState>() {
                     BootstrapToastHeader {
                         strong {
                             attrs.classes = setOf("mr-auto")
-                            consumer.onTagContentUnsafe {
-                                +t.headerHtml
-                            }
+                            unsafeHtml(t.headerHtml)
                         }
                     }
                     BootstrapToastBody {
-                        span {
-                            consumer.onTagContentUnsafe {
-                                +t.bodyHtml
-                            }
-                        }
+                        unsafeHtml(t.bodyHtml)
                     }
                 }
             }
