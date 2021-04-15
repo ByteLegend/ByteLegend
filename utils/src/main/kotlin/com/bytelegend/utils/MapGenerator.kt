@@ -472,7 +472,6 @@ class MapGenerator(
             return dynamicSpriteBlocks.entries.map {
                 GameMapDynamicSprite(
                     it.key,
-                    it.value.topLeftCorner,
                     it.value.frames.map { it.map { it.toTilesetCoordinate() } }
                 )
             }

@@ -108,16 +108,6 @@ abstract class GameUIComponent<P : GameAwareProps, S : RState> : RComponent<P, S
 }
 
 abstract class LayeredGameUIComponent<P : GameProps, S : RState> : GameUIComponent<P, S>() {
-//    fun StyledDOMBuilder<DIV>.fillContainer(layer: Layer) {
-//        css {
-//            position = Position.absolute
-//            top = 0.px
-//            left = 0.px
-//            width = containerWidth.px
-//            height = containerHeight.px
-//            zIndex = layer.zIndex
-//        }
-//    }
 
     @Suppress("UnsafeCastFromDynamic")
     fun RBuilder.containerFillingDiv(zIndex: Int, classes: Set<String> = emptySet(), block: RDOMBuilder<DIV>.() -> Unit = {}) {

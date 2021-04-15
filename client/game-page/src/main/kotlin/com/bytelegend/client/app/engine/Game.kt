@@ -122,7 +122,7 @@ class Game(
     }
 
     private fun animate() {
-        sceneContainer.activeScene?.canvasState?.unsafeCast<DefaultGameCanvasState>()?.onAnimate(lastAnimationFrameTime)
+        sceneContainer.activeScene?.canvasState?.unsafeCast<DefaultGameCanvasState>()?.onAnimate()
         eventBus.emit(GAME_ANIMATION_EVENT, lastAnimationFrameTime)
         lastAnimationFrameTime = Timestamp.now()
         window.requestAnimationFrame { animate() }

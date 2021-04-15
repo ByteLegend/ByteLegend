@@ -7,9 +7,8 @@ import com.bytelegend.app.client.api.ImageResource
 import com.bytelegend.app.client.api.JSArrayBackedList
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
-import com.bytelegend.app.client.misc.search
+import com.bytelegend.app.client.misc.searchForNonHero
 import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.playerAnimationSetResourceId
 import com.bytelegend.app.shared.protocol.playerEnterSceneEvent
@@ -61,13 +60,11 @@ class PlayerContainer(
     private fun onPlayerMoveOnScene(player: Player) {
         val currentPlayer = idToPlayer[player.id!!] ?: return
         idToSprite[player.id!!]?.apply {
-            movePath = search(
+            movePath = searchForNonHero(
                 gameScene.blockers,
                 GridCoordinate(gridCoordinate.x, gridCoordinate.y),
-                GridCoordinate(player.x!!, player.y!!),
-            ) {
-                it != NON_BLOCKER
-            }
+                GridCoordinate(player.x!!, player.y!!)
+            )
         }
         currentPlayer.x = player.x!!
         currentPlayer.y = player.y!!

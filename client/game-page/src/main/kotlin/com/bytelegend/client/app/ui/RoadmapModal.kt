@@ -1,7 +1,5 @@
-package com.bytelegend.client.app
+package com.bytelegend.client.app.ui
 
-import com.bytelegend.client.app.ui.GameProps
-import com.bytelegend.client.app.ui.GameUIComponent
 import react.RBuilder
 import react.RState
 import react.dom.div

@@ -38,6 +38,8 @@ enum class MissionType {
     // Star a GitHub repository
     Star,
 
+    RememberBravePeople,
+
     // Create a PR
     PR,
 
@@ -45,7 +47,7 @@ enum class MissionType {
     Question
 }
 
-fun Mission.flatten():List<Mission> {
+fun Mission.flatten(): List<Mission> {
     val ret = mutableListOf(this)
     children.forEach {
         ret.addAll(it.flatten())

@@ -17,7 +17,6 @@ import com.bytelegend.client.app.engine.SCENE_LOADING_START_EVENT
 import com.bytelegend.client.app.engine.init
 import com.bytelegend.client.app.obj.HeroCharacter
 import com.bytelegend.client.app.ui.AudioSwitchWidget
-import com.bytelegend.client.app.ui.AudioSwitchWidgetProps
 import com.bytelegend.client.app.ui.BannerUIComponent
 import com.bytelegend.client.app.ui.CoinCountWidget
 import com.bytelegend.client.app.ui.CoinCountWidgetProps
@@ -352,7 +351,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
     private fun RElementBuilder<MapTitleWidgetsProps>.audioSwitch(
         parentProps: MapTitleWidgetsProps,
-        block: RElementBuilder<AudioSwitchWidgetProps>.() -> Unit = {}
+        block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, AudioSwitchWidget::class, block)
     }

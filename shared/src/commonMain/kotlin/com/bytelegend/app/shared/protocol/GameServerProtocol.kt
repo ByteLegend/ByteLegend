@@ -1,13 +1,14 @@
 package com.bytelegend.app.shared.protocol
 
+import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.SceneInitData
-
 
 
 /**
  * Upon switching to a new scene, get all online players and missions/states on a map.
  */
 const val GET_SCENE_INIT_DATA = "protocol.get.scene.init.data"
+const val GET_MISSION_MODAL_DATA = "protocol.get.mission.modal.data"
 
 /**
  * Player move to another point
@@ -36,6 +37,8 @@ interface GameServerProtocol {
     suspend fun getSceneInitData(mapId: String): SceneInitData
 
     suspend fun moveTo(x: Int, y: Int)
+
+    suspend fun getMissionModalData(missionId: String): MissionModalData
 }
 
 interface WebSocketMessage {

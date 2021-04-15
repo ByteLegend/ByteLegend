@@ -9,9 +9,7 @@ import react.dom.jsStyle
 import react.dom.span
 import react.setState
 
-interface AudioSwitchWidgetProps : GameProps
-
-class AudioSwitchWidget : GameUIComponent<AudioSwitchWidgetProps, RState>() {
+class AudioSwitchWidget : GameUIComponent<GameProps, RState>() {
     override fun RBuilder.render() {
         div {
             span {

@@ -187,6 +187,16 @@ body {
     margin-bottom: 0;
 }
 
+.mission-modal .modal-dialog {
+    max-width: 100%;
+    width: calc(100% - 64px);
+    height: calc(100% - 64px);
+}
+
+.mission-modal .modal-content {
+    height: 100%;
+}
+
 .roadmap-dialog .modal-content {
     /* overwrite background white */
     background: none;
@@ -197,6 +207,18 @@ body {
     border: 2px solid #2a3cad;
     border-radius: 4px;
     box-shadow: 0 0 10px #2a3cad;
+}
+
+.modal-close-button {
+    position: absolute;
+    background-image: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cpath d='M89.013 1022.51a88.832 88.832 0 0 1-62.941-26.018 88.797 88.797 0 0 1 0-125.696l845.87-844.65a89.088 89.088 0 0 1 125.871 0 88.785 88.785 0 0 1 0 125.697l-845.87 844.649a88.809 88.809 0 0 1-62.93 26.019z'/%3E%3Cpath d='M934.872 1022.51a88.832 88.832 0 0 1-62.93-26.018L26.085 151.842a88.785 88.785 0 0 1 0-125.695 89.088 89.088 0 0 1 125.859 0l845.882 844.649a88.797 88.797 0 0 1 0 125.696 88.797 88.797 0 0 1-62.941 26.03z'/%3E%3C/svg%3E");
+    background-size: 100% 100%;
+    right: 20px;
+    top: 20px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    z-index: 999;
 }
 
 .user-mouse-interaction-layer {

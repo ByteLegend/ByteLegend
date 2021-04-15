@@ -1,7 +1,7 @@
 package com.bytelegend.app.client.misc
 
-import com.bytelegend.app.shared.BLOCKER
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.NON_BLOCKER
 import kotlinext.js.jsObject
 import kotlinx.browser.window
 
@@ -52,12 +52,22 @@ fun search(
     }
 }
 
-fun search(
+fun searchForHero(
     mapArray: Array<Array<Int>>,
     start: GridCoordinate,
     end: GridCoordinate
 ): List<GridCoordinate> {
     return search(mapArray, start, end) {
-        it == BLOCKER
+        it != NON_BLOCKER
+    }
+}
+
+fun searchForNonHero(
+    mapArray: Array<Array<Int>>,
+    start: GridCoordinate,
+    end: GridCoordinate
+): List<GridCoordinate> {
+    return search(mapArray, start, end) {
+        it > NON_BLOCKER
     }
 }

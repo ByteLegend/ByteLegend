@@ -74,7 +74,6 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
         )
         GameMapObjectType.GameMapDynamicSprite -> CompressedGameMapDynamicObject(
             it.id,
-            (it.topLeftCorner as Array<Int>).toList(),
             (it.frames as Array<Array<Array<Array<Int>>>>).mapToList4 { it }
         )
         GameMapObjectType.GameMapMission -> CompressedGameMapMission(

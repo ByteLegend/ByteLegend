@@ -4,12 +4,12 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.getAudioElementOrNull
-import com.bytelegend.app.client.misc.search
+import com.bytelegend.app.client.misc.searchForHero
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
 
@@ -70,12 +70,12 @@ class GameControl(
         if (online &&
             game._hero != null &&
             gameRuntime.activeScene == game._hero!!.gameScene &&
-            !isBlocker(coordinate)
+            !isBlockerForHero(coordinate)
         ) {
             val hero = gameRuntime.hero!!
-            val path = search(scene.blockers, hero.gridCoordinate, coordinate)
+            val path = searchForHero(scene.blockers, hero.gridCoordinate, coordinate)
             if (path.isNotEmpty()) {
-                GlobalScope.async {
+                GlobalScope.launch {
                     webSocketClient.moveTo(coordinate.x, coordinate.y)
                 }
                 game._hero!!.movePath = path
@@ -83,5 +83,5 @@ class GameControl(
         }
     }
 
-    private fun isBlocker(coordinate: GridCoordinate) = gameSceneContainer.activeScene!!.blockers[coordinate.y][coordinate.x] > NON_BLOCKER
+    private fun isBlockerForHero(coordinate: GridCoordinate) = gameSceneContainer.activeScene!!.blockers[coordinate.y][coordinate.x] != NON_BLOCKER
 }

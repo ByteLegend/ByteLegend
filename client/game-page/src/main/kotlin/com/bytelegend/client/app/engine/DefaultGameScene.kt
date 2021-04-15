@@ -6,6 +6,7 @@ import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
+import com.bytelegend.app.client.api.JSArrayBackedList
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
@@ -58,6 +59,7 @@ class DefaultGameScene(
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
     val director: DefaultGameDirector = DefaultGameDirector(di, this)
+    val missions: MissionContainer = MissionContainer(di, this)
 
     lateinit var players: PlayerContainer
 
@@ -73,6 +75,7 @@ class DefaultGameScene(
     }
 
     init {
+        val missions = JSArrayBackedList<GameMapMission>()
         map.objects.forEach {
             when (it.type) {
                 GameMapObjectType.GameMapText -> gameMapText(it.unsafeCast<GameMapText>())
@@ -81,13 +84,18 @@ class DefaultGameScene(
                 GameMapObjectType.GameMapCurve -> gameMapCurve(it.unsafeCast<GameMapCurve>())
                 GameMapObjectType.GameMapDynamicSprite -> objects.add(it.unsafeCast<GameMapDynamicSprite>())
                 GameMapObjectType.GameMapMission -> {
+                    missions.add(it.unsafeCast<GameMapMission>())
                     // it may reference dynamic sprite so we need a second pass
                 }
                 else -> throw IllegalStateException("Unsupported type: ${it.type}")
             }
         }
-        map.objects.filter { it.type == GameMapObjectType.GameMapMission }.forEach {
-            objects.add(GameMission(this, it.unsafeCast<GameMapMission>()))
+        missions.forEach { mission ->
+            GameMission(
+                this,
+                mission,
+                objects.getById(mission.sprite)
+            ).init()
         }
     }
 

@@ -6,6 +6,9 @@ import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.entities.MissionAnswer
+import com.bytelegend.app.shared.entities.MissionModalData
+import com.bytelegend.app.shared.entities.MissionTab
+import com.bytelegend.app.shared.entities.MissionTabType
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.entities.PlayerMission
 import com.bytelegend.app.shared.entities.SceneInitData
@@ -77,6 +80,31 @@ fun toSceneInitData(jsonObject: dynamic) = SceneInitData(
     toTypedMap(jsonObject.missions, ::toMission),
     toStates(jsonObject.states)
 )
+
+fun toMissionModalData(jsonObject: dynamic) = MissionModalData(
+    toTypedList(jsonObject.tabs, ::toMissionTab)
+)
+
+fun toMissionTab(jsonObject: dynamic): MissionTab {
+    val type = MissionTabType.valueOf(jsonObject.type)
+    return MissionTab(
+        type,
+        jsonObject.title,
+        toMissionTabData(type, jsonObject.data)
+    )
+}
+
+fun toMissionTabData(tabType: MissionTabType, jsonObject: dynamic): Any {
+    return when (tabType) {
+        MissionTabType.QuestionChallenge -> ""
+        MissionTabType.StarChallenge -> ""
+        MissionTabType.PRChallenge -> ""
+        MissionTabType.RememberBravePeopleChallenge -> ""
+        MissionTabType.Tutorial -> ""
+        MissionTabType.Discussion -> ""
+        else -> throw IllegalStateException()
+    }
+}
 
 fun toStates(jsonObject: dynamic) = States().apply {
     playerId = jsonObject.playerId

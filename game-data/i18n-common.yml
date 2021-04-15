@@ -295,3 +295,15 @@
       几乎全部代码（包括所有的游戏数据）都是开源的，因此您可以通过提交GitHub的pull request帮助我们改进翻译的质量。
       <p>点击这里查看如何向我们的代码仓库贡献您的智慧。</p>
       <p>我们对您的贡献感激不尽。</p>
+- id: MissionTutorial
+  data:
+    EN: Tutorials
+    ZH_HANS: 教程
+- id: MissionChallenge
+  data:
+    EN: Challenge
+    ZH_HANS: 挑战
+- id: MissionDiscussions
+  data:
+    EN: Discussions
+    ZH_HANS: 挑战

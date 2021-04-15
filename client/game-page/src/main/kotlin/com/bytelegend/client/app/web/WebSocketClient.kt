@@ -6,7 +6,9 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.JSObjectBackedMap
+import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.SceneInitData
+import com.bytelegend.app.shared.protocol.GET_MISSION_MODAL_DATA
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.GameServerProtocol
 import com.bytelegend.app.shared.protocol.MOVE_TO
@@ -169,10 +171,7 @@ class WebSocketClient(
             continuation.resume(this)
         }
         client.onerror = {
-            if (connected) {
-                // We've connected ever, but some shit happens
-                displayDisconnectionAnimation()
-            } else {
+            if (!connected) {
                 continuation.resumeWithException(IllegalStateException("Can't connect to game server"))
             }
             connected = false
@@ -186,28 +185,16 @@ class WebSocketClient(
         }
     }
 
-    private fun displayDisconnectionAnimation() {
-//        if (gameRuntime.sceneContainer.activeScene == null) {
-//            // Loading page
-//            eventBus.emit(
-//                RESOURCE_LOADING_FAILURE_EVENT,
-//                ResourceLoadingFailureEvent("", "Disconnected from game server.")
-//            )
-//            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
-//        } else {
-//            gameRuntime.sceneContainer.activeScene!!.scripts {
-//                disableUserMouse()
-//            }
-//            disconnectionEffect(gameRuntime.sceneContainer.activeScene!!.gameContainerSize)
-//        }
-    }
-
     override suspend fun getSceneInitData(mapId: String): SceneInitData {
         return toSceneInitData(send(GET_SCENE_INIT_DATA, mapId))
     }
 
     override suspend fun moveTo(x: Int, y: Int) {
         send<Unit>(MOVE_TO, x.toString(), y.toString())
+    }
+
+    override suspend fun getMissionModalData(missionId: String): MissionModalData {
+        return toMissionModalData(send(GET_MISSION_MODAL_DATA, missionId))
     }
 }
 

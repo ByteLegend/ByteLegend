@@ -11,7 +11,6 @@ import com.bytelegend.app.shared.map
  */
 class GameMapDynamicSprite(
     override val id: String,
-    val topLeftCorner: GridCoordinate,
     val frames: List<List<List<GridCoordinate>>>
 ) : GameMapObject, GameObject {
     override val layer: Int = PLAYER_LAYER + 1
@@ -25,7 +24,6 @@ class GameMapDynamicSprite(
 
     override fun compress() = CompressedGameMapDynamicObject(
         id,
-        topLeftCorner.toCompressedList(),
         frames.map {
             val tmp = mutableListOf<List<Int>>()
             it.forEach {
@@ -38,7 +36,6 @@ class GameMapDynamicSprite(
 
 data class CompressedGameMapDynamicObject(
     override val id: String,
-    val topLeftCorner: List<Int>,
     val frames: List<List<List<List<Int>>>>
 ) : CompressedGameMapObject {
     override val layer: Int = PLAYER_LAYER + 1
@@ -47,7 +44,6 @@ data class CompressedGameMapDynamicObject(
 
     override fun decompress() = GameMapDynamicSprite(
         id,
-        GridCoordinate(topLeftCorner),
         frames.map {
             val tmp = mutableListOf<GridCoordinate>()
             it.forEach {

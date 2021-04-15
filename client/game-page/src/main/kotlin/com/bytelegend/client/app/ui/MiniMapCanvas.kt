@@ -12,7 +12,6 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.Ratio
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameObjectRole.MapRegion
-import com.bytelegend.client.app.RoadmapModal
 import com.bytelegend.client.app.obj.quadraticCurveTo
 import com.bytelegend.client.app.obj.setShadow
 import com.bytelegend.client.app.page.HERO_AVATAR_IMG_ID

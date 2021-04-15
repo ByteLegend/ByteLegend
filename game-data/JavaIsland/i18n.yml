@@ -74,8 +74,8 @@
 - id: star-bytelegend-title
   format: HTML
   data:
-    EN: <span class="notranslate">Star ByteLegend</span>
-    ZH_HANS: 给字节传说一个Star
+    EN: Get the first star
+    ZH_HANS: 获得第一颗星星
 - id: remember-brave-people-title
   data:
     EN: Learn GitHub pull request
@@ -112,7 +112,7 @@
   format: HTML
   data:
     EN: Install a <span class="notranslate">Java IDE</span class="notranslate">
-    ZH_HANS: 安装一个<span class="notranslate">Java IDE</span class="notranslate">
+    ZH_HANS: 安装<span class="notranslate">Java IDE</span class="notranslate">
 - id: IDontKnowTakeALookAtStarBytelegend
   format: HTML
   data:

@@ -168,6 +168,15 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
      */
     val tileset: ImageResourceData
 
+    /**
+     * 2d matrix of blockers.
+     * 0 means "nothing".
+     * >0 means "it's a blocker for everyone"
+     * <0 means "it's a blocker for everyone other than hero, like NPC,other players"
+     *
+     * So it's a bit tricky: when an NPC steps into a tile, this number decrements by 1,
+     * not increment.
+     */
     val blockers: Array<Array<Int>>
     val objects: GameObjectContainer
     val canvasState: GameCanvasState

@@ -41,7 +41,8 @@ enum class GameObjectRole {
     MapEntrance,
     CoordinateAware,
     Clickable,
-    Mission;
+    Mission,
+    UnableToBeSetAsDestination;
 
     companion object {
         fun fromIndex(index: Int): GameObjectRole = values()[index - 1]
