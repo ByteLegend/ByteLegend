@@ -11,7 +11,13 @@ interface GameObject : Lifecycle {
     val layer: Int
     val roles: Set<GameObjectRole>
 
-    fun onClick() {}
+    /**
+     * Respond to the click event.
+     *
+     * Returns true if this object responds to the click, i.e. something happens,
+     * otherwise return false
+     */
+    fun onClick(): Boolean = false
 
     /**
      * Invoked when "touched" by another object.

@@ -15,5 +15,6 @@ external interface BootstrapNavProps : RProps {
     var activeKey: String
     var `as`: Any
     var variant: String
+    var className: String
     var defaultActiveKey: String
 }

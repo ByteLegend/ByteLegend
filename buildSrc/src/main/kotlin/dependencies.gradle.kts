@@ -59,6 +59,8 @@ val kmongoVersion = "4.2.4"
 val mongodbJavaDriverVersion = "4.2.0"
 val batikVersion = "1.14"
 val googleTranslationSdkVersion = "19.2.1"
+val reactPlayerVersion = "2.9.0"
+val reactSelectVersion = "4.3.0"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -206,7 +208,21 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         license = Apache2
     ),
     OpenSourceLibrary("org.apache.xmlgraphics:batik-dom:$batikVersion"),
-    OpenSourceLibrary("org.apache.xmlgraphics:batik-swing:$batikVersion")
+    OpenSourceLibrary("org.apache.xmlgraphics:batik-swing:$batikVersion"),
+    OpenSourceLibrary(
+        name = "react-player",
+        creditName = "react-player",
+        url = "https://github.com/CookPete/react-player",
+        version = reactPlayerVersion,
+        license = MIT
+    ),
+    OpenSourceLibrary(
+        name = "react-select",
+        creditName = "react-select",
+        url = "https://github.com/JedWatson/react-select",
+        version = reactSelectVersion,
+        license = MIT
+    )
 )
 
 val nameToLib = mutableMapOf<String, OpenSourceLibrary>()

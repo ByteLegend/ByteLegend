@@ -24,6 +24,9 @@ interface AnimationSet {
     fun getFrame(still: Boolean, direction: Direction): Pair<HTMLImageElement, PixelBlock>
 }
 
+/**
+ * AnimationSet stored in "player-collection" PNG, i.e. animation-set-X.png
+ */
 class TwelveTilesAnimationSet(
     private val gameScene: GameScene,
     characterId: Int
@@ -54,6 +57,9 @@ class TwelveTilesAnimationSet(
     }
 }
 
+/**
+ * AnimationSet stored in tileset. The frame information is stored in DynamicSprite
+ */
 class MapTilesetAnimationSet(
     private val gameScene: GameScene,
     dynamicSprite: GameMapDynamicSprite

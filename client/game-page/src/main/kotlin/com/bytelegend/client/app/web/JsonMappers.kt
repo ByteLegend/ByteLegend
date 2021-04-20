@@ -99,7 +99,7 @@ fun toMissionTabData(tabType: MissionTabType, jsonObject: dynamic): Any {
         MissionTabType.QuestionChallenge -> ""
         MissionTabType.StarChallenge -> ""
         MissionTabType.PRChallenge -> ""
-        MissionTabType.RememberBravePeopleChallenge -> ""
+        MissionTabType.NoticeboardChallenge -> ""
         MissionTabType.Tutorial -> ""
         MissionTabType.Discussion -> ""
         else -> throw IllegalStateException()

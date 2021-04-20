@@ -11,7 +11,6 @@ import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
 import com.bytelegend.app.client.api.dsl.NpcBuilder
-import com.bytelegend.app.client.api.dsl.ObjectBuilder
 import com.bytelegend.app.client.api.dsl.ObjectsBuilder
 import com.bytelegend.app.client.api.dsl.SpriteBuilder
 import com.bytelegend.app.shared.GameMap
@@ -26,9 +25,9 @@ import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.client.app.obj.GameCurveSprite
 import com.bytelegend.client.app.obj.GameTextSprite
-import com.bytelegend.client.app.obj.GenericCoordinateAwareGameObject
 import com.bytelegend.client.app.obj.MapEntrance
 import com.bytelegend.client.app.obj.NPC
+import com.bytelegend.client.app.obj.createMissionSprite
 import com.bytelegend.client.app.obj.defaultMapEntranceId
 import com.bytelegend.client.app.obj.defaultMapEntrancePointId
 import com.bytelegend.client.app.script.DefaultGameDirector
@@ -91,10 +90,11 @@ class DefaultGameScene(
             }
         }
         missions.forEach { mission ->
+            val sprite = createMissionSprite(this, mission.point, mission.sprite)
             GameMission(
                 this,
                 mission,
-                objects.getById(mission.sprite)
+                sprite
             ).init()
         }
     }
@@ -118,22 +118,6 @@ class DefaultGameScene(
         )
 
         objects.add(mapEntrance)
-    }
-
-    override fun obj(action: ObjectBuilder.() -> Unit) {
-        val builder = ObjectBuilder()
-        builder.action()
-
-        val coordinate = objects.getById<GameMapPoint>(builder.coordinatePointId!!).point
-
-        objects.add(
-            GenericCoordinateAwareGameObject(
-                builder.id!!,
-                coordinate,
-                coordinate * map.tileSize,
-                builder.onClick
-            )
-        )
     }
 
     override fun noticeboard(action: NoticeboardBuilder.() -> Unit) {

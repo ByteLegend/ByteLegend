@@ -3,6 +3,7 @@ package com.bytelegend.client.app.ui.mission
 import BootstrapNavItem
 import BootstrapNavLink
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
@@ -19,6 +20,7 @@ import react.setState
 
 interface MissionModalProps : GameProps {
     var missionId: String
+    var onClose: UnitFunction
 }
 
 interface MissionModalState : RState {
@@ -35,9 +37,13 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
         child(ModalCloseButton::class) {
             attrs.onClickFunction = {
                 game.modalController.hide()
+                if (props.onClose != undefined) {
+                    props.onClose()
+                }
             }
         }
         BootstrapModalBody {
+            attrs.className = "mission-modal-body"
             val missions = game.activeScene.unsafeCast<DefaultGameScene>().missions
             if (missions.isMissionModalDataLoading(props.missionId)) {
                 BootstrapSpinner {
@@ -71,7 +77,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                     }
                     MissionTabType.PRChallenge -> child(PRChallengeTab::class) {
                     }
-                    MissionTabType.RememberBravePeopleChallenge -> child(RememberBravePeopleChallengeTab::class) {
+                    MissionTabType.NoticeboardChallenge -> child(RememberBravePeopleChallengeTab::class) {
                     }
                     MissionTabType.Tutorial -> child(TutorialTab::class) {
                     }

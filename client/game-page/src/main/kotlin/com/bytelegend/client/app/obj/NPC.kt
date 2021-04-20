@@ -39,9 +39,10 @@ class NPC(
         onTouchFunction(character)
     }
 
-    override fun onClick() {
+    override fun onClick(): Boolean {
         super.onClick()
         onClickFunction()
+        return true
     }
 
     override fun enterTile(gridCoordinate: GridCoordinate) {

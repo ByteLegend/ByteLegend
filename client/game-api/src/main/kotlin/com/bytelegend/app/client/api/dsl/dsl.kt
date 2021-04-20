@@ -73,11 +73,6 @@ class NoticeboardBuilder {
 interface ObjectsBuilder {
     fun mapEntrance(action: MapEntranceBuilder.() -> Unit)
 
-    /**
-     * An invisible object
-     */
-    fun obj(action: ObjectBuilder.() -> Unit)
-
     fun sprite(action: SpriteBuilder.() -> Unit)
 
     /*

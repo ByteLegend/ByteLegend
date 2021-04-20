@@ -2,17 +2,72 @@ package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.AbstractStaticLocationSprite
 import com.bytelegend.app.client.api.Animation
+import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.CoordinateAware
+import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Static
-import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
-import com.bytelegend.app.shared.objects.GameObject
-import com.bytelegend.app.shared.objects.GameObjectRole
+import kotlinx.browser.window
 import org.w3c.dom.CanvasRenderingContext2D
+
+var globalCounter = 0
+
+fun createMissionSprite(
+    scene: GameScene,
+    gridCoordinate: GridCoordinate,
+    dynamicSpriteId: String
+): DynamicSprite = when (dynamicSpriteId) {
+    "Book" -> BookSprite(
+        "$dynamicSpriteId-${globalCounter++}",
+        scene,
+        gridCoordinate,
+        scene.objects.getById(dynamicSpriteId)
+    )
+    "Gate" -> GateSprite(
+        "$dynamicSpriteId-${globalCounter++}",
+        scene,
+        gridCoordinate,
+        scene.objects.getById(dynamicSpriteId)
+    )
+    else -> DynamicSprite(
+        "$dynamicSpriteId-${globalCounter++}",
+        scene,
+        gridCoordinate,
+        scene.objects.getById(dynamicSpriteId)
+    )
+}
+
+class BookSprite(
+    id: String,
+    gameScene: GameScene,
+    gridCoordinate: GridCoordinate,
+    bookSprite: GameMapDynamicSprite
+) : DynamicSprite(id, gameScene, gridCoordinate, bookSprite) {
+    override fun onClick(): Boolean {
+        animation = FramePlayingAnimation(listOf(AnimationFrame(1, 500)), false)
+        return true
+    }
+
+    override fun onMissionModalClosed() {
+        window.setTimeout(
+            {
+                animation = Static
+            },
+            500
+        )
+    }
+}
+
+class GateSprite(
+    id: String,
+    gameScene: GameScene,
+    gridCoordinate: GridCoordinate,
+    gateSprite: GameMapDynamicSprite
+) : DynamicSprite(id, gameScene, gridCoordinate, gateSprite)
 
 /**
  * A DynamicSprite is added to the map and controlled by game script,
@@ -22,12 +77,7 @@ open class DynamicSprite(
     override val id: String,
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
-    protected val dynamicSprite: GameMapDynamicSprite,
-    private val effect: Effect = NoEffect,
-    private val onInitFunction: UnitFunction = {},
-    private val onTouchFunction: (GameObject) -> Unit = {},
-    private val onClickFunction: UnitFunction = {},
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
+    protected val dynamicSprite: GameMapDynamicSprite
 ) : CoordinateAware, AbstractStaticLocationSprite(
     gridCoordinate,
     gridCoordinate * gameScene.map.tileSize,
@@ -36,32 +86,10 @@ open class DynamicSprite(
         gameScene.map.tileSize.height * dynamicSprite.height
     )
 ) {
+    protected var animation: Animation = Static
     override val layer: Int = dynamicSprite.layer
-    var animation: Animation = Static
-
-    override fun init() {
-        gameScene.objects.add(this)
-        onInitFunction()
-    }
-
-    override fun close() {
-        gameScene.objects.remove<GameObject>(this.id)
-    }
-
-    override fun onClick() {
-        onClickFunction()
-    }
-
-    /**
-     * Play a series of script.
-     */
-    fun play(animation: Animation) {
-        this.animation = animation
-    }
-
     override fun draw(canvas: CanvasRenderingContext2D) {
         val coordinateInCanvas = pixelCoordinate - gameScene.canvasState.getCanvasCoordinateInMap()
-        effect.draw(coordinateInCanvas, gameScene, canvas)
 
         for (y in 0 until dynamicSprite.height) {
             for (x in 0 until dynamicSprite.width) {
@@ -73,5 +101,8 @@ open class DynamicSprite(
                 )
             }
         }
+    }
+
+    open fun onMissionModalClosed() {
     }
 }

@@ -23,7 +23,7 @@ enum class MissionTabType {
 
     PRChallenge,
 
-    RememberBravePeopleChallenge,
+    NoticeboardChallenge,
 
     /**
      * A tab displaying the tutorials

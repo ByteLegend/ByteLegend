@@ -3,6 +3,7 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.ModalController
+import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModal
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
@@ -38,8 +39,9 @@ class DefaultModalController(
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)
     }
 
-    override fun showModal(contentId: String, titleId: String?) {
+    override fun showModal(contentId: String, titleId: String?, onClose: UnitFunction) {
         show {
+            attrs.onHide = onClose
             if (titleId != null) {
                 BootstrapModalHeader {
                     attrs.closeButton = true
