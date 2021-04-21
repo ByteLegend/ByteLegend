@@ -1,19 +1,17 @@
 package com.bytelegend.client.app.ui
 
+import BootstrapDropdownDivider
 import BootstrapDropdownItem
 import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdownButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
-import com.bytelegend.app.client.ui.icons.aiOutlineGlobal
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.PREFERRED_LOCALE_COOKIE_NAME
-import com.bytelegend.client.app.page.GAME_INIT_DATA
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.html.classes
-import org.w3c.dom.events.Event
 import react.RBuilder
 import react.RState
 import react.dom.div
@@ -44,38 +42,39 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
                             attrs.classes = setOf("locale-selection-dropdown-item-span")
                             +locale.displayName
                         }
-
-                        if (locale.byMachine) {
-                            aiOutlineGlobal {
-                                attrs.className = "locale-selection-dropdown-item-global-svg"
-                                attrs.title = "Contribute"
-                                attrs.onClick = { event: Event ->
-                                    event.stopPropagation()
-                                    showHelpUsImproveModal(locale)
-                                }
-                            }
-                        }
                         attrs.onClick = stateUpdatingEventHandler {
                             onSwitchLocale(locale)
                         }
+                    }
+                }
+
+                BootstrapDropdownDivider {}
+
+                BootstrapDropdownItem {
+                    span {
+                        attrs.classes = setOf("locale-selection-dropdown-item-span")
+                        +i("HelpUsImproveTheTranslationQuality")
+                    }
+                    attrs.onClick = {
+                        showHelpUsImproveModal()
                     }
                 }
             }
         }
     }
 
-    private fun showHelpUsImproveModal(selectedLocale: Locale) {
+    private fun showHelpUsImproveModal() {
         game.modalController.show {
             BootstrapModalHeader {
                 attrs.closeButton = true
                 BootstrapModalTitle {
-                    +GAME_INIT_DATA.getI18nText("HelpUsImproveTheTranslationQuality", selectedLocale)
+                    +i("HelpUsImproveTheTranslationQuality")
                 }
             }
 
             BootstrapModalBody {
                 div {
-                    unsafeHtml(GAME_INIT_DATA.getI18nText("HelpUsImproveTheTranslationQualityBody", selectedLocale))
+                    unsafeHtml(i("HelpUsImproveTheTranslationQualityBody"))
                 }
 
                 img {

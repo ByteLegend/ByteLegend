@@ -285,15 +285,15 @@
     EN: |
       <p>As you may know, most of the languages supported by <span class="notranslate">ByteLegend</span>
       are translated by machine.
-      The good news is that almost all code and game data in <span class="notranslate">ByteLegend</span>
+      The good news is that any text (UI elements, game data, etc.) you see in <span class="notranslate">ByteLegend</span>
       is open-source. You can create a GitHub pull request to help us improve the translation quality.</p>
-      <p>Click here to see how to contribute to our codebase.</p>
+      <p>Click here to see how to contribute to our codebase. <strong>Any text.</strong></p>
       <p>We sincerely appreciate your contribution.</p>
     ZH_HANS:
       <p>您可能已经知道，<span class="notranslate">字节传说</span>所支持的大多数语言是由机器所翻译的。
-      好消息是，<span class="notranslate">字节传说</span>的
-      几乎全部代码（包括所有的游戏数据）都是开源的，因此您可以通过提交GitHub的pull request帮助我们改进翻译的质量。
-      <p>点击这里查看如何向我们的代码仓库贡献您的智慧。</p>
+      好消息是，您在<span class="notranslate">字节传说</span>中看到的任何文本
+      （包括UI元素、游戏数据等）都是开源的，因此您可以通过提交GitHub的pull request帮助我们改进翻译的质量。
+      <p>点击这里查看如何向我们的代码仓库贡献您的智慧。<strong>任何文本都可以。</strong></p>
       <p>我们对您的贡献感激不尽。</p>
 - id: MissionTutorial
   data:

@@ -21,7 +21,6 @@ data class GameInitData(
     val maps: List<GameMapDefinition>,
     /**
      * Some localized texts which contain all language versions,
-     * see LocaleSelectionDropdown.kt
      */
     val localizedTexts: List<LocalizedText>
 ) {
