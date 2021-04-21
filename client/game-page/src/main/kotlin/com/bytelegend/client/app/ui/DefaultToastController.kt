@@ -78,7 +78,7 @@ class ToastUIComponent : GameUIComponent<GameProps, ToastUIComponentRState>() {
             zIndex = Layer.BannerToast.zIndex(),
             classes = setOf("toast-container"),
             extraStyleBuilder = {
-                left = canvasCoordinateInGameContainer.x
+                left = uiContainerCoordinateInGameContainer.x
                 /* minimap height + gap */
                 bottom = "${gameMap.size.width * 2 + (gameContainerHeight - canvasPixelSize.height)}px"
             }

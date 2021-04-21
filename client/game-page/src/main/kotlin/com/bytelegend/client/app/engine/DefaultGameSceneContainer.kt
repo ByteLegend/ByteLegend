@@ -86,6 +86,7 @@ class DefaultGameSceneContainer(
         }
     }
 
+    @Suppress("UnsafeCastFromDynamic")
     private suspend fun createThenSwitchScene(oldScene: GameScene?, mapId: String, switchAfterLoading: Boolean, action: suspend (GameScene?, GameScene) -> Unit) {
         val map = resourceLoader.loadAsync(GameMapResource(mapJsonResourceId(mapId), "$RRBD/map/$mapId/map.json", 1))
         val tileset = resourceLoader.loadAsync(ImageResource(mapTilesetResourceId(mapId), "$RRBD/map/$mapId/tileset.png", 1))
@@ -101,7 +102,7 @@ class DefaultGameSceneContainer(
 
         val scene = DefaultGameScene(di, map.await(), tileset.await(), gameContainerSize)
         scene.players = PlayerContainer(mapId, eventBus, game.webSocketClient, resourceLoader, sceneInitData.await().players).apply { init(scene) }
-        scene.playerMissions = DefaultPlayerMissionContainer(di, sceneInitData.await().missions).apply { init(scene) }
+        scene.playerMissions = DefaultPlayerMissionContainer(di, sceneInitData.await().missions.asDynamic()).apply { init(scene) }
         scene.states = DefaultStateContainer(sceneInitData.await().states).apply { init(scene) }
         scenes[mapId] = scene
         switchScene(oldScene, scene, switchAfterLoading, action)

@@ -8,9 +8,17 @@ import com.bytelegend.app.shared.ConstantPoolType.BlockerGameTile
 import com.bytelegend.app.shared.ConstantPoolType.NonBlockerGameTile
 import com.bytelegend.app.shared.ConstantPoolType.StaticImageLayer
 import com.bytelegend.app.shared.annotations.JsonIgnore
+import com.bytelegend.app.shared.objects.CompressedGameMapCurve
+import com.bytelegend.app.shared.objects.CompressedGameMapDynamicObject
+import com.bytelegend.app.shared.objects.CompressedGameMapMission
 import com.bytelegend.app.shared.objects.CompressedGameMapObject
+import com.bytelegend.app.shared.objects.CompressedGameMapPoint
+import com.bytelegend.app.shared.objects.CompressedGameMapRegion
+import com.bytelegend.app.shared.objects.CompressedGameMapText
 import com.bytelegend.app.shared.objects.GameMapObject
+import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.util.HashBiMap
+import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Polymorphic
@@ -25,7 +33,10 @@ import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonContentPolymorphicSerializer
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonTransformingSerializer
+import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
@@ -69,6 +80,7 @@ interface CompressableElement {
     fun addToFinalConstantPool(rawConstantPool: Map<Any, Int>, finalConstantPool: LinkedHashSet<ConstantPoolEntry>)
 }
 
+@Serializable
 data class RawGameMap(
     override val id: String,
     /**
@@ -180,13 +192,16 @@ data class RawTileAnimationFrame(
     val duration: Int
 )
 
+@Serializable
 data class CompressedGameMap(
     override val id: String,
     override val size: GridSize,
     override val tileSize: PixelSize,
+    @Serializable(with = ConstantPoolEntryListSerializer::class)
     val constantPool: List<ConstantPoolEntry>,
     val tiles: List<Int>,
-    val compressedObjects: List<CompressedGameMapObject>,
+    @Serializable(with = CompressedGameMapObjectListSerializer::class)
+    val compressedObjects: List<CompressedGameMapObject> = emptyList(),
 ) : GameMap {
     private val rawGameMap: RawGameMap = decompress()
     override val rawTiles: List<List<RawGameMapTile>>
@@ -206,6 +221,7 @@ data class CompressedGameMap(
 }
 
 object ConstantPoolEntryListSerializer : JsonTransformingSerializer<List<ConstantPoolEntry>>(ListSerializer(ConstantPoolEntrySerializer))
+object CompressedGameMapObjectListSerializer : JsonTransformingSerializer<List<CompressedGameMapObject>>(ListSerializer(CompressedGameMapObjectSerializer))
 
 @Suppress("UNCHECKED_CAST")
 enum class ConstantPoolType(
@@ -244,6 +260,21 @@ enum class ConstantPoolType(
 
     companion object {
         fun ofIndex(index: Int) = values()[index - 1]
+    }
+}
+
+// https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-json/kotlinx-serialization-json/kotlinx.serialization.json/-json-content-polymorphic-serializer/index.html
+object CompressedGameMapObjectSerializer : JsonContentPolymorphicSerializer<CompressedGameMapObject>(CompressedGameMapObject::class) {
+    override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out CompressedGameMapObject> {
+        return when (val type = GameMapObjectType.fromIndex(element.jsonObject["type"].toString().toInt())) {
+            GameMapObjectType.GameMapText -> CompressedGameMapText.serializer()
+            GameMapObjectType.GameMapRegion -> CompressedGameMapRegion.serializer()
+            GameMapObjectType.GameMapPoint -> CompressedGameMapPoint.serializer()
+            GameMapObjectType.GameMapCurve -> CompressedGameMapCurve.serializer()
+            GameMapObjectType.GameMapDynamicSprite -> CompressedGameMapDynamicObject.serializer()
+            GameMapObjectType.GameMapMission -> CompressedGameMapMission.serializer()
+            else -> throw IllegalStateException("Unsupported type: $type")
+        }
     }
 }
 

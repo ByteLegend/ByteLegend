@@ -19,30 +19,6 @@ fun main() {
                 destMapId = JAVA_ISLAND_NEWBIE_VILLAGE_PUB
             }
 
-//            noticeboard {
-//                id = "JavaIslandNewbieVillageNoticeboard"
-//                spriteId = "Noticeboard-sprite"
-//            }
-//
-//            sprite {
-//                id = "GitHubNoticeboard"
-//                spriteId = "GitHubNoticeboard-sprite"
-//                onClick = {
-//                    gameRuntime.modalController.showModal("WhyGitHubContentHtml", "WhyGitHubTitle")
-//                }
-//                clickable = true
-//                glow = true
-//            }
-//
-//            sprite {
-//                id = "StarByteLegendBookMission"
-//                spriteId = "GitHubExplanationBook-sprite"
-//                onClick = {
-//                    scripts {
-//                    }
-//                }
-//            }
-
 //            npc {
 //                id = "JavaIslandNewbieVillageOldMan"
 //                spriteId = "JavaIslandNewbieVillageOldMan-sprite"

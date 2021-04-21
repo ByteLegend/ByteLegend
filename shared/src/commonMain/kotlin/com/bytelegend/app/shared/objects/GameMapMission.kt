@@ -2,6 +2,7 @@ package com.bytelegend.app.shared.objects
 
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.entities.MissionType
+import kotlinx.serialization.Serializable
 
 /**
  * GameMapMission doesn't contain all information of missions, just partial of them
@@ -28,6 +29,7 @@ class GameMapMission(
     )
 }
 
+@Serializable
 data class CompressedGameMapMission(
     override val id: String,
     val title: String,

@@ -1,5 +1,7 @@
 package com.bytelegend.app.shared.objects
 
+import kotlinx.serialization.Polymorphic
+
 /**
  * GameMapObject are objects that are easier to draw in Tiled than in code,
  * for example, a point, a region, etc.
@@ -14,6 +16,7 @@ interface GameMapObject {
     }
 }
 
+@Polymorphic
 interface CompressedGameMapObject {
     val id: String
     val layer: Int

@@ -8,6 +8,7 @@ import com.bytelegend.app.client.api.ModalController
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
+import com.bytelegend.app.client.misc.searchForNonHero
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
@@ -21,6 +22,7 @@ import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
@@ -119,6 +121,7 @@ class DefaultGameDirector(
         }
     }
 
+    @Suppress("UnsafeCastFromDynamic")
     override fun speech(action: SpeechBuilder.() -> Unit) {
         val builder = SpeechBuilder()
         builder.action()
@@ -143,7 +146,7 @@ class DefaultGameDirector(
     }
 
     override fun characterMove(characterId: String, destMapCoordinate: GridCoordinate) {
-        TODO("Not yet implemented")
+        scripts.add(CharacterMoveScript(gameScene.objects.getById(characterId), destMapCoordinate))
     }
 
     override fun fadeIn() {
@@ -173,6 +176,22 @@ class DefaultGameDirector(
             respondToClick = false
             currentWidgets.remove(id)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+        }
+    }
+
+    inner class CharacterMoveScript(
+        val character: CharacterSprite,
+        val destMapCoordinate: GridCoordinate
+    ) : GameScript {
+        override fun start() {
+            character.movePath = searchForNonHero(gameScene.blockers, character.gridCoordinate, destMapCoordinate)
+
+            GlobalScope.launch {
+                while (character.gridCoordinate != destMapCoordinate) {
+                    delay(500)
+                }
+                next()
+            }
         }
     }
 

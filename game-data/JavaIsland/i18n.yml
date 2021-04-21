@@ -4,7 +4,7 @@
     EN: |
       I only allow people with more than <span style='color:red'>{0} ⭐</span> to pass,
       but you only have <span style='color:red'>{1} ⭐</span>.
-    ZH_HANS: 我只允许拥有<span style='color:red'>{0}颗⭐</span>的人通过，但是你只有<span style='color:red'>{1}颗⭐</span>。
+    ZH_HANS: 我允许拥有<span style='color:red'>{0}颗⭐</span>的人通过，但是你只有<span style='color:red'>{1}颗⭐</span>。
 - id: ICantHearYou
   data:
     EN: I can't hear you! Step closer!

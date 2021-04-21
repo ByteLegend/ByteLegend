@@ -1,6 +1,7 @@
 package com.bytelegend.app.shared.objects
 
 import com.bytelegend.app.shared.GridCoordinate
+import kotlinx.serialization.Serializable
 
 class GameMapPoint(
     override val id: String,
@@ -13,6 +14,7 @@ class GameMapPoint(
     override fun compress() = CompressedGameMapPoint(id, layer, point.compress())
 }
 
+@Serializable
 data class CompressedGameMapPoint(
     override val id: String,
     override val layer: Int,

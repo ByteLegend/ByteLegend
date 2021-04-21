@@ -3,6 +3,7 @@ package com.bytelegend.client.app.ui.script
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.GAME_CLOCK_10HZ_EVENT
+import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
@@ -45,12 +46,12 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
     }
 
     override fun componentDidMount() {
-        super.componentDidMount()
+        props.game.eventBus.on(GAME_CLOCK_50HZ_EVENT, gameUiUpdateEventListener)
         props.game.eventBus.on(GAME_CLOCK_10HZ_EVENT, arrowUpDownListener)
     }
 
     override fun componentWillUnmount() {
-        super.componentWillUnmount()
+        props.game.eventBus.remove(GAME_CLOCK_50HZ_EVENT, gameUiUpdateEventListener)
         props.game.eventBus.remove(GAME_CLOCK_10HZ_EVENT, arrowUpDownListener)
     }
 

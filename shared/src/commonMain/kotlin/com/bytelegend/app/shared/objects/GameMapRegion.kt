@@ -2,7 +2,9 @@ package com.bytelegend.app.shared.objects
 
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CompressedGameMapRegion(
     override val id: String,
     override val layer: Int,

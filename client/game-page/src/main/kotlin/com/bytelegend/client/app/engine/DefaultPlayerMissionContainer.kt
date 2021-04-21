@@ -28,7 +28,7 @@ import org.kodein.di.instance
 
 class DefaultPlayerMissionContainer(
     di: DI,
-    private val missions: Map<String, PlayerMission>
+    private val missions: MutableMap<String, PlayerMission>
 ) : PlayerMissionContainer {
     private val eventBus: EventBus by di.instance()
     private val game: GameRuntime by di.instance()
@@ -135,6 +135,10 @@ class DefaultPlayerMissionContainer(
     }
 
     private fun onMissionUpdate(eventData: MissionUpdateEventData) {
+        val currentMap: String = gameScene?.map?.id ?: return
+        if (currentMap == eventData.map) {
+            missions[eventData.newValue.id!!] = eventData.newValue
+        }
     }
 
     fun init(gameScene: GameScene) {

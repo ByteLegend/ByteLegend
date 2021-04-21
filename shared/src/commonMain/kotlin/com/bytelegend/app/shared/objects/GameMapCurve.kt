@@ -1,6 +1,7 @@
 package com.bytelegend.app.shared.objects
 
 import com.bytelegend.app.shared.PixelCoordinate
+import kotlinx.serialization.Serializable
 
 class GameMapCurve(
     override val id: String,
@@ -16,6 +17,7 @@ class GameMapCurve(
     )
 }
 
+@Serializable
 data class CompressedGameMapCurve(
     override val id: String,
     override val layer: Int,

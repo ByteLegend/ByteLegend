@@ -4,6 +4,7 @@ import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.map
+import kotlinx.serialization.Serializable
 
 /**
  * Dynamic objects aren't displayed on the map directly, but added by game script
@@ -34,6 +35,7 @@ class GameMapDynamicSprite(
     )
 }
 
+@Serializable
 data class CompressedGameMapDynamicObject(
     override val id: String,
     val frames: List<List<List<List<Int>>>>
