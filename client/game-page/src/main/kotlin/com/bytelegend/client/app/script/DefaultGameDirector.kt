@@ -9,6 +9,7 @@ import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
 import com.bytelegend.app.client.misc.searchForNonHero
+import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
@@ -190,6 +191,7 @@ class DefaultGameDirector(
                 while (character.gridCoordinate != destMapCoordinate) {
                     delay(500)
                 }
+                character.direction = Direction.DOWN
                 next()
             }
         }

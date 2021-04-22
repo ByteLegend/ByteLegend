@@ -181,7 +181,7 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                         if (!isMaximized()) {
                             display = "none"
                         }
-                        background = "url('${game.resolve("/map/${activeScene.map.id}/roadmap.svg")}')"
+                        backgroundImage = "url('${game.resolve("/map/${activeScene.map.id}/roadmap.svg")}')"
                         backgroundSize = "100% 100%"
                         cursor = state.cursor
                         zIndex = miniMapZIndex

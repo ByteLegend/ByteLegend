@@ -23,13 +23,14 @@ import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
+import com.bytelegend.app.shared.objects.defaultMapEntranceDestinationId
+import com.bytelegend.app.shared.objects.defaultMapEntranceId
+import com.bytelegend.app.shared.objects.defaultMapEntrancePointId
 import com.bytelegend.client.app.obj.GameCurveSprite
 import com.bytelegend.client.app.obj.GameTextSprite
 import com.bytelegend.client.app.obj.MapEntrance
 import com.bytelegend.client.app.obj.NPC
 import com.bytelegend.client.app.obj.createMissionSprite
-import com.bytelegend.client.app.obj.defaultMapEntranceId
-import com.bytelegend.client.app.obj.defaultMapEntrancePointId
 import com.bytelegend.client.app.script.DefaultGameDirector
 import org.kodein.di.DI
 import org.kodein.di.DIAware
@@ -107,14 +108,15 @@ class DefaultGameScene(
         val entranceId = builder.id ?: defaultMapEntranceId(map.id, destMapId)
         val entrancePointId = builder.coordinatePointId ?: defaultMapEntrancePointId(entranceId)
         val coordinate = objects.getById<GameMapPoint>(entrancePointId).point
-        val backEntrancePointId = builder.backEntrancePointId ?: defaultMapEntrancePointId(destMapId, map.id)
+        val backEntrancePointId = builder.backEntrancePointId ?: defaultMapEntranceDestinationId(entranceId)
 
         val mapEntrance = MapEntrance(
             entranceId,
             this,
             coordinate,
             destMapId,
-            backEntrancePointId
+            backEntrancePointId,
+            gameRuntime.unsafeCast<Game>().webSocketClient
         )
 
         objects.add(mapEntrance)
@@ -144,7 +146,6 @@ class DefaultGameScene(
             onTouchFunction = builder.onTouch,
             onClickFunction = builder.onClick
         ).apply {
-            objects.add(this)
             init()
         }
     }

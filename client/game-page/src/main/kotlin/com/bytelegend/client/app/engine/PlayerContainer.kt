@@ -58,6 +58,9 @@ class PlayerContainer(
     }
 
     private fun onPlayerMoveOnScene(player: Player) {
+        if (player.id == game.heroPlayer.id) {
+            return
+        }
         val currentPlayer = idToPlayer[player.id!!] ?: return
         idToSprite[player.id!!]?.apply {
             movePath = searchForNonHero(
@@ -71,12 +74,16 @@ class PlayerContainer(
     }
 
     private fun onPlayerLeaveScene(player: Player) {
-        idToPlayer.remove(player.id!!)
-        idToSprite.remove(player.id)?.close()
+        if (player.id != game.heroPlayer.id) {
+            idToPlayer.remove(player.id!!)
+            idToSprite.remove(player.id)?.close()
+        }
     }
 
     private fun onPlayerEnterScene(player: Player) {
-        idToPlayer[player.id!!] = player
+        if (player.id != game.heroPlayer.id) {
+            idToPlayer[player.id!!] = player
+        }
     }
 
     fun getDrawableCharacters(): List<PlayerSprite> {

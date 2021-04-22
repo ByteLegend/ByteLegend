@@ -1,5 +1,6 @@
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
@@ -8,13 +9,18 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
+import react.setState
 
 interface PlayerNamesProps : GameProps
 interface PlayerNamesState : RState
 
 class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
+    private val on50HzClockListener: EventListener<Nothing> = {
+        setState { }
+    }
+
     override fun RBuilder.render() {
-        if (!game.heroPlayer.isAnonymous && !game._hero!!.outOfCanvas()) {
+        if (!game.heroPlayer.isAnonymous && !game._hero!!.outOfCanvas() && game.heroPlayer.map == activeScene.map.id) {
             renderOne(game.heroPlayer, game._hero!!)
         }
 
@@ -40,12 +46,12 @@ class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
 
     override fun componentDidMount() {
         super.componentDidMount()
-        props.game.eventBus.on(GAME_CLOCK_50HZ_EVENT, gameUiUpdateEventListener)
+        props.game.eventBus.on(GAME_CLOCK_50HZ_EVENT, on50HzClockListener)
     }
 
     override fun componentWillUnmount() {
         super.componentWillUnmount()
-        props.game.eventBus.remove(GAME_CLOCK_50HZ_EVENT, gameUiUpdateEventListener)
+        props.game.eventBus.remove(GAME_CLOCK_50HZ_EVENT, on50HzClockListener)
     }
 }
 

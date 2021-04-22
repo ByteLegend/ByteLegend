@@ -313,6 +313,38 @@
                  "tileid":303
                 }],
          "id":304
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":280
+                }, 
+                {
+                 "duration":500,
+                 "tileid":281
+                }, 
+                {
+                 "duration":500,
+                 "tileid":282
+                }],
+         "id":322
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":300
+                }, 
+                {
+                 "duration":500,
+                 "tileid":301
+                }, 
+                {
+                 "duration":500,
+                 "tileid":302
+                }],
+         "id":342
         }],
  "tilewidth":32,
  "type":"tileset",

@@ -34,7 +34,7 @@ abstract class AbstractIndexPageRenderer(
                     RRBD,
                     enjoyProgrammingText,
                     player,
-                    rrbdResourceProvider.maps,
+                    rrbdResourceProvider.mapDefinitions,
                     emptyList()
                 )
             )

@@ -3,6 +3,15 @@ package com.bytelegend.app.shared.objects
 import com.bytelegend.app.shared.GridCoordinate
 import kotlinx.serialization.Serializable
 
+fun defaultMapEntranceId(srcMapId: String, destMapId: String) = "$srcMapId-$destMapId-entrance"
+
+fun defaultMapEntrancePointId(mapEntranceId: String) = "$mapEntranceId-point"
+
+fun defaultMapEntranceDestinationId(mapEntranceId: String) = "$mapEntranceId-destination"
+
+fun defaultMapEntrancePointId(srcMapId: String, destMapId: String) = defaultMapEntrancePointId(defaultMapEntranceId(srcMapId, destMapId))
+
+
 class GameMapPoint(
     override val id: String,
     override val layer: Int,

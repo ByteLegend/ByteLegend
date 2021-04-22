@@ -64,7 +64,7 @@ abstract class AbstractIncrementAnimatableWidget<P : GameAwareProps, S : RState>
     }
 
     override fun componentWillUnmount() {
-        super.componentDidMount()
+        super.componentWillUnmount()
         props.game.eventBus.remove(eventName, incrementEventListener)
     }
 }

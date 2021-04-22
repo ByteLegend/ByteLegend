@@ -10,6 +10,7 @@ import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
 import org.w3c.dom.CanvasRenderingContext2D
 
@@ -35,10 +36,12 @@ abstract class CharacterSprite(
     private val clockEventListener: EventListener<Nothing> = this::onAnimation
 
     override fun init() {
+        gameScene.objects.add(this)
         gameScene.gameRuntime.eventBus.on(GAME_CLOCK_50HZ_EVENT, clockEventListener)
     }
 
     override fun close() {
+        gameScene.objects.remove<GameObject>(id)
         gameScene.gameRuntime.eventBus.remove(GAME_CLOCK_50HZ_EVENT, clockEventListener)
     }
 

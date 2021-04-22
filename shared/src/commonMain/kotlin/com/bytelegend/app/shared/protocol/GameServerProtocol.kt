@@ -14,12 +14,15 @@ const val GET_MISSION_MODAL_DATA = "protocol.get.mission.modal.data"
  * Player move to another point
  */
 const val MOVE_TO = "protocol.move.to"
+const val LEAVE_SCENE = "protocol.leave.scene"
+const val ENTER_SCENE = "protocol.enter.scene"
 
 
 /***************** Events broadcast from server to client-side EventBus ***********************/
 fun playerEnterSceneEvent(mapId: String) = "protocol.player.enter.${mapId}"
 fun playerLeaveSceneEvent(mapId: String) = "protocol.player.leave.${mapId}"
 fun playerMoveOnSceneEvent(mapId: String) = "protocol.player.move.${mapId}"
+
 /**
  * Periodically get online player number
  */
@@ -37,6 +40,10 @@ interface GameServerProtocol {
     suspend fun getSceneInitData(mapId: String): SceneInitData
 
     suspend fun moveTo(x: Int, y: Int)
+
+    suspend fun leaveScene(srcMapId: String, destMapId: String)
+
+    suspend fun enterScene(srcMapId: String, destMapId: String)
 
     suspend fun getMissionModalData(missionId: String): MissionModalData
 }

@@ -8,9 +8,11 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.SceneInitData
+import com.bytelegend.app.shared.protocol.ENTER_SCENE
 import com.bytelegend.app.shared.protocol.GET_MISSION_MODAL_DATA
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.GameServerProtocol
+import com.bytelegend.app.shared.protocol.LEAVE_SCENE
 import com.bytelegend.app.shared.protocol.MOVE_TO
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PublishMessage
@@ -191,6 +193,14 @@ class WebSocketClient(
 
     override suspend fun moveTo(x: Int, y: Int) {
         send<Unit>(MOVE_TO, x.toString(), y.toString())
+    }
+
+    override suspend fun leaveScene(srcMapId: String, destMapId: String) {
+        send<Unit>(LEAVE_SCENE, srcMapId, destMapId)
+    }
+
+    override suspend fun enterScene(srcMapId: String, destMapId: String) {
+        send<Unit>(ENTER_SCENE, srcMapId, destMapId)
     }
 
     override suspend fun getMissionModalData(missionId: String): MissionModalData {

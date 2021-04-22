@@ -3,10 +3,10 @@ package com.bytelegend.client.app.ui
 import BootstrapDropdownDivider
 import BootstrapDropdownItem
 import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdownButton
+import kotlinx.browser.document
 import react.RBuilder
 import react.RElementBuilder
 import react.RState
-import react.dom.jsStyle
 import react.dom.span
 
 interface MapSelectionDropdownProps : GameProps
@@ -16,7 +16,9 @@ class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, RState>(
         BootstrapDropdownButton {
             attrs.className = "map-name-selection map-title-text"
             attrs.id = "map-selection"
-            attrs.title = i(gameMap.id)
+            attrs.title = document.createElement("span").apply {
+                innerHTML = i(gameMap.id)
+            }.textContent ?: ""
 
             game.mapHierarchy.forEachIndexed { index, it ->
                 val currentMainMap = it.id
@@ -37,13 +39,11 @@ class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, RState>(
         BootstrapDropdownItem {
             if (submap) {
                 span {
-                    attrs.jsStyle {
-                        paddingLeft = "10px"
-                    }
-                    +i(mapId)
+                    +"  "
                 }
+                unsafeHtml(i(mapId))
             } else {
-                +i(mapId)
+                unsafeHtml(i(mapId))
             }
             // disable map selection when game script is running
             attrs.onClick = gameControlAwareEventHandler(

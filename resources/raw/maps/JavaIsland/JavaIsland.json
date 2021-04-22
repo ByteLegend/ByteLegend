@@ -1117,6 +1117,18 @@
                  "width":0,
                  "x":431,
                  "y":2957
+                }, 
+                {
+                 "height":0,
+                 "id":129,
+                 "name":"JavaIslandNewbieVillagePub-JavaIsland-entrance-destination",
+                 "point":true,
+                 "rotation":0,
+                 "type":"GameMapPoint",
+                 "visible":true,
+                 "width":0,
+                 "x":232.333333333333,
+                 "y":2861
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1709,7 +1721,7 @@
          "y":0
         }],
  "nextlayerid":71,
- "nextobjectid":129,
+ "nextobjectid":130,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.5.0",

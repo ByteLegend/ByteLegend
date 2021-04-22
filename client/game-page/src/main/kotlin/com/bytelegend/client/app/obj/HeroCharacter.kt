@@ -17,6 +17,8 @@ class HeroCharacter(
     )
 
     override fun enterTile(gridCoordinate: GridCoordinate) {
+        player.x = gridCoordinate.x
+        player.y = gridCoordinate.y
         gameScene.objects.getByCoordinate(gridCoordinate).filter {
             it.id != this.id
         }.forEach {

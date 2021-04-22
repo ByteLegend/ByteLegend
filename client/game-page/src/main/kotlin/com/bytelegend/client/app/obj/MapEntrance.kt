@@ -10,19 +10,17 @@ import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.Game
-
-fun defaultMapEntranceId(srcMapId: String, destMapId: String) = "$srcMapId-$destMapId-entrance"
-
-fun defaultMapEntrancePointId(mapEntranceId: String) = "$mapEntranceId-point"
-
-fun defaultMapEntrancePointId(srcMapId: String, destMapId: String) = defaultMapEntrancePointId(defaultMapEntranceId(srcMapId, destMapId))
+import com.bytelegend.client.app.web.WebSocketClient
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MapEntrance(
     override val id: String,
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
     private val destMapId: String,
-    private val backEntrancePointId: String
+    private val backEntrancePointId: String,
+    private val webSocketClient: WebSocketClient
 ) : GameObject, GameSceneAware, CoordinateAware {
     override val layer: Int = INVISIBLE_OBJECT_LAYER
     override val roles: Set<GameObjectRole> = setOf(GameObjectRole.MapEntrance, GameObjectRole.CoordinateAware)
@@ -31,6 +29,10 @@ class MapEntrance(
     override fun onTouch(character: GameObject) {
         if (gameRuntime.hero != null && gameRuntime.hero!!.id == character.id) {
             val heroId = gameRuntime.hero!!.id
+            GlobalScope.launch {
+                webSocketClient.leaveScene(gameScene.map.id, destMapId)
+            }
+
             gameRuntime.sceneContainer.loadScene(destMapId) { oldScene, newScene ->
                 val oldHero = oldScene!!.objects.getById<HeroCharacter>(heroId)
 
@@ -38,10 +40,17 @@ class MapEntrance(
                 newHero.direction = oldHero.direction
                 val newMapEntrance = newScene.objects.getById<GameMapPoint>(backEntrancePointId).point
                 newHero.pixelCoordinate = newMapEntrance * newScene.map.tileSize
+                gameRuntime.heroPlayer.map = newScene.map.id
+                gameRuntime.heroPlayer.x = newMapEntrance.x
+                gameRuntime.heroPlayer.y = newMapEntrance.y
 
                 oldHero.close()
                 gameRuntime.unsafeCast<Game>()._hero = newHero
                 newHero.init()
+
+                GlobalScope.launch {
+                    webSocketClient.enterScene(oldScene.map.id, newScene.map.id)
+                }
             }
         } else {
             gameRuntime.activeScene.objects.getById<GameObject>(character.id).close()
