@@ -21,7 +21,10 @@ fun main() {
 
 //            npc {
 //                id = "JavaIslandNewbieVillageOldMan"
-//                spriteId = "JavaIslandNewbieVillageOldMan-sprite"
+//                sprite = "JavaIslandNewbieVillageOldMan-sprite"
+//                onInit = {
+//
+//                }
 //                onClick = {
 //                    scripts {
 //                        speech {

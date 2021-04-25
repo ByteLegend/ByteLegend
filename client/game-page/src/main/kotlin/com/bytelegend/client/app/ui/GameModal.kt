@@ -9,6 +9,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalProps
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
+import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import org.kodein.di.DI
 import org.kodein.di.instance
@@ -62,6 +63,7 @@ class DefaultModalController(
     override fun hide() {
         currentModal = initModalAction
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+        gameRuntime.activeScene.unsafeCast<DefaultGameScene>().director.next()
     }
 }
 

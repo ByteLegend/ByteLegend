@@ -7,6 +7,7 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.atTileBorder
 
 class NPC(
     override val id: String,
@@ -41,7 +42,13 @@ class NPC(
 
     override fun onClick(): Boolean {
         super.onClick()
-        onClickFunction()
+        // if the player is current moving and not at the border of the tile, not trigger
+        // the click event on game object because the object handler may change moving state
+        // of the player.
+        val hero = gameScene.gameRuntime.hero
+        if (hero == null || atTileBorder(gameScene.map.tileSize, hero.pixelCoordinate)) {
+            onClickFunction()
+        }
         return true
     }
 

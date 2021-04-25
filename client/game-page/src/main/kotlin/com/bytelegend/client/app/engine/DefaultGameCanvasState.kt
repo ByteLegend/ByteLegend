@@ -324,4 +324,4 @@ private fun nextTileBorder(direction: Direction, nextCoordinate: PixelCoordinate
 private fun sameTile(tileSize: PixelSize, coordinate1: PixelCoordinate, coordinate2: PixelCoordinate) =
     coordinate1.x / tileSize.width == coordinate2.x / tileSize.width && coordinate1.y / tileSize.height == coordinate2.y / tileSize.height
 
-private fun atTileBorder(tileSize: PixelSize, coordinate: PixelCoordinate) = coordinate.x % tileSize.width == 0 && coordinate.y % tileSize.height == 0
+fun atTileBorder(tileSize: PixelSize, coordinate: PixelCoordinate) = coordinate.x % tileSize.width == 0 && coordinate.y % tileSize.height == 0
