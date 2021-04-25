@@ -21,18 +21,18 @@ class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
 
     override fun RBuilder.render() {
         if (!game.heroPlayer.isAnonymous && !game._hero!!.outOfCanvas() && game.heroPlayer.map == activeScene.map.id) {
-            renderOne(game.heroPlayer, game._hero!!)
+            renderOne(game.heroPlayer, game._hero!!, true)
         }
 
         game.activeScene.unsafeCast<DefaultGameScene>()
             .players
             .getDrawableCharacters()
             .forEach {
-                renderOne(it.player, it)
+                renderOne(it.player, it, false)
             }
     }
 
-    private fun RBuilder.renderOne(player: Player, sprite: CharacterSprite) {
+    private fun RBuilder.renderOne(player: Player, sprite: CharacterSprite, isHero: Boolean) {
         val imageBlockOnCanvas = sprite.getImageBlockOnCanvas()
         val x = imageBlockOnCanvas.x + canvasCoordinateInGameContainer.x + activeScene.map.tileSize.width / 2
         val y = imageBlockOnCanvas.y + canvasCoordinateInGameContainer.y - 10
@@ -41,6 +41,7 @@ class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
             attrs.x = x
             attrs.y = y
             attrs.name = name
+            attrs.isHero = isHero
         }
     }
 
@@ -60,6 +61,7 @@ interface PlayerNameSpanProps : RProps {
     var x: Int
     var y: Int
     var name: String
+    var isHero: Boolean
 }
 
 class PlayerNameSpan : RComponent<PlayerNameSpanProps, RState>() {
@@ -68,7 +70,10 @@ class PlayerNameSpan : RComponent<PlayerNameSpanProps, RState>() {
             left = props.x,
             top = props.y,
             zIndex = Layer.PlayerNames.zIndex(),
-            classes = setOf("white-text-black-shadow", "nickname-span")
+            classes = if (props.isHero)
+                setOf("yellow-text-black-shadow", "nickname-span")
+            else
+                setOf("white-text-black-shadow", "nickname-span")
         ) {
             +props.name
         }

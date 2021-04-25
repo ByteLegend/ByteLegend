@@ -105,6 +105,11 @@ body {
     text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.2em 0.2em 0.2em;
 }
 
+.yellow-text-black-shadow {
+    color: yellow;
+    text-shadow: -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000, #000 0.2em 0.2em 0.2em;
+}
+
 .locale-selection-widget {
     margin-top: 10px;
     display: inline-block;
