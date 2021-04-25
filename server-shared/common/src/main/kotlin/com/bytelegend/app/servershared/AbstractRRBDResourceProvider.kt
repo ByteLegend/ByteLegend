@@ -33,9 +33,11 @@ abstract class AbstractRRBDResourceProvider(
         }.toMap()
     }
 
-    val idToMaps: Map<String, FastAccessGameMap> = idToMapDefinitions.keys.associateWith {
-        FastAccessGameMap(File(localRRBD).resolve("map/$it/map.json").readAsGameMap())
-    }
+    private val idToMaps: Map<String, FastAccessGameMap> = idToMapDefinitions.keys
+        .filter { File(localRRBD).resolve("map/$it/map.json").isFile }
+        .associateWith {
+            FastAccessGameMap(File(localRRBD).resolve("map/$it/map.json").readAsGameMap())
+        }
 
     private fun putInto(result: MutableMap<String, GameMapDefinition>, maps: List<GameMapDefinition>) {
         maps.forEach {

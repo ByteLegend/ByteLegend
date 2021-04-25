@@ -131,8 +131,8 @@ fun toMissionAnswer(jsonObject: dynamic) = MissionAnswer().apply {
 
 fun toGameMapDefinition(jsonObject: dynamic): GameMapDefinition = GameMapDefinition(
     jsonObject.id,
-    toTypedList(jsonObject.children, ::toGameMapDefinition),
-    jsonObject.frames
+    jsonObject.frames,
+    toTypedList(jsonObject.children, ::toGameMapDefinition)
 )
 
 fun toGameInitData(jsonObject: dynamic) = GameInitData(

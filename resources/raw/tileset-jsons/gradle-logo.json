@@ -1,0 +1,14 @@
+{ "columns":50,
+ "image":"..\/tilesets\/gradle-logo.png",
+ "imageheight":1600,
+ "imagewidth":1600,
+ "margin":0,
+ "name":"gradle-logo",
+ "spacing":0,
+ "tilecount":2500,
+ "tiledversion":"1.5.0",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":1.5
+}

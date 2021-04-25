@@ -7,7 +7,6 @@ import kotlinx.browser.document
 import react.RBuilder
 import react.RElementBuilder
 import react.RState
-import react.dom.span
 
 interface MapSelectionDropdownProps : GameProps
 
@@ -38,10 +37,7 @@ class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, RState>(
     private fun RElementBuilder<*>.dropdownItem(mapId: String, submap: Boolean) {
         BootstrapDropdownItem {
             if (submap) {
-                span {
-                    +"  "
-                }
-                unsafeHtml(i(mapId))
+                unsafeHtml(i(mapId), "submap-name")
             } else {
                 unsafeHtml(i(mapId))
             }

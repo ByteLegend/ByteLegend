@@ -116,13 +116,19 @@ fun generate(gameDataDir: File, outputI18nDir: File, outputAllJson: File) {
     uglyObjectMapper.writeValue(outputAllJson, idToTextAllMap)
 }
 
-private fun File.yamlToLocalizedTexts(): LinkedHashMap<String, LocalizedText> =
-    YAML_PARSER.readValue(this, object : TypeReference<List<LocalizedText>>() {})
-        .map { it.id to it }.toMap() as LinkedHashMap<String, LocalizedText>
+private fun File.yamlToLocalizedTexts(): LinkedHashMap<String, LocalizedText> {
+    val content = readText()
+    return if (content.isEmpty()) LinkedHashMap()
+    else YAML_PARSER.readValue(this, object : TypeReference<List<LocalizedText>>() {})
+        .associateBy { it.id } as LinkedHashMap<String, LocalizedText>
+}
 
-private fun File.jsonToLocalizedTexts(): LinkedHashMap<String, LocalizedText> =
-    uglyObjectMapper.readValue(this, object : TypeReference<List<LocalizedText>>() {})
-        .map { it.id to it }.toMap() as LinkedHashMap<String, LocalizedText>
+private fun File.jsonToLocalizedTexts(): LinkedHashMap<String, LocalizedText> {
+    val content = readText()
+    return if (content.isEmpty()) LinkedHashMap()
+    else uglyObjectMapper.readValue(this, object : TypeReference<List<LocalizedText>>() {})
+        .associateBy { it.id } as LinkedHashMap<String, LocalizedText>
+}
 
 val YAML_FACTORY = YAMLFactory()
 val YAML_PARSER = ObjectMapper(YAML_FACTORY).registerModule(KotlinModule())

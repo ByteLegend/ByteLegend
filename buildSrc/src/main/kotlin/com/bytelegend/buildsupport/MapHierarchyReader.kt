@@ -26,7 +26,7 @@ private fun readInto(ret: MutableList<String>, list: List<GameMapDefinition>) {
 
 data class GameMapDefinition(
     val id: String,
-    val children: List<GameMapDefinition>,
     val frames: Int,
+    val children: List<GameMapDefinition> = emptyList(),
     val roadmap: Boolean = true
 )

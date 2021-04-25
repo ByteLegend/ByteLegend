@@ -30,6 +30,7 @@ import react.RState
 import react.dom.jsStyle
 import react.setState
 import kotlin.math.PI
+import kotlin.math.max
 
 interface MiniMapState : RState {
     var cursor: String
@@ -51,9 +52,9 @@ const val MINIMAP_AVATAR_SIZE = 16
 
 class MiniMap : AbstractMapCanvas<MiniMapState>() {
     private val miniMapWidth: Int
-        get() = gameMap.size.width * 2 + 2
+        get() = max(gameMap.size.width * 2, 200) + 2
     private val miniMapHeight: Int
-        get() = gameMap.size.height * 2 + 2
+        get() = max(gameMap.size.height * 2, 200) + 2
 
     // minimap frame border
     private val miniMapX: Int

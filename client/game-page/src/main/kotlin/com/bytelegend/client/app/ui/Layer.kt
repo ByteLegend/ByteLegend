@@ -6,7 +6,7 @@ enum class Layer {
     PlayerNames,
     CursorWidget,
     UserMouseInteraction,
-    CheckpointTitle,
+    MissionTitle,
     ScrollButtons,
     MiniMapCanvas,
     ScriptWidget,

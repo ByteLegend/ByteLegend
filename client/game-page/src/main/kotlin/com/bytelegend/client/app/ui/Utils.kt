@@ -211,8 +211,9 @@ fun <PARENT : GameProps, CHILD : GameProps> RElementBuilder<PARENT>.gameChild(
     }
 }
 
-fun RBuilder.unsafeHtml(html: String) {
+fun RBuilder.unsafeHtml(html: String, vararg classes: String) {
     span {
+        attrs.classes = setOf(*classes)
         consumer.onTagContentUnsafe {
             +html
         }

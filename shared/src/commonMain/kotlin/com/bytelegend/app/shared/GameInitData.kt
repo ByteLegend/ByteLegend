@@ -26,9 +26,7 @@ data class GameInitData(
 ) {
     fun resolve(path: String) = "$rrbd$path"
 
-    private val idToLocalizedText = localizedTexts
-        .map { it.id to it }
-        .toMap()
+    private val idToLocalizedText = localizedTexts.associateBy { it.id }
 
     fun getI18nText(id: String, locale: Locale) =
         idToLocalizedText.getValue(id).getTextOrDefaultLocale(locale)
@@ -36,10 +34,10 @@ data class GameInitData(
 
 data class GameMapDefinition(
     val id: String,
-    val children: List<GameMapDefinition>,
     /**
      * How many frames in background animation, this value is used to pre-render background.
      */
     val frames: Int,
+    val children: List<GameMapDefinition> = emptyList(),
     val roadmap: Boolean = true
 )

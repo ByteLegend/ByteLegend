@@ -85,7 +85,7 @@ class MissionTitles : GameUIComponent<MissionTitlesProps, MissionTitlesState>() 
     }
 }
 
-interface CheckpointTitleProps : RProps {
+interface MissionTitleProps : RProps {
     // coordinate in game container
     var left: Int
     var bottom: Int
@@ -100,11 +100,11 @@ interface CheckpointTitleProps : RProps {
     var currentStar: Int
 }
 
-interface CheckPointTitleState : RState {
+interface MissionTitleState : RState {
     var hovered: Boolean
 }
 
-class MissionTile : RComponent<CheckpointTitleProps, CheckPointTitleState>() {
+class MissionTile : RComponent<MissionTitleProps, MissionTitleState>() {
     private val mouseMoveListener: MouseEventListener = {
         if (it.mapCoordinate == props.tileCoordinate) {
             setState { hovered = true }
@@ -118,7 +118,7 @@ class MissionTile : RComponent<CheckpointTitleProps, CheckPointTitleState>() {
         }
     }
 
-    override fun CheckPointTitleState.init() {
+    override fun MissionTitleState.init() {
         hovered = false
     }
 
@@ -128,7 +128,7 @@ class MissionTile : RComponent<CheckpointTitleProps, CheckPointTitleState>() {
         absoluteDiv(
             left = props.left,
             bottom = props.bottom + getOffsetY(),
-            zIndex = Layer.CheckpointTitle.zIndex(),
+            zIndex = Layer.MissionTitle.zIndex() + if (state.hovered) 1 else 0,
             classes = setOf("checkpoint-title")
         ) {
             unsafeHtml(props.title)
@@ -144,16 +144,16 @@ class MissionTile : RComponent<CheckpointTitleProps, CheckPointTitleState>() {
                 }
             }
             absoluteDiv(
-                zIndex = Layer.CheckpointTitle.zIndex(),
+                zIndex = Layer.MissionTitle.zIndex(),
                 classes = setOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-left")
             )
             absoluteDiv(
-                zIndex = Layer.CheckpointTitle.zIndex(),
+                zIndex = Layer.MissionTitle.zIndex(),
                 classes = setOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-right")
             )
 
             absoluteDiv(
-                zIndex = Layer.CheckpointTitle.zIndex() + 2,
+                zIndex = Layer.MissionTitle.zIndex() + 2,
                 classes = setOf("checkpoint-title-triangle-container")
             ) {
                 absoluteDiv(
@@ -166,7 +166,7 @@ class MissionTile : RComponent<CheckpointTitleProps, CheckPointTitleState>() {
             }
 
             absoluteDiv(
-                zIndex = Layer.CheckpointTitle.zIndex() + 3,
+                zIndex = Layer.MissionTitle.zIndex() + 3,
                 classes = setOf("title-star-box")
             ) {
                 child(TitleStarCounter::class) {
@@ -177,7 +177,7 @@ class MissionTile : RComponent<CheckpointTitleProps, CheckPointTitleState>() {
         }
     }
 
-    override fun shouldComponentUpdate(nextProps: CheckpointTitleProps, nextState: CheckPointTitleState): Boolean {
+    override fun shouldComponentUpdate(nextProps: MissionTitleProps, nextState: MissionTitleState): Boolean {
         return props.left != nextProps.left ||
             props.bottom != nextProps.bottom ||
             props.title != nextProps.title ||

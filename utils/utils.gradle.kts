@@ -158,6 +158,9 @@ val mapHierarchyYaml = rootProject.file("game-data/hierarchy.yml").apply {
 val allMaps: List<String> = getAllMaps(mapHierarchyYaml)
 allMaps.forEach { map ->
     val inputTiledJson = tiledMapsDir.resolve("$map/${map}.json")
+    if (!inputTiledJson.isFile) {
+        return@forEach
+    }
     val inputGameDataMapDir = gameDataDir.resolve(map)
     val outputMapJsonsDir = rrbdMapDataDir.resolve(map)
     processResourcesTasks.add(registerExecTask(
@@ -186,13 +189,17 @@ processResourcesTasks.add(registerExecTask(
     outputs.dir(outputAnimationSetDir)
 })
 
+fun forEachMapWithProject(consumer: (String) -> Unit) {
+    allMaps.filter { rootProject.findProject(":client:game-$it") != null }.forEach(consumer)
+}
+
 tasks.register<Copy>("processGameDevJs") {
     dependsOn(":client:game-page:browserDevelopmentWebpack")
-    allMaps.forEach {
+    forEachMapWithProject {
         dependsOn(":client:game-$it:browserDevelopmentWebpack")
     }
     from(project(":client:game-page").file("build/distributions/game-page.js"))
-    allMaps.forEach {
+    forEachMapWithProject {
         from(project(":client:game-$it").file("build/distributions/game-$it.js"))
     }
     into(RRBD.resolve("js"))
@@ -200,11 +207,11 @@ tasks.register<Copy>("processGameDevJs") {
 
 tasks.register<Copy>("processGameProductionJs") {
     dependsOn(":client:game-page:browserProductionWebpack")
-    allMaps.forEach {
+    forEachMapWithProject {
         dependsOn(":client:game-$it:browserProductionWebpack")
     }
     from(project(":client:game-page").file("build/distributions/game-page.js"))
-    allMaps.forEach {
+    forEachMapWithProject {
         from(project(":client:game-$it").file("build/distributions/game-$it.js"))
     }
     into(RRBD.resolve("js"))
