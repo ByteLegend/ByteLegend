@@ -1,7 +1,6 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
-import com.bytelegend.app.client.misc.searchForHero
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
@@ -104,7 +103,7 @@ class TileCursorWidget : GameUIComponent<TileCursorWidgetProps, TileCursorWidget
         isClickable(cursorCoordinate) -> "#007bff"
         game.hero == null -> "white"
         game.activeScene != game._hero!!.gameScene -> "white"
-        searchForHero(game.activeScene.blockers, game.hero!!.gridCoordinate, cursorCoordinate).isEmpty() -> "red"
+        game.hero!!.searchPath(cursorCoordinate).isEmpty() -> "red"
         else -> "green"
     }
 

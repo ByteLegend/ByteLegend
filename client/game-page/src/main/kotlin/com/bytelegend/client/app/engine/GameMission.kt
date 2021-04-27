@@ -47,7 +47,8 @@ class GameMission(
         }
         // If the sprite responds to the click event, delay 500 ms so we can see the effect
         val delayMs = if (sprite.onClick()) 500 else 0
-        gameScene.unsafeCast<DefaultGameScene>().missions.refresh(id)
+        val defaultGameScene = gameScene.unsafeCast<DefaultGameScene>()
+        defaultGameScene.missions.refresh(id)
         window.setTimeout(
             {
                 game.modalController.show {

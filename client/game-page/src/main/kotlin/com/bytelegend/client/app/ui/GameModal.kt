@@ -63,7 +63,7 @@ class DefaultModalController(
     override fun hide() {
         currentModal = initModalAction
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)
-        gameRuntime.activeScene.unsafeCast<DefaultGameScene>().director.next()
+        gameRuntime.activeScene.unsafeCast<DefaultGameScene>().director.start()
     }
 }
 

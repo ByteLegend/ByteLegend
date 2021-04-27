@@ -2,6 +2,7 @@ package com.bytelegend.client.app.ui.script
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_10HZ_EVENT
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
 import com.bytelegend.client.app.ui.GameProps
@@ -9,6 +10,7 @@ import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.unsafeHtml
 import kotlinx.html.classes
+import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.RHandler
 import react.RState
@@ -70,6 +72,9 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
                 position = "absolute"
                 left = "${bubbleLeft}px"
                 bottom = "${bubbleBottom}px"
+            }
+            attrs.onClickFunction = {
+                game.activeScene.unsafeCast<DefaultGameScene>().director.next()
             }
             // Can only set one of 'children' or props.dangerouslySetInnerHTML'
             unsafeHtml(props.contentHtml)

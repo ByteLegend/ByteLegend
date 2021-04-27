@@ -12,6 +12,7 @@ import com.bytelegend.app.client.api.TextAjaxResource
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.page.game
+import com.bytelegend.client.app.script.effect.fadeInEffect
 import com.bytelegend.client.app.web.GameSceneInitResource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -68,10 +69,7 @@ class DefaultGameSceneContainer(
                 switchScene(oldScene, scene, switchAfterLoad, onFinish)
             }
 
-            _activeScene!!.scripts {
-                fadeIn()
-            }
-
+            launch { fadeInEffect(gameContainerSize) }
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
     }

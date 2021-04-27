@@ -53,10 +53,12 @@ class NPC(
     }
 
     override fun enterTile(gridCoordinate: GridCoordinate) {
+        super.enterTile(gridCoordinate)
         gameScene.blockers[gridCoordinate.y][gridCoordinate.x]--
     }
 
     override fun leaveTile(gridCoordinate: GridCoordinate) {
+        super.leaveTile(gridCoordinate)
         gameScene.blockers[gridCoordinate.y][gridCoordinate.x]++
     }
 }

@@ -63,6 +63,8 @@ import com.bytelegend.client.app.ui.UserAvatarWidgetProps
 import com.bytelegend.client.app.ui.UserMouseInteractionLayer
 import com.bytelegend.client.app.ui.UserMouseInteractionLayerProps
 import com.bytelegend.client.app.ui.gameChild
+import com.bytelegend.client.app.ui.item.ItemWidget
+import com.bytelegend.client.app.ui.item.ItemWidgetProps
 import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
 import com.bytelegend.client.app.web.toGameInitData
@@ -195,6 +197,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                         starCountWidget(attrs)
                         coinCountWidget(attrs)
                         reputationCountWidget(attrs)
+                        itemWidget(attrs)
                     }
                     checkpointTitleWidgets(attrs)
                     tileCursorWidget(attrs)
@@ -301,6 +304,13 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         block: RElementBuilder<ReputationCountWidgetProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, ReputationCountWidget::class, block)
+    }
+
+    private fun RElementBuilder<RightSideBarProps>.itemWidget(
+        parentProps: RightSideBarProps,
+        block: RElementBuilder<ItemWidgetProps>.() -> Unit = {}
+    ): ReactElement {
+        return gameChild(parentProps, ItemWidget::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.tileCursorWidget(

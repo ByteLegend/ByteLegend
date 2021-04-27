@@ -6,8 +6,11 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneAware
 import com.bytelegend.app.client.api.Timestamp
+import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.client.misc.search
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
@@ -60,10 +63,16 @@ abstract class CharacterSprite(
     private var currentMovePathIndex: Int = -1
 
     /**
+     * When set, the character will invoke the callback
+     * upon destination.
+     */
+    private var callbackOnDestination: UnitFunction? = null
+
+    /**
      * Current move path. When it's set, the character will start "moving" along this path
      * (i.e. responding to animation events and change coordinate correspondingly)
      */
-    var movePath: List<GridCoordinate> = emptyList()
+    private var movePath: List<GridCoordinate> = emptyList()
         set(value) {
             field = value
             currentMovePathIndex = value.indexOf(gridCoordinate)
@@ -74,6 +83,26 @@ abstract class CharacterSprite(
                 lastAnimationTime = Timestamp.now()
             }
         }
+
+    override fun moveAlong(movePath: List<GridCoordinate>, callback: UnitFunction?) {
+        callbackOnDestination = callback
+        this.movePath = movePath
+    }
+
+    override fun moveTo(destination: GridCoordinate, callback: UnitFunction?) {
+        console.log("Move to $destination")
+        val path = searchPath(destination)
+        if (path.isNotEmpty()) {
+            console.log("Move along $path")
+            moveAlong(path, callback)
+        }
+    }
+
+    override fun searchPath(destination: GridCoordinate): List<GridCoordinate> {
+        return search(gameScene.blockers, gridCoordinate, destination) {
+            it > NON_BLOCKER
+        }
+    }
 
     private fun elapsedSecondSinceLastAnimation() = (Timestamp.now() - lastAnimationTime!!) / 1000.0
 
@@ -113,7 +142,11 @@ abstract class CharacterSprite(
         }
     }
 
-    open fun enterTile(gridCoordinate: GridCoordinate) {}
+    open fun enterTile(gridCoordinate: GridCoordinate) {
+        if (callbackOnDestination != null && gridCoordinate == movePath.last()) {
+            callbackOnDestination!!()
+        }
+    }
 
     open fun leaveTile(gridCoordinate: GridCoordinate) {}
 

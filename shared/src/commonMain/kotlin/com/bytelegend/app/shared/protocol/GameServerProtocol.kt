@@ -30,7 +30,8 @@ const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
 
 /***************** Point-to-point events from server to client-side EventBus ***********************/
 const val STAR_UPDATE_EVENT = "protocol.star.update"
-const val MISSION_UPDATE_EVENT = "protocol.mission.udpate"
+const val MISSION_UPDATE_EVENT = "protocol.mission.update"
+const val REMOVE_STATE = "protocol.remove.state"
 
 interface GameServerProtocol {
     /**
@@ -40,6 +41,8 @@ interface GameServerProtocol {
     suspend fun getSceneInitData(mapId: String): SceneInitData
 
     suspend fun moveTo(x: Int, y: Int)
+
+    suspend fun removeState(map: String, state: String)
 
     suspend fun leaveScene(srcMapId: String, destMapId: String)
 

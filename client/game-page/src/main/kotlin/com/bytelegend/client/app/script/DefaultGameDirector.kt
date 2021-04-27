@@ -8,25 +8,29 @@ import com.bytelegend.app.client.api.ModalController
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
-import com.bytelegend.app.client.misc.searchForNonHero
+import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.shared.BEGINNER_GUIDE_UNFINISHED_STATE
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.START_BYTELEGEND_MISSION_ID
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
 import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.obj.CharacterSprite
-import com.bytelegend.client.app.script.effect.fadeInEffect
+import com.bytelegend.client.app.script.effect.showArrowGif
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.HIGHTLIGHT_MISSION_EVENT
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
+import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
+import org.w3c.dom.HTMLImageElement
 import react.RHandler
 import kotlin.reflect.KClass
 
@@ -66,7 +70,7 @@ class DefaultGameDirector(
 
     val currentWidgets: MutableMap<String, Widget<out GameProps>> = JSObjectBackedMap()
 
-    private val isRunning
+    val isRunning
         get() = index != -1
 
     init {
@@ -106,7 +110,9 @@ class DefaultGameDirector(
             gameControl.mapMouseClickEnabled = true
             reset()
         } else {
-            scripts[index++].start()
+            scripts[index++].apply {
+                console.log(this::class)
+            }.start()
         }
     }
 
@@ -146,16 +152,34 @@ class DefaultGameDirector(
         TODO("Not yet implemented")
     }
 
-    override fun characterMove(characterId: String, destMapCoordinate: GridCoordinate) {
-        scripts.add(CharacterMoveScript(gameScene.objects.getById(characterId), destMapCoordinate))
-    }
-
-    override fun fadeIn() {
-        scripts.add(RunSuspendFunctionScript { fadeInEffect(gameScene.gameContainerSize) })
+    override fun characterMove(characterId: String, destMapCoordinate: GridCoordinate, callback: UnitFunction) {
+        scripts.add(CharacterMoveScript(gameScene.objects.getById(characterId), destMapCoordinate, callback))
     }
 
     override fun onComplete(action: () -> Unit) {
         TODO("Not yet implemented")
+    }
+
+    override fun startBeginnerGuide() {
+        scripts.add(BeginnerGuideScript())
+    }
+
+    inner class BeginnerGuideScript : GameScript {
+        lateinit var arrowGif: HTMLImageElement
+        override fun start() {
+            // show gif arrow pointing to the coordinate
+            // highlight the first mission
+            respondToClick = true
+            arrowGif = showArrowGif(gameScene.canvasState.getUICoordinateInGameContainer())
+            eventBus.emit(HIGHTLIGHT_MISSION_EVENT, listOf(START_BYTELEGEND_MISSION_ID))
+        }
+
+        override fun stop() {
+            respondToClick = false
+            eventBus.emit(HIGHTLIGHT_MISSION_EVENT, null)
+            gameScene.states.removeState(BEGINNER_GUIDE_UNFINISHED_STATE)
+            document.body?.removeChild(arrowGif)
+        }
     }
 
     fun getAndIncrement(): Int {
@@ -182,15 +206,12 @@ class DefaultGameDirector(
 
     inner class CharacterMoveScript(
         val character: CharacterSprite,
-        val destMapCoordinate: GridCoordinate
+        val destMapCoordinate: GridCoordinate,
+        val callback: UnitFunction
     ) : GameScript {
         override fun start() {
-            character.movePath = searchForNonHero(gameScene.blockers, character.gridCoordinate, destMapCoordinate)
-
-            GlobalScope.launch {
-                while (character.gridCoordinate != destMapCoordinate) {
-                    delay(500)
-                }
+            character.moveTo(destMapCoordinate) {
+                callback()
                 character.direction = Direction.DOWN
                 next()
             }

@@ -16,6 +16,7 @@ import com.bytelegend.app.shared.protocol.LEAVE_SCENE
 import com.bytelegend.app.shared.protocol.MOVE_TO
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PublishMessage
+import com.bytelegend.app.shared.protocol.REMOVE_STATE
 import com.bytelegend.app.shared.protocol.ReplyMessage
 import com.bytelegend.app.shared.protocol.SendMessage
 import com.bytelegend.app.shared.protocol.SubscribeUnsubscribeMessage
@@ -193,6 +194,10 @@ class WebSocketClient(
 
     override suspend fun moveTo(x: Int, y: Int) {
         send<Unit>(MOVE_TO, x.toString(), y.toString())
+    }
+
+    override suspend fun removeState(map: String, state: String) {
+        send<Unit>(REMOVE_STATE, map, state)
     }
 
     override suspend fun leaveScene(srcMapId: String, destMapId: String) {

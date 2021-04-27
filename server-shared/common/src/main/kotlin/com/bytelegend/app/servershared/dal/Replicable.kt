@@ -20,6 +20,26 @@ interface Replicable {
     var lastUpdatedMs: Long?
 }
 
+// This is an adapter layer for application and database layer
+// For Player, the sk is "P"
+// For mission, the sk is "mapId#M#missionId"
+// For states, the sk is "mapId#S"
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+// | PartitionKey | SortKey                      | server     | map        | x  | y  | answers         | states     |
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+// | gh#alice     | P                            | gh#alice@1 | JavaIsland | 20 | 80 |                 |            |
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+// | gh#alice     |   mapId#M#StarByteLegend     |            |            |    |    | [{star:0, ...}] |            |
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+// | gh#alice     |   mapId#M#XXX                |            |            |    |    | []              |            |
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+// | gh#alice     |       mapId#S                |            |            |    |    |                 | {A:1, B:2} |
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+const val PLAYER_SORT_KEY = "P"
+const val MISSION_SORT_KEY = "M"
+const val STATES_SORT_KEY = "S"
+const val ITEMS_SORT_KEY = "I"
+
 interface StoredInPlayerTable : Replicable {
     var pk: String
     var sk: String

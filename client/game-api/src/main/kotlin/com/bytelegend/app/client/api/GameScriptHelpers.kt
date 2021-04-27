@@ -31,10 +31,19 @@ class GameScriptHelpers(val gameScene: GameScene) {
      * Standard NPC speech behaviour when clicked, including:
      *
      * 1. Display toast "you are not login" for anonymous user.
-     * 2. Say "I can't hear you" when hero is far from NPC.
-     * 3. Make NPC and hero face to face.
+     * 2. Make hero move to the npc, make them face to face, then call `onInteraction`
+     * 3. If hero can't reach NPC, call `onUnreachable`
      */
-    fun standardNpcSpeech(npcId: String, onClick: UnitFunction) = click@{
+    fun standardNpcSpeech(
+        npcId: String,
+        onInteraction: UnitFunction
+    ) = standardNpcSpeech(npcId, onInteraction) {}
+
+    fun standardNpcSpeech(
+        npcId: String,
+        onInteraction: UnitFunction,
+        onUnreachable: UnitFunction
+    ) = click@{
         if (gameScene.gameRuntime.hero == null) {
             gameScene.gameRuntime.toastController.addToast(
                 gameScene.gameRuntime.i("YouAreNotLoggedIn"),
@@ -43,20 +52,30 @@ class GameScriptHelpers(val gameScene: GameScene) {
             )
             return@click
         }
-        if (distanceOf(HERO_ID, npcId) > 1) {
-            gameScene.scripts {
-                speech {
-                    objectId = npcId
-                    contentHtmlId = "ICantHearYou"
-                }
-            }
-            return@click
-        }
         val npc = gameScene.objects.getById<Character>(npcId)
         val hero = gameScene.objects.getById<Character>(HERO_ID)
-        gameScene.objects.getById<Character>(npcId).direction = faceDirectionOf(npc, hero)
-        gameScene.gameRuntime.hero!!.direction = faceDirectionOf(hero, npc)
 
-        onClick()
+        if (distanceOf(HERO_ID, npcId) > 1) {
+            // This is a bit tricky: if searching path from hero to NPC
+            // it will be unreachable because NPC is a blocker
+            // so we search reversely
+            val movePath = npc.searchPath(hero.gridCoordinate).reversed()
+
+            if (movePath.isEmpty()) {
+                onUnreachable()
+            } else {
+                hero.moveAlong(movePath.subList(0, movePath.size - 1)) {
+                    faceToFaceThenInteract(hero, npc, onInteraction)
+                }
+            }
+        } else {
+            faceToFaceThenInteract(hero, npc, onInteraction)
+        }
+    }
+
+    private fun faceToFaceThenInteract(hero: Character, npc: Character, onInteraction: UnitFunction) {
+        npc.direction = faceDirectionOf(npc, hero)
+        hero.direction = faceDirectionOf(hero, npc)
+        onInteraction()
     }
 }

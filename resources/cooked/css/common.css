@@ -16,6 +16,7 @@ body {
     text-align: right;
     margin-top: 20px;
     margin-right: 10px;
+    user-select: none;
 }
 
 #online-counter-offline {
@@ -393,6 +394,7 @@ body {
     left: -48px;
     width: 160px;
     text-align: center;
+    user-select: none;
 }
 
 .brave-people-avatar-tooltip {
@@ -406,6 +408,7 @@ p.speech-bubble {
     padding: 1em 1em;
     font-size: 1em;
     border-radius: 0.5rem;
+    user-select: none;
     box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .3), 0 0.5rem 0.5rem rgba(0, 0, 0, .2);
 }
 
@@ -425,4 +428,10 @@ p.speech-bubble::after {
     line-height: 1.5;
     font-weight: 300;
     color: #192229;
+}
+
+.sidebar-item-widget  {
+    max-width: 64px;
+    border-radius: 8px;
+    padding: 8px;
 }

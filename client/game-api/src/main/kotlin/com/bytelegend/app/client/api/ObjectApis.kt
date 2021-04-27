@@ -1,5 +1,6 @@
 package com.bytelegend.app.client.api
 
+import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
@@ -17,6 +18,10 @@ interface Character : GameObject, CoordinateMutable {
      * Note this means "how we paint the character", not moving direction.
      */
     var direction: Direction
+
+    fun moveTo(destination: GridCoordinate, callback: UnitFunction? = null)
+    fun moveAlong(movePath: List<GridCoordinate>, callback: UnitFunction? = null)
+    fun searchPath(destination: GridCoordinate): List<GridCoordinate>
 }
 
 interface CoordinateMutable : CoordinateAware {

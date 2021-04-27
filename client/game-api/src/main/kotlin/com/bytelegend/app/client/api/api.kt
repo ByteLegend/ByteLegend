@@ -192,7 +192,11 @@ interface PlayerMissionContainer {
     fun missionAccomplished(missionId: String): Boolean
 }
 
-interface StateContainer
+interface StateContainer {
+    fun hasState(state: String): Boolean
+    fun getState(name: String): String
+    fun removeState(beginnerGuideUnfinishedState: String)
+}
 
 interface GameSceneContainer : GameContainerSizeAware {
     fun getSceneByIdOrNull(mapId: String): GameScene?

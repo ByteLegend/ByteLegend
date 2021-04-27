@@ -4,12 +4,9 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.getAudioElementOrNull
-import com.bytelegend.app.client.misc.searchForHero
 import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.NON_BLOCKER
+import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.web.WebSocketClient
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
 
@@ -52,11 +49,16 @@ class GameControl(
 
     // In offline mode, everything is still clickable, but hero won't move.
     private fun clickObjectsAndMove(coordinate: GridCoordinate) {
-        val scene = gameSceneContainer.activeScene!!
+        val scene = gameSceneContainer.activeScene!!.unsafeCast<DefaultGameScene>()
         val gameObjects = scene.objects.getByCoordinate(coordinate)
 
-        gameObjects.forEach {
-            it.onClick()
+        if (scene.director.isRunning) {
+            // if the speech bubble is on, don't allow to click on NPCs
+            gameObjects
+                .filter { !it.roles.contains(GameObjectRole.NPC) }
+                .forEach { it.onClick() }
+        } else {
+            gameObjects.forEach { it.onClick() }
         }
 
         if (!online) {
@@ -69,19 +71,9 @@ class GameControl(
 
         if (online &&
             game._hero != null &&
-            gameRuntime.activeScene == game._hero!!.gameScene &&
-            !isBlockerForHero(coordinate)
+            gameRuntime.activeScene == game._hero!!.gameScene
         ) {
-            val hero = gameRuntime.hero!!
-            val path = searchForHero(scene.blockers, hero.gridCoordinate, coordinate)
-            if (path.isNotEmpty()) {
-                GlobalScope.launch {
-                    webSocketClient.moveTo(coordinate.x, coordinate.y)
-                }
-                game._hero!!.movePath = path
-            }
+            game.hero!!.moveTo(coordinate)
         }
     }
-
-    private fun isBlockerForHero(coordinate: GridCoordinate) = gameSceneContainer.activeScene!!.blockers[coordinate.y][coordinate.x] != NON_BLOCKER
 }

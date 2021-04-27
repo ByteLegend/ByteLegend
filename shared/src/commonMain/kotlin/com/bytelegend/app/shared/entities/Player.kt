@@ -9,7 +9,6 @@ val ANONYMOUS_DUMMY_MAP = "ANONYMOUS_DUMMY_MAP"
 
 @Serializable
 open class Player {
-
     /**
      * ID for human reading, e.g.
      *
@@ -58,6 +57,8 @@ open class Player {
     var star: Int = 0
     var coin: Int = 0
     var reputation: Int = 0
+
+    var items: MutableList<String> = ArrayList()
 
     val online: Boolean
         @JsonIgnore

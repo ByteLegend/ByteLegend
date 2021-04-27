@@ -40,6 +40,12 @@ interface ScriptsBuilder {
     }
 
     /**
+     * Move then talk to an NPC
+     */
+    fun moveAndTalkTo() {
+    }
+
+    /**
      * Play an animation on object with objectId, with frames and intervals.
      *
      * For example, this shows a shaking animation:
@@ -47,7 +53,7 @@ interface ScriptsBuilder {
      * playAnimate("CoffeeMachine", [1,2,1,2], 100)
      */
     fun playAnimate(objectId: String, frames: List<Int>, intervalMs: Int)
-    fun characterMove(characterId: String, destMapCoordinate: GridCoordinate)
-    fun fadeIn()
+    fun characterMove(characterId: String, destMapCoordinate: GridCoordinate, callback: UnitFunction = {})
     fun onComplete(action: UnitFunction)
+    fun startBeginnerGuide()
 }
