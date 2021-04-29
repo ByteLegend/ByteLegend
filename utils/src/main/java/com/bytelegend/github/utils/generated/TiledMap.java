@@ -61,7 +61,7 @@ public class TiledMap {
     @JsonProperty("type")
     private String type;
     @JsonProperty("version")
-    private Double version;
+    private String version;
     @JsonProperty("width")
     private Long width;
     @JsonIgnore
@@ -92,7 +92,7 @@ public class TiledMap {
      * @param compressionlevel
      * @param height
      */
-    public TiledMap(Long compressionlevel, Long height, Boolean infinite, List<TiledMap.Layer> layers, Long nextlayerid, Long nextobjectid, String orientation, String renderorder, String tiledversion, Long tileheight, List<TiledMap.Tileset> tilesets, Long tilewidth, String type, Double version, Long width) {
+    public TiledMap(Long compressionlevel, Long height, Boolean infinite, List<TiledMap.Layer> layers, Long nextlayerid, Long nextobjectid, String orientation, String renderorder, String tiledversion, Long tileheight, List<TiledMap.Tileset> tilesets, Long tilewidth, String type, String version, Long width) {
         super();
         this.compressionlevel = compressionlevel;
         this.height = height;
@@ -242,12 +242,12 @@ public class TiledMap {
     }
 
     @JsonProperty("version")
-    public Double getVersion() {
+    public String getVersion() {
         return version;
     }
 
     @JsonProperty("version")
-    public void setVersion(Double version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 

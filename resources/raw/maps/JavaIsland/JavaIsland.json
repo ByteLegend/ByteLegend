@@ -1043,8 +1043,8 @@
                  "type":"GameMapPoint",
                  "visible":true,
                  "width":32,
-                 "x":610.666666666667,
-                 "y":3043
+                 "x":611.333333333334,
+                 "y":3013.66666666667
                 }, 
                 {
                  "gid":24627,
@@ -1055,8 +1055,8 @@
                  "type":"GameMapPoint",
                  "visible":true,
                  "width":32,
-                 "x":642.333333333333,
-                 "y":3010.66666666667
+                 "x":643,
+                 "y":2981.33333333334
                 }, 
                 {
                  "gid":95,
@@ -1724,7 +1724,7 @@
  "nextobjectid":130,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.5.0",
+ "tiledversion":"1.6.0",
  "tileheight":32,
  "tilesets":[
         {
@@ -1817,6 +1817,6 @@
         }],
  "tilewidth":32,
  "type":"map",
- "version":1.5,
+ "version":"1.6",
  "width":100
 }

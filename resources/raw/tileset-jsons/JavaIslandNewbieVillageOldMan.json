@@ -4,9 +4,10 @@
  "imagewidth":96,
  "margin":0,
  "name":"JavaIslandNewbieVillageOldMan",
+ "objectalignment":"topleft",
  "spacing":0,
  "tilecount":12,
- "tiledversion":"1.4.3",
+ "tiledversion":"1.6.0",
  "tileheight":32,
  "tiles":[
         {
@@ -63,5 +64,5 @@
         }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.4
+ "version":"1.6"
 }

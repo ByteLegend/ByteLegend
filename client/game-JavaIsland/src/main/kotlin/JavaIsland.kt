@@ -6,6 +6,7 @@ import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.shared.BEGINNER_GUIDE_UNFINISHED_STATE
 import com.bytelegend.app.shared.HumanReadableCoordinate
+import com.bytelegend.app.shared.JAVA_COFFEE
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.START_BYTELEGEND_MISSION_ID
@@ -22,23 +23,34 @@ fun main() {
                 destMapId = JAVA_ISLAND_NEWBIE_VILLAGE_PUB
             }
 
-//            npc {
-//                id = "JavaIslandNewbieVillageOldMan"
-//                sprite = "JavaIslandNewbieVillageOldMan-sprite"
-//                onInit = {
-//
-//                }
-//                onClick = {
-//                    scripts {
-//                        speech {
-//                            objectId = "JavaIslandNewbieVillageOldMan"
-//                            contentHtmlId = "PleaseTakeALookAtThatBook"
-//                        }
-//
-//                        starFly("JavaIslandNewbieVillageOldMan")
-//                    }
-//                }
-//            }
+            npc {
+                val oldManId = "JavaIslandNewbieVillageOldMan"
+                val oldManStartPoint = objects.getById<GameMapPoint>("$oldManId-point").point
+                val oldManDestination = objects.getById<GameMapPoint>("$oldManId-destination").point
+                id = oldManId
+                sprite = "$oldManId-sprite"
+                onInit = {
+                    if (gameRuntime.heroPlayer.items.contains(JAVA_COFFEE)) {
+                        helpers.getCharacter(oldManId).gridCoordinate = oldManDestination
+                    } else {
+                        helpers.getCharacter(oldManId).gridCoordinate = oldManStartPoint
+                    }
+                }
+                onClick = helpers.standardNpcSpeech(oldManId) {
+                    if (gameRuntime.heroPlayer.items.contains(JAVA_COFFEE)) {
+                        if (helpers.getCharacter(oldManId).gridCoordinate == oldManStartPoint) {
+                            scripts {
+                                speech(oldManId, "CanYouPleaseGrabACoffee", arrow = false)
+                            }
+                        } else {
+                        }
+                    } else {
+                        scripts {
+                            speech(oldManId, "CanYouPleaseGrabACoffee", arrow = false)
+                        }
+                    }
+                }
+            }
 
             npc {
                 val guardId = "JavaIslandNewbieVillagePubGuard"
@@ -107,35 +119,6 @@ fun main() {
                         }
                     }
                 }
-//                    helpers.standardNpcSpeech(guardId) {
-//                    if (!playerMissions.missionAccomplished(START_BYTELEGEND_MISSION_ID)) {
-//                        if (helpers.getCharacter(guardId).gridCoordinate == guardStartPoint) {
-//                            // mission accomplished, let's celebrate!
-//                            scripts {
-//                                speech(guardId, "NiceJob", arrayOf("1", "0"))
-//                                characterMove(guardId, guardMoveDestPoint)
-//                            }
-//                        } else {
-//                            scripts {
-//                                speech(guardId, "NiceDayHub", arrow = false)
-//                            }
-//                        }
-//                    } else {
-//                        if (helpers.getCharacter(guardId).gridCoordinate == guardStartPoint) {
-//                            scripts {
-//                                speech(guardId, "StarCondition", arrayOf("1", "0"))
-//                                speech(HERO_ID, "WhereToFindStar")
-//                                speech(
-//                                    guardId, "IDontKnowTakeALookAtStarBytelegend",
-//                                    arrayOf(
-//                                        HumanReadableCoordinate(objects.getById<AbstractStaticLocationSprite>("star-bytelegend").gridCoordinate).toString()
-//                                    ),
-//                                    arrow = false
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
             }
         }
     }
