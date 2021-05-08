@@ -1,7 +1,44 @@
 [
   {
-    "name": "money_3213595",
+    "name": "BrowserQuest tileset",
+    "url": "https://github.com/mozilla/BrowserQuest/blob/master/client/img/3/tilesheet.png",
+    "artist": "Franck Lecollinet",
+    "licence": "CC-BY-SA 3.0",
+    "licenceUrl": "http://creativecommons.org/licenses/by-sa/3.0/"
+  },
+  {
+    "name": "coin icon",
     "url": "https://www.flaticon.com/free-icon/money_3213595",
-    "artist": "Freepik"
+    "artist": "Freepik",
+    "licence": "Flaticon License",
+    "licenceUrl": "https://support.flaticon.com/hc/en-us/articles/207248209-Attribution-How-when-and-where-"
+  },
+  {
+    "name": "star icon",
+    "url": "https://www.flaticon.com/free-icon/star_616489",
+    "artist": "Freepik",
+    "licence": "Flaticon License",
+    "licenceUrl": "https://support.flaticon.com/hc/en-us/articles/207248209-Attribution-How-when-and-where-"
+  },
+  {
+    "name": "heart icon",
+    "url": "https://www.flaticon.com/free-icon/heart_1216649",
+    "artist": "itim2101",
+    "licence": "Flaticon License",
+    "licenceUrl": "https://support.flaticon.com/hc/en-us/articles/207248209-Attribution-How-when-and-where-"
+  },
+  {
+    "name": "coffee icon",
+    "url": "https://www.flaticon.com/free-icon/java_1387539",
+    "artist": "Freepik",
+    "licence": "Flaticon License",
+    "licenceUrl": "https://support.flaticon.com/hc/en-us/articles/207248209-Attribution-How-when-and-where-"
+  },
+  {
+    "name": "git icon",
+    "url": "https://commons.wikimedia.org/wiki/File:Git_icon.svg",
+    "artist": "Jason Long",
+    "licence": "CC BY 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by/3.0"
   }
 ]

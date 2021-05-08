@@ -63,8 +63,8 @@ import com.bytelegend.client.app.ui.UserAvatarWidgetProps
 import com.bytelegend.client.app.ui.UserMouseInteractionLayer
 import com.bytelegend.client.app.ui.UserMouseInteractionLayerProps
 import com.bytelegend.client.app.ui.gameChild
-import com.bytelegend.client.app.ui.item.ItemWidget
 import com.bytelegend.client.app.ui.item.ItemWidgetProps
+import com.bytelegend.client.app.ui.item.ItemsWidget
 import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
 import com.bytelegend.client.app.web.toGameInitData
@@ -310,7 +310,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         parentProps: RightSideBarProps,
         block: RElementBuilder<ItemWidgetProps>.() -> Unit = {}
     ): ReactElement {
-        return gameChild(parentProps, ItemWidget::class, block)
+        return gameChild(parentProps, ItemsWidget::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.tileCursorWidget(

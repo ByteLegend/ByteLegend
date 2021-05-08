@@ -11,7 +11,7 @@ private fun <E> Collection<E>.toJSArray(): dynamic {
 }
 
 class JSArrayBackedList<E>(
-    private val delegate: dynamic
+    val delegate: dynamic
 ) : MutableList<E> {
     constructor() : this(delegate = js("[]"))
     constructor(collection: Collection<E>) : this(delegate = collection.toJSArray())

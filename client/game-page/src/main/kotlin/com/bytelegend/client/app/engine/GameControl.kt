@@ -43,6 +43,7 @@ class GameControl(
 
     private fun onMouseClickOnCanvas(event: GameMouseEvent) {
         if (mapMouseClickEnabled) {
+            console.log("Click at ${event.mapCoordinate}")
             clickObjectsAndMove(event.mapCoordinate)
         }
     }

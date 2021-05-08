@@ -2,6 +2,7 @@
 
 package com.bytelegend.client.app.web
 
+import com.bytelegend.app.client.api.JSArrayBackedList
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition
@@ -64,6 +65,7 @@ fun toPlayer(jsonObject: dynamic) = Player().apply {
     locale = jsonObject.locale
     characterId = jsonObject.characterId
     avatarUrl = jsonObject.avatarUrl
+    items = JSArrayBackedList(delegate = jsonObject.items)
 }
 
 fun <T> toTypedList(jsonArray: dynamic, mapper: (dynamic) -> T): List<T> {

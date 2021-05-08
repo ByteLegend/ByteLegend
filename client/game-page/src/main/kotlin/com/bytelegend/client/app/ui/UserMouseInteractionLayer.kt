@@ -72,6 +72,7 @@ class UserMouseInteractionLayer : LayeredGameUIComponent<UserMouseInteractionLay
             attrs {
                 id = "user-mouse-interaction-layer"
                 onClickFunction = {
+                    console.log("Click at layer: ${toGameMouseEvent(it).mapCoordinate}")
                     game.eventBus.emit(MOUSE_CLICK_EVENT, toGameMouseEvent(it))
                 }
                 onMouseMoveFunction = {

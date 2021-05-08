@@ -81,6 +81,9 @@ fun WebDriver.startGame(port: Int) {
     waitUntil(10000) {
         assertNoErrorInConsoleLog()
         findElements(By.id("background-canvas-layer")).isNotEmpty() &&
-            findElements(By.id("objects-canvas-layer")).isNotEmpty()
+            findElements(By.id("objects-canvas-layer")).isNotEmpty() &&
+            fadeInLayerDisappeared()
     }
 }
+
+fun WebDriver.fadeInLayerDisappeared() = findElements(By.className("fade-in-layer")).isEmpty()

@@ -22,6 +22,7 @@ suspend fun fadeInEffect(gameContainerSize: PixelSize): Unit = suspendCoroutine 
     val id = "fadeIn-${Date().getTime().toLong()}"
     val fadeInLayer = createFullscreenDiv(id, Layer.FadeInFadeOut.zIndex(), gameContainerSize) {
         style.backgroundColor = "black"
+        className = "fade-in-layer"
     }
     window.asDynamic().gsap.fromTo(
         "#$id",

@@ -2,6 +2,7 @@ package com.bytelegend.app.opensourceserver
 
 import com.bytelegend.app.servershared.mock.mockPlayer
 import com.bytelegend.app.testfixtures.AbstractBrowserTest
+import com.bytelegend.app.testfixtures.fadeInLayerDisappeared
 import com.bytelegend.app.testfixtures.startGame
 import com.bytelegend.app.testfixtures.waitUntil
 import org.junit.jupiter.api.BeforeEach
@@ -35,16 +36,14 @@ class AppBrowserSmokeTest : AbstractBrowserTest() {
         browserWebDriverContainers[0].start()
         webDriver.startGame(gameServerPort)
 
-        Thread.sleep(1000) // wait for fade in
         webDriver.findElement(By.id("login-link")).click()
 
         webDriver.waitUntil(10000) {
             findElements(By.className("avatar-img")).run {
-                isNotEmpty() && get(0).getAttribute("src") == mockPlayer.avatarUrl
+                isNotEmpty() && get(0).getAttribute("src") == mockPlayer.avatarUrl && fadeInLayerDisappeared()
             }
         }
 
-        Thread.sleep(1000) // wait for fade in
         webDriver.findElement(By.className("avatar-img")).click()
         for (it in webDriver.findElements(By.className("dropdown-item"))) {
             if (it.text == "Sign out") {

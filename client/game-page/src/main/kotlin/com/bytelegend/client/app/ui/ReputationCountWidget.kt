@@ -1,10 +1,8 @@
 package com.bytelegend.client.app.ui
 
-import kotlinx.browser.document
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.id
-import org.w3c.dom.Node
 import react.RState
 import react.dom.RDOMBuilder
 import react.dom.span
@@ -14,7 +12,7 @@ interface ReputationCountWidgetState : RState
 
 const val REPUTATION_INCREMENT_EVENT = "reputation.increment"
 
-class ReputationCountWidget : AbstractIncrementAnimatableWidget<ReputationCountWidgetProps, ReputationCountWidgetState>() {
+class ReputationCountWidget : AbstractIncrementAnimatableWidget<ReputationCountWidgetProps, ReputationCountWidgetState>("heart-icon") {
     override val eventName: String = REPUTATION_INCREMENT_EVENT
 
     override fun RDOMBuilder<DIV>.renderDiv() {
@@ -23,10 +21,8 @@ class ReputationCountWidget : AbstractIncrementAnimatableWidget<ReputationCountW
             attrs.classes = setOf("map-title-text")
             +game.heroPlayer.reputation.toString()
         }
-        +" ❤️"
+        renderIcon()
     }
-
-    override fun getIncrementAnimationDiv(event: NumberIncrementEvent): Node = document.createTextNode("+${event.inc}❤️")
 
     override fun onIncrementNewValue(event: NumberIncrementEvent) {
         game.heroPlayer.reputation = event.newValue

@@ -7,4 +7,6 @@ val BootstrapListGroupItem: RClass<BootstrapListGroupItemProps> = BootstrapListG
 
 external interface BootstrapListGroupItemProps : RProps {
     var variant: String
+    var onClick: Any
+    var active: Boolean
 }

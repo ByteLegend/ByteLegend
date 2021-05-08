@@ -110,9 +110,7 @@ class DefaultGameDirector(
             gameControl.mapMouseClickEnabled = true
             reset()
         } else {
-            scripts[index++].apply {
-                console.log(this::class)
-            }.start()
+            scripts[index++].start()
         }
     }
 
