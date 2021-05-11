@@ -44,6 +44,10 @@ class DefaultPlayerMissionContainer(
         return missions[missionId]?.accomplished == true
     }
 
+    override fun missionStar(missionId: String): Int {
+        return missions[missionId]?.star ?: 0
+    }
+
     private fun onStarUpdate(eventData: StarUpdateEventData) {
         val currentMap: String = gameScene?.map?.id ?: return
         if (currentMap == eventData.map) {

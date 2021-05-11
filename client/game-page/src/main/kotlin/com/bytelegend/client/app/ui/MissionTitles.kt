@@ -75,8 +75,8 @@ class MissionTitles : GameUIComponent<MissionTitlesProps, MissionTitlesState>() 
             attrs.offsetY = if (state.counter % 20 < 10) 0 else -2
             attrs.title = i(mission.gameMapMission.title)
             attrs.tileCoordinate = mission.gridCoordinate
-            attrs.totalStar = 5
-            attrs.currentStar = 2
+            attrs.totalStar = mission.gameMapMission.totalStar
+            attrs.currentStar = activeScene.playerMissions.missionStar(mission.id)
         }
     }
 

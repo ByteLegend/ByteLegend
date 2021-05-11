@@ -137,6 +137,7 @@ class TiledObjectReader(
             GameMapMission(
                 it.name,
                 idToMissionDefinitions.getValue(it.name).title,
+                idToMissionDefinitions.getValue(it.name).challenge?.star ?: 0,
                 mapId,
                 tileIdToSpriteIdMap.getValue(it.gid),
                 it.toPoint(),

@@ -79,6 +79,7 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
         GameMapObjectType.GameMapMission -> CompressedGameMapMission(
             it.id,
             it.title,
+            it.totalStar,
             it.map,
             it.sprite,
             (it.point as Array<Int>).toList(),

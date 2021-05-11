@@ -188,7 +188,15 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
 }
 
 interface PlayerMissionContainer {
+    /**
+     * Is the mission accomplished?
+     */
     fun missionAccomplished(missionId: String): Boolean
+
+    /**
+     * How many star the player gets from the mission?
+     */
+    fun missionStar(missionId: String): Int
 }
 
 interface StateContainer {

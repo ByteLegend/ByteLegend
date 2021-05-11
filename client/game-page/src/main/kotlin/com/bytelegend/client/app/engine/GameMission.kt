@@ -14,6 +14,9 @@ import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.mission.MissionModal
 import kotlinx.browser.window
 
+/**
+ * Represent a mission object in the game
+ */
 class GameMission(
     override val gameScene: GameScene,
     val gameMapMission: GameMapMission,

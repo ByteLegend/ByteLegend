@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 class GameMapMission(
     override val id: String,
     val title: String,
+    val totalStar: Int,
     override val map: String,
     override val sprite: String,
     override val point: GridCoordinate,
@@ -23,6 +24,7 @@ class GameMapMission(
     override fun compress() = CompressedGameMapMission(
         id,
         title,
+        totalStar,
         map,
         sprite,
         point.toCompressedList(),
@@ -37,6 +39,7 @@ class GameMapMission(
 data class CompressedGameMapMission(
     override val id: String,
     val title: String,
+    val totalStar: Int,
     val map: String,
     val sprite: String,
     val point: List<Int>,
@@ -49,6 +52,7 @@ data class CompressedGameMapMission(
     override fun decompress() = GameMapMission(
         id,
         title,
+        totalStar,
         map,
         sprite,
         GridCoordinate(point),
