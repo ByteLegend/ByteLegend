@@ -131,18 +131,6 @@ processResourcesTasks.add(registerExecTask(
     outputs.file(i18nAllJson)
 })
 
-val checkpointsAllJson = RRBD.resolve("map/missions-all.json")
-processResourcesTasks.add(registerExecTask(
-    "mergeMissionYamls",
-    "com.bytelegend.utils.MissionMergerKt",
-    gameDataDir.absolutePath,
-    checkpointsAllJson.absolutePath
-) {
-    // TODO filter out checkpoints dir
-    inputs.dir(gameDataDir).withPathSensitivity(PathSensitivity.RELATIVE)
-    outputs.file(checkpointsAllJson)
-})
-
 processResourcesTasks.add(tasks.register<Copy>("copyHierarchyYml") {
     from(gameDataDir)
     include("hierarchy.yml")

@@ -7,7 +7,7 @@
  "objectalignment":"topleft",
  "spacing":0,
  "tilecount":400,
- "tiledversion":"1.5.0",
+ "tiledversion":"1.6.0",
  "tileheight":32,
  "tiles":[
         {
@@ -294,6 +294,58 @@
          "animation":[
                 {
                  "duration":500,
+                 "tileid":192
+                }, 
+                {
+                 "duration":500,
+                 "tileid":193
+                }, 
+                {
+                 "duration":500,
+                 "tileid":194
+                }, 
+                {
+                 "duration":500,
+                 "tileid":212
+                }, 
+                {
+                 "duration":500,
+                 "tileid":213
+                }, 
+                {
+                 "duration":500,
+                 "tileid":214
+                }, 
+                {
+                 "duration":500,
+                 "tileid":232
+                }, 
+                {
+                 "duration":500,
+                 "tileid":233
+                }, 
+                {
+                 "duration":500,
+                 "tileid":234
+                }, 
+                {
+                 "duration":500,
+                 "tileid":252
+                }, 
+                {
+                 "duration":500,
+                 "tileid":253
+                }, 
+                {
+                 "duration":500,
+                 "tileid":254
+                }],
+         "id":172
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
                  "tileid":309
                 }, 
                 {
@@ -348,5 +400,5 @@
         }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.5
+ "version":"1.6"
 }

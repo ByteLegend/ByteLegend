@@ -32,6 +32,10 @@ const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
 const val STAR_UPDATE_EVENT = "protocol.star.update"
 const val MISSION_UPDATE_EVENT = "protocol.mission.update"
 const val REMOVE_STATE = "protocol.remove.state"
+const val PUT_STATE = "protocol.put.state"
+const val ADD_ITEM = "protocol.add.item"
+const val REMOVE_ITEM = "protocol.remove.item"
+
 
 interface GameServerProtocol {
     /**
@@ -42,7 +46,11 @@ interface GameServerProtocol {
 
     suspend fun moveTo(x: Int, y: Int)
 
-    suspend fun removeState(map: String, state: String)
+    // TODO verify frontend input
+    suspend fun putState(key: String, value: String)
+    suspend fun removeState(key: String)
+    suspend fun addItem(item: String)
+    suspend fun removeItem(item: String)
 
     suspend fun leaveScene(srcMapId: String, destMapId: String)
 

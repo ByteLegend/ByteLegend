@@ -9,12 +9,11 @@ import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
 import com.bytelegend.app.client.api.dsl.UnitFunction
-import com.bytelegend.app.shared.BEGINNER_GUIDE_UNFINISHED_STATE
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.app.shared.START_BYTELEGEND_MISSION_ID
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
+import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
 import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
@@ -25,6 +24,7 @@ import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.HIGHTLIGHT_MISSION_EVENT
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
+import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -49,6 +49,8 @@ interface GameScript {
     fun stop() {}
 }
 
+const val STAR_BYTELEGEND_MISSION_ID = "star-bytelegend"
+
 class DefaultGameDirector(
     di: DI,
     private val gameScene: GameScene
@@ -59,6 +61,9 @@ class DefaultGameDirector(
     private val scripts: MutableList<GameScript> = mutableListOf()
     private val eventBus: EventBus by di.instance()
     private var respondToClick: Boolean = false
+    private val webSocketClient: WebSocketClient by lazy {
+        gameScene.gameRuntime.unsafeCast<Game>().webSocketClient
+    }
 
     // Point to next script to run
     private var index = -1
@@ -162,6 +167,44 @@ class DefaultGameDirector(
         scripts.add(BeginnerGuideScript())
     }
 
+    override fun putState(key: String, value: String) {
+        scripts.add(
+            RunSuspendFunctionScript {
+                webSocketClient.putState(key, value)
+                game.heroPlayer.states[key] = value
+            }
+        )
+    }
+
+    override fun removeState(key: String) {
+        scripts.add(
+            RunSuspendFunctionScript {
+                webSocketClient.removeState(key)
+                game.heroPlayer.states.remove(key)
+            }
+        )
+    }
+
+    override fun addItem(item: String) {
+        scripts.add(
+            RunSuspendFunctionScript {
+                webSocketClient.addItem(item)
+                if (!game.heroPlayer.items.contains(item)) {
+                    game.heroPlayer.items.add(item)
+                }
+            }
+        )
+    }
+
+    override fun removeItem(item: String) {
+        scripts.add(
+            RunSuspendFunctionScript {
+                webSocketClient.removeItem(item)
+                game.heroPlayer.items.remove(item)
+            }
+        )
+    }
+
     inner class BeginnerGuideScript : GameScript {
         lateinit var arrowGif: HTMLImageElement
         override fun start() {
@@ -169,13 +212,12 @@ class DefaultGameDirector(
             // highlight the first mission
             respondToClick = true
             arrowGif = showArrowGif(gameScene.canvasState.getUICoordinateInGameContainer())
-            eventBus.emit(HIGHTLIGHT_MISSION_EVENT, listOf(START_BYTELEGEND_MISSION_ID))
+            eventBus.emit(HIGHTLIGHT_MISSION_EVENT, listOf(STAR_BYTELEGEND_MISSION_ID))
         }
 
         override fun stop() {
             respondToClick = false
             eventBus.emit(HIGHTLIGHT_MISSION_EVENT, null)
-            gameScene.states.removeState(BEGINNER_GUIDE_UNFINISHED_STATE)
             document.body?.removeChild(arrowGif)
         }
     }

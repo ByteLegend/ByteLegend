@@ -1,8 +1,11 @@
 package com.bytelegend.app.servershared
 
+import com.bytelegend.app.shared.entities.mission.MapMissionSpec
+import com.bytelegend.app.shared.objects.GameMapMission
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver
 import com.fasterxml.jackson.databind.module.SimpleModule
 
 /**
@@ -23,4 +26,16 @@ fun <T> ObjectMapper.install(klass: Class<T>, deserializer: JsonDeserializer<T>)
     val module = SimpleModule()
     module.addDeserializer(klass, deserializer)
     registerModule(module)
+}
+
+fun ObjectMapper.registerMapMissionSpecMapping() {
+    registerModule(
+        SimpleModule().apply {
+            setAbstractTypes(
+                SimpleAbstractTypeResolver().apply {
+                    addMapping(MapMissionSpec::class.java, GameMapMission::class.java)
+                }
+            )
+        }
+    )
 }

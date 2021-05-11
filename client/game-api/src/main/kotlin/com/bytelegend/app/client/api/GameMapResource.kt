@@ -79,9 +79,10 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
         GameMapObjectType.GameMapMission -> CompressedGameMapMission(
             it.id,
             it.title,
+            it.map,
             it.sprite,
-            it.missionType,
             (it.point as Array<Int>).toList(),
+            (it.children as Array<String>).toList(),
             it.next
         )
         else -> throw IllegalStateException("Unrecognized type: ${it.type}")

@@ -101,7 +101,6 @@ class DefaultGameSceneContainer(
         val scene = DefaultGameScene(di, map.await(), tileset.await(), gameContainerSize)
         scene.players = PlayerContainer(mapId, eventBus, game.webSocketClient, resourceLoader, sceneInitData.await().players).apply { init(scene) }
         scene.playerMissions = DefaultPlayerMissionContainer(di, sceneInitData.await().missions.asDynamic()).apply { init(scene) }
-        scene.states = DefaultStateContainer(sceneInitData.await().states).apply { init(scene) }
         scenes[mapId] = scene
         switchScene(oldScene, scene, switchAfterLoading, action)
 

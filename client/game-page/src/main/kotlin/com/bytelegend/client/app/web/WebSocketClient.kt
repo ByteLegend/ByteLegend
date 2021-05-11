@@ -8,6 +8,7 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.SceneInitData
+import com.bytelegend.app.shared.protocol.ADD_ITEM
 import com.bytelegend.app.shared.protocol.ENTER_SCENE
 import com.bytelegend.app.shared.protocol.GET_MISSION_MODAL_DATA
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
@@ -15,7 +16,9 @@ import com.bytelegend.app.shared.protocol.GameServerProtocol
 import com.bytelegend.app.shared.protocol.LEAVE_SCENE
 import com.bytelegend.app.shared.protocol.MOVE_TO
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.PUT_STATE
 import com.bytelegend.app.shared.protocol.PublishMessage
+import com.bytelegend.app.shared.protocol.REMOVE_ITEM
 import com.bytelegend.app.shared.protocol.REMOVE_STATE
 import com.bytelegend.app.shared.protocol.ReplyMessage
 import com.bytelegend.app.shared.protocol.SendMessage
@@ -196,8 +199,20 @@ class WebSocketClient(
         send<Unit>(MOVE_TO, x.toString(), y.toString())
     }
 
-    override suspend fun removeState(map: String, state: String) {
-        send<Unit>(REMOVE_STATE, map, state)
+    override suspend fun putState(key: String, value: String) {
+        send<Unit>(PUT_STATE, key, value)
+    }
+
+    override suspend fun removeState(key: String) {
+        send<Unit>(REMOVE_STATE, key)
+    }
+
+    override suspend fun addItem(item: String) {
+        send<Unit>(ADD_ITEM, item)
+    }
+
+    override suspend fun removeItem(item: String) {
+        send<Unit>(REMOVE_ITEM, item)
     }
 
     override suspend fun leaveScene(srcMapId: String, destMapId: String) {

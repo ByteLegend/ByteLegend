@@ -4,6 +4,8 @@ import com.bytelegend.app.shared.CompressedGameMap
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.entities.mission.ChallengeType
+import com.bytelegend.app.shared.entities.mission.MissionSpec
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.objects.GameMapObject
@@ -33,6 +35,17 @@ abstract class AbstractRRBDResourceProvider(
         }.toMap()
     }
 
+    private val mapToMissionSpecs: Map<String, List<MissionSpec>> =
+        idToMapDefinitions.keys.associateWith { serializer.fromJson(File(localRRBD, "map/$it/missions.json").readText(), object : TypeReference<List<MissionSpec>>() {}) }
+
+    private val idToMissionSpec: Map<String, MissionSpec> = mapToMissionSpecs.values
+        .flatten()
+        .associateBy { it.id }
+
+    private val repoToMissionSpec: Map<String, MissionSpec> = idToMissionSpec.values
+        .filter { it.challenge != null && (it.challenge?.type == ChallengeType.PullRequest || it.challenge?.type == ChallengeType.Star) }
+        .associateBy { it.challenge!!.spec }
+
     private val idToMaps: Map<String, FastAccessGameMap> = idToMapDefinitions.keys
         .filter { File(localRRBD).resolve("map/$it/map.json").isFile }
         .associateWith {
@@ -45,6 +58,9 @@ abstract class AbstractRRBDResourceProvider(
             putInto(result, it.children)
         }
     }
+
+    fun getMissionSpecById(id: String) = idToMissionSpec.getValue(id)
+    fun getMissionSpecByRepo(repo: String) = repoToMissionSpec.getValue(repo)
 
     fun getI18nText(id: String, locale: Locale) = localizedText.getValue(id).getTextOrDefaultLocale(locale)
 

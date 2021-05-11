@@ -73,14 +73,8 @@ class MissionAnswer {
     }
 }
 
-class MissionsAndStates(
-    val missions: Map<String, PlayerMission>,
-    val states: States
-)
-
 class SceneInitData(
     val players: List<Player>,
-    val missions: Map<String, PlayerMission>,
-    val states: States
+    val missions: Map<String, PlayerMission>
 )
 

@@ -1,8 +1,7 @@
 package com.bytelegend.utils
 
-import com.bytelegend.app.shared.entities.Mission
-import com.bytelegend.app.shared.entities.Tutorial
-import com.bytelegend.app.shared.entities.flatten
+import com.bytelegend.app.shared.entities.mission.MissionSpec
+import com.bytelegend.app.shared.entities.mission.Tutorial
 import java.io.File
 
 /**
@@ -11,9 +10,7 @@ import java.io.File
 class MissionDataReader(
     private val mapIdToMissionsDir: Map<String, File>
 ) {
-    fun getCheckpointsOnMap(mapId: String): List<Mission> = maps.getValue(mapId).missions.values.toList()
-    fun getMissionsOnMap(mapId: String): List<Mission> = maps.getValue(mapId).missions.values.toList()
-    fun getAllMissions(): Map<String, Map<String, Mission>> = maps.map { it.key to it.value.missions }.toMap()
+    fun getMissionsOnMap(mapId: String): List<MissionSpec> = maps.getValue(mapId).missionSpecs.values.toList()
 
     private val maps: Map<String, MapData> = mapIdToMissionsDir.map {
         it.key to MapData(it.value)
@@ -22,22 +19,20 @@ class MissionDataReader(
 
 class MapData(ymlDir: File) {
     private val duplicateIdChecker: HashSet<String> = HashSet()
-    val missions: Map<String, Mission> = ymlDir.listFiles().filter {
+    val missionSpecs: Map<String, MissionSpec> = ymlDir.listFiles().filter {
         it.name.endsWith(".yml")
     }.flatMap {
         YAML_PARSER
-            .readValues(YAML_FACTORY.createParser(it), Mission::class.java)
+            .readValues(YAML_FACTORY.createParser(it), MissionSpec::class.java)
             .readAll()
     }.onEach {
         require(duplicateIdChecker.add(it.id)) { "Duplicate id: ${it.id}" }
-    }.flatMap {
-        it.flatten()
     }.associateBy {
         it.id
     }
 
-    val tutorials: Map<String, Tutorial> = missions.values.flatMap {
-        it.tutorials
+    val tutorials: Map<String, Tutorial> = missionSpecs.values.flatMap {
+        it.tutorials?.data ?: emptyList()
     }.onEach {
         require(duplicateIdChecker.add(it.id)) { "Duplicate id: ${it.id}" }
     }.associateBy {

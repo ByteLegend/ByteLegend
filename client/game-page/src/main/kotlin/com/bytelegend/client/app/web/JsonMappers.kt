@@ -13,7 +13,6 @@ import com.bytelegend.app.shared.entities.MissionTabType
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.entities.PlayerMission
 import com.bytelegend.app.shared.entities.SceneInitData
-import com.bytelegend.app.shared.entities.States
 import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.i18n.LocalizedTextFormat
@@ -66,6 +65,7 @@ fun toPlayer(jsonObject: dynamic) = Player().apply {
     characterId = jsonObject.characterId
     avatarUrl = jsonObject.avatarUrl
     items = JSArrayBackedList(delegate = jsonObject.items)
+    states = JSObjectBackedMap(jsonObject.states)
 }
 
 fun <T> toTypedList(jsonArray: dynamic, mapper: (dynamic) -> T): List<T> {
@@ -82,8 +82,7 @@ fun <T> toTypedMap(jsonObject: dynamic, valueMapper: (dynamic) -> T): Map<String
 
 fun toSceneInitData(jsonObject: dynamic) = SceneInitData(
     toTypedList(jsonObject.players, ::toPlayer),
-    toTypedMap(jsonObject.missions, ::toMission),
-    toStates(jsonObject.states)
+    toTypedMap(jsonObject.missions, ::toMission)
 )
 
 fun toMissionModalData(jsonObject: dynamic) = MissionModalData(
@@ -109,12 +108,6 @@ fun toMissionTabData(tabType: MissionTabType, jsonObject: dynamic): Any {
         MissionTabType.Discussion -> ""
         else -> throw IllegalStateException()
     }
-}
-
-fun toStates(jsonObject: dynamic) = States().apply {
-    playerId = jsonObject.playerId
-    map = jsonObject.map
-    states.putAll(JSObjectBackedMap(jsonObject.states))
 }
 
 fun toMission(jsonObject: dynamic) = PlayerMission().apply {

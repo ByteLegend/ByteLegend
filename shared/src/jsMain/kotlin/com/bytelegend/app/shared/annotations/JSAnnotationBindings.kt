@@ -8,5 +8,6 @@ actual annotation class DynamoDbSortKey()
 actual annotation class DynamoDbIgnore()
 actual annotation class DynamoDbVersionAttribute()
 actual annotation class DynamoDbSecondaryPartitionKey(actual val indexNames: Array<String>)
+actual annotation class ReadOnly()
 
 

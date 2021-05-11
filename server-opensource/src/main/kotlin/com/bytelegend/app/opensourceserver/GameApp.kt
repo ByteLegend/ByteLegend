@@ -8,9 +8,9 @@ import com.bytelegend.app.servershared.dal.SESSION_COOKIE_NAME
 import com.bytelegend.app.servershared.install
 import com.bytelegend.app.servershared.mock.anonymousPlayer
 import com.bytelegend.app.servershared.mock.mockPlayer
+import com.bytelegend.app.servershared.registerMapMissionSpecMapping
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.entities.SceneInitData
-import com.bytelegend.app.shared.entities.States
 import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
@@ -126,6 +126,7 @@ class JacksonJsonMapper : JsonMapper {
     private val objectMapper = ObjectMapper().apply {
         setSerializationInclusion(JsonInclude.Include.NON_NULL)
         registerModule(KotlinModule())
+        registerMapMissionSpecMapping()
         install(WebSocketMessage::class.java, WebSocketMessageDeserializer())
     }
     private val yamlMapper = ObjectMapper(YAMLFactory()).apply {
@@ -236,8 +237,7 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
                 MOVE_TO -> ""
                 GET_SCENE_INIT_DATA -> SceneInitData(
                     emptyList(),
-                    emptyMap(),
-                    States()
+                    emptyMap()
                 )
                 else -> throw IllegalArgumentException("Unsupported message name: ${message.name}")
             }
@@ -245,7 +245,11 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
             sendMessage(session, replyMessage)
         } catch (t: Throwable) {
             t.printStackTrace()
-            val replyErrorMessage = ReplyMessage(WebSocketMessageType.REPLY_ERROR, message.replyAddress, t.message ?: "")
+            val replyErrorMessage = ReplyMessage(
+                WebSocketMessageType.REPLY_ERROR, message.replyAddress,
+                t.message
+                    ?: ""
+            )
             sendMessage(session, replyErrorMessage)
         }
     }

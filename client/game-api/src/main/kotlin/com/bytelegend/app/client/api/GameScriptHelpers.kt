@@ -58,15 +58,20 @@ class GameScriptHelpers(val gameScene: GameScene) {
         if (distanceOf(HERO_ID, npcId) > 1) {
             // This is a bit tricky: if searching path from hero to NPC
             // it will be unreachable because NPC is a blocker
-            // so we search reversely
-            val movePath = npc.searchPath(hero.gridCoordinate).reversed()
-
-            if (movePath.isEmpty()) {
-                onUnreachable()
-            } else {
-                hero.moveAlong(movePath.subList(0, movePath.size - 1)) {
-                    faceToFaceThenInteract(hero, npc, onInteraction)
+            // so we remove blocker first then restore
+            val tmp = gameScene.blockers[npc.gridCoordinate.y][npc.gridCoordinate.x]
+            try {
+                gameScene.blockers[npc.gridCoordinate.y][npc.gridCoordinate.x] = 0
+                val movePath = hero.searchPath(npc.gridCoordinate)
+                if (movePath.isEmpty()) {
+                    onUnreachable()
+                } else {
+                    hero.moveAlong(movePath.subList(0, movePath.size - 1)) {
+                        faceToFaceThenInteract(hero, npc, onInteraction)
+                    }
                 }
+            } finally {
+                gameScene.blockers[npc.gridCoordinate.y][npc.gridCoordinate.x] = tmp
             }
         } else {
             faceToFaceThenInteract(hero, npc, onInteraction)

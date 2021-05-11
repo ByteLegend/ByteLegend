@@ -9,13 +9,13 @@ import com.bytelegend.app.client.api.PlayerMissionContainer
 import com.bytelegend.app.client.api.getAudioElementOrNull
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.entities.MissionType
 import com.bytelegend.app.shared.entities.PlayerMission
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
 import com.bytelegend.client.app.script.DefaultGameDirector
+import com.bytelegend.client.app.script.STAR_BYTELEGEND_MISSION_ID
 import com.bytelegend.client.app.script.effect.starFlyEffect
 import com.bytelegend.client.app.ui.NumberIncrementEvent
 import com.bytelegend.client.app.ui.STAR_INCREMENT_EVENT
@@ -52,16 +52,13 @@ class DefaultPlayerMissionContainer(
             val mission = gameScene!!.objects.getById<GameMission>(eventData.missionId).gameMapMission
             val canvasState = gameScene!!.canvasState
             val endCoordinateInGameContainer: PixelCoordinate = canvasState.determineRightSideBarCoordinateInGameContainerLeftTop()
-            val startCoordinateInGameContainer: PixelCoordinate = when (mission.missionType) {
-                MissionType.Star -> {
-                    // See MenuItem, from the GitHub menu icon
+            val startCoordinateInGameContainer: PixelCoordinate =
+                if (mission.id == STAR_BYTELEGEND_MISSION_ID)
+                // See MenuItem, from the GitHub menu icon
                     canvasState.determineMenuCoordinateInGameContainer()
-                }
-                else -> {
+                else
                     mission.point * gameScene!!.map.tileSize -
                         canvasState.getCanvasCoordinateInMap() + canvasState.getCanvasCoordinateInGameContainer()
-                }
-            }
 
             if (modalController.visible) {
                 // if modal is visible, add to script list

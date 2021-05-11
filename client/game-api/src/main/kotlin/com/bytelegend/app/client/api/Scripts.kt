@@ -40,12 +40,6 @@ interface ScriptsBuilder {
     }
 
     /**
-     * Move then talk to an NPC
-     */
-    fun moveAndTalkTo() {
-    }
-
-    /**
      * Play an animation on object with objectId, with frames and intervals.
      *
      * For example, this shows a shaking animation:
@@ -56,4 +50,8 @@ interface ScriptsBuilder {
     fun characterMove(characterId: String, destMapCoordinate: GridCoordinate, callback: UnitFunction = {})
     fun onComplete(action: UnitFunction)
     fun startBeginnerGuide()
+    fun putState(key: String, value: String = "1")
+    fun removeState(key: String)
+    fun removeItem(item: String)
+    fun addItem(item: String)
 }

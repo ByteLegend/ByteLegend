@@ -37,8 +37,6 @@ interface Replicable {
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 const val PLAYER_SORT_KEY = "P"
 const val MISSION_SORT_KEY = "M"
-const val STATES_SORT_KEY = "S"
-const val ITEMS_SORT_KEY = "I"
 
 interface StoredInPlayerTable : Replicable {
     var pk: String

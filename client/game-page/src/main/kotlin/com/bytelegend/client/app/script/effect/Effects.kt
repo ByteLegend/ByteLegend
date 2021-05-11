@@ -118,7 +118,11 @@ suspend fun starFlyEffect(
         style.backgroundColor = "transparent"
         style.position = "absolute"
 
-        appendChild(document.createTextNode("⭐"))
+        appendChild(
+            document.createElement("div").apply {
+                className = "star-icon inline-icon"
+            }
+        )
     }
 
     window.asDynamic().starFly(

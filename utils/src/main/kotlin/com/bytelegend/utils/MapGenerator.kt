@@ -75,6 +75,7 @@ class MapGenerator(
      *    |_ map.json
      *    |_ tileset.png
      *    |_ roadmap.svg
+     *    |_ missions.json
      */
     private val outputDir: File
 ) {
@@ -85,6 +86,7 @@ class MapGenerator(
     private val outputRawMapJson = outputDir.resolve("map.raw.json")
     private val outputCompressedMapJson = outputDir.resolve("map.json")
     private val outputRoadmapSvg = outputDir.resolve("roadmap.svg")
+    private val outputMissionsJson = outputDir.resolve("missions.json")
     private val tiledMap: TiledMap = uglyObjectMapper.readValue(tiledMapJson.readText(), TiledMap::class.java)
     private val mapDataReader = MissionDataReader(mapOf(mapId to mapMissionDataDir))
     private val tilesets: List<TilesetAndImage> = tiledMap.tilesets.map {
@@ -148,6 +150,11 @@ class MapGenerator(
 
         generateDestGameMap(outputRawMapJson, outputCompressedMapJson)
         generateRoadmapSvg()
+        generateMissionsJson()
+    }
+
+    private fun generateMissionsJson() {
+        outputMissionsJson.writeText(uglyObjectMapper.writeValueAsString(tiledObjectReader.readAndMergeMissionSpecs()))
     }
 
     private fun generateRoadmapSvg() {
@@ -458,7 +465,8 @@ class MapGenerator(
          * Note: this also populates srcImageBlocksToDestBlockMapping
          */
         fun readDynamicSpriteAndPopulateTileset() {
-            val dynamicSpriteLayers = tiledMap.layers.find { it.type == "group" && it.name == "DynamicSprites" }?.layers ?: return
+            val dynamicSpriteLayers = tiledMap.layers.find { it.type == "group" && it.name == "DynamicSprites" }?.layers
+                ?: return
             dynamicSpriteLayers.forEach {
                 dynamicSpriteBlocks[it.name] = it.getDynamicSpriteData()
             }

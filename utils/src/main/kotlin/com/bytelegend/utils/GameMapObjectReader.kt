@@ -1,6 +1,7 @@
 package com.bytelegend.utils
 
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.entities.mission.MissionSpec
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameMapObject
@@ -50,6 +51,20 @@ class TiledObjectReader(
     private val rawLayerIdToIndexMap: Map<Int, Int>
 ) {
     private val tileSize = tiledMap.getTileSize()
+
+    /**
+     * Read mission specs from game-data/missions and merge mission information on map (`MapMissionSpec`)
+     */
+    fun readAndMergeMissionSpecs(): List<MissionSpec> {
+        val idToMapMission = tiledMap.readMissions().associateBy { it.id }
+        return missionDataReader.getMissionsOnMap(mapId).map {
+            require(it.mapMissionSpec == null) {
+                "mapMissionSpec found in ${it.id}!"
+            }
+            it.copy(mapMissionSpec = idToMapMission.getValue(it.id))
+        }
+    }
+
     fun readRawObjects(): List<GameMapObject> {
         tiledMap.verify()
         return tiledMap.readRawObjects()
@@ -100,11 +115,12 @@ class TiledObjectReader(
             .map { fn(layer, it) }
     }
 
-    private fun TiledMap.readMissions(): List<GameMapObject> {
+    private fun TiledMap.readMissions(): List<GameMapMission> {
         val rawMissionObjects: List<TiledMapObject> = readObjects(TiledObjectType.GameMapMission) { _, obj -> obj }
         val tiledNumberIdToRawMissionObjects: Map<Long, TiledMapObject> = rawMissionObjects.associateBy { it.id }
 
-        val dynamicSpriteLayers: List<TiledMap.Layer2> = tiledMap.layers.find { it.type == "group" && it.name == "DynamicSprites" }?.layers ?: emptyList()
+        val dynamicSpriteLayers: List<TiledMap.Layer2> = tiledMap.layers.find { it.type == "group" && it.name == "DynamicSprites" }?.layers
+            ?: emptyList()
         // key: the tile id (gid)
         // value: the dynamic sprite id
         val tileIdToSpriteIdMap: Map<Long, String> = dynamicSpriteLayers.flatMap { layer ->
@@ -121,9 +137,10 @@ class TiledObjectReader(
             GameMapMission(
                 it.name,
                 idToMissionDefinitions.getValue(it.name).title,
+                mapId,
                 tileIdToSpriteIdMap.getValue(it.gid),
-                idToMissionDefinitions.getValue(it.name).spec.type,
                 it.toPoint(),
+                emptyList(),
                 tiledNumberIdToRawMissionObjects[next]?.name
             )
         }

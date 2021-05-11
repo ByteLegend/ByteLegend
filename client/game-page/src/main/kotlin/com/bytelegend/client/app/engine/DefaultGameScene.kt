@@ -64,7 +64,6 @@ class DefaultGameScene(
     lateinit var players: PlayerContainer
 
     override lateinit var playerMissions: DefaultPlayerMissionContainer
-    override lateinit var states: DefaultStateContainer
 
     override fun objects(block: ObjectsBuilder.() -> Unit) {
         block()

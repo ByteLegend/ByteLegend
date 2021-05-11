@@ -182,7 +182,6 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
     val objects: GameObjectContainer
     val canvasState: GameCanvasState
     val playerMissions: PlayerMissionContainer
-    val states: StateContainer
 
     fun objects(block: ObjectsBuilder.() -> Unit)
     fun scripts(block: ScriptsBuilder.() -> Unit)
@@ -195,7 +194,9 @@ interface PlayerMissionContainer {
 interface StateContainer {
     fun hasState(state: String): Boolean
     fun getState(name: String): String
-    fun removeState(beginnerGuideUnfinishedState: String)
+    suspend fun removeState(state: String)
+    suspend fun putState(key: String, value: String)
+    suspend fun putState(key: String) = putState(key, "1")
 }
 
 interface GameSceneContainer : GameContainerSizeAware {
