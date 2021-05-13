@@ -26,13 +26,6 @@ fun RawGameMapTileLayer.toSprite(
         AnimationSprite(gameScene, coordinate, tileset, this as RawAnimationLayer)
     }
 
-/**
- * We use "pre-rendered canvas" to improve rendering performance.
- * In short, we pre-rendered 2 whole maps on invisible canvases
- * so we can copy the whole viewport from it in the future.
- */
-val PRE_RENDERED_CANVAS_NUM = 2
-
 interface BackgroundSpriteLayer : Sprite {
     /**
      * Upon the following cases, we must fall back to realtime rendering:
@@ -106,7 +99,7 @@ class AnimationSprite(
     private val frames = animationLayer.frames.toTypedArray()
     private val duration = animationLayer.frames[0].duration
 
-    override fun supportPrerender() = frames.size <= PRE_RENDERED_CANVAS_NUM && animationLayer.layer < PLAYER_LAYER
+    override fun supportPrerender() = animationLayer.layer < PLAYER_LAYER
 
     override fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D) {
         drawFrame(frameIndex, canvas, pixelCoordinate.x, pixelCoordinate.y)

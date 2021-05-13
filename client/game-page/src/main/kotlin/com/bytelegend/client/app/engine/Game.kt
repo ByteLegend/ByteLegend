@@ -7,6 +7,7 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.JSObjectBackedMap
+import com.bytelegend.app.client.api.Logger
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.WindowBasedEventBus
@@ -59,6 +60,8 @@ private fun determineLocale(gameInitData: GameInitData): Locale {
         Locale.of(gameInitData.player.locale!!)
     }
 }
+
+val logger: Logger = BrowserConsoleLogger
 
 class Game(
     override val di: DI,

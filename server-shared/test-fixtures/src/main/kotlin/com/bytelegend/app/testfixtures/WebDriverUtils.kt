@@ -3,17 +3,14 @@ package com.bytelegend.app.testfixtures
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.RGBA
-import org.junit.jupiter.api.Assertions
 import org.openqa.selenium.By
 import org.openqa.selenium.Dimension
 import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.Point
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.logging.LogType
 import java.awt.Color
 import java.nio.file.Paths
 import java.util.Base64
-import java.util.logging.Level
 
 fun Color.toRGBA() = RGBA(red, green, blue, alpha)
 
@@ -26,22 +23,18 @@ fun WebDriver.waitUntil(timeoutMs: Int = 5000, predicate: WebDriver.() -> Boolea
 fun waitUntil(timeoutMs: Int = 5000, predicate: () -> Boolean) {
     val start = System.currentTimeMillis()
 
+    var exception: Exception? = null
     while (System.currentTimeMillis() - start < timeoutMs) {
-        if (predicate()) {
-            return
+        try {
+            if (predicate()) {
+                return
+            }
+        } catch (e: Exception) {
+            exception = e
         }
         Thread.sleep(100)
     }
-    throw IllegalStateException("Timeout after $timeoutMs ms waiting for condition to be true!")
-}
-
-fun WebDriver.assertNoErrorInConsoleLog() {
-    manage().logs().get(LogType.BROWSER).all.forEach { log ->
-        println("${log.level} ${log.message}")
-        if (listOf("/favicon.ico", "/404").none { log.message.contains(it) }) {
-            Assertions.assertNotEquals(Level.SEVERE, log.level)
-        }
-    }
+    throw IllegalStateException("Timeout after $timeoutMs ms waiting for condition to be true!", exception)
 }
 
 fun WebDriver.clearLocalStorage() {

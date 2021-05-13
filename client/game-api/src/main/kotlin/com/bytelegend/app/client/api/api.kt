@@ -23,6 +23,25 @@ interface GameObjectContainer {
     fun <T : GameObject> getByRole(role: GameObjectRole): List<T>
 }
 
+enum class LogLevel {
+    Debug,
+    Info,
+    Warn,
+    Error
+}
+
+interface Logger {
+    val logLevel: LogLevel
+    val debugEnabled: Boolean
+    val infoEnabled: Boolean
+    val warnEnabled: Boolean
+    val errorEnabled: Boolean
+    fun debug(message: String)
+    fun info(message: String)
+    fun warn(message: String)
+    fun error(message: String)
+}
+
 interface GameRuntime {
     val hero: Character?
     val heroPlayer: Player

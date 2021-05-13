@@ -9,7 +9,6 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.obj.BackgroundSpriteLayer
-import com.bytelegend.client.app.obj.PRE_RENDERED_CANVAS_NUM
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
@@ -123,7 +122,8 @@ class MainMapCanvasRenderer(
         currentCanvasCoordinateInMap: PixelCoordinate,
         currentCanvasPixelSize: PixelSize
     ): Boolean {
-        return Timestamp.now() - lastBackgroundRenderTime > 1000 / PRE_RENDERED_CANVAS_NUM ||
+        val frameNum = game.idToMapDefinition.getValue(game.activeScene.map.id).frames
+        return Timestamp.now() - lastBackgroundRenderTime > 1000 / frameNum ||
             lastBackgroundRenderCanvasCoordinateInMap != currentCanvasCoordinateInMap ||
             lastBackgroundRenderCanvasPixelSize != currentCanvasPixelSize
     }

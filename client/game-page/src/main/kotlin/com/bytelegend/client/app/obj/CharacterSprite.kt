@@ -15,6 +15,7 @@ import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
+import com.bytelegend.client.app.engine.logger
 import org.w3c.dom.CanvasRenderingContext2D
 
 // How many pixels does a character move per second?
@@ -90,10 +91,10 @@ abstract class CharacterSprite(
     }
 
     override fun moveTo(destination: GridCoordinate, callback: UnitFunction?) {
-        console.log("Move to $destination")
+        logger.debug("$id starts moving to $destination")
         val path = searchPath(destination)
         if (path.isNotEmpty()) {
-            console.log("Move along $path")
+            logger.debug("$id starts moving along $destination")
             moveAlong(path, callback)
         }
     }

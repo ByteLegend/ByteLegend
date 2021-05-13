@@ -140,8 +140,9 @@ class GameMaterialTable : AsyncLoadingTable<GameMaterialTableState>() {
     }
 
     override fun RDOMBuilder<TR>.tableHeaderBuilder() {
-        th { +"Name" }
-        th { +"Artist" }
+        th { +props.game.i("Material") }
+        th { +props.game.i("Author") }
+        th { +props.game.i("License") }
     }
 
     override fun RDOMBuilder<TR>.tableRowBuilder(rowData: dynamic) {
@@ -153,5 +154,13 @@ class GameMaterialTable : AsyncLoadingTable<GameMaterialTableState>() {
             }
         }
         td { +(rowData.artist.toString()) }
+
+        td {
+            a {
+                attrs.href = rowData.licenceUrl.toString()
+                attrs.target = "_blank"
+                +(rowData.licence.toString())
+            }
+        }
     }
 }

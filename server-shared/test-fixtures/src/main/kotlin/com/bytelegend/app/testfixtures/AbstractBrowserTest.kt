@@ -1,3 +1,5 @@
+@file:Suppress("HttpUrlsUsage")
+
 package com.bytelegend.app.testfixtures
 
 import com.bytelegend.app.browsertest.JUnit5VncRecorder
@@ -41,6 +43,7 @@ abstract class AbstractBrowserTest {
      */
     val buildTmpDir: File
         get() = File(System.getProperty("build.tmp.dir"), javaClass.simpleName)
+
     abstract val gameServerPort: Int
 
     @BeforeEach
@@ -79,7 +82,6 @@ abstract class AbstractBrowserTest {
 fun WebDriver.startGame(port: Int) {
     get("http://host.testcontainers.internal:$port")
     waitUntil(10000) {
-        assertNoErrorInConsoleLog()
         findElements(By.id("background-canvas-layer")).isNotEmpty() &&
             findElements(By.id("objects-canvas-layer")).isNotEmpty() &&
             fadeInLayerDisappeared()
