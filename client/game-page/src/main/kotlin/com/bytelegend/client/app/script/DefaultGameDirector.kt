@@ -30,7 +30,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
-import org.w3c.dom.HTMLImageElement
+import org.w3c.dom.HTMLElement
 import react.RHandler
 import kotlin.reflect.KClass
 
@@ -206,12 +206,12 @@ class DefaultGameDirector(
     }
 
     inner class BeginnerGuideScript : GameScript {
-        lateinit var arrowGif: HTMLImageElement
+        lateinit var arrowGif: HTMLElement
         override fun start() {
             // show gif arrow pointing to the coordinate
             // highlight the first mission
             respondToClick = true
-            arrowGif = showArrowGif(gameScene.canvasState.getUICoordinateInGameContainer())
+            arrowGif = showArrowGif(gameScene.canvasState.getUICoordinateInGameContainer(), game.i("ThisIsCoordinate"))
             eventBus.emit(HIGHTLIGHT_MISSION_EVENT, listOf(STAR_BYTELEGEND_MISSION_ID))
         }
 
