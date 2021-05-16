@@ -2,7 +2,7 @@ package com.bytelegend.client.app.ui.noticeboard
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
-import com.bytelegend.client.app.ui.GameAwareProps
+import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.unsafeHtml
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
@@ -51,10 +51,10 @@ interface JavaIslandNewbieVillageNoticeboardState : RState {
 }
 
 class JavaIslandNewbieVillageNoticeboard :
-    RComponent<GameAwareProps, JavaIslandNewbieVillageNoticeboardState>() {
+    RComponent<GameProps, JavaIslandNewbieVillageNoticeboardState>() {
     private var loading = false
 
-    override fun UNSAFE_componentWillReceiveProps(nextProps: GameAwareProps) {
+    override fun UNSAFE_componentWillReceiveProps(nextProps: GameProps) {
         setState { }
     }
 

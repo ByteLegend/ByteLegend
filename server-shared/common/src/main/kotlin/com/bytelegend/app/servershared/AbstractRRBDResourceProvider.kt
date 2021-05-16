@@ -74,6 +74,7 @@ abstract class AbstractRRBDResourceProvider(
 class FastAccessGameMap(private val delegate: GameMap) : GameMap by delegate {
     private val idToObject = objects.associateBy { it.id }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T : GameMapObject> getObjectById(id: String): T {
         return idToObject.getValue(id) as T
     }

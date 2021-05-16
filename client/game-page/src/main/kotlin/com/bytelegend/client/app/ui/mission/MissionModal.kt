@@ -1,3 +1,5 @@
+@file:Suppress("UnsafeCastFromDynamic")
+
 package com.bytelegend.client.app.ui.mission
 
 import BootstrapNavItem
@@ -7,14 +9,17 @@ import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
-import com.bytelegend.app.shared.entities.MissionTab
+import com.bytelegend.app.shared.entities.ChallengeTabData
+import com.bytelegend.app.shared.entities.DiscussionsTabData
+import com.bytelegend.app.shared.entities.MissionTabData
 import com.bytelegend.app.shared.entities.MissionTabType
+import com.bytelegend.app.shared.entities.TutorialsTabData
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.MISSION_DATA_LOAD_FINISH
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import kotlinx.browser.window
 import react.RBuilder
-import react.RElementBuilder
 import react.RState
 import react.setState
 
@@ -53,15 +58,19 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                 val mission = missions.getMissionModalDataById(props.missionId)
                 BootstrapNav {
                     attrs.variant = "tabs"
-                    mission.tabs.forEachIndexed { index: Int, tab: MissionTab ->
+                    mission.tabs.forEachIndexed { index: Int, tab: MissionTabData<*> ->
                         BootstrapNavItem {
                             BootstrapNavLink {
                                 attrs.active = (index == state.activeTabIndex)
                                 attrs.eventKey = "tab-$index"
                                 +i(tab.title)
                                 attrs.onSelect = {
-                                    setState {
-                                        activeTabIndex = index
+                                    if (tab.type == MissionTabType.Discussions) {
+                                        window.open(tab.unsafeCast<DiscussionsTabData>().data.url, "_blank")
+                                    } else {
+                                        setState {
+                                            activeTabIndex = index
+                                        }
                                     }
                                 }
                             }
@@ -70,44 +79,48 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                 }
                 val activeTab = mission.tabs[state.activeTabIndex]
                 when (activeTab.type) {
-                    MissionTabType.QuestionChallenge -> child(QuestionChallengeTab::class) {
-                    }
-                    MissionTabType.StarChallenge -> child(StarChallengeTab::class) {
-                        attrs.game = game
-                    }
-                    MissionTabType.PRChallenge -> child(PRChallengeTab::class) {
-                    }
-                    MissionTabType.NoticeboardChallenge -> child(RememberBravePeopleChallengeTab::class) {
-                    }
-                    MissionTabType.Tutorial -> child(TutorialTab::class) {
-                    }
-                    MissionTabType.Discussion -> child(DiscussionTab::class) {
-                    }
+                    MissionTabType.QuestionChallenge -> renderQuestionChallenge(activeTab.asDynamic())
+                    MissionTabType.StarChallenge -> renderStarChallenge(activeTab.asDynamic())
+                    MissionTabType.PullRequestChallenge -> renderPullRequestChallenge(activeTab.asDynamic())
+                    MissionTabType.NoticeboardChallenge -> renderRememberBravePeopleChallenge(activeTab.asDynamic())
+                    MissionTabType.Tutorials -> renderTutorials(activeTab.asDynamic())
+                    else -> throw IllegalArgumentException(activeTab.title)
                 }
             }
         }
     }
 
-    private fun renderDiscussion(tab: MissionTab) {
-        TODO("Not yet implemented")
+    private fun RBuilder.renderTutorials(tab: TutorialsTabData) {
+        child(TutorialTab::class) {
+            attrs.missionId = props.missionId
+            attrs.game = game
+            attrs.initTutorials = tab.data
+            attrs.initLocales = tab.locales
+        }
     }
 
-    private fun renderTutorial(tab: MissionTab) {
-        TODO("Not yet implemented")
+    private fun RBuilder.renderRememberBravePeopleChallenge(tab: ChallengeTabData) {
+        child(RememberBravePeopleChallengeTab::class) {
+            attrs.game = game
+        }
     }
 
-    private fun renderRememberBravePeopleChallenge(tab: MissionTab) {
-        TODO("Not yet implemented")
+    private fun RBuilder.renderPullRequestChallenge(tab: ChallengeTabData) {
+        child(PullRequestChallengeTab::class) {
+            attrs.game = game
+        }
     }
 
-    private fun renderPRChallenge(tab: MissionTab) {
+    private fun RBuilder.renderStarChallenge(tab: ChallengeTabData) {
+        child(StarChallengeTab::class) {
+            attrs.game = game
+        }
     }
 
-    private fun RElementBuilder<*>.renderStarChallenge(tab: MissionTab) {
-    }
-
-    private fun renderQuestionChallenge(tab: MissionTab) {
-        TODO("Not yet implemented")
+    private fun RBuilder.renderQuestionChallenge(tab: ChallengeTabData) {
+        child(QuestionChallengeTab::class) {
+            attrs.game = game
+        }
     }
 
     private fun onMissionDataLoadFinish(missionId: String) {

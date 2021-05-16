@@ -3,6 +3,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.client.app.external.ReactSelect
+import com.bytelegend.client.app.external.ReactSelectProps
 import kotlinext.js.clone
 import kotlinext.js.jsObject
 import react.RBuilder
@@ -38,6 +39,7 @@ interface MultiSelectProps : RProps {
      * User select multiple values and close the dropdown
      */
     var onSelectComplete: (List<Option>) -> Unit
+    var configuration: ReactSelectProps.() -> Unit
 }
 
 interface MultiSelectState : RState {
@@ -51,7 +53,10 @@ class MultiSelect(props: MultiSelectProps) : RComponent<MultiSelectProps, MultiS
 
     override fun RBuilder.render() {
         ReactSelect {
-            attrs.className = "${props.className} mission-modal-tutorial-filter"
+            if (props.configuration != undefined) {
+                props.configuration.invoke(attrs)
+            }
+            attrs.className = "${props.className ?: ""} mission-modal-tutorial-filter"
             attrs.options = props.allOptions.map { it.toJsObject() }.toTypedArray()
             attrs.value = state.selectedOptions.map { it.toJsObject() }.toTypedArray()
 
@@ -64,7 +69,7 @@ class MultiSelect(props: MultiSelectProps) : RComponent<MultiSelectProps, MultiS
                 props.onSelectComplete(state.selectedOptions.map { Option(it) })
             }
             attrs.styles = jsObject<dynamic> {
-                container = { provided: dynamic, state: dynamic ->
+                container = { provided: dynamic, _: dynamic ->
                     val ret: dynamic = clone(provided)
                     ret.width = "${(this@MultiSelect.state.selectedOptions.size + 1) * 100}px"
                     ret

@@ -5,6 +5,7 @@ import react.RProps
 // https://react-bootstrap.github.io/components/buttons/
 interface BootstrapButtonProps : RProps {
     var active: Boolean
+    var className: String
     var disabled: Boolean
     var href: String
 

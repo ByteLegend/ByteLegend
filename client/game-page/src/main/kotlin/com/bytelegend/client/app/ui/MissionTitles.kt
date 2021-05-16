@@ -23,7 +23,6 @@ import react.setState
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
 
-interface MissionTitlesProps : GameProps
 interface MissionTitlesState : RState {
     var counter: Int
 
@@ -36,7 +35,7 @@ const val ESTIMATE_WIDTH = 100
 const val TITLE_HEIGHT = 32
 const val HIGHTLIGHT_MISSION_EVENT = "highlight.mission"
 
-class MissionTitles : GameUIComponent<MissionTitlesProps, MissionTitlesState>() {
+class MissionTitles : GameUIComponent<GameProps, MissionTitlesState>() {
     private val on50HzClockListener: EventListener<Nothing> = this::on50HzClock
     private val onHighlightMissionListener: EventListener<List<String>?> = this::onHighlightMissions
 

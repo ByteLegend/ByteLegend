@@ -1,6 +1,7 @@
 package com.bytelegend.app.shared.entities.mission
 
 import com.bytelegend.app.shared.annotations.JsonCreator
+import com.bytelegend.app.shared.annotations.JsonValue
 import com.bytelegend.app.shared.i18n.Locale
 
 /**
@@ -10,18 +11,22 @@ data class TutorialsSpec(
     val data: List<Tutorial>
 )
 
-data class Tutorial(
+data class Tutorial constructor(
     val id: String,
     val title: String,
     val type: TutorialType,
     val href: String,
-    val language: Any
+    val languages: List<Locale>
 ) {
-    val locales: List<Locale> = when (language) {
-        is String -> listOf(Locale.of(language))
-        is Array<*> -> language.map { Locale.of(it.toString()) }
-        else -> throw IllegalStateException("Unsupported: $language")
-    }
+    @JsonCreator
+    constructor(
+        id: String,
+        title: String,
+        type: TutorialType,
+        href: String,
+        language: Locale?,
+        languages: List<Locale>?
+    ) : this(id, title, type, href, languages ?: listOf(language!!))
 }
 
 data class TutorialType constructor(val type: String, val subtype: String) {
@@ -29,4 +34,9 @@ data class TutorialType constructor(val type: String, val subtype: String) {
     @JsonCreator
     constructor(typeAndSubType: String) :
         this(typeAndSubType.substringBefore("/"), typeAndSubType.substringAfter("/"))
+
+    @JsonValue
+    override fun toString(): String {
+        return "$type/$subtype"
+    }
 }

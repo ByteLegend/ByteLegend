@@ -11,7 +11,6 @@ import react.RBuilder
 import react.RState
 import react.setState
 
-interface TileCursorWidgetProps : GameProps
 interface TileCursorWidgetState : RState {
     var cursorCoordinateOnMap: GridCoordinate?
 
@@ -21,7 +20,7 @@ interface TileCursorWidgetState : RState {
 
 val ANIMATION_INTERVAL_MS = 300
 
-class TileCursorWidget : GameUIComponent<TileCursorWidgetProps, TileCursorWidgetState>() {
+class TileCursorWidget : GameUIComponent<GameProps, TileCursorWidgetState>() {
     private var timerId: Int? = null
 
     private val mouseMoveListener: MouseEventListener = {
@@ -39,7 +38,7 @@ class TileCursorWidget : GameUIComponent<TileCursorWidgetProps, TileCursorWidget
         animationFrameIndex = 0
     }
 
-    override fun shouldComponentUpdate(nextProps: TileCursorWidgetProps, nextState: TileCursorWidgetState): Boolean {
+    override fun shouldComponentUpdate(nextProps: GameProps, nextState: TileCursorWidgetState): Boolean {
         return state.cursorCoordinateOnMap != nextState.cursorCoordinateOnMap ||
             state.animationFrameIndex != nextState.animationFrameIndex
     }

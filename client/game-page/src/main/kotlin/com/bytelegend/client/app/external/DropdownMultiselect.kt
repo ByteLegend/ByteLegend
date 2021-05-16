@@ -16,7 +16,9 @@ external interface ReactSelectProps : RProps {
     var onChange: Any
     var isMulti: Boolean
     var isSearchable: Boolean
+    var isDisabled: Boolean
     var closeMenuOnSelect: Boolean
+
     // https://react-select.com/styles
     var styles: Any
     var onMenuOpen: Any

@@ -6,7 +6,7 @@ import react.RState
 
 interface GameContainerProps : GameProps
 
-class GameContainer : LayeredGameUIComponent<GameContainerProps, RState>() {
+class GameContainer : GameUIComponent<GameContainerProps, RState>() {
     override fun RBuilder.render() {
         containerFillingDiv(Layer.GameContainer.zIndex()) {
             attrs.id = "game-container-layer"

@@ -23,13 +23,11 @@ import react.dom.thead
 import react.dom.tr
 import react.setState
 
-interface AsyncLoadingTableProps : GameProps
-
 interface AsyncLoadingTableState : RState {
     var data: Array<dynamic>
 }
 
-abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : RComponent<AsyncLoadingTableProps, S>() {
+abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : RComponent<GameProps, S>() {
     abstract val url: String
     var loading = false
     override fun RBuilder.render() {

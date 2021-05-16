@@ -55,7 +55,10 @@ data class ImageResourceData(
 
 fun getImageElement(imageId: String): HTMLImageElement {
     val elementId = "img-container-$imageId"
-    return (document.getElementById(elementId) ?: throw NoSuchElementException("Img element $elementId not found")) as HTMLImageElement
+    return (
+        document.getElementById(elementId)
+            ?: throw NoSuchElementException("Img element $elementId not found")
+        ) as HTMLImageElement
 }
 
 fun getAudioElementOrNull(imageId: String): HTMLAudioElement? {
@@ -136,7 +139,7 @@ abstract class AjaxResource<T>(
                 .await()
                 .apply {
                     if (status < 200 || status > 400) {
-                        throw Exception("Got response status code $status")
+                        throw Exception("Got response status code $status when requesting $url")
                     }
                 }
         )

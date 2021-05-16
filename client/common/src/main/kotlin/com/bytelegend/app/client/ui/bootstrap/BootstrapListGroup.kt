@@ -10,6 +10,8 @@ import react.RProps
 external val BootstrapListGroup: RClass<BootstrapListGroupProps>
 
 external interface BootstrapListGroupProps : RProps {
+    var defaultActiveKey: String
+    var className: String
     var horizontal: String
     var style: dynamic
 }

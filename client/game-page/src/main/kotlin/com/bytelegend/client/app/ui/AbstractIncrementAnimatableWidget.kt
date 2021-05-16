@@ -24,7 +24,7 @@ data class NumberIncrementEvent(
 /**
  * A special widget which can show a "+X" animation when updated.
  */
-abstract class AbstractIncrementAnimatableWidget<P : GameAwareProps, S : RState>(
+abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : RState>(
     private val iconClassName: String
 ) : GameUIComponent<P, S>() {
     abstract val eventName: String

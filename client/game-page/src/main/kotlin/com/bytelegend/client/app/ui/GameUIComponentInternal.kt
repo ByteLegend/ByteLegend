@@ -1,3 +1,5 @@
+@file:Suppress("UnsafeCastFromDynamic")
+
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
@@ -23,14 +25,18 @@ import react.RState
 import react.dom.RDOMBuilder
 import react.setState
 
-interface GameProps : GameAwareProps, Layered
-
-interface GameAwareProps : RProps, GameAware
+interface GameProps : RProps {
+    var game: Game
+}
 
 /**
  * A special component which responds to game.ui.update event and update itself correspondingly.
  */
-abstract class GameUIComponent<P : GameAwareProps, S : RState> : RComponent<P, S>() {
+abstract class GameUIComponent<P : GameProps, S : RState> : RComponent<P, S> {
+    constructor() : super()
+
+    constructor(props: P) : super(props)
+
     protected val game: Game
         get() = props.game
 
@@ -105,11 +111,7 @@ abstract class GameUIComponent<P : GameAwareProps, S : RState> : RComponent<P, S
             }
         }
     }
-}
 
-abstract class LayeredGameUIComponent<P : GameProps, S : RState> : GameUIComponent<P, S>() {
-
-    @Suppress("UnsafeCastFromDynamic")
     fun RBuilder.containerFillingDiv(zIndex: Int, classes: Set<String> = emptySet(), block: RDOMBuilder<DIV>.() -> Unit = {}) {
         absoluteDiv(
             left = 0,
@@ -121,8 +123,4 @@ abstract class LayeredGameUIComponent<P : GameProps, S : RState> : GameUICompone
             block = block
         )
     }
-}
-
-interface GameAware {
-    var game: Game
 }

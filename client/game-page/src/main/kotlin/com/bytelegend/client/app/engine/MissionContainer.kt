@@ -4,6 +4,7 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.client.app.web.WebSocketClient
+import com.bytelegend.client.app.web.getMissionModalData
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
@@ -45,7 +46,7 @@ class MissionContainer(
     private fun load(missionId: String) {
         loadingMissions.add(missionId)
         GlobalScope.launch {
-            missionData[missionId] = webSocketClient.getMissionModalData(missionId)
+            missionData[missionId] = getMissionModalData(missionId)
             loadingMissions.remove(missionId)
             eventBus.emit(MISSION_DATA_LOAD_FINISH, missionId)
         }

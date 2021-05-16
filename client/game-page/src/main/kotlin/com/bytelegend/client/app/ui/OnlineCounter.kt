@@ -12,21 +12,18 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLSpanElement
 import react.RBuilder
 import react.RState
-import react.dom.div
 import react.dom.jsStyle
 import react.dom.span
 import react.setState
 
 const val ANIMATION_DIV_ID = "counter-animation-div"
 
-interface OnlineCounterProps : GameProps
-
 interface OnlineCounterState : RState {
     var count: String
     var offsetY: Int
 }
 
-class OnlineCounter : GameUIComponent<OnlineCounterProps, OnlineCounterState>() {
+class OnlineCounter : GameUIComponent<GameProps, OnlineCounterState>() {
     lateinit var span: HTMLSpanElement
     private val onlineCounterUpdateEventListener: EventListener<Int> = {
         // It's possible the event during the animation is lost, but we think it's fine

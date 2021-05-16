@@ -10,5 +10,5 @@ data class ChallengeSpec(
 )
 
 enum class ChallengeType {
-    Star, PullRequest, Question
+    Star, Noticeboard, PullRequest, Question
 }

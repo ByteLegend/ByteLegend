@@ -27,14 +27,12 @@ const val AVATAR_WIDTH = 64
 const val AVATAR_HEIGHT = 64
 const val AVATAR_DROPDOWN_TOGGLE_HEIGHT = 32
 
-interface UserAvatarWidgetProps : GameProps
-
 interface UserAvatarWidgetState : RState {
     var showDropdownArrow: Boolean
     var showDropdownMenu: Boolean
 }
 
-class UserAvatarWidget : GameUIComponent<UserAvatarWidgetProps, UserAvatarWidgetState>() {
+class UserAvatarWidget : GameUIComponent<GameProps, UserAvatarWidgetState>() {
     override fun UserAvatarWidgetState.init() {
         showDropdownArrow = false
         showDropdownMenu = false

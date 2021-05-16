@@ -136,10 +136,20 @@ enum class Locale(
             } catch (e: Throwable) {
                 default
             }
+
+        fun fromList(str: String): List<Locale> {
+            return if (str.contains("ALL")) {
+                values().toList()
+            } else {
+                str.split(",").map { of(it) }.distinct()
+            }
+        }
     }
 
     fun toLowerCase() = toString().toLowerCase()
 }
+
+fun List<Locale>.joinToString() = joinToString(",")
 
 val DEFAULT_LOCALE = Locale.EN
 

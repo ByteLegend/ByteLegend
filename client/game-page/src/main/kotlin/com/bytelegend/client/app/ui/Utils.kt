@@ -205,7 +205,6 @@ fun <PARENT : GameProps, CHILD : GameProps> RElementBuilder<PARENT>.gameChild(
     handler: RHandler<CHILD> = {}
 ): ReactElement {
     return child(klazz) {
-        attrs.layer = props.layer
         attrs.game = props.game
         handler()
     }

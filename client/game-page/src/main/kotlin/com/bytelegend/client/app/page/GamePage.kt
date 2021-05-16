@@ -21,7 +21,6 @@ import com.bytelegend.client.app.ui.BannerUIComponent
 import com.bytelegend.client.app.ui.CoinCountWidget
 import com.bytelegend.client.app.ui.CoinCountWidgetProps
 import com.bytelegend.client.app.ui.FpsCounter
-import com.bytelegend.client.app.ui.FpsCounterProps
 import com.bytelegend.client.app.ui.GameContainer
 import com.bytelegend.client.app.ui.GameContainerProps
 import com.bytelegend.client.app.ui.GameModal
@@ -42,9 +41,7 @@ import com.bytelegend.client.app.ui.MapTitleWidgets
 import com.bytelegend.client.app.ui.MapTitleWidgetsProps
 import com.bytelegend.client.app.ui.MiniMap
 import com.bytelegend.client.app.ui.MissionTitles
-import com.bytelegend.client.app.ui.MissionTitlesProps
 import com.bytelegend.client.app.ui.OnlineCounter
-import com.bytelegend.client.app.ui.OnlineCounterProps
 import com.bytelegend.client.app.ui.PlayerNames
 import com.bytelegend.client.app.ui.PlayerNamesProps
 import com.bytelegend.client.app.ui.ReputationCountWidget
@@ -56,12 +53,9 @@ import com.bytelegend.client.app.ui.ScrollButtonsProps
 import com.bytelegend.client.app.ui.StarCountWidget
 import com.bytelegend.client.app.ui.StarCountWidgetProps
 import com.bytelegend.client.app.ui.TileCursorWidget
-import com.bytelegend.client.app.ui.TileCursorWidgetProps
 import com.bytelegend.client.app.ui.ToastUIComponent
 import com.bytelegend.client.app.ui.UserAvatarWidget
-import com.bytelegend.client.app.ui.UserAvatarWidgetProps
 import com.bytelegend.client.app.ui.UserMouseInteractionLayer
-import com.bytelegend.client.app.ui.UserMouseInteractionLayerProps
 import com.bytelegend.client.app.ui.gameChild
 import com.bytelegend.client.app.ui.item.ItemWidgetProps
 import com.bytelegend.client.app.ui.item.ItemsWidget
@@ -247,7 +241,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
     private fun RElementBuilder<GameContainerProps>.userMouseInteractionLayer(
         parentProps: GameContainerProps,
-        block: RElementBuilder<UserMouseInteractionLayerProps>.() -> Unit = {}
+        block: RElementBuilder<GameProps>.() -> Unit = {}
     ) = gameChild(parentProps, UserMouseInteractionLayer::class, block)
 
     private fun RElementBuilder<GameContainerProps>.gameScriptWidgetDisplayLayer(
@@ -315,14 +309,14 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
     private fun RElementBuilder<GameContainerProps>.tileCursorWidget(
         parentProps: GameContainerProps,
-        block: RElementBuilder<TileCursorWidgetProps>.() -> Unit = {}
+        block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, TileCursorWidget::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.checkpointTitleWidgets(
         parentProps: GameContainerProps,
-        block: RElementBuilder<MissionTitlesProps>.() -> Unit = {}
+        block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, MissionTitles::class, block)
     }
@@ -343,12 +337,12 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
     private fun RElementBuilder<MapTitleWidgetsProps>.fpsCounter(
         parentProps: MapTitleWidgetsProps,
-        block: RElementBuilder<FpsCounterProps>.() -> Unit = {}
+        block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, FpsCounter::class, block)
     }
 
-    private fun RElementBuilder<MapTitleWidgetsProps>.onlineCounter(parentProps: MapTitleWidgetsProps, block: RElementBuilder<OnlineCounterProps>.() -> Unit = {}): ReactElement {
+    private fun RElementBuilder<MapTitleWidgetsProps>.onlineCounter(parentProps: MapTitleWidgetsProps, block: RElementBuilder<GameProps>.() -> Unit = {}): ReactElement {
         return gameChild(parentProps, OnlineCounter::class, block)
     }
 
@@ -410,7 +404,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
     private fun RElementBuilder<GameContainerProps>.userAvatarWidget(
         parentProps: GameContainerProps,
-        block: RElementBuilder<UserAvatarWidgetProps>.() -> Unit = {}
+        block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, UserAvatarWidget::class, block)
     }

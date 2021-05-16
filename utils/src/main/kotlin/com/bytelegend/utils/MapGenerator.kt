@@ -18,6 +18,7 @@ import com.bytelegend.app.shared.map
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.github.utils.generated.TiledMap
 import com.bytelegend.github.utils.generated.TiledTileset
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -53,11 +54,13 @@ val module = SimpleModule().apply {
     addSerializer(ConstantPoolEntry::class.java, JacksonConstantPoolSerializer)
 }
 val uglyObjectMapper = ObjectMapper().apply {
+    setSerializationInclusion(JsonInclude.Include.NON_NULL)
     registerModule(module)
     registerModule(KotlinModule())
 }
 
 val prettyObjectMapper = ObjectMapper().apply {
+    setSerializationInclusion(JsonInclude.Include.NON_NULL)
     registerModule(module)
     registerModule(KotlinModule())
     writerWithDefaultPrettyPrinter()

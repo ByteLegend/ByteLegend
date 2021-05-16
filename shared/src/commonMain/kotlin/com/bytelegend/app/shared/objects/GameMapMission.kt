@@ -44,7 +44,7 @@ data class CompressedGameMapMission(
     val sprite: String,
     val point: List<Int>,
     val children: List<String>,
-    val next: String?
+    val next: String? = null
 ) : CompressedGameMapObject {
     override val layer: Int = 0
     override val type: Int = GameMapObjectType.GameMapMission.index

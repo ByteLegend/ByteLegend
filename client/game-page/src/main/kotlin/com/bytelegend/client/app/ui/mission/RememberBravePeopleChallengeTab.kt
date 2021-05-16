@@ -1,12 +1,11 @@
 package com.bytelegend.client.app.ui.mission
 
+import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.GameUIComponent
 import react.RBuilder
-import react.RComponent
-import react.RProps
 import react.RState
 
-class RememberBravePeopleChallengeTab : RComponent<RProps, RState>() {
+class RememberBravePeopleChallengeTab : GameUIComponent<GameProps, RState>() {
     override fun RBuilder.render() {
-//        TODO("Not yet implemented")
     }
 }

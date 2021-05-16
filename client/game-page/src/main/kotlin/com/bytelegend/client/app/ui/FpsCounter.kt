@@ -12,8 +12,6 @@ import react.setState
 import styled.css
 import styled.styledSpan
 
-interface FpsCounterProps : GameProps
-
 interface FpsCounterState : RState {
     var fps: Int
 }
@@ -21,7 +19,7 @@ interface FpsCounterState : RState {
 /**
  * Display current FPS. Update upon "window.animate" event.
  */
-class FpsCounter : GameUIComponent<FpsCounterProps, FpsCounterState>() {
+class FpsCounter : GameUIComponent<GameProps, FpsCounterState>() {
     // Don't update the FPS counter too frequently
     private var lastComponentUpdateTime = Timestamp.now()
     private var framesSinceLastComponentUpdate: Int = 0

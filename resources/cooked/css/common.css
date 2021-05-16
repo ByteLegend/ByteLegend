@@ -64,7 +64,7 @@ body {
     font-size: 16px;
 }
 
-.list-group-item {
+.right-sidebar .list-group-item {
     background-color: transparent;
     border: 1px solid #007bff;
     min-width: 64px;
@@ -76,7 +76,7 @@ body {
     white-space: nowrap;
 }
 
-.list-group-item:hover {
+.right-sidebar .list-group-item:hover {
     background-color: #007bff;
 }
 
@@ -336,8 +336,18 @@ body {
 }
 
 .mission-modal-tutorial-filters {
+    display: flex;
     flex: 0 1 auto;
     margin-top: 16px;
+}
+
+.mission-modal-tutorial-filter-name {
+    margin-left: 16px;
+    margin-right: 8px;
+}
+
+.mission-modal-tutorial-filter-refresh-button {
+    margin-left: auto
 }
 
 .mission-modal-tutorial-content {
@@ -481,3 +491,12 @@ p.speech-bubble::after {
     border-radius: 8px;
     padding: 8px;
 }
+
+.mission-modal-tutorial-item {
+    cursor: pointer;
+}
+
+.mission-modal-tutorial-item:hover:not(.list-group-item-primary){
+    background-color: #f6f8fa;
+}
+
