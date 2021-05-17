@@ -500,3 +500,8 @@ p.speech-bubble::after {
     background-color: #f6f8fa;
 }
 
+.tutorial-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}

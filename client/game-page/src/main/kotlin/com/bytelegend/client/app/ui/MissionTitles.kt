@@ -12,6 +12,7 @@ import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
+import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onMouseMoveFunction
 import kotlinx.html.js.onMouseOutFunction
 import react.RBuilder
@@ -76,6 +77,7 @@ class MissionTitles : GameUIComponent<GameProps, MissionTitlesState>() {
             attrs.tileCoordinate = mission.gridCoordinate
             attrs.totalStar = mission.gameMapMission.totalStar
             attrs.currentStar = activeScene.playerMissions.missionStar(mission.id)
+            attrs.mission = mission
         }
     }
 
@@ -119,6 +121,7 @@ interface MissionTitleProps : RProps {
 
     var totalStar: Int
     var currentStar: Int
+    var mission: GameMission
 }
 
 interface MissionTitleState : RState {
@@ -153,6 +156,9 @@ class MissionTile : RComponent<MissionTitleProps, MissionTitleState>() {
             classes = setOf("checkpoint-title")
         ) {
             unsafeHtml(props.title)
+            attrs.onClickFunction = {
+                props.mission.onClick()
+            }
             attrs.onMouseOutFunction = {
                 setState { hovered = false }
             }

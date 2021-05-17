@@ -12,6 +12,7 @@ external val BootstrapSpinner: RClass<BootstrapSpinnerProps>
 // https://react-bootstrap.github.io/components/badge/
 external interface BootstrapSpinnerProps : RProps {
     var animation: String
+    var className: String
     var `as`: Any
     var role: String
     var size: String

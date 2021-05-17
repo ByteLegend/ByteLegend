@@ -10,6 +10,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationItem
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationLast
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationNext
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationPrev
+import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.client.ui.bootstrap.BootstrapTabContainer
 import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
@@ -41,6 +42,8 @@ interface TutorialTabState : RState {
 
     // The page data is dirty when filters are changed.
     var dirty: Boolean
+    var loadingTutorials: Boolean
+    var loadingTutorialContent: Boolean
 }
 
 class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, TutorialTabState>(props) {
@@ -48,6 +51,8 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
         tutorials = props.initTutorials
         locales = props.initLocales
         activeTutorialIndex = 0
+        loadingTutorials = false
+        loadingTutorialContent = true
     }
 
     private fun RBuilder.localeFilter() {
@@ -120,6 +125,14 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
             }
             div {
                 attrs.classes = setOf("mission-modal-tutorial-content")
+
+                if (state.loadingTutorials) {
+                    BootstrapSpinner {
+                        attrs.animation = "border"
+                        attrs.className = "tutorial-spinner"
+                    }
+                }
+
                 BootstrapTabContainer {
                     attrs.id = "left-tabs-example"
                     div {
@@ -136,6 +149,11 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                                         }
                                         attrs.className = "mission-modal-tutorial-item"
                                         +item.title
+                                        attrs.onClick = {
+                                            setState {
+                                                activeTutorialIndex = index
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -176,6 +194,12 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                     }
                     div {
                         attrs.classes = setOf("mission-modal-tutorial-content-right")
+                        if (!state.loadingTutorials) {
+                            child(TutorialContent::class) {
+                                attrs.game = game
+                                attrs.tutorial = state.tutorials.items[state.activeTutorialIndex]
+                            }
+                        }
                     }
                 }
             }
@@ -192,10 +216,14 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
         }
 
         if (number != state.tutorials.pageNumber || state.dirty) {
+            setState {
+                loadingTutorials = true
+            }
             GlobalScope.launch {
                 val newData = getMissionTutorial(props.missionId, pageNumber, state.locales)
                 setState {
                     tutorials = newData
+                    loadingTutorials = false
                 }
             }
         }
