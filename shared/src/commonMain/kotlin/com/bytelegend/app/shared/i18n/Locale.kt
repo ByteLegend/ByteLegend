@@ -41,7 +41,10 @@ enum class Language {
     KO,
 
     // Italian
-    IT;
+    IT,
+
+    // A special locale for filter
+    ALL;
 
     val code: String
         get() = toString().toLowerCase()
@@ -75,6 +78,8 @@ enum class Locale(
     val languageScript: LanguageScript?,
     val countryRegion: CountryRegion?
 ) {
+    // A special locale for filter
+    ALL("All", Language.ALL,true, null, null),
     EN("English", Language.EN, false, null, null) {
         override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.toLowerCase().startsWith("en")
     },
@@ -113,7 +118,9 @@ enum class Locale(
     KO("한국어", Language.KO, true, null, null),
 
     // Italian
-    IT("Italiano", Language.IT, true, null, null);
+    IT("Italiano", Language.IT, true, null, null),
+
+    ;
 
     open fun accept(acceptLanguageHeader: String): Boolean {
         if (byMachine) {

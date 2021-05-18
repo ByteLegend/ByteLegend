@@ -10,6 +10,7 @@ import react.RProps
 external val ReactSelect: RClass<ReactSelectProps>
 
 external interface ReactSelectProps : RProps {
+    var id: String
     var className: String
     var options: Any
     var value: Any
@@ -18,7 +19,9 @@ external interface ReactSelectProps : RProps {
     var isSearchable: Boolean
     var isDisabled: Boolean
     var closeMenuOnSelect: Boolean
+    var defaultMenuIsOpen: Boolean
 
+    var onBlur: Any
     // https://react-select.com/styles
     var styles: Any
     var onMenuOpen: Any

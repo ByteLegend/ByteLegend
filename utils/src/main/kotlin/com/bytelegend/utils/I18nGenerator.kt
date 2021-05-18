@@ -60,7 +60,7 @@ class I18nResource(
             val enIsSame = i18nTexts.getTextOrNull(Locale.EN) == localizedTextsInJson[textId]?.getTextOrNull(Locale.EN)
             val zhHansIsSame = i18nTexts.getTextOrNull(Locale.ZH_HANS) == localizedTextsInJson[textId]?.getTextOrNull(Locale.ZH_HANS)
 
-            Locale.values().forEach { locale ->
+            Locale.values().filter { it != Locale.ALL }.forEach { locale ->
                 when {
                     i18nTexts.getTextOrNull(locale) != null -> localeToText[locale.toString()] = i18nTexts.getTextOrNull(locale)!!
                     // zh-hans is same and target is zh-hant, just use the translated text in json

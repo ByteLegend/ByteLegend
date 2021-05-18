@@ -65,12 +65,18 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
             +game.i("Language")
         }
         child(MultiSelect::class) {
+            attrs.id = "tutorial-locale-filter"
             attrs.allOptions = Locale.values().map { Option(it.name, it.displayName) }
             attrs.initOptions = state.locales.map { Option(it.name, it.displayName) }
             attrs.onSelectComplete = { selectedOptions ->
-                val newLocales = selectedOptions.map { Locale.of(it.value) }
-                state.dirty = newLocales != state.locales
-                state.locales = newLocales
+                val newLocales = selectedOptions.map { Locale.of(it.value) }.let {
+                    if (it.contains(Locale.ALL)) listOf(Locale.ALL) else it
+                }
+                setState {
+                    dirty = newLocales != state.locales
+                    locales = newLocales
+                }
+                newLocales.map { Option(it.name, it.displayName) }
             }
         }
     }
@@ -86,8 +92,6 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
             }
             attrs.allOptions = listOf(Option("updateTime", game.i("UpdateTime")), Option("upvote", game.i("Upvote")))
             attrs.initOptions = listOf(Option("updateTime", game.i("UpdateTime")))
-            attrs.onSelectComplete = {
-            }
         }
     }
 
@@ -102,8 +106,6 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
             }
             attrs.allOptions = listOf()
             attrs.initOptions = listOf()
-            attrs.onSelectComplete = {
-            }
         }
     }
 

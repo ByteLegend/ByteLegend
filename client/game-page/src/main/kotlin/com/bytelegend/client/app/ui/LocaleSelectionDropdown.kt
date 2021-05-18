@@ -36,7 +36,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
                 attrs.id = "locale-selection"
                 attrs.title = game.locale.displayName
 
-                Locale.values().forEach { locale ->
+                Locale.values().filter { it != Locale.ALL }.forEach { locale ->
                     BootstrapDropdownItem {
                         span {
                             attrs.classes = setOf("locale-selection-dropdown-item-span")

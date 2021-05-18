@@ -33,12 +33,13 @@ data class Option(
 interface MultiSelectProps : RProps {
     var className: String
     var initOptions: List<Option>
+    var id: String
     var allOptions: List<Option>
 
     /**
      * User select multiple values and close the dropdown
      */
-    var onSelectComplete: (List<Option>) -> Unit
+    var onSelectComplete: (List<Option>) -> List<Option>
     var configuration: ReactSelectProps.() -> Unit
 }
 
@@ -56,6 +57,9 @@ class MultiSelect(props: MultiSelectProps) : RComponent<MultiSelectProps, MultiS
             if (props.configuration != undefined) {
                 props.configuration.invoke(attrs)
             }
+            if (props.id != undefined) {
+                attrs.id = props.id
+            }
             attrs.className = "${props.className ?: ""} mission-modal-tutorial-filter"
             attrs.options = props.allOptions.map { it.toJsObject() }.toTypedArray()
             attrs.value = state.selectedOptions.map { it.toJsObject() }.toTypedArray()
@@ -66,7 +70,9 @@ class MultiSelect(props: MultiSelectProps) : RComponent<MultiSelectProps, MultiS
             attrs.isMulti = true
             attrs.closeMenuOnSelect = false
             attrs.onMenuClose = {
-                props.onSelectComplete(state.selectedOptions.map { Option(it) })
+                setState {
+                    selectedOptions = props.onSelectComplete(state.selectedOptions.map { Option(it) })
+                }
             }
             attrs.styles = jsObject<dynamic> {
                 container = { provided: dynamic, _: dynamic ->
