@@ -1,7 +1,5 @@
-import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScriptHelpers
-import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import kotlinx.browser.window
