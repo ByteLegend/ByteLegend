@@ -6,14 +6,11 @@ import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
-import com.bytelegend.app.client.api.JSArrayBackedList
-import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
 import com.bytelegend.app.client.api.dsl.NpcBuilder
 import com.bytelegend.app.client.api.dsl.ObjectsBuilder
-import com.bytelegend.app.client.api.dsl.SpriteBuilder
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.mapToArray
@@ -162,35 +159,6 @@ class DefaultGameScene(
         ).apply {
             init()
         }
-    }
-
-    override fun sprite(action: SpriteBuilder.() -> Unit) {
-//        val builder = SpriteBuilder()
-//        builder.action()
-//
-//        val effect = if (builder.glow)
-//            RectangleOuterGlowEffect(4, 10, 24, 12, 10, "white")
-//        else
-//            NoEffect
-//
-//        val roles = if (builder.clickable)
-//            setOf(GameObjectRole.Clickable, GameObjectRole.CoordinateAware, GameObjectRole.Sprite)
-//        else
-//            setOf(GameObjectRole.CoordinateAware, GameObjectRole.Sprite)
-//
-//        DynamicSprite(
-//            builder.id!!,
-//            this,
-//            objects.getById(builder.spriteId!!),
-//            onInitFunction = builder.onInit,
-//            onTouchFunction = builder.onTouch,
-//            onClickFunction = builder.onClick,
-//            effect = effect,
-//            roles = roles
-//        ).apply {
-//            objects.add(this)
-//            init()
-//        }
     }
 
     private fun gameMapText(gameMapText: GameMapText) {

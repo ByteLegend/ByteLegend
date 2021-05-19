@@ -3,7 +3,7 @@ package com.bytelegend.client.app.engine
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameSceneContainer
-import com.bytelegend.app.client.api.getAudioElementOrNull
+import com.bytelegend.app.client.misc.getAudioElementOrNull
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.client.app.script.STAR_FLYING_CHANNEL
 import com.bytelegend.client.app.web.WebSocketClient

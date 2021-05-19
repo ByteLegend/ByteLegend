@@ -73,8 +73,6 @@ class NoticeboardBuilder {
 interface ObjectsBuilder {
     fun mapEntrance(action: MapEntranceBuilder.() -> Unit)
 
-    fun sprite(action: SpriteBuilder.() -> Unit)
-
     /*
     This shouldn't be in API module, but we have to workaround the following issue:
 

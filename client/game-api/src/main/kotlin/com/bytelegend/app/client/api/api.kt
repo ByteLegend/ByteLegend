@@ -11,6 +11,7 @@ import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import org.w3c.dom.HTMLImageElement
 
 val HERO_ID = "hero"
 
@@ -174,6 +175,12 @@ interface GameSceneAware {
     val gameRuntime: GameRuntime
         get() = gameScene.gameRuntime
 }
+
+data class ImageResourceData(
+    val imageId: String,
+    val size: PixelSize,
+    val htmlElement: HTMLImageElement
+)
 
 interface GameScene : GameContainerSizeAware, GameRuntimeAware {
     val isActive: Boolean

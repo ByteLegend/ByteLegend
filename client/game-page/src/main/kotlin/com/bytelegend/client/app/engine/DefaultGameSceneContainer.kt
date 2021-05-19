@@ -1,16 +1,15 @@
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.EventBus
-import com.bytelegend.app.client.api.GameMapResource
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneContainer
-import com.bytelegend.app.client.api.I18nTextResource
-import com.bytelegend.app.client.api.ImageResource
-import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
-import com.bytelegend.app.client.api.TextAjaxResource
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.client.app.engine.resource.GameMapResource
+import com.bytelegend.client.app.engine.resource.I18nTextResource
+import com.bytelegend.client.app.engine.resource.ImageResource
+import com.bytelegend.client.app.engine.resource.TextAjaxResource
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.script.effect.fadeInEffect
 import com.bytelegend.client.app.web.GameSceneInitResource

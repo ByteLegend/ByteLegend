@@ -1,7 +1,6 @@
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.EventBus
-import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.client.app.web.WebSocketClient
 import com.bytelegend.client.app.web.getMissionModalData

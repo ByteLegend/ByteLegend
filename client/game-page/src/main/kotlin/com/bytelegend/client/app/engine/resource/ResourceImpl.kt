@@ -1,13 +1,12 @@
-@file:Suppress("UnsafeCastFromDynamic")
+package com.bytelegend.client.app.engine.resource
 
-package com.bytelegend.app.client.api
-
+import com.bytelegend.app.client.api.ExpensiveResource
+import com.bytelegend.app.client.api.ImageResourceData
+import com.bytelegend.app.client.misc.getOrCreateAudioElement
+import com.bytelegend.app.client.misc.getOrCreateImageElement
 import com.bytelegend.app.shared.PixelSize
-import kotlinx.browser.document
+import com.bytelegend.client.app.engine.JSObjectBackedMap
 import kotlinx.browser.window
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 import kotlinx.coroutines.await
 import org.w3c.dom.HTMLAudioElement
 import org.w3c.dom.HTMLImageElement
@@ -15,22 +14,6 @@ import org.w3c.fetch.Response
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
-
-interface ExpensiveResource<T> {
-    val id: String
-    val weight: Int
-
-    /**
-     * Load a resource. Implementations must finish all work
-     * before returning,
-     *
-     * For example, we may need to load i18n texts and put them
-     * into a container. This means that putting texts into container
-     * must be done in this method, not `load(XXX).then(put)`.
-     *
-     */
-    suspend fun load(): T
-}
 
 class I18nTextResource(
     override val id: String,
@@ -45,43 +28,6 @@ class I18nTextResource(
             result
         }
     }
-}
-
-data class ImageResourceData(
-    val imageId: String,
-    val size: PixelSize,
-    val htmlElement: HTMLImageElement
-)
-
-fun getImageElement(imageId: String): HTMLImageElement {
-    val elementId = "img-container-$imageId"
-    return (
-        document.getElementById(elementId)
-            ?: throw NoSuchElementException("Img element $elementId not found")
-        ) as HTMLImageElement
-}
-
-fun getAudioElementOrNull(imageId: String): HTMLAudioElement? {
-    val elementId = "audio-container-$imageId"
-    return document.getElementById(elementId).asDynamic()
-}
-
-private fun <T> getOrCreateHtmlElement(tagName: String, id: String): T {
-    val elementId = "$tagName-container-$id"
-    return (
-        document.getElementById(elementId) ?: document.createElement(tagName).apply {
-            this.id = elementId
-            document.body?.appendChild(this)
-        }
-        ).asDynamic()
-}
-
-fun getOrCreateImageElement(imageId: String): HTMLImageElement {
-    return getOrCreateHtmlElement("img", imageId)
-}
-
-fun getOrCreateAudioElement(audioId: String): HTMLAudioElement {
-    return getOrCreateHtmlElement("audio", audioId)
 }
 
 class AudioResource(
@@ -154,45 +100,4 @@ class TextAjaxResource(
     override val weight: Int
 ) : AjaxResource<String>(id, url, weight) {
     override suspend fun decode(response: Response) = response.text().await()
-}
-
-interface ResourceLoader {
-    /**
-     * Add a resource to be loaded in a session.
-     *
-     * The scene has to wait for all "blockingScene" resources to be loaded.
-     *
-     */
-    suspend fun <T> load(
-        resource: ExpensiveResource<out T>,
-        blockingScene: Boolean = true
-    ): T
-
-    fun <T> loadAsync(
-        resource: ExpensiveResource<out T>,
-        blockingScene: Boolean = true
-    ): Deferred<T> = GlobalScope.async { load(resource, blockingScene) }
-
-    /**
-     * Reset the session (esp. the loading progress).
-     */
-    fun resetSession()
-
-    /**
-     * Whether a specific resource is loading or not.
-     */
-    fun isResourceLoading(id: String): Boolean
-
-    /**
-     * Get a loaded resource, which can be image, audio, etc.
-     * Throws NoSuchElementException on absence.
-     */
-    fun <T> getLoadedResource(id: String): T
-
-    fun <T> getLoadedResourceOrNull(id: String): T?
-
-    /**
-     * 100 * (loaded resource weight sum) / (all resource weight sum)
-     */
-    fun currentProgress(): Int
 }

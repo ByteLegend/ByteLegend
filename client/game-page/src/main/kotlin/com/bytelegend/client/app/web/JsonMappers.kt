@@ -2,8 +2,6 @@
 
 package com.bytelegend.client.app.web
 
-import com.bytelegend.app.client.api.JSArrayBackedList
-import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.entities.ChallengeTabData
@@ -37,6 +35,8 @@ import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
+import com.bytelegend.client.app.engine.JSArrayBackedList
+import com.bytelegend.client.app.engine.JSObjectBackedMap
 
 // PublishMessage<Any>
 @Suppress("UnsafeCastFromDynamic")

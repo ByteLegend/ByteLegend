@@ -2,10 +2,7 @@
 
 package com.bytelegend.client.app.page
 
-import com.bytelegend.app.client.api.AudioResource
 import com.bytelegend.app.client.api.EventListener
-import com.bytelegend.app.client.api.I18nTextResource
-import com.bytelegend.app.client.api.ImageResource
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.PixelSize
@@ -15,6 +12,9 @@ import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.SCENE_LOADING_END_EVENT
 import com.bytelegend.client.app.engine.SCENE_LOADING_START_EVENT
 import com.bytelegend.client.app.engine.init
+import com.bytelegend.client.app.engine.resource.AudioResource
+import com.bytelegend.client.app.engine.resource.I18nTextResource
+import com.bytelegend.client.app.engine.resource.ImageResource
 import com.bytelegend.client.app.obj.HeroCharacter
 import com.bytelegend.client.app.ui.AudioSwitchWidget
 import com.bytelegend.client.app.ui.BannerUIComponent

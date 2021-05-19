@@ -6,7 +6,6 @@ import com.bytelegend.app.client.api.GameContainerSizeAware
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneContainer
-import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.Logger
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.Timestamp

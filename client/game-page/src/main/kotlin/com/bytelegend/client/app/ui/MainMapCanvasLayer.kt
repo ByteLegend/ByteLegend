@@ -3,7 +3,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.Timestamp
-import com.bytelegend.app.client.api.getImageElement
+import com.bytelegend.app.client.misc.getImageElement
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener

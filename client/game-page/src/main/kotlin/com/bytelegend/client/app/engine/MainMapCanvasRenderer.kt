@@ -1,8 +1,6 @@
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.JSArrayBackedList
-import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.shared.PixelCoordinate

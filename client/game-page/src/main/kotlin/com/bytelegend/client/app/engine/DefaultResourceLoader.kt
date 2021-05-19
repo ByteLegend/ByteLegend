@@ -4,7 +4,6 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
-import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
 import org.kodein.di.DI
 import org.kodein.di.DIAware

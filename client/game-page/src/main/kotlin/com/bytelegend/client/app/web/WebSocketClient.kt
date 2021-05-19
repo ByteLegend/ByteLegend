@@ -5,7 +5,6 @@ package com.bytelegend.client.app.web
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.GameRuntime
-import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.protocol.ADD_ITEM
 import com.bytelegend.app.shared.protocol.ENTER_SCENE
@@ -30,6 +29,7 @@ import com.bytelegend.app.shared.protocol.WebSocketMessageType.SEND
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.SUBSCRIBE
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.UNSUBSCRIBE
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
+import com.bytelegend.client.app.engine.JSObjectBackedMap
 import com.bytelegend.client.app.obj.uuid
 import kotlinext.js.js
 import kotlinx.browser.window

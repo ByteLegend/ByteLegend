@@ -3,9 +3,6 @@ package com.bytelegend.client.app.engine
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.ImageResource
-import com.bytelegend.app.client.api.JSArrayBackedList
-import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.entities.Player
@@ -13,6 +10,7 @@ import com.bytelegend.app.shared.playerAnimationSetResourceId
 import com.bytelegend.app.shared.protocol.playerEnterSceneEvent
 import com.bytelegend.app.shared.protocol.playerLeaveSceneEvent
 import com.bytelegend.app.shared.protocol.playerMoveOnSceneEvent
+import com.bytelegend.client.app.engine.resource.ImageResource
 import com.bytelegend.client.app.obj.AnimationSet
 import com.bytelegend.client.app.obj.PlayerSprite
 import com.bytelegend.client.app.page.game

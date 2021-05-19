@@ -3,7 +3,6 @@ package com.bytelegend.client.app.script
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
@@ -16,6 +15,7 @@ import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
+import com.bytelegend.client.app.engine.JSObjectBackedMap
 import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.CharacterSprite

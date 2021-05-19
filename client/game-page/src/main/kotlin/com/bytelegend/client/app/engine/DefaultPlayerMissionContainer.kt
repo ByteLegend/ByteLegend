@@ -6,7 +6,7 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ModalController
 import com.bytelegend.app.client.api.PlayerMissionContainer
-import com.bytelegend.app.client.api.getAudioElementOrNull
+import com.bytelegend.app.client.misc.getAudioElementOrNull
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.PlayerMission

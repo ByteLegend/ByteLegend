@@ -4,7 +4,7 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.api.Timestamp
-import com.bytelegend.app.client.api.getImageElement
+import com.bytelegend.app.client.misc.getImageElement
 import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate

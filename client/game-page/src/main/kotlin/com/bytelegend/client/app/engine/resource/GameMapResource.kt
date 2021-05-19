@@ -1,6 +1,6 @@
 @file:Suppress("UnsafeCastFromDynamic")
 
-package com.bytelegend.app.client.api
+package com.bytelegend.client.app.engine.resource
 
 import com.bytelegend.app.shared.CompressedGameMap
 import com.bytelegend.app.shared.ConstantPoolEntry
