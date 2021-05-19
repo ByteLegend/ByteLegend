@@ -9,7 +9,7 @@ class GameMapCurve(
     val points: List<PixelCoordinate>
 ) : GameMapObject, GameObject {
     override val type: GameMapObjectType = GameMapObjectType.GameMapCurve
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.MapCurve)
+    override val roles: Set<String> = setOf(GameObjectRole.MapCurve.toString())
     override fun compress() = CompressedGameMapCurve(
         id,
         layer,

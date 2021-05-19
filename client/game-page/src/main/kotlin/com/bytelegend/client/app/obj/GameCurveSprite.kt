@@ -5,6 +5,7 @@ import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
 
 class GameCurveSprite(
@@ -13,7 +14,7 @@ class GameCurveSprite(
 ) : Sprite {
     override val id: String = "${obj.id}-sprite"
     override val layer: Int = obj.layer
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite)
+    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite.toString())
     val points: List<PixelCoordinate> = obj.points
 
     override fun outOfCanvas() = obj.points.all { it.outOfCanvas(gameScene) }

@@ -29,7 +29,7 @@ import com.bytelegend.app.shared.protocol.WebSocketMessageType.SEND
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.SUBSCRIBE
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.UNSUBSCRIBE
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
-import com.bytelegend.client.app.engine.JSObjectBackedMap
+import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.obj.uuid
 import kotlinext.js.js
 import kotlinx.browser.window

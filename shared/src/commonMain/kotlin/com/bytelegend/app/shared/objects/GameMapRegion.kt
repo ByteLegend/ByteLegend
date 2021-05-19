@@ -25,7 +25,7 @@ class GameMapRegion(
     val vertices: List<PixelCoordinate>
 ) : GameMapObject, GameObject {
     override val type: GameMapObjectType = GameMapObjectType.GameMapRegion
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.MapRegion)
+    override val roles: Set<String> = setOf(GameObjectRole.MapRegion.toString())
 
     override fun compress() = CompressedGameMapRegion(
         id,

@@ -1,4 +1,4 @@
-import com.bytelegend.app.client.api.AbstractStaticLocationSprite
+import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
@@ -10,6 +10,7 @@ import com.bytelegend.app.shared.HumanReadableCoordinate
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.objects.GameMapPoint
+import com.bytelegend.app.shared.objects.GameObject
 import kotlinx.browser.window
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
@@ -95,7 +96,7 @@ fun GameScene.pubGuard() = objects {
                             speech(
                                 guardId, "IDontKnowTakeALookAtStarBytelegend",
                                 arrayOf(
-                                    HumanReadableCoordinate(objects.getById<AbstractStaticLocationSprite>(STAR_BYTELEGEND_MISSION_ID).gridCoordinate).toString()
+                                    HumanReadableCoordinate(objects.getById<GameObject>(STAR_BYTELEGEND_MISSION_ID).unsafeCast<CoordinateAware>().gridCoordinate).toString()
                                 ),
                                 arrow = false
                             )
@@ -254,7 +255,7 @@ fun ScriptsBuilder.talkAboutFirstStar(guardId: String, objects: GameObjectContai
     speech(
         guardId, "IDontKnowTakeALookAtStarBytelegend",
         arrayOf(
-            HumanReadableCoordinate(objects.getById<AbstractStaticLocationSprite>("star-bytelegend").gridCoordinate).toString()
+            HumanReadableCoordinate(objects.getById<GameObject>(STAR_BYTELEGEND_MISSION_ID).unsafeCast<CoordinateAware>().gridCoordinate).toString()
         )
     )
 }

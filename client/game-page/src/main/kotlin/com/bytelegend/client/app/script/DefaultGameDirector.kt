@@ -15,9 +15,9 @@ import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
-import com.bytelegend.client.app.engine.JSObjectBackedMap
 import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.engine.logger
+import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.obj.CharacterSprite
 import com.bytelegend.client.app.script.effect.showArrowGif
 import com.bytelegend.client.app.ui.COORDINATE_BORDER_FLICKER

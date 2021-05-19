@@ -1,5 +1,6 @@
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.id
@@ -18,7 +19,7 @@ class ReputationCountWidget : AbstractIncrementAnimatableWidget<ReputationCountW
     override fun RDOMBuilder<DIV>.renderDiv() {
         attrs.id = "reputation-count"
         span {
-            attrs.classes = setOf("map-title-text")
+            attrs.classes = jsObjectBackedSetOf("map-title-text")
             +game.heroPlayer.reputation.toString()
         }
         renderIcon()

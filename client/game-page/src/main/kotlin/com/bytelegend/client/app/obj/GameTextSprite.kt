@@ -4,6 +4,7 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.page.game
 import org.w3c.dom.CanvasRenderingContext2D
 import kotlin.math.PI
@@ -14,7 +15,7 @@ class GameTextSprite(
 ) : Sprite {
     override val id: String = "${obj.id}-sprite"
     override val layer: Int = obj.layer
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite)
+    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite)
 
     override fun outOfCanvas() = obj.coordinate.outOfCanvas(gameScene)
 

@@ -16,6 +16,7 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.obj.PlayerSprite
 import com.bytelegend.client.app.ui.DefaultBannerController
 import com.bytelegend.client.app.ui.DefaultModalController

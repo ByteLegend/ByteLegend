@@ -5,6 +5,7 @@ package com.bytelegend.client.app.engine
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.ResourceLoader
+import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance

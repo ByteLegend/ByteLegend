@@ -5,6 +5,7 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.GAME_CLOCK_10HZ_EVENT
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
 import com.bytelegend.client.app.engine.GAME_SCRIPT_NEXT
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.script.MAIN_CHANNEL
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
@@ -66,7 +67,7 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
         val bubbleBottom = gameContainerHeight -
             (props.speakerCoordinate.y - canvasCoordinateInMap.y + canvasCoordinateInGameContainer.y)
         p {
-            attrs.classes = setOf("speech-bubble")
+            attrs.classes = jsObjectBackedSetOf("speech-bubble")
             val z = Layer.ScriptWidget.zIndex()
             attrs.jsStyle {
                 zIndex = z

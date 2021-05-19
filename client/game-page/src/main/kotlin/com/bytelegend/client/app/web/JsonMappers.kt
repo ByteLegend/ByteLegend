@@ -35,8 +35,8 @@ import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
-import com.bytelegend.client.app.engine.JSArrayBackedList
-import com.bytelegend.client.app.engine.JSObjectBackedMap
+import com.bytelegend.client.app.engine.util.JSArrayBackedList
+import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 
 // PublishMessage<Any>
 @Suppress("UnsafeCastFromDynamic")

@@ -1,15 +1,9 @@
 package com.bytelegend.app.shared.objects
 
-// GameObject
-//   |--- MapEntrance
-//   |--- Sprite
-//         |--- CharacterSprite
-//         |--- GameText
-
 interface GameObject : Lifecycle {
     val id: String
     val layer: Int
-    val roles: Set<GameObjectRole>
+    val roles: Set<String>
 
     /**
      * Respond to the click event.

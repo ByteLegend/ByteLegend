@@ -4,6 +4,7 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.obj.CharacterSprite
 import react.RBuilder
 import react.RComponent
@@ -71,9 +72,9 @@ class PlayerNameSpan : RComponent<PlayerNameSpanProps, RState>() {
             top = props.y,
             zIndex = Layer.PlayerNames.zIndex(),
             classes = if (props.isHero)
-                setOf("yellow-text-black-shadow", "nickname-span")
+                jsObjectBackedSetOf("yellow-text-black-shadow", "nickname-span")
             else
-                setOf("white-text-black-shadow", "nickname-span")
+                jsObjectBackedSetOf("white-text-black-shadow", "nickname-span")
         ) {
             +props.name
         }

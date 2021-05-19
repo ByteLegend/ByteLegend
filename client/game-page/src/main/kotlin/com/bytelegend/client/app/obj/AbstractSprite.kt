@@ -1,5 +1,8 @@
-package com.bytelegend.app.client.api
+package com.bytelegend.client.app.obj
 
+import com.bytelegend.app.client.api.CoordinateAware
+import com.bytelegend.app.client.api.GameScene
+import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
@@ -7,8 +10,9 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.math.imageBlockOnCanvas
 import com.bytelegend.app.shared.math.outOfCanvas
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 
-abstract class AbstractMovableSprite : Sprite {
+abstract class AbstractSprite : Sprite {
     abstract var pixelCoordinate: PixelCoordinate
 
     override fun outOfCanvas() = getImageBlockOnCanvas().run {
@@ -35,7 +39,7 @@ abstract class AbstractStaticLocationSprite(
     override val pixelCoordinate: PixelCoordinate,
     private val spriteSize: PixelSize
 ) : CoordinateAware, Sprite {
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite)
+    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite.toString())
     override fun outOfCanvas() = getImageBlockOnCanvas(gameScene).outOfCanvas(gameScene.canvasState.getCanvasPixelSize())
     open fun getImageBlockOnCanvas(gameScene: GameScene) =
         imageBlockOnCanvas(pixelCoordinate, gameScene.canvasState.getCanvasCoordinateInMap(), spriteSize)

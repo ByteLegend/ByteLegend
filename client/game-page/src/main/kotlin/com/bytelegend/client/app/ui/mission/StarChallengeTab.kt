@@ -1,5 +1,6 @@
 package com.bytelegend.client.app.ui.mission
 
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.unsafeHtml
@@ -13,7 +14,7 @@ import react.dom.img
 class StarChallengeTab : RComponent<GameProps, RState>() {
     override fun RBuilder.render() {
         div {
-            attrs.classes = setOf("mission-tab-content")
+            attrs.classes = jsObjectBackedSetOf("mission-tab-content")
             unsafeHtml(game.i("StarByteLegendChallengeText"))
 
             img {

@@ -3,6 +3,7 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.css.zIndex
 import kotlinx.html.classes
 import kotlinx.html.id
@@ -54,13 +55,12 @@ class FpsCounter : GameUIComponent<GameProps, FpsCounterState>() {
     override fun RBuilder.render() {
         styledSpan {
             attrs.id = "fps-counter"
-            attrs.classes = setOf("map-title-widget", "map-title-text")
+            attrs.classes = jsObjectBackedSetOf("map-title-widget", "map-title-text")
             css {
                 zIndex = Layer.MapTitle.zIndex()
             }
 
             +"${state.fps} fps"
-//            +"${((1000.0 * framesSinceLastComponentUpdate) / (TimeStamp.now() - lastComponentUpdateTime)).toInt()} fps"
         }
     }
 }

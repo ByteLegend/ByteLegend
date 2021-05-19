@@ -8,6 +8,7 @@ import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.Game
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -16,7 +17,7 @@ class HeroCharacter(
     player: Player,
 ) : PlayerSprite(gameScene, player) {
     override val id: String = "hero"
-    override val roles: Set<GameObjectRole> = setOf(
+    override val roles: Set<String> = jsObjectBackedSetOf(
         GameObjectRole.Character,
         GameObjectRole.Sprite,
         GameObjectRole.Hero

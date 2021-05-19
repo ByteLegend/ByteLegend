@@ -1,5 +1,6 @@
 package com.bytelegend.client.app.ui.mission
 
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
@@ -15,7 +16,7 @@ interface ModalCloseButtonProps : RProps {
 class ModalCloseButton : RComponent<ModalCloseButtonProps, RState>() {
     override fun RBuilder.render() {
         div {
-            attrs.classes = setOf("modal-close-button")
+            attrs.classes = jsObjectBackedSetOf("modal-close-button")
             attrs.onClickFunction = {
                 props.onClickFunction()
             }

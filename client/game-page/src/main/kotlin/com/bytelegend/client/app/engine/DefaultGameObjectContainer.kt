@@ -7,6 +7,8 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.mapToArrayWithIndex
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.util.JSArrayBackedList
+import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.obj.BackgroundSpriteLayer
 import com.bytelegend.client.app.obj.toSprite
 

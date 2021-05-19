@@ -2,6 +2,7 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.script.effect.numberIncrementEffect
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
@@ -49,7 +50,7 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : RState>(
     abstract fun onIncrementNewValue(event: NumberIncrementEvent)
     protected fun RBuilder.renderIcon() {
         div {
-            attrs.classes = setOf(iconClassName, "inline-icon")
+            attrs.classes = jsObjectBackedSetOf(iconClassName, "inline-icon")
         }
     }
 

@@ -7,6 +7,7 @@ import com.bytelegend.app.client.misc.getImageElement
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.CANVAS
 import kotlinx.html.classes
 import kotlinx.html.id
@@ -132,7 +133,7 @@ class MainMapCanvasLayer : GameUIComponent<MapCanvasProps, RState>() {
         attrs {
             id = canvasId
             if (!mapCoveredByCanvas) {
-                classes = setOf("canvas-border")
+                classes = jsObjectBackedSetOf("canvas-border")
             }
             width = canvasPixelSize.width.toString()
             height = canvasPixelSize.height.toString()

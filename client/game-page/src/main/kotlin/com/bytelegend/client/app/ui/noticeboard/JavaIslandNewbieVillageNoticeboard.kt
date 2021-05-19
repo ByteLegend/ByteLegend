@@ -2,6 +2,7 @@ package com.bytelegend.client.app.ui.noticeboard
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.unsafeHtml
 import kotlinx.browser.window
@@ -85,7 +86,7 @@ class JavaIslandNewbieVillageNoticeboard :
                 if (!imgAndJsonLoaded()) {
                     if (loading) {
                         div {
-                            attrs.classes = setOf("flex-center")
+                            attrs.classes = jsObjectBackedSetOf("flex-center")
                             BootstrapSpinner {
                                 attrs.animation = "border"
                             }

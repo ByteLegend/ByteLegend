@@ -3,6 +3,7 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.id
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onMouseMoveFunction
@@ -65,7 +66,7 @@ class UserMouseInteractionLayer : GameUIComponent<GameProps, RState>() {
             width = canvasPixelSize.width,
             height = canvasPixelSize.height,
             zIndex = Layer.UserMouseInteraction.zIndex(),
-            classes = setOf("user-mouse-interaction-layer")
+            classes = jsObjectBackedSetOf("user-mouse-interaction-layer")
         ) {
             attrs {
                 id = "user-mouse-interaction-layer"

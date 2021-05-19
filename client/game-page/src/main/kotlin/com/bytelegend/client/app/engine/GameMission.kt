@@ -9,6 +9,7 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.obj.DynamicSprite
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.mission.MissionModal
@@ -26,13 +27,13 @@ class GameMission(
     override val gridCoordinate: GridCoordinate = gameMapMission.point
     override val pixelCoordinate: PixelCoordinate = gameMapMission.point * gameScene.map.tileSize
     override val layer: Int = 0
-    override val roles: Set<GameObjectRole> =
-        setOf(
-            GameObjectRole.Mission,
-            GameObjectRole.Sprite,
-            GameObjectRole.CoordinateAware,
-            GameObjectRole.Clickable,
-            GameObjectRole.UnableToBeSetAsDestination
+    override val roles: Set<String> =
+        jsObjectBackedSetOf(
+            GameObjectRole.Mission.toString(),
+            GameObjectRole.Sprite.toString(),
+            GameObjectRole.CoordinateAware.toString(),
+            GameObjectRole.Clickable.toString(),
+            GameObjectRole.UnableToBeSetAsDestination.toString()
         )
 
     override fun init() {

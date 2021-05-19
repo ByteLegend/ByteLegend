@@ -1,5 +1,6 @@
 package com.bytelegend.client.app.ui.noticeboard
 
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.classes
 import react.RBuilder
 import react.RComponent
@@ -30,7 +31,7 @@ class AvatarTooltip : RComponent<AvatarCardProps, RState>() {
 
     override fun RBuilder.render() {
         div {
-            attrs.classes = setOf("brave-people-avatar-tooltip")
+            attrs.classes = jsObjectBackedSetOf("brave-people-avatar-tooltip")
             attrs.jsStyle {
                 position = "absolute"
                 left = "${props.tile.x + TOOLTIP_OFFSET_X}px"
@@ -59,7 +60,7 @@ class AvatarTooltip : RComponent<AvatarCardProps, RState>() {
                     position = "absolute"
                     left = "${TOOLTIP_HEIGHT + 4}px"
                 }
-                attrs.classes = setOf("white-text-black-shadow-1")
+                attrs.classes = jsObjectBackedSetOf("white-text-black-shadow-1")
                 p {
                     attrs.jsStyle.fontSize = "16px"
                     +props.tile.username

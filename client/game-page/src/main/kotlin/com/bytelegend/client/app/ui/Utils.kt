@@ -2,6 +2,7 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.css.Position
 import kotlinx.css.height
 import kotlinx.css.left
@@ -212,7 +213,7 @@ fun <PARENT : GameProps, CHILD : GameProps> RElementBuilder<PARENT>.gameChild(
 
 fun RBuilder.unsafeHtml(html: String, vararg classes: String) {
     span {
-        attrs.classes = setOf(*classes)
+        attrs.classes = jsObjectBackedSetOf(*classes)
         consumer.onTagContentUnsafe {
             +html
         }

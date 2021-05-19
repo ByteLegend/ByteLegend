@@ -15,7 +15,7 @@ class GameMapDynamicSprite(
     val frames: List<List<List<GridCoordinate>>>
 ) : GameMapObject, GameObject {
     override val layer: Int = PLAYER_LAYER + 1
-    override val roles: Set<GameObjectRole> = setOf()
+    override val roles: Set<String> = setOf()
     override val type: GameMapObjectType = GameMapObjectType.GameMapDynamicSprite
     // 3 dimension:
     // first/second dimension: the y/x of tiles because a sprite can cross multiple tiles.

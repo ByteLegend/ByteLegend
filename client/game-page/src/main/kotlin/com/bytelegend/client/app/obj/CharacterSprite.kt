@@ -1,6 +1,5 @@
 package com.bytelegend.client.app.obj
 
-import com.bytelegend.app.client.api.AbstractMovableSprite
 import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameScene
@@ -30,7 +29,7 @@ abstract class CharacterSprite(
     override val gameScene: GameScene,
     override var pixelCoordinate: PixelCoordinate,
     private val animationSet: AnimationSet
-) : AbstractMovableSprite(), GameSceneAware, Character {
+) : AbstractSprite(), GameSceneAware, Character {
     override val layer: Int = PLAYER_LAYER
 
     var still = true

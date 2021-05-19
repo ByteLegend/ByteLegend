@@ -10,6 +10,7 @@ import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.Game
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class MapEntrance(
     private val webSocketClient: WebSocketClient
 ) : GameObject, GameSceneAware, CoordinateAware {
     override val layer: Int = INVISIBLE_OBJECT_LAYER
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.MapEntrance, GameObjectRole.CoordinateAware)
+    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.MapEntrance, GameObjectRole.CoordinateAware)
     override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
 
     override fun onTouch(character: GameObject) {

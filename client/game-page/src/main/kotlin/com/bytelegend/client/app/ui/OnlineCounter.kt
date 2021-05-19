@@ -2,6 +2,7 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.page.GAME_INIT_DATA
 import kotlinext.js.jsObject
 import kotlinx.browser.document
@@ -95,7 +96,7 @@ class OnlineCounter : GameUIComponent<GameProps, OnlineCounterState>() {
         span {
             if (gameControl.online) {
                 attrs.id = "online-counter"
-                attrs.classes = setOf("map-title-widget")
+                attrs.classes = jsObjectBackedSetOf("map-title-widget")
 
                 +i("OnlineCount")
                 span {
@@ -112,7 +113,7 @@ class OnlineCounter : GameUIComponent<GameProps, OnlineCounterState>() {
                 }
             } else {
                 attrs.id = "online-counter-offline"
-                attrs.classes = setOf("map-title-widget")
+                attrs.classes = jsObjectBackedSetOf("map-title-widget")
 
                 +i("OfflineMode")
             }

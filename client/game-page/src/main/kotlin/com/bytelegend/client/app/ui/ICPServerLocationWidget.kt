@@ -4,6 +4,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.enums.ServerLocation
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.title
@@ -31,7 +32,7 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
             width = ICPServerLocationWidgetWidth,
             height = ICPServerLocationWidgetHeight,
             zIndex = Layer.IcpServerLocationWidget.zIndex(),
-            classes = setOf("flex-center", "white-text-black-shadow-1")
+            classes = jsObjectBackedSetOf("flex-center", "white-text-black-shadow-1")
         ) {
             if (game.serverLocation == ServerLocation.BEIJING) {
                 a {
@@ -54,7 +55,7 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
 
             if (game.gameControl.online) {
                 a {
-                    attrs.classes = setOf("server-location-link")
+                    attrs.classes = jsObjectBackedSetOf("server-location-link")
                     attrs.title = getServerLocationTitle()
                     attrs.onClickFunction = {
                         showServerLocationModal()
@@ -64,7 +65,7 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
                 }
             } else {
                 span {
-                    attrs.classes = setOf("server-location-link-offline")
+                    attrs.classes = jsObjectBackedSetOf("server-location-link-offline")
                     +i("OfflineMode")
                 }
             }

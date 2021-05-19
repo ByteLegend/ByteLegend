@@ -15,6 +15,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapTabContainer
 import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.MultiSelect
@@ -61,7 +62,7 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
         //  update time, upvote
         // type: video/article/youtube
         span {
-            attrs.classes = setOf("mission-modal-tutorial-filter-name")
+            attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-filter-name")
             +game.i("Language")
         }
         child(MultiSelect::class) {
@@ -83,7 +84,7 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
 
     private fun RBuilder.orderBy() {
         span {
-            attrs.classes = setOf("mission-modal-tutorial-filter-name")
+            attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-filter-name")
             +game.i("OrderBy")
         }
         child(MultiSelect::class) {
@@ -97,7 +98,7 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
 
     private fun RBuilder.typeFilter() {
         span {
-            attrs.classes = setOf("mission-modal-tutorial-filter-name")
+            attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-filter-name")
             +game.i("Type")
         }
         child(MultiSelect::class) {
@@ -111,9 +112,9 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
 
     override fun RBuilder.render() {
         div {
-            attrs.classes = setOf("mission-modal-tutorial-tab")
+            attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-tab")
             div {
-                attrs.classes = setOf("mission-modal-tutorial-filters")
+                attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-filters")
                 localeFilter()
                 orderBy()
                 typeFilter()
@@ -126,7 +127,7 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                 }
             }
             div {
-                attrs.classes = setOf("mission-modal-tutorial-content")
+                attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-content")
 
                 if (state.loadingTutorials) {
                     BootstrapSpinner {
@@ -138,9 +139,9 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                 BootstrapTabContainer {
                     attrs.id = "left-tabs-example"
                     div {
-                        attrs.classes = setOf("mission-modal-tutorial-content-left")
+                        attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-content-left")
                         div {
-                            attrs.classes = setOf("mission-modal-tutorial-content-left-tutorials")
+                            attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-content-left-tutorials")
                             BootstrapListGroup {
                                 attrs.className = "flex-column"
 
@@ -162,7 +163,7 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                         }
 
                         div {
-                            attrs.classes = setOf("mission-modal-tutorial-content-left-pagination")
+                            attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-content-left-pagination")
                             BootstrapPagination {
                                 attrs.size = "sm"
                                 BootstrapPaginationFirst {
@@ -195,7 +196,7 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                         }
                     }
                     div {
-                        attrs.classes = setOf("mission-modal-tutorial-content-right")
+                        attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-content-right")
                         if (!state.loadingTutorials) {
                             child(TutorialContent::class) {
                                 attrs.game = game

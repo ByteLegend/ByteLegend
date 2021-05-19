@@ -1,6 +1,6 @@
 @file:Suppress("UnsafeCastFromDynamic")
 
-package com.bytelegend.client.app.engine
+package com.bytelegend.client.app.engine.util
 
 private fun <E> Collection<E>.toJSArray(): dynamic {
     val jsArray = js("[]")

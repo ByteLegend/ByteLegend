@@ -1,5 +1,6 @@
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.id
@@ -17,7 +18,7 @@ class StarCountWidget : AbstractIncrementAnimatableWidget<StarCountWidgetProps, 
     override fun RDOMBuilder<DIV>.renderDiv() {
         attrs.id = "star-count"
         span {
-            attrs.classes = setOf("map-title-text")
+            attrs.classes = jsObjectBackedSetOf("map-title-text")
             +game.heroPlayer.star.toString()
         }
         renderIcon()

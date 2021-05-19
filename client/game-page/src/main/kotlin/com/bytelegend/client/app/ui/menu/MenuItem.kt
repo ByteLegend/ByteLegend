@@ -6,6 +6,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
@@ -59,7 +60,7 @@ class MenuItem : GameUIComponent<MenuItemProps, MenuItemState>() {
             attrs.onBlurFunction = onHoverOut
             attrs.onClickFunction = props.onClickFunction
 
-            attrs.classes = setOf("menu-item-div")
+            attrs.classes = jsObjectBackedSetOf("menu-item-div")
             attrs.jsStyle {
                 height = "${iconSize}px"
                 width = "${iconSize}px"
@@ -76,7 +77,7 @@ class MenuItem : GameUIComponent<MenuItemProps, MenuItemState>() {
             if (state.hover) {
                 div {
                     +i(props.titleId)
-                    attrs.classes = setOf("menu-item-div-title", "white-text-black-shadow-1")
+                    attrs.classes = jsObjectBackedSetOf("menu-item-div-title", "white-text-black-shadow-1")
                 }
             }
         }

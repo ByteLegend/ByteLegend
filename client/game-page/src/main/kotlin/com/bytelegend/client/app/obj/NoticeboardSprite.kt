@@ -21,7 +21,7 @@ package com.bytelegend.client.app.obj
 //                        pointCoordinate,
 //                        pointCoordinate * gameScene.map.tileSize,
 //                        onClickFunction = this::onClick,
-//                        setOf(
+//                        jsObjectBackedSetOf(
 //                            GameObjectRole.CoordinateAware,
 //                            GameObjectRole.Clickable,
 //                        )

@@ -1,6 +1,5 @@
 package com.bytelegend.client.app.obj
 
-import com.bytelegend.app.client.api.AbstractStaticLocationSprite
 import com.bytelegend.app.client.api.Animation
 import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.CoordinateAware

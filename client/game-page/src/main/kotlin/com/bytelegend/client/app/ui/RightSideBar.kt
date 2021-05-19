@@ -3,6 +3,7 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroup
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import react.RBuilder
 import react.RState
 
@@ -28,7 +29,7 @@ class RightSideBar : GameUIComponent<RightSideBarProps, RState>() {
             right = gameCanvasState.determineRightSideBarCoordinateInGameContainerRightTop().x,
             top = gameCanvasState.determineRightSideBarCoordinateInGameContainerRightTop().y,
             zIndex = Layer.RightSideBar.zIndex(),
-            classes = setOf("right-sidebar")
+            classes = jsObjectBackedSetOf("right-sidebar")
         ) {
             BootstrapListGroup {
                 children()

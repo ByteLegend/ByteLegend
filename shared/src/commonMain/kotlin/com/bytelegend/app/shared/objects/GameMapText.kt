@@ -11,7 +11,7 @@ class GameMapText(
     val rotation: Int
 ) : GameMapObject, GameObject {
     override val type: GameMapObjectType = GameMapObjectType.GameMapText
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.MapText)
+    override val roles: Set<String> = setOf(GameObjectRole.MapText.toString())
 
     override fun compress() = CompressedGameMapText(
         id,

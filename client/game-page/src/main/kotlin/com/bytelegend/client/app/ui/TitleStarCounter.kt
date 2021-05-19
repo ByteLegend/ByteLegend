@@ -1,5 +1,6 @@
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.classes
 import react.RBuilder
 import react.RComponent
@@ -28,7 +29,7 @@ class TitleStarCounter : RComponent<TitleStarCounterProps, RState>() {
     override fun RBuilder.render() {
         if (props.total > 5) {
             span {
-                attrs.classes = setOf("map-title-text")
+                attrs.classes = jsObjectBackedSetOf("map-title-text")
                 +"${props.current}/${props.total}"
             }
             star(STAR_PNG_BASE64)

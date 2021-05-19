@@ -12,6 +12,7 @@ import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onMouseMoveFunction
 import kotlinx.html.js.onMouseOutFunction
@@ -153,7 +154,7 @@ class MissionTile : RComponent<MissionTitleProps, MissionTitleState>() {
             left = props.left,
             bottom = props.bottom + getOffsetY(),
             zIndex = Layer.MissionTitle.zIndex() + if (state.hovered) 1 else 0,
-            classes = setOf("checkpoint-title")
+            classes = jsObjectBackedSetOf("checkpoint-title")
         ) {
             unsafeHtml(props.title)
             attrs.onClickFunction = {
@@ -172,29 +173,29 @@ class MissionTile : RComponent<MissionTitleProps, MissionTitleState>() {
             }
             absoluteDiv(
                 zIndex = Layer.MissionTitle.zIndex(),
-                classes = setOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-left")
+                classes = jsObjectBackedSetOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-left")
             )
             absoluteDiv(
                 zIndex = Layer.MissionTitle.zIndex(),
-                classes = setOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-right")
+                classes = jsObjectBackedSetOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-right")
             )
 
             absoluteDiv(
                 zIndex = Layer.MissionTitle.zIndex() + 2,
-                classes = setOf("checkpoint-title-triangle-container")
+                classes = jsObjectBackedSetOf("checkpoint-title-triangle-container")
             ) {
                 absoluteDiv(
                     left = 0,
                     top = 0,
                     width = 0,
                     height = 0,
-                    classes = setOf("checkpoint-title-triangle")
+                    classes = jsObjectBackedSetOf("checkpoint-title-triangle")
                 )
             }
 
             absoluteDiv(
                 zIndex = Layer.MissionTitle.zIndex() + 3,
-                classes = setOf("title-star-box")
+                classes = jsObjectBackedSetOf("title-star-box")
             ) {
                 child(TitleStarCounter::class) {
                     attrs.total = props.totalStar

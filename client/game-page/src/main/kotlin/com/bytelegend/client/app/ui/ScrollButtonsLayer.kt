@@ -10,6 +10,7 @@ import com.bytelegend.app.shared.Direction.RIGHT
 import com.bytelegend.app.shared.Direction.RIGHT_DOWN
 import com.bytelegend.app.shared.Direction.RIGHT_UP
 import com.bytelegend.app.shared.Direction.UP
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onFocusFunction
@@ -216,7 +217,7 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
             height = height,
             zIndex = Layer.ScrollButtons.zIndex(),
             opacity = "0",
-            classes = setOf(direction.cursorCssClass()),
+            classes = jsObjectBackedSetOf(direction.cursorCssClass()),
             block = {
                 attrs {
                     onMouseMoveFunction = scrollEventListener(direction)

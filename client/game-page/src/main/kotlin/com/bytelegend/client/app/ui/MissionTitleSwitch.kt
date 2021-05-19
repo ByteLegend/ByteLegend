@@ -1,6 +1,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSwitchButton
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.classes
 import react.RBuilder
 import react.RState
@@ -14,7 +15,7 @@ const val MISSION_PNG_BASE64 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAI
 class MissionTitleSwitch : GameUIComponent<GameProps, RState>() {
     override fun RBuilder.render() {
         div {
-            attrs.classes = setOf("map-title-widget")
+            attrs.classes = jsObjectBackedSetOf("map-title-widget")
             attrs.jsStyle {
                 display = "inline-block"
             }

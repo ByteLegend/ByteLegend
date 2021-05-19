@@ -1,5 +1,6 @@
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import react.RState
@@ -17,7 +18,7 @@ class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, 
 
     override fun RDOMBuilder<DIV>.renderDiv() {
         span {
-            attrs.classes = setOf("map-title-text")
+            attrs.classes = jsObjectBackedSetOf("map-title-text")
             +game.heroPlayer.coin.toString()
         }
         renderIcon()

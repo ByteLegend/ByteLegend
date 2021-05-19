@@ -6,6 +6,7 @@ import com.bytelegend.app.client.api.ToastController
 import com.bytelegend.app.client.ui.bootstrap.BootstrapToast
 import com.bytelegend.app.client.ui.bootstrap.BootstrapToastBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapToastHeader
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.browser.window
 import kotlinx.html.classes
 import react.RBuilder
@@ -76,7 +77,7 @@ class ToastUIComponent : GameUIComponent<GameProps, ToastUIComponentRState>() {
 
         absoluteDiv(
             zIndex = Layer.BannerToast.zIndex(),
-            classes = setOf("toast-container"),
+            classes = jsObjectBackedSetOf("toast-container"),
             extraStyleBuilder = {
                 left = uiContainerCoordinateInGameContainer.x
                 /* minimap height + gap */
@@ -96,7 +97,7 @@ class ToastUIComponent : GameUIComponent<GameProps, ToastUIComponentRState>() {
                     }
                     BootstrapToastHeader {
                         strong {
-                            attrs.classes = setOf("mr-auto")
+                            attrs.classes = jsObjectBackedSetOf("mr-auto")
                             unsafeHtml(t.headerHtml)
                         }
                     }

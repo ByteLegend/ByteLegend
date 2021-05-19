@@ -18,7 +18,7 @@ class GameMapPoint(
     val point: GridCoordinate
 ) : GameMapObject, GameObject {
     override val type: GameMapObjectType = GameMapObjectType.GameMapPoint
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.MapPoint)
+    override val roles: Set<String> = setOf(GameObjectRole.MapPoint.toString())
 
     override fun compress() = CompressedGameMapPoint(id, layer, point.compress())
 }

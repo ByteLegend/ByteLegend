@@ -1,6 +1,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSwitchButton
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.classes
 import react.RBuilder
 import react.RState
@@ -18,10 +19,10 @@ class AudioSwitchWidget : GameUIComponent<GameProps, RState>() {
                     position = "relative"
                     top = "4px"
                 }
-                attrs.classes = setOf("white-text-white-shadow-1")
+                attrs.classes = jsObjectBackedSetOf("white-text-white-shadow-1")
                 +"\uD83C\uDFB5 "
             }
-            attrs.classes = setOf("map-title-widget")
+            attrs.classes = jsObjectBackedSetOf("map-title-widget")
             attrs.jsStyle {
                 display = "inline-block"
             }

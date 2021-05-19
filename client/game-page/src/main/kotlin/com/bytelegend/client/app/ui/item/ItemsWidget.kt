@@ -1,6 +1,7 @@
 package com.bytelegend.client.app.ui.item
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import kotlinx.html.classes
@@ -25,13 +26,13 @@ class ItemsWidget : GameUIComponent<ItemWidgetProps, RState>() {
 
     private fun RBuilder.renderOne(item: String) {
         div {
-            attrs.classes = setOf("inline-icon", item)
+            attrs.classes = jsObjectBackedSetOf("inline-icon", item)
         }
     }
 
     private fun RBuilder.renderText(text: String) {
         div {
-            attrs.classes = setOf("map-title-text", "items-widget")
+            attrs.classes = jsObjectBackedSetOf("map-title-text", "items-widget")
             +text
         }
     }

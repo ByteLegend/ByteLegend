@@ -11,6 +11,7 @@ import com.bytelegend.app.shared.RawGameMapTileLayer
 import com.bytelegend.app.shared.RawStaticImageLayer
 import com.bytelegend.app.shared.RawTileAnimationFrame
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.page.game
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLImageElement
@@ -45,7 +46,7 @@ class StaticImageBlockSprite(
 ) : BackgroundSpriteLayer, CoordinateAware {
     override val id: String = "${gridCoordinate.x}-${gridCoordinate.y}-${imageLayer.layer}"
     override val layer: Int = imageLayer.layer
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
+    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
     override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
     private val tileWidth = gameScene.map.tileSize.width
     private val tileHeight = gameScene.map.tileSize.width
@@ -91,7 +92,7 @@ class AnimationSprite(
 ) : BackgroundSpriteLayer, CoordinateAware {
     override val id: String = "${gridCoordinate.x}-${gridCoordinate.y}-${animationLayer.layer}"
     override val layer: Int = animationLayer.layer
-    override val roles: Set<GameObjectRole> = setOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
+    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite.toString(), GameObjectRole.CoordinateAware.toString())
     override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
     private val tileWidth = gameScene.map.tileSize.width
     private val tileHeight = gameScene.map.tileSize.width

@@ -24,6 +24,8 @@ import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.app.shared.objects.defaultMapEntranceDestinationId
 import com.bytelegend.app.shared.objects.defaultMapEntranceId
 import com.bytelegend.app.shared.objects.defaultMapEntrancePointId
+import com.bytelegend.client.app.engine.util.JSArrayBackedList
+import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.obj.GameCurveSprite
 import com.bytelegend.client.app.obj.GameTextSprite
 import com.bytelegend.client.app.obj.MapEntrance

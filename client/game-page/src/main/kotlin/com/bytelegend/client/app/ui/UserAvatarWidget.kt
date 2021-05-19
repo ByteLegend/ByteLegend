@@ -7,6 +7,7 @@ import BootstrapDropdownItem
 import BootstrapDropdownMenu
 import BootstrapDropdownToggle
 import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdown
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.classes
@@ -45,19 +46,19 @@ class UserAvatarWidget : GameUIComponent<GameProps, UserAvatarWidgetState>() {
             width = AVATAR_WIDTH,
             height = AVATAR_HEIGHT,
             zIndex = Layer.UserAvatarWidget.zIndex(),
-            classes = setOf("picture-frame-border")
+            classes = jsObjectBackedSetOf("picture-frame-border")
         ) {
             attrs.id = "avatar-div"
             if (game.heroPlayer.isAnonymous) {
                 attrs.title = i("Login")
 
                 img {
-                    attrs.classes = setOf("avatar-img")
+                    attrs.classes = jsObjectBackedSetOf("avatar-img")
                     attrs.src = game.resolve("/img/ui/login.png")
                 }
 
                 span {
-                    attrs.classes = setOf("avatar-login-span")
+                    attrs.classes = jsObjectBackedSetOf("avatar-login-span")
                     a {
                         attrs.id = "login-link"
                         attrs.href = "/game/login?redirect=/"
@@ -66,7 +67,7 @@ class UserAvatarWidget : GameUIComponent<GameProps, UserAvatarWidgetState>() {
                 }
             } else {
                 img {
-                    attrs.classes = setOf("avatar-img")
+                    attrs.classes = jsObjectBackedSetOf("avatar-img")
                     attrs.src = game.heroPlayer.avatarUrl ?: ""
                 }
                 attrs.onMouseMoveFunction = {

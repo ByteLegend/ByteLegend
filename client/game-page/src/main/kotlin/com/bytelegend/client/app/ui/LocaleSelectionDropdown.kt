@@ -8,6 +8,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.PREFERRED_LOCALE_COOKIE_NAME
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
@@ -31,7 +32,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
     @Suppress("UnsafeCastFromDynamic")
     override fun RBuilder.render() {
         div {
-            attrs.classes = setOf("locale-selection-widget", "map-title-widget")
+            attrs.classes = jsObjectBackedSetOf("locale-selection-widget", "map-title-widget")
             BootstrapDropdownButton {
                 attrs.id = "locale-selection"
                 attrs.title = game.locale.displayName
@@ -39,7 +40,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
                 Locale.values().filter { it != Locale.ALL }.forEach { locale ->
                     BootstrapDropdownItem {
                         span {
-                            attrs.classes = setOf("locale-selection-dropdown-item-span")
+                            attrs.classes = jsObjectBackedSetOf("locale-selection-dropdown-item-span")
                             +locale.displayName
                         }
                         attrs.onClick = stateUpdatingEventHandler {
@@ -52,7 +53,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
 
                 BootstrapDropdownItem {
                     span {
-                        attrs.classes = setOf("locale-selection-dropdown-item-span")
+                        attrs.classes = jsObjectBackedSetOf("locale-selection-dropdown-item-span")
                         +i("HelpUsImproveTheTranslationQuality")
                     }
                     attrs.onClick = {

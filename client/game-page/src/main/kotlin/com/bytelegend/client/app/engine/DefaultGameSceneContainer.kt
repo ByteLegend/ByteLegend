@@ -10,6 +10,7 @@ import com.bytelegend.client.app.engine.resource.GameMapResource
 import com.bytelegend.client.app.engine.resource.I18nTextResource
 import com.bytelegend.client.app.engine.resource.ImageResource
 import com.bytelegend.client.app.engine.resource.TextAjaxResource
+import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.script.effect.fadeInEffect
 import com.bytelegend.client.app.web.GameSceneInitResource

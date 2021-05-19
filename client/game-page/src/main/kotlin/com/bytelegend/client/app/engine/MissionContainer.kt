@@ -2,6 +2,8 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.shared.entities.MissionModalData
+import com.bytelegend.client.app.engine.util.JSObjectBackedMap
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.web.WebSocketClient
 import com.bytelegend.client.app.web.getMissionModalData
 import kotlinx.coroutines.GlobalScope
@@ -17,7 +19,7 @@ class MissionContainer(
 ) {
     private val eventBus: EventBus by di.instance()
     private val webSocketClient: WebSocketClient by di.instance()
-    private val loadingMissions: MutableSet<String> = mutableSetOf()
+    private val loadingMissions: MutableSet<String> = jsObjectBackedSetOf()
     private val missionData: MutableMap<String, MissionModalData> = JSObjectBackedMap()
 
     fun isMissionModalDataLoading(missionId: String): Boolean = loadingMissions.contains(missionId)

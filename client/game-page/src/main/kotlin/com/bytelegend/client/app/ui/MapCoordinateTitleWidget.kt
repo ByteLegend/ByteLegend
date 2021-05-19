@@ -8,6 +8,7 @@ import com.bytelegend.client.app.engine.MAP_SCROLL_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.classes
 import kotlinx.html.id
 import react.RBuilder
@@ -83,9 +84,9 @@ class MapCoordinateTitleWidget : GameUIComponent<GameProps, MapCoordinateWidgetS
         span {
             attrs.id = "map-coordinate"
             if (!state.flickering || (counter / 5) % 2 == 0) {
-                attrs.classes = setOf("map-title-widget", "map-title-text", "map-coordinate")
+                attrs.classes = jsObjectBackedSetOf("map-title-widget", "map-title-text", "map-coordinate")
             } else {
-                attrs.classes = setOf("map-title-widget", "map-title-text", "bordered-map-coordinate")
+                attrs.classes = jsObjectBackedSetOf("map-title-widget", "map-title-text", "bordered-map-coordinate")
             }
 
             val z = Layer.MapTitle.zIndex().toString()
