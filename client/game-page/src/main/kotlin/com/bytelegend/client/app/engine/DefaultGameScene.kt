@@ -7,6 +7,7 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.api.JSArrayBackedList
+import com.bytelegend.app.client.api.JSObjectBackedMap
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
@@ -32,6 +33,7 @@ import com.bytelegend.client.app.obj.MapEntrance
 import com.bytelegend.client.app.obj.NPC
 import com.bytelegend.client.app.obj.createMissionSprite
 import com.bytelegend.client.app.script.DefaultGameDirector
+import com.bytelegend.client.app.script.MAIN_CHANNEL
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
@@ -58,8 +60,11 @@ class DefaultGameScene(
     }
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
-    val director: DefaultGameDirector = DefaultGameDirector(di, this)
+    private val channelToDirector: MutableMap<String, DefaultGameDirector> = JSObjectBackedMap()
     val missions: MissionContainer = MissionContainer(di, this)
+    val mainChannelDirector by lazy {
+        getDirectorOfChannel(MAIN_CHANNEL)
+    }
 
     lateinit var players: PlayerContainer
 
@@ -70,7 +75,17 @@ class DefaultGameScene(
     }
 
     override fun scripts(block: ScriptsBuilder.() -> Unit) {
-        director.scripts(block)
+        scripts(MAIN_CHANNEL, true, block)
+    }
+
+    fun scripts(channel: String, runImmediately: Boolean, block: ScriptsBuilder.() -> Unit) {
+        getDirectorOfChannel(channel).scripts(runImmediately, block)
+    }
+
+    private fun getDirectorOfChannel(channel: String): DefaultGameDirector {
+        return channelToDirector.getOrPut(channel) {
+            DefaultGameDirector(di, channel, this)
+        }
     }
 
     init {

@@ -16,6 +16,7 @@ import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.STAR_BYTELEGEND_MISSION_ID
+import com.bytelegend.client.app.script.STAR_FLYING_CHANNEL
 import com.bytelegend.client.app.script.effect.starFlyEffect
 import com.bytelegend.client.app.ui.NumberIncrementEvent
 import com.bytelegend.client.app.ui.STAR_INCREMENT_EVENT
@@ -32,10 +33,11 @@ class DefaultPlayerMissionContainer(
 ) : PlayerMissionContainer {
     private val eventBus: EventBus by di.instance()
     private val game: GameRuntime by di.instance()
+    private val gameControl: GameControl by di.instance()
     private val modalController: ModalController by lazy {
         game.modalController
     }
-    var gameScene: GameScene? = null
+    var gameScene: DefaultGameScene? = null
 
     private val starUpdateEventListener: EventListener<StarUpdateEventData> = this::onStarUpdate
     private val missionUpdateEventListener: EventListener<MissionUpdateEventData> = this::onMissionUpdate
@@ -46,6 +48,10 @@ class DefaultPlayerMissionContainer(
 
     override fun missionStar(missionId: String): Int {
         return missions[missionId]?.star ?: 0
+    }
+
+    private fun isCanvasInvisible(): Boolean {
+        return modalController.visible || !gameControl.isWindowVisible
     }
 
     private fun onStarUpdate(eventData: StarUpdateEventData) {
@@ -63,10 +69,8 @@ class DefaultPlayerMissionContainer(
                 else
                     mission.point * gameScene!!.map.tileSize -
                         canvasState.getCanvasCoordinateInMap() + canvasState.getCanvasCoordinateInGameContainer()
-
-            if (modalController.visible) {
-                // if modal is visible, add to script list
-                gameScene?.scripts {
+            if (isCanvasInvisible()) {
+                gameScene?.scripts(STAR_FLYING_CHANNEL, false) {
                     this.unsafeCast<DefaultGameDirector>().suspendAnimation {
                         starFlyThenIncrement(
                             canvasState.gameContainerSize,
@@ -92,9 +96,9 @@ class DefaultPlayerMissionContainer(
         ) {
             // the corresponding scene is not loaded, let activeScene respond
             // only add star
-            if (modalController.visible) {
+            if (isCanvasInvisible()) {
                 // if modal is visible, add to script list
-                gameScene?.scripts {
+                gameScene?.scripts(STAR_FLYING_CHANNEL, false) {
                     this.unsafeCast<DefaultGameDirector>().suspendAnimation {
                         starIncrement(eventData)
                     }
@@ -143,7 +147,7 @@ class DefaultPlayerMissionContainer(
     }
 
     fun init(gameScene: GameScene) {
-        this.gameScene = gameScene
+        this.gameScene = gameScene.unsafeCast<DefaultGameScene>()
         eventBus.on(STAR_UPDATE_EVENT, starUpdateEventListener)
         eventBus.on(MISSION_UPDATE_EVENT, missionUpdateEventListener)
     }

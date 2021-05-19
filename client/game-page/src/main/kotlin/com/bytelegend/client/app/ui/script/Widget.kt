@@ -2,9 +2,10 @@ package com.bytelegend.client.app.ui.script
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_10HZ_EVENT
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
+import com.bytelegend.client.app.engine.GAME_SCRIPT_NEXT
+import com.bytelegend.client.app.script.MAIN_CHANNEL
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
@@ -74,7 +75,7 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
                 bottom = "${bubbleBottom}px"
             }
             attrs.onClickFunction = {
-                game.activeScene.unsafeCast<DefaultGameScene>().director.next()
+                props.game.eventBus.emit(GAME_SCRIPT_NEXT, MAIN_CHANNEL)
             }
             // Can only set one of 'children' or props.dangerouslySetInnerHTML'
             unsafeHtml(props.contentHtml)

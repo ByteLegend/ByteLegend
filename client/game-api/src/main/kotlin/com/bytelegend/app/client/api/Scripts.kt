@@ -48,7 +48,6 @@ interface ScriptsBuilder {
      */
     fun playAnimate(objectId: String, frames: List<Int>, intervalMs: Int)
     fun characterMove(characterId: String, destMapCoordinate: GridCoordinate, callback: UnitFunction = {})
-    fun onComplete(action: UnitFunction)
     fun startBeginnerGuide()
     fun putState(key: String, value: String = "1")
     fun removeState(key: String)

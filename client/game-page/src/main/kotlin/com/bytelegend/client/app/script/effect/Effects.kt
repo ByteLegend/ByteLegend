@@ -99,6 +99,7 @@ fun showArrowGif(
         className = "map-title-text"
         style.zIndex = Layer.ScriptWidget.zIndex().toString()
         style.position = "absolute"
+        style.color = "red"
         style.left = "${uiCoordinateInGameContainer.x + 230}px"
         style.top = "${uiCoordinateInGameContainer.y + 50}px"
     }

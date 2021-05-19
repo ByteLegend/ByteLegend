@@ -4,7 +4,6 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.JSObjectBackedMap
-import com.bytelegend.app.client.api.ModalController
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
@@ -12,13 +11,16 @@ import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.client.app.engine.GAME_SCRIPT_NEXT
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
 import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
+import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.CharacterSprite
 import com.bytelegend.client.app.script.effect.showArrowGif
+import com.bytelegend.client.app.ui.COORDINATE_BORDER_FLICKER
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.HIGHTLIGHT_MISSION_EVENT
@@ -50,23 +52,42 @@ interface GameScript {
 }
 
 const val STAR_BYTELEGEND_MISSION_ID = "star-bytelegend"
+const val MAIN_CHANNEL = "MainChannel"
+const val STAR_FLYING_CHANNEL = "StarFlying"
 
+/**
+ * A director directs the scripts running on the scene, in a specific channel.
+ */
 class DefaultGameDirector(
     di: DI,
+    private val channel: String,
     private val gameScene: GameScene
 ) : ScriptsBuilder {
     private val gameControl: GameControl by di.instance()
     private val game: GameRuntime by di.instance()
-    private val modalController: ModalController by lazy { game.modalController }
-    private val scripts: MutableList<GameScript> = mutableListOf()
     private val eventBus: EventBus by di.instance()
-    private var respondToClick: Boolean = false
+
+    /**
+     * Main channel means that it can respond to user click or other events.
+     * Also, user mouse will be disabled during scripts running.
+     *
+     * This channel is usually used to display main story, like NPC speech.
+     */
+    private val mainChannel: Boolean = channel == MAIN_CHANNEL
+
+    /**
+     * When it is true, the user mouse click can trigger next script to run,
+     * like speech bubbles.
+     */
+    private var clickEnabled: Boolean = false
     private val webSocketClient: WebSocketClient by lazy {
         gameScene.gameRuntime.unsafeCast<Game>().webSocketClient
     }
 
+    private val scripts: MutableList<GameScript> = mutableListOf()
+
     // Point to next script to run
-    private var index = -1
+    var index = -1
 
     /**
      * A counter providing unique id for widgets in DOM
@@ -75,59 +96,83 @@ class DefaultGameDirector(
 
     val currentWidgets: MutableMap<String, Widget<out GameProps>> = JSObjectBackedMap()
 
-    val isRunning
-        get() = index != -1
-
     init {
         eventBus.on(MOUSE_CLICK_EVENT, this::onMouseClickOnCanvas)
+        eventBus.on<String?>(GAME_SCRIPT_NEXT) { channel ->
+            if (channel == this.channel) {
+                next()
+            }
+        }
     }
 
-    /**
-     * Start all scripts, if modal is not shown.
-     */
-    fun start() {
-        if (!modalController.visible) {
-            index = 0
-            next()
+    private fun enableClick(enabled: Boolean) {
+        if (mainChannel) {
+            clickEnabled = enabled
         }
     }
 
     private fun onMouseClickOnCanvas(event: GameMouseEvent) {
-        if (respondToClick) {
+        if (clickEnabled) {
             next()
+            if (index == -1 && mainChannel) {
+                // all scripts have been finished. Re-trigger the mouse event
+                eventBus.emit(MOUSE_CLICK_EVENT, event)
+            }
         }
     }
 
     /**
      * Trigger next script to run.
      */
-    fun next() {
+    private fun next() {
         if (scripts.isEmpty()) {
+            throw IllegalStateException("Scripts should not be empty!")
+        }
+        if (channel == STAR_FLYING_CHANNEL && (!gameControl.isWindowVisible || game.modalController.visible)) {
             return
         }
+
+        if (index == -1) {
+            index = 0
+        }
+
         if (index != 0) {
             scripts[index - 1].stop()
-        } else {
-            gameControl.mapMouseClickEnabled = false
         }
 
         if (index == scripts.size) {
-            gameControl.mapMouseClickEnabled = true
             reset()
-        } else {
-            scripts[index++].start()
+            return
         }
+
+        if (index == 0 && mainChannel) {
+            logger.debug("Disable user mouse")
+            gameControl.mapMouseClickEnabled = false
+        }
+
+        val script = scripts[index++]
+        logger.debug("Running script $channel:${index - 1}: $script")
+
+        script.start()
     }
 
     private fun reset() {
+        if (mainChannel) {
+            logger.debug("Enable user mouse")
+            gameControl.mapMouseClickEnabled = true
+        }
         scripts.clear()
         index = -1
     }
 
     fun scripts(block: ScriptsBuilder.() -> Unit) {
+        scripts(true, block)
+    }
+
+    fun scripts(runImmediately: Boolean, block: ScriptsBuilder.() -> Unit) {
         block()
-        if (!isRunning) {
-            start()
+        if (runImmediately) {
+            next()
         }
     }
 
@@ -138,12 +183,16 @@ class DefaultGameDirector(
 
         val character = gameScene.objects.getById<CharacterSprite>(builder.objectId!!)
         scripts.add(
-            DisplayWidgetScript(SpeechBubbleWidget::class) {
-                attrs.game = gameScene.gameRuntime.asDynamic()
-                attrs.speakerCoordinate = character.pixelCoordinate
-                attrs.contentHtml = gameScene.gameRuntime.i(builder.contentHtmlId!!, *builder.args)
-                attrs.arrow = builder.arrow
-            }
+            DisplayWidgetScript(
+                SpeechBubbleWidget::class,
+                {
+                    attrs.game = gameScene.gameRuntime.asDynamic()
+                    attrs.speakerCoordinate = character.pixelCoordinate
+                    attrs.contentHtml = gameScene.gameRuntime.i(builder.contentHtmlId!!, *builder.args)
+                    attrs.arrow = builder.arrow
+                },
+                builder.contentHtmlId
+            )
         )
     }
 
@@ -157,10 +206,6 @@ class DefaultGameDirector(
 
     override fun characterMove(characterId: String, destMapCoordinate: GridCoordinate, callback: UnitFunction) {
         scripts.add(CharacterMoveScript(gameScene.objects.getById(characterId), destMapCoordinate, callback))
-    }
-
-    override fun onComplete(action: () -> Unit) {
-        TODO("Not yet implemented")
     }
 
     override fun startBeginnerGuide() {
@@ -210,13 +255,15 @@ class DefaultGameDirector(
         override fun start() {
             // show gif arrow pointing to the coordinate
             // highlight the first mission
-            respondToClick = true
+            enableClick(true)
             arrowGif = showArrowGif(gameScene.canvasState.getUICoordinateInGameContainer(), game.i("ThisIsCoordinate"))
+            eventBus.emit(COORDINATE_BORDER_FLICKER, true)
             eventBus.emit(HIGHTLIGHT_MISSION_EVENT, listOf(STAR_BYTELEGEND_MISSION_ID))
         }
 
         override fun stop() {
-            respondToClick = false
+            enableClick(false)
+            eventBus.emit(COORDINATE_BORDER_FLICKER, false)
             eventBus.emit(HIGHTLIGHT_MISSION_EVENT, null)
             document.body?.removeChild(arrowGif)
         }
@@ -228,19 +275,26 @@ class DefaultGameDirector(
 
     inner class DisplayWidgetScript<P : GameProps>(
         private val klass: KClass<out GameUIComponent<P, *>>,
-        private val handler: RHandler<P>
+        private val handler: RHandler<P>,
+        private val stringRepresentation: String?
     ) : GameScript {
-        private val id = "${gameScene.map.id}-ScriptWidget-${getAndIncrement()}"
+        constructor(klass: KClass<out GameUIComponent<P, *>>, handler: RHandler<P>) : this(klass, handler, null)
+
+        private val id = "${gameScene.map.id}-ScriptWidget-$channel-${getAndIncrement()}"
         override fun start() {
-            respondToClick = true
+            enableClick(true)
             currentWidgets[id] = Widget(klass, handler)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
 
         override fun stop() {
-            respondToClick = false
+            enableClick(false)
             currentWidgets.remove(id)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+        }
+
+        override fun toString(): String {
+            return stringRepresentation ?: id
         }
     }
 

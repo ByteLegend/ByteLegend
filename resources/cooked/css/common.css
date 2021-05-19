@@ -505,3 +505,13 @@ p.speech-bubble::after {
     top: 50%;
     left: 50%;
 }
+
+.map-coordinate {
+    min-width: 60px;
+    text-align: center;
+}
+
+.bordered-map-coordinate {
+    border: red 3px solid;
+    border-radius: 4px 4px 4px 4px;
+}

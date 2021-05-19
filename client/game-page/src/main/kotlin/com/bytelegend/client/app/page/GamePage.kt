@@ -34,7 +34,6 @@ import com.bytelegend.client.app.ui.LocaleSelectionDropdownProps
 import com.bytelegend.client.app.ui.MainMapCanvasLayer
 import com.bytelegend.client.app.ui.MapCanvasProps
 import com.bytelegend.client.app.ui.MapCoordinateTitleWidget
-import com.bytelegend.client.app.ui.MapCoordinateWidgetProps
 import com.bytelegend.client.app.ui.MapSelectionDropdown
 import com.bytelegend.client.app.ui.MapSelectionDropdownProps
 import com.bytelegend.client.app.ui.MapTitleWidgets
@@ -348,7 +347,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
     private fun RElementBuilder<MapTitleWidgetsProps>.mapCoordinateTitleWidget(
         parentProps: MapTitleWidgetsProps,
-        block: RElementBuilder<MapCoordinateWidgetProps>.() -> Unit = {}
+        block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, MapCoordinateTitleWidget::class, block)
     }

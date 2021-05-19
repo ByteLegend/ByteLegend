@@ -9,7 +9,7 @@ interface GameScriptWidgetDisplayLayerProps : GameProps
 class GameScriptWidgetDisplayLayer : GameUIComponent<GameScriptWidgetDisplayLayerProps, RState>() {
     @Suppress("UnsafeCastFromDynamic")
     override fun RBuilder.render() {
-        game.activeScene.unsafeCast<DefaultGameScene>().director.currentWidgets.entries.forEach {
+        game.activeScene.unsafeCast<DefaultGameScene>().mainChannelDirector.currentWidgets.entries.forEach {
             child(it.value.klass.asDynamic(), it.value.handler)
         }
     }
