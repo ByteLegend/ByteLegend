@@ -17,6 +17,9 @@ class DefaultGameObjectContainer(
 ) : GameObjectContainer {
     private val objectsById: IdGameObjectContainer = IdGameObjectContainer()
     private val objectsByRole: MutableMap<String, IdGameObjectContainer> = JSObjectBackedMap()
+
+    // {"y" -> { "x" ->  {id1:obj1, id2:obj2} }}
+    private val objectsByCoordinate: MutableMap<String, MutableMap<String, IdGameObjectContainer>> = JSObjectBackedMap()
     val background: Array<Array<List<BackgroundSpriteLayer>>> = gameScene.map.rawTiles.mapToArrayWithIndex { it, coordinate ->
         val list = JSArrayBackedList<BackgroundSpriteLayer>()
         it.layers.forEach {
@@ -33,9 +36,24 @@ class DefaultGameObjectContainer(
         return objectsById.getValue(id).unsafeCast<T>()
     }
 
+    override fun putIntoCoordinate(gameObject: GameObject, newCoordinate: GridCoordinate) {
+        objectsByCoordinate
+            .getNextLevelMap(newCoordinate.y)
+            .putGameObject(newCoordinate.x.toString(), gameObject)
+    }
+
+    override fun removeFromCoordinate(gameObject: GameObject, oldCoordinate: GridCoordinate) {
+        objectsByCoordinate
+            .getNextLevelMap(oldCoordinate.y)
+            .removeGameObject(oldCoordinate.x.toString(), gameObject.id)
+    }
+
     override fun add(gameObject: GameObject) {
         objectsById[gameObject.id] = gameObject
         gameObject.roles.forEach {
+            if (it == GameObjectRole.CoordinateAware.toString()) {
+                putIntoCoordinate(gameObject, gameObject.unsafeCast<CoordinateAware>().gridCoordinate)
+            }
             objectsByRole.putGameObject(it, gameObject)
         }
     }
@@ -49,9 +67,9 @@ class DefaultGameObjectContainer(
     }
 
     override fun getByCoordinate(coordinate: GridCoordinate): List<GameObject> {
-        return getByRole<GameObject>(GameObjectRole.CoordinateAware).filter {
-            it.unsafeCast<CoordinateAware>().gridCoordinate == coordinate
-        }
+        return objectsByCoordinate
+            .getNextLevelMap(coordinate.y)
+            .getGameObject(coordinate.x)
     }
 
     @Suppress("UnsafeCastFromDynamic")
@@ -60,8 +78,10 @@ class DefaultGameObjectContainer(
     }
 }
 
+fun MutableMap<String, MutableMap<String, IdGameObjectContainer>>.getNextLevelMap(key: Any) = getOrPut(key.toString()) { JSObjectBackedMap() }
+
 fun MutableMap<String, IdGameObjectContainer>.putGameObject(key: Any, gameObject: GameObject) {
-    getOrPut(key.toString()) { IdGameObjectContainer() }.put(gameObject.id, gameObject)
+    getOrPut(key.toString()) { IdGameObjectContainer() }[gameObject.id] = gameObject
 }
 
 @Suppress("UnsafeCastFromDynamic")

@@ -143,12 +143,15 @@ abstract class CharacterSprite(
     }
 
     open fun enterTile(gridCoordinate: GridCoordinate) {
+        gameScene.objects.putIntoCoordinate(this, gridCoordinate)
         if (callbackOnDestination != null && gridCoordinate == movePath.last()) {
             callbackOnDestination!!()
         }
     }
 
-    open fun leaveTile(gridCoordinate: GridCoordinate) {}
+    open fun leaveTile(gridCoordinate: GridCoordinate) {
+        gameScene.objects.removeFromCoordinate(this, gridCoordinate)
+    }
 
     private fun nextCoordinateInPath(coordinateIndexInPath: Int) = movePath[coordinateIndexInPath + 1]
 

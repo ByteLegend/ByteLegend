@@ -1,20 +1,13 @@
 { "columns":3,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"",
-         "target":"."
-        }
-    },
  "image":"..\/tilesets\/JavaIslandNewbieVillagePubTestEngineer.png",
  "imageheight":128,
  "imagewidth":96,
  "margin":0,
- "name":"JavaIslandStarPubsTestEngineer",
+ "name":"JavaIslandNewbieVillageEngineer",
+ "objectalignment":"topleft",
  "spacing":0,
  "tilecount":12,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.6.0",
  "tileheight":32,
  "tiles":[
         {
@@ -71,5 +64,5 @@
         }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.4
+ "version":"1.6"
 }

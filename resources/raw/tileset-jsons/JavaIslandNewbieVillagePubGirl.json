@@ -1,20 +1,13 @@
 { "columns":3,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"",
-         "target":"."
-        }
-    },
  "image":"..\/tilesets\/JavaIslandNewbieVillagePubGirl.png",
  "imageheight":128,
  "imagewidth":96,
  "margin":0,
  "name":"JavaIslandNewbieVillagePubGirl",
+ "objectalignment":"topleft",
  "spacing":0,
  "tilecount":12,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.6.0",
  "tileheight":32,
  "tiles":[
         {
@@ -68,8 +61,60 @@
                  "tileid":11
                 }],
          "id":0
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":0
+                }, 
+                {
+                 "duration":500,
+                 "tileid":1
+                }, 
+                {
+                 "duration":500,
+                 "tileid":2
+                }, 
+                {
+                 "duration":500,
+                 "tileid":3
+                }, 
+                {
+                 "duration":500,
+                 "tileid":4
+                }, 
+                {
+                 "duration":500,
+                 "tileid":5
+                }, 
+                {
+                 "duration":500,
+                 "tileid":6
+                }, 
+                {
+                 "duration":500,
+                 "tileid":7
+                }, 
+                {
+                 "duration":500,
+                 "tileid":8
+                }, 
+                {
+                 "duration":500,
+                 "tileid":9
+                }, 
+                {
+                 "duration":500,
+                 "tileid":10
+                }, 
+                {
+                 "duration":500,
+                 "tileid":11
+                }],
+         "id":11
         }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.4
+ "version":"1.6"
 }

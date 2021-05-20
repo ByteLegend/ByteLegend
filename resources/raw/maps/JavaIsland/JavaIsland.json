@@ -1023,18 +1023,6 @@
                  "y":2853.66666666666
                 }, 
                 {
-                 "gid":2656,
-                 "height":32,
-                 "id":110,
-                 "name":"GitHubExplanationWoodenSign-point",
-                 "rotation":0,
-                 "type":"GameMapPoint",
-                 "visible":true,
-                 "width":32,
-                 "x":96.6666666666666,
-                 "y":2881.66666666666
-                }, 
-                {
                  "gid":24627,
                  "height":32,
                  "id":112,
@@ -1735,8 +1723,8 @@
                  "type":"GameMapMission",
                  "visible":true,
                  "width":32,
-                 "x":98.3333333333333,
-                 "y":2886.33333333333
+                 "x":99.8333333333333,
+                 "y":2883.33333333333
                 }],
          "opacity":1,
          "type":"objectgroup",

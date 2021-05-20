@@ -20,6 +20,7 @@ import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.obj.CharacterSprite
 import com.bytelegend.client.app.script.effect.showArrowGif
+import com.bytelegend.client.app.ui.BEGINNER_GUIDE_FINISHED_STATE
 import com.bytelegend.client.app.ui.COORDINATE_BORDER_FLICKER
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
@@ -114,8 +115,12 @@ class DefaultGameDirector(
     private fun onMouseClickOnCanvas(event: GameMouseEvent) {
         if (clickEnabled) {
             next()
-            if (index == -1 && mainChannel) {
-                // all scripts have been finished. Re-trigger the mouse event
+            if (index == -1 && !game.heroPlayer.isAnonymous && !game.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE)) {
+                // A very tricky thing. When the player opens the game at the first time
+                // we want them to click once then trigger mouse event twice:
+                // 1. Cancel the current speech bubble
+                // 2. Move to NPC and start talking
+                // So here if we detect all scripts have been finished. Re-trigger the mouse event
                 eventBus.emit(MOUSE_CLICK_EVENT, event)
             }
         }

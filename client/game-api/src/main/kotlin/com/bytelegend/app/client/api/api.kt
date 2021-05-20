@@ -21,6 +21,8 @@ interface GameObjectContainer {
     fun add(gameObject: GameObject)
     fun <T : GameObject> remove(id: String): T?
     fun getByCoordinate(coordinate: GridCoordinate): List<GameObject>
+    fun putIntoCoordinate(gameObject: GameObject, newCoordinate: GridCoordinate)
+    fun removeFromCoordinate(gameObject: GameObject, oldCoordinate: GridCoordinate)
     fun <T : GameObject> getByRole(role: GameObjectRole): List<T>
 }
 

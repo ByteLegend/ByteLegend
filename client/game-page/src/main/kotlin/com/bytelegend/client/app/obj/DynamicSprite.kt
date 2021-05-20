@@ -76,7 +76,7 @@ open class DynamicSprite(
     override val id: String,
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
-    protected val dynamicSprite: GameMapDynamicSprite
+    val dynamicSprite: GameMapDynamicSprite
 ) : CoordinateAware, AbstractStaticLocationSprite(
     gridCoordinate,
     gridCoordinate * gameScene.map.tileSize,

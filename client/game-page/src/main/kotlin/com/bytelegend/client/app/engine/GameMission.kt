@@ -38,7 +38,13 @@ class GameMission(
 
     override fun init() {
         gameScene.objects.add(this)
-        gameScene.blockers[gridCoordinate.y][gridCoordinate.x]--
+
+        for (y in 0 until sprite.dynamicSprite.frames.size) {
+            for (x in 0 until sprite.dynamicSprite.frames[0].size) {
+                gameScene.blockers[gridCoordinate.y + y][gridCoordinate.x + x]--
+                gameScene.objects.putIntoCoordinate(this, gridCoordinate + GridCoordinate(x, y))
+            }
+        }
     }
 
     override fun close() {

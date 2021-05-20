@@ -63,15 +63,7 @@ class GameControl(
         val scene = gameSceneContainer.activeScene!!.unsafeCast<DefaultGameScene>()
         val gameObjects = scene.objects.getByCoordinate(coordinate)
 
-//        console.log(scene.mainChannelDirector.index)
-//        if (scene.mainChannelDirector.isRunning) {
-//            // if the speech bubble is on, don't allow to click on NPCs
-//            gameObjects
-//                .filter { !it.roles.contains(GameObjectRole.NPC) }
-//                .forEach { it.onClick() }
-//        } else {
         gameObjects.forEach { it.onClick() }
-//        }
 
         if (!online) {
             gameRuntime.toastController.addToast(
