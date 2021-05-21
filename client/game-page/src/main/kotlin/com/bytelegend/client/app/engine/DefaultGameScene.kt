@@ -152,8 +152,8 @@ class DefaultGameScene(
         builder.action()
 
         NPC(
-            builder.id!!,
-            objects.getById(builder.sprite!!),
+            builder.id ?: throw IllegalArgumentException("No id specified for NPC!"),
+            objects.getById(builder.sprite ?: throw IllegalArgumentException("No sprite specified for NPC!")),
             this,
             onInitFunction = builder.onInit,
             onTouchFunction = builder.onTouch,

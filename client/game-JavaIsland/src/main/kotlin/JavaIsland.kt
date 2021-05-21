@@ -234,6 +234,10 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
         id = soldierId
         sprite = "$soldierId-sprite"
 
+        onInit = {
+            helpers.getCharacter(soldierId).gridCoordinate = startPoint
+        }
+
         onClick = helpers.standardNpcSpeech(
             soldierId,
             {

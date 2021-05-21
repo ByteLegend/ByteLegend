@@ -5,6 +5,7 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.misc.getAudioElementOrNull
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.client.app.script.STAR_FLYING_CHANNEL
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.browser.document
@@ -24,11 +25,6 @@ class GameControl(
             }
         }
 
-    /**
-     * During the scripts, e.g. speech with NPC, you can scroll the map, move cursor, but can't click
-     * on map elements.
-     */
-    var mapMouseClickEnabled = false
     private val gameRuntime: GameRuntime by di.instance()
     private val game: Game by lazy { gameRuntime.unsafeCast<Game>() }
     private val eventBus: EventBus by di.instance()
@@ -40,7 +36,6 @@ class GameControl(
         get() = webSocketClient.connected
 
     fun start() {
-        mapMouseClickEnabled = true
         eventBus.on(MOUSE_CLICK_EVENT, this::onMouseClickOnCanvas)
         document.addEventListener(
             "visibilitychange",
@@ -53,7 +48,10 @@ class GameControl(
     }
 
     private fun onMouseClickOnCanvas(event: GameMouseEvent) {
-        if (mapMouseClickEnabled) {
+        val mainChannel = gameRuntime.activeScene.unsafeCast<DefaultGameScene>().mainChannelDirector
+        val mainChannelRunning = mainChannel.isRunning
+        mainChannel.onMouseClickOnCanvas(event)
+        if (!mainChannelRunning) {
             clickObjectsAndMove(event.mapCoordinate)
         }
     }
@@ -75,7 +73,8 @@ class GameControl(
 
         if (online &&
             game._hero != null &&
-            gameRuntime.activeScene == game._hero!!.gameScene
+            gameRuntime.activeScene == game._hero!!.gameScene &&
+            gameRuntime.activeScene.blockers[coordinate.y][coordinate.x] == NON_BLOCKER
         ) {
             game.hero!!.moveTo(coordinate)
         }

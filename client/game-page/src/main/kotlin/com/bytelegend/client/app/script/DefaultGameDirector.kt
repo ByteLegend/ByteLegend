@@ -74,13 +74,13 @@ class DefaultGameDirector(
      *
      * This channel is usually used to display main story, like NPC speech.
      */
-    private val mainChannel: Boolean = channel == MAIN_CHANNEL
+    private val isMainChannel: Boolean = channel == MAIN_CHANNEL
 
     /**
      * When it is true, the user mouse click can trigger next script to run,
      * like speech bubbles.
      */
-    private var clickEnabled: Boolean = false
+    private var isRespondToClick: Boolean = false
     private val webSocketClient: WebSocketClient by lazy {
         gameScene.gameRuntime.unsafeCast<Game>().webSocketClient
     }
@@ -88,7 +88,7 @@ class DefaultGameDirector(
     private val scripts: MutableList<GameScript> = mutableListOf()
 
     // Point to next script to run
-    var index = -1
+    private var index = -1
 
     /**
      * A counter providing unique id for widgets in DOM
@@ -96,26 +96,27 @@ class DefaultGameDirector(
     private var counter = 0
 
     val currentWidgets: MutableMap<String, Widget<out GameProps>> = JSObjectBackedMap()
+    val isRunning: Boolean
+        get() = index != -1
 
     init {
-        eventBus.on(MOUSE_CLICK_EVENT, this::onMouseClickOnCanvas)
         eventBus.on<String?>(GAME_SCRIPT_NEXT) { channel ->
-            if (channel == this.channel) {
+            if (channel == this.channel && gameScene.isActive) {
                 next()
             }
         }
     }
 
-    private fun enableClick(enabled: Boolean) {
-        if (mainChannel) {
-            clickEnabled = enabled
+    private fun respondToClick(enabled: Boolean) {
+        if (isMainChannel) {
+            isRespondToClick = enabled
         }
     }
 
-    private fun onMouseClickOnCanvas(event: GameMouseEvent) {
-        if (clickEnabled) {
+    fun onMouseClickOnCanvas(event: GameMouseEvent) {
+        if (isRunning && isRespondToClick) {
             next()
-            if (index == -1 && !game.heroPlayer.isAnonymous && !game.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE)) {
+            if (!game.heroPlayer.isAnonymous && !game.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE)) {
                 // A very tricky thing. When the player opens the game at the first time
                 // we want them to click once then trigger mouse event twice:
                 // 1. Cancel the current speech bubble
@@ -150,11 +151,6 @@ class DefaultGameDirector(
             return
         }
 
-        if (index == 0 && mainChannel) {
-            logger.debug("Disable user mouse")
-            gameControl.mapMouseClickEnabled = false
-        }
-
         val script = scripts[index++]
         logger.debug("Running script $channel:${index - 1}: $script")
 
@@ -162,10 +158,6 @@ class DefaultGameDirector(
     }
 
     private fun reset() {
-        if (mainChannel) {
-            logger.debug("Enable user mouse")
-            gameControl.mapMouseClickEnabled = true
-        }
         scripts.clear()
         index = -1
     }
@@ -260,14 +252,14 @@ class DefaultGameDirector(
         override fun start() {
             // show gif arrow pointing to the coordinate
             // highlight the first mission
-            enableClick(true)
+            respondToClick(true)
             arrowGif = showArrowGif(gameScene.canvasState.getUICoordinateInGameContainer(), game.i("ThisIsCoordinate"))
             eventBus.emit(COORDINATE_BORDER_FLICKER, true)
             eventBus.emit(HIGHTLIGHT_MISSION_EVENT, listOf(STAR_BYTELEGEND_MISSION_ID))
         }
 
         override fun stop() {
-            enableClick(false)
+            respondToClick(false)
             eventBus.emit(COORDINATE_BORDER_FLICKER, false)
             eventBus.emit(HIGHTLIGHT_MISSION_EVENT, null)
             document.body?.removeChild(arrowGif)
@@ -287,13 +279,13 @@ class DefaultGameDirector(
 
         private val id = "${gameScene.map.id}-ScriptWidget-$channel-${getAndIncrement()}"
         override fun start() {
-            enableClick(true)
+            respondToClick(true)
             currentWidgets[id] = Widget(klass, handler)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
 
         override fun stop() {
-            enableClick(false)
+            respondToClick(false)
             currentWidgets.remove(id)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
@@ -312,6 +304,7 @@ class DefaultGameDirector(
             character.moveTo(destMapCoordinate) {
                 callback()
                 character.direction = Direction.DOWN
+                console.log(3333)
                 next()
             }
         }
@@ -335,6 +328,7 @@ class DefaultGameDirector(
         override fun start() {
             GlobalScope.launch {
                 fn()
+                console.log(3333)
                 next()
             }
         }

@@ -2,7 +2,6 @@ package com.bytelegend.app.client.api
 
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.Direction
-import kotlinx.browser.window
 
 /**
  * We have to use instance method due to the defect of current module loading mechanism
@@ -76,18 +75,7 @@ class GameScriptHelpers(val gameScene: GameScene) {
                 gameScene.blockers[npc.gridCoordinate.y][npc.gridCoordinate.x] = tmp
             }
         } else {
-            // Let all events to be processed first
-            // For example, when the player is next to NPC and clicks NPC,
-            // a mouse click event is emitted:
-            // 1. NPC start dialog
-            // 2. DefaultGameDirectory.onMouseClickOnCanvas is invoked, then next()
-            //  This means one mouse click, two next() invocations.
-            window.setTimeout(
-                {
-                    faceToFaceThenInteract(hero, npc, onInteraction)
-                },
-                0
-            )
+            faceToFaceThenInteract(hero, npc, onInteraction)
         }
     }
 

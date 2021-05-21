@@ -3,6 +3,7 @@ package com.bytelegend.client.app.ui
 import BootstrapDropdownDivider
 import BootstrapDropdownItem
 import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdownButton
+import com.bytelegend.client.app.engine.DefaultGameScene
 import kotlinx.browser.document
 import react.RBuilder
 import react.RElementBuilder
@@ -42,11 +43,11 @@ class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, RState>(
                 unsafeHtml(i(mapId))
             }
             // disable map selection when game script is running
-            attrs.onClick = gameControlAwareEventHandler(
-                stateUpdatingEventHandler {
+            attrs.onClick = {
+                if (!game.activeScene.unsafeCast<DefaultGameScene>().mainChannelDirector.isRunning) {
                     game.sceneContainer.loadScene(mapId)
                 }
-            )
+            }
         }
     }
 }
