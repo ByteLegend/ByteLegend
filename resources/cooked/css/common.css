@@ -259,6 +259,7 @@ body {
     width: 16px;
     height: 16px;
     background-size: 100% 100%;
+    vertical-align: middle;
 }
 
 .coin-icon {
@@ -281,9 +282,8 @@ body {
     content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='97' height='97' viewBox='0 0 97 97'%3E%3Cpath fill='%23F05133' d='M92.71 44.408L52.591 4.291a5.918 5.918 0 0 0-8.369 0l-8.33 8.332L46.459 23.19a7.022 7.022 0 0 1 7.229 1.685 7.03 7.03 0 0 1 1.67 7.275l10.186 10.185a7.028 7.028 0 0 1 7.275 1.671 7.043 7.043 0 0 1-9.961 9.958 7.043 7.043 0 0 1-1.531-7.658l-9.5-9.499v24.997a7.042 7.042 0 1 1-8.096 11.291 7.042 7.042 0 0 1 2.307-11.496v-25.23a7.041 7.041 0 0 1-3.823-9.235L31.798 16.715 4.288 44.222a5.92 5.92 0 0 0 0 8.371l40.121 40.118a5.918 5.918 0 0 0 8.369 0L92.71 52.779a5.92 5.92 0 0 0 0-8.371z'/%3E%3C/svg%3E");
 }
 
-
 .mission-tab-content {
-    margin-top: 16px
+    margin: 16px
 }
 
 .user-mouse-interaction-layer {
@@ -338,7 +338,6 @@ body {
 .mission-modal-tutorial-filters {
     display: flex;
     flex: 0 1 auto;
-    margin-top: 16px;
 }
 
 .mission-modal-tutorial-filter-name {
@@ -374,6 +373,7 @@ body {
     /* pagination */
     height: calc(100% - 32px);
 }
+
 .mission-modal-tutorial-content-left-pagination {
 }
 
@@ -486,7 +486,7 @@ p.speech-bubble::after {
     color: #192229;
 }
 
-.sidebar-item-widget  {
+.sidebar-item-widget {
     max-width: 64px;
     border-radius: 8px;
     padding: 8px;
@@ -496,7 +496,7 @@ p.speech-bubble::after {
     cursor: pointer;
 }
 
-.mission-modal-tutorial-item:hover:not(.list-group-item-primary){
+.mission-modal-tutorial-item:hover:not(.list-group-item-primary) {
     background-color: #f6f8fa;
 }
 
@@ -514,4 +514,29 @@ p.speech-bubble::after {
 .bordered-map-coordinate {
     border: red 3px solid;
     border-radius: 4px 4px 4px 4px;
+}
+
+.mission-player-answer {
+    cursor: pointer;
+    text-overflow: ellipsis;
+}
+
+.mission-player-answer-inline {
+    max-width: 50%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.mission-fail-cross-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='3 3 16 16'%3E%3Cdefs%3E%3ClinearGradient id='a' gradientUnits='userSpaceOnUse' y1='986.67' x2='0' y2='-2.623'%3E%3Cstop stop-color='%23ffce3b'/%3E%3Cstop offset='1' stop-color='%23fef4ab'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M11 3c-4.432 0-8 3.568-8 8s3.568 8 8 8 8-3.568 8-8-3.568-8-8-8' fill='%23da4453'/%3E%3Cpath d='M12.812 11.2l1.98-1.98a.619.619 0 0 0 .188-.458.622.622 0 0 0-.188-.458l-.916-.916a.63.63 0 0 0-.458-.188.622.622 0 0 0-.458.188l-1.98 1.98L9 7.388a.63.63 0 0 0-.458-.188.622.622 0 0 0-.458.188l-.916.916a.622.622 0 0 0-.188.458c0 .18.062.332.188.458l1.98 1.98-1.98 1.98a.619.619 0 0 0-.188.458c0 .18.062.332.188.458l.916.916a.622.622 0 0 0 .458.188c.18 0 .332-.062.458-.188l1.98-1.98 1.98 1.98a.622.622 0 0 0 .458.188c.18 0 .332-.062.458-.188l.916-.916a.619.619 0 0 0 .188-.458.622.622 0 0 0-.188-.458l-1.98-1.98' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+.mission-success-tick-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='3 3 16 16'%3E%3Cg transform='translate(-10.994 -2071.68) scale(1.99997)' fill='%23da4453'%3E%3Crect y='1037.36' x='7' height='8' width='8' fill='%2332c671' rx='4'/%3E%3Cpath d='M13.577 1040.285l-.483-.483a.329.329 0 0 0-.241-.1.329.329 0 0 0-.242.1l-2.33 2.334-1.045-1.048a.329.329 0 0 0-.241-.1.329.329 0 0 0-.242.1l-.483.483a.329.329 0 0 0-.1.242c0 .094.034.175.1.241l1.286 1.286.483.483c.066.067.147.1.242.1a.329.329 0 0 0 .241-.1l.483-.483 2.572-2.572a.33.33 0 0 0 .1-.241.329.329 0 0 0-.1-.242' fill='%23fff'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.mission-tab-content textarea {
+    width: 100%;
+    border: black 1px solid;
 }

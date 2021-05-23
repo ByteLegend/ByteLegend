@@ -12,6 +12,7 @@ external interface BootstrapFormRowProps : RProps {
 val BootstrapFormGroup: RClass<BootstrapFormGroupProps> = BootstrapForm.asDynamic().Group
 
 external interface BootstrapFormGroupProps : RProps {
+    var `as`: Any
     var controlId: String
     var bsPrefix: String
 }

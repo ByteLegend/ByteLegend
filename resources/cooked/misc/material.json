@@ -40,5 +40,19 @@
     "artist": "Jason Long",
     "licence": "CC BY 3.0",
     "licenceUrl": "https://creativecommons.org/licenses/by/3.0"
+  },
+  {
+    "name": "Flat tick icon",
+    "url": "https://commons.wikimedia.org/wiki/File:Flat_tick_icon.svg",
+    "artist": "Antü Plasma Suite",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "name": "Flat cross icon",
+    "url": "https://commons.wikimedia.org/wiki/File:Flat_cross_icon.svg",
+    "artist": "Antü Plasma Suite",
+    "licence": "CC BY-SA 3.0",
+    "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0"
   }
 ]

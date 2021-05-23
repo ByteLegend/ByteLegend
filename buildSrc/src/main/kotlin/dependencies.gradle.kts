@@ -1,5 +1,6 @@
 import com.bytelegend.buildsupport.OpenSourceLibrary
 import com.bytelegend.buildsupport.OpenSourceLicense.Apache2
+import com.bytelegend.buildsupport.OpenSourceLicense.BSD2Clause
 import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
@@ -61,6 +62,8 @@ val batikVersion = "1.14"
 val googleTranslationSdkVersion = "19.2.1"
 val reactPlayerVersion = "2.9.0"
 val reactSelectVersion = "4.3.0"
+val commonmarkVersion = "0.17.2"
+val reactTextAreaAutosizeVersion = "8.3.2"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -221,6 +224,21 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         creditName = "react-select",
         url = "https://github.com/JedWatson/react-select",
         version = reactSelectVersion,
+        license = MIT
+    ),
+    OpenSourceLibrary(
+        name = "commonmark",
+        groupArtifactId = "org.commonmark:commonmark",
+        version = commonmarkVersion,
+        creditName = "commonmark-java",
+        url = "https://github.com/commonmark/commonmark-java",
+        license = BSD2Clause
+    ),
+    OpenSourceLibrary(
+        name = "react-textarea-autosize",
+        version = reactTextAreaAutosizeVersion,
+        creditName = "react-textarea-autosize",
+        url = "https://github.com/Andarist/react-textarea-autosize",
         license = MIT
     )
 )

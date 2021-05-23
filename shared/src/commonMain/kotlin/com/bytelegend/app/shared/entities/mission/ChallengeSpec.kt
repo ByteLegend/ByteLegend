@@ -5,8 +5,14 @@ data class ChallengeSpec(
     val star: Int,
 
     val spec: String,
-    // the text id at challenge tab
-    val readme: String = "",
+    /**
+     * A TL;DR description i18n id of this challenge
+     */
+    val tldr: String = "",
+    /**
+     * The detail description i18n id of this challenge
+     */
+    val readme: String = ""
 )
 
 enum class ChallengeType {

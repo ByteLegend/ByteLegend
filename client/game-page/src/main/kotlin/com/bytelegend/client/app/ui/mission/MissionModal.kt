@@ -16,11 +16,14 @@ import com.bytelegend.app.shared.entities.MissionTabType
 import com.bytelegend.app.shared.entities.TutorialsTabData
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.MISSION_DATA_LOAD_FINISH
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import kotlinx.browser.window
+import kotlinx.html.classes
 import react.RBuilder
 import react.RState
+import react.dom.div
 import react.setState
 
 interface MissionModalProps : GameProps {
@@ -78,13 +81,16 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                     }
                 }
                 val activeTab = mission.tabs[state.activeTabIndex]
-                when (activeTab.type) {
-                    MissionTabType.QuestionChallenge -> renderQuestionChallenge(activeTab.asDynamic())
-                    MissionTabType.StarChallenge -> renderStarChallenge(activeTab.asDynamic())
-                    MissionTabType.PullRequestChallenge -> renderPullRequestChallenge(activeTab.asDynamic())
-                    MissionTabType.NoticeboardChallenge -> renderRememberBravePeopleChallenge(activeTab.asDynamic())
-                    MissionTabType.Tutorials -> renderTutorials(activeTab.asDynamic())
-                    else -> throw IllegalArgumentException(activeTab.title)
+                div {
+                    attrs.classes = jsObjectBackedSetOf("mission-tab-content")
+                    when (activeTab.type) {
+                        MissionTabType.QuestionChallenge -> renderQuestionChallenge(activeTab.asDynamic())
+                        MissionTabType.StarChallenge -> renderStarChallenge(activeTab.asDynamic())
+                        MissionTabType.PullRequestChallenge -> renderPullRequestChallenge(activeTab.asDynamic())
+                        MissionTabType.NoticeboardChallenge -> renderRememberBravePeopleChallenge(activeTab.asDynamic())
+                        MissionTabType.Tutorials -> renderTutorials(activeTab.asDynamic())
+                        else -> throw IllegalArgumentException(activeTab.title)
+                    }
                 }
             }
         }
@@ -117,9 +123,10 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
         }
     }
 
-    private fun RBuilder.renderQuestionChallenge(tab: ChallengeTabData) {
+    private fun RBuilder.renderQuestionChallenge(tabData: ChallengeTabData) {
         child(QuestionChallengeTab::class) {
             attrs.game = game
+            attrs.challengeSpec = tabData.data
         }
     }
 

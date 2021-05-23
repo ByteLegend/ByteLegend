@@ -98,11 +98,11 @@ class ToastUIComponent : GameUIComponent<GameProps, ToastUIComponentRState>() {
                     BootstrapToastHeader {
                         strong {
                             attrs.classes = jsObjectBackedSetOf("mr-auto")
-                            unsafeHtml(t.headerHtml)
+                            unsafeSpan(t.headerHtml)
                         }
                     }
                     BootstrapToastBody {
-                        unsafeHtml(t.bodyHtml)
+                        unsafeSpan(t.bodyHtml)
                     }
                 }
             }

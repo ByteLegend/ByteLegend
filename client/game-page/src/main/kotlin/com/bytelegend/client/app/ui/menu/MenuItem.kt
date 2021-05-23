@@ -11,7 +11,7 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
-import com.bytelegend.client.app.ui.unsafeHtml
+import com.bytelegend.client.app.ui.unsafeSpan
 import kotlinx.browser.window
 import kotlinx.html.classes
 import kotlinx.html.js.onBlurFunction
@@ -167,7 +167,7 @@ class Menu : GameUIComponent<MenuProps, RState>() {
                         attrs.href = "#"
                         +i("ClickHere")
                     }
-                    unsafeHtml(i("UnfinishedText"))
+                    unsafeSpan(i("UnfinishedText"))
                 }
             }
         }
@@ -186,22 +186,22 @@ class Menu : GameUIComponent<MenuProps, RState>() {
             BootstrapModalBody {
                 h5 { +i("AboutByteLegendTitle") }
                 p {
-                    unsafeHtml(i("AboutByteLegendParagraph"))
+                    unsafeSpan(i("AboutByteLegendParagraph"))
                 }
 
                 h5 { +i("ReportBugFeatureRequestTitle") }
                 p {
-                    unsafeHtml(i("ReportBugFeatureRequestParagraph"))
+                    unsafeSpan(i("ReportBugFeatureRequestParagraph"))
                 }
 
                 h5 { +i("DiscussHowToPlayTitle") }
                 p {
-                    unsafeHtml(i("DiscussHowToPlayParagraph"))
+                    unsafeSpan(i("DiscussHowToPlayParagraph"))
                 }
 
                 h5 { +i("ContactUsTitle") }
                 p {
-                    unsafeHtml(i("ContactUsParagraph"))
+                    unsafeSpan(i("ContactUsParagraph"))
                 }
             }
         }

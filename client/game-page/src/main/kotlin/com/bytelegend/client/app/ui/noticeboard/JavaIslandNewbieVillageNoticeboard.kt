@@ -4,7 +4,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
-import com.bytelegend.client.app.ui.unsafeHtml
+import com.bytelegend.client.app.ui.unsafeSpan
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
@@ -71,7 +71,7 @@ class JavaIslandNewbieVillageNoticeboard :
         BootstrapModalBody {
             p {
                 attrs.jsStyle.textAlign = "center"
-                unsafeHtml(props.game.i("BravePeopleDedication"))
+                unsafeSpan(props.game.i("BravePeopleDedication"))
             }
             div {
                 attrs.jsStyle {

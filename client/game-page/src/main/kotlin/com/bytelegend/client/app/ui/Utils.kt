@@ -21,6 +21,8 @@ import react.RHandler
 import react.ReactElement
 import react.dom.RDOMBuilder
 import react.dom.div
+import react.dom.h3
+import react.dom.h4
 import react.dom.img
 import react.dom.jsStyle
 import react.dom.span
@@ -211,9 +213,33 @@ fun <PARENT : GameProps, CHILD : GameProps> RElementBuilder<PARENT>.gameChild(
     }
 }
 
-fun RBuilder.unsafeHtml(html: String, vararg classes: String) {
+fun RBuilder.unsafeSpan(html: String, vararg classes: String) {
     span {
         attrs.classes = jsObjectBackedSetOf(*classes)
+        consumer.onTagContentUnsafe {
+            +html
+        }
+    }
+}
+
+fun RBuilder.unsafeDiv(html: String) {
+    div {
+        consumer.onTagContentUnsafe {
+            +html
+        }
+    }
+}
+
+fun RBuilder.unsafeH3(html: String) {
+    h3 {
+        consumer.onTagContentUnsafe {
+            +html
+        }
+    }
+}
+
+fun RBuilder.unsafeH4(html: String) {
+    h4 {
         consumer.onTagContentUnsafe {
             +html
         }

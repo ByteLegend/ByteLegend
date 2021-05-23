@@ -10,7 +10,7 @@ external val BootstrapCol: RClass<BootstrapColProps>
 
 external interface BootstrapColProps : ExtraClassAwareProps {
     var lg: Int
-    var md: Int
+    var md: Any
     var noGutters: Boolean
     var sm: Int
     var xl: Int

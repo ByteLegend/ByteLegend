@@ -10,7 +10,7 @@ import com.bytelegend.client.app.script.MAIN_CHANNEL
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
-import com.bytelegend.client.app.ui.unsafeHtml
+import com.bytelegend.client.app.ui.unsafeSpan
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
@@ -79,7 +79,7 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
                 props.game.eventBus.emit(GAME_SCRIPT_NEXT, MAIN_CHANNEL)
             }
             // Can only set one of 'children' or props.dangerouslySetInnerHTML'
-            unsafeHtml(props.contentHtml)
+            unsafeSpan(props.contentHtml)
             if (props.arrow) {
                 span {
                     attrs.jsStyle {

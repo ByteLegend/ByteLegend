@@ -79,7 +79,7 @@ enum class Locale(
     val countryRegion: CountryRegion?
 ) {
     // A special locale for filter
-    ALL("All", Language.ALL,true, null, null),
+    ALL("All", Language.ALL, true, null, null),
     EN("English", Language.EN, false, null, null) {
         override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.toLowerCase().startsWith("en")
     },
@@ -130,6 +130,11 @@ enum class Locale(
         }
     }
 
+    val javascriptLocale: String
+        get() = if (countryRegion == null) this.toLowerCase()
+        // zh-CN, zh-TW
+        else "${language.code.toLowerCase()}-${countryRegion}"
+
     val googleTranslateApiCode: String
         get() =
             if (countryRegion == null) this.toLowerCase()
@@ -178,5 +183,6 @@ data class LocalizedText(
 
 enum class LocalizedTextFormat {
     TEXT,
-    HTML
+    HTML,
+    MARKDOWN
 }

@@ -39,6 +39,7 @@ data class OpenSourceLibrary(
 enum class OpenSourceLicense(val url: String) {
     GPL("https://www.gnu.org/licenses/gpl-3.0.en.html"),
     BSD("https://en.wikipedia.org/wiki/BSD_licenses"),
+    BSD2Clause("https://opensource.org/licenses/BSD-2-Clause"),
     Apache2("https://www.apache.org/licenses/LICENSE-2.0"),
     LGPL("https://www.gnu.org/licenses/lgpl-3.0.en.html"),
     MIT("https://en.wikipedia.org/wiki/MIT_License"),

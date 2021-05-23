@@ -4,7 +4,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.client.ui.bootstrap.BootstrapTable
 import com.bytelegend.client.app.ui.GameProps
-import com.bytelegend.client.app.ui.unsafeHtml
+import com.bytelegend.client.app.ui.unsafeSpan
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
@@ -131,7 +131,7 @@ class GameMaterialTable : AsyncLoadingTable<GameMaterialTableState>() {
                 attrs.onClose = {
                     setState { showAlert = false }
                 }
-                unsafeHtml(props.game.i("ContactUsIfYouThinkUsMisuse"))
+                unsafeSpan(props.game.i("ContactUsIfYouThinkUsMisuse"))
             }
         }
         +props.game.i("ThisGameWouldNotExistWithoutArtwork")

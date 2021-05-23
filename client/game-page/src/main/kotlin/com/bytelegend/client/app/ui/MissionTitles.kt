@@ -156,7 +156,7 @@ class MissionTile : RComponent<MissionTitleProps, MissionTitleState>() {
             zIndex = Layer.MissionTitle.zIndex() + if (state.hovered) 1 else 0,
             classes = jsObjectBackedSetOf("checkpoint-title")
         ) {
-            unsafeHtml(props.title)
+            unsafeSpan(props.title)
             attrs.onClickFunction = {
                 props.mission.onClick()
             }

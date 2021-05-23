@@ -7,6 +7,7 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.entities.MissionAnswer
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.objects.GameObject
@@ -225,6 +226,8 @@ interface PlayerMissionContainer {
      * How many star the player gets from the mission?
      */
     fun missionStar(missionId: String): Int
+
+    fun missionAnswers(missionId: String): List<MissionAnswer>
 }
 
 interface StateContainer {

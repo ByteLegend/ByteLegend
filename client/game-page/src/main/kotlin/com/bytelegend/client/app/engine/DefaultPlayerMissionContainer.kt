@@ -9,6 +9,7 @@ import com.bytelegend.app.client.api.PlayerMissionContainer
 import com.bytelegend.app.client.misc.getAudioElementOrNull
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.entities.MissionAnswer
 import com.bytelegend.app.shared.entities.PlayerMission
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
@@ -48,6 +49,10 @@ class DefaultPlayerMissionContainer(
 
     override fun missionStar(missionId: String): Int {
         return missions[missionId]?.star ?: 0
+    }
+
+    override fun missionAnswers(missionId: String): List<MissionAnswer> {
+        return missions[missionId]?.answers ?: emptyList()
     }
 
     private fun isCanvasInvisible(): Boolean {

@@ -38,9 +38,9 @@ class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, RState>(
     private fun RElementBuilder<*>.dropdownItem(mapId: String, submap: Boolean) {
         BootstrapDropdownItem {
             if (submap) {
-                unsafeHtml(i(mapId), "submap-name")
+                unsafeSpan(i(mapId), "submap-name")
             } else {
-                unsafeHtml(i(mapId))
+                unsafeSpan(i(mapId))
             }
             // disable map selection when game script is running
             attrs.onClick = {

@@ -78,7 +78,7 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
                 attrs.closeButton = true
                 BootstrapModalTitle {
                     attrs.asDynamic().id = "contained-modal-title-vcenter"
-                    unsafeHtml(getServerLocationTitleHtml())
+                    unsafeSpan(getServerLocationTitleHtml())
                 }
             }
 

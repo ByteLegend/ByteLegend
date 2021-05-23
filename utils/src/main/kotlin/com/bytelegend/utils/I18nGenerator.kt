@@ -30,10 +30,13 @@ class I18nResource(
 ) {
     val autoJsonFile: File = yamlFile.parentFile.resolve(yamlFile.name.replace(".yml", "-auto.json"))
     private val localizedTextsInYaml: LinkedHashMap<String, LocalizedText> by lazy {
-        yamlFile.yamlToLocalizedTexts().apply {
-            values.forEach(LocalizedText::validate)
-        }
+        yamlFile.yamlToLocalizedTexts()
+            .onEach { it.value.validate() }
+            .mapValues {
+                CommonmarkMarkdownRenderer.render(it.value)
+            } as LinkedHashMap
     }
+
     private val localizedTextsInJson: LinkedHashMap<String, LocalizedText> by lazy {
         if (autoJsonFile.isFile) {
             autoJsonFile.jsonToLocalizedTexts()
@@ -85,7 +88,7 @@ class I18nResource(
 }
 
 fun generate(gameDataDir: File, outputI18nDir: File, outputAllJson: File) {
-    val i18nResources: List<I18nResource> = gameDataDir.listFiles()
+    val allI18nResources: List<I18nResource> = gameDataDir.listFiles()
         .filter { it.isDirectory }
         .map { I18nResource(it.name, it.resolve("i18n.yml")) }
         .toMutableList()
@@ -95,7 +98,7 @@ fun generate(gameDataDir: File, outputI18nDir: File, outputAllJson: File) {
 
     val idToTextAllMap: MutableMap<String, LocalizedText> = mutableMapOf()
     val uniqueIdChecker = mutableSetOf<String>()
-    i18nResources.forEach { i18ResourceOfOneMap ->
+    allI18nResources.forEach { i18ResourceOfOneMap ->
         val textsOnOneMap: List<LocalizedText> = i18ResourceOfOneMap.generate()
         // check id uniqueness
         textsOnOneMap.forEach {
@@ -108,7 +111,7 @@ fun generate(gameDataDir: File, outputI18nDir: File, outputAllJson: File) {
         val outputDir = outputI18nDir.resolve(i18ResourceOfOneMap.mapId).apply { mkdirs() }
         Locale.values().forEach { locale ->
             val outputJson = outputDir.resolve("${locale.toLowerCase()}.json")
-            val outputData = textsOnOneMap.map { it.id to it.getTextOrDefaultLocale(locale) }.toMap()
+            val outputData = textsOnOneMap.associate { it.id to it.getTextOrDefaultLocale(locale) }
 
             uglyObjectMapper.writeValue(outputJson, outputData)
         }

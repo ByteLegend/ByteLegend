@@ -48,14 +48,14 @@ class DefaultModalController(
                 BootstrapModalHeader {
                     attrs.closeButton = true
                     BootstrapModalTitle {
-                        unsafeHtml(gameRuntime.i(titleId))
+                        unsafeSpan(gameRuntime.i(titleId))
                     }
                 }
             }
 
             BootstrapModalBody {
                 p {
-                    unsafeHtml(gameRuntime.i(contentId))
+                    unsafeSpan(gameRuntime.i(contentId))
                 }
             }
         }

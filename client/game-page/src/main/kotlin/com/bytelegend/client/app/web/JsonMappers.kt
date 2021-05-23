@@ -129,6 +129,7 @@ fun toChallengeSpec(jsonObject: dynamic): ChallengeSpec {
         ChallengeType.valueOf(jsonObject.type),
         jsonObject.star,
         jsonObject.spec,
+        jsonObject.tldr,
         jsonObject.readme
     )
 }

@@ -34,6 +34,7 @@ dependencies {
     implementation(libs("batik-svggen"))
     implementation(libs("batik-dom"))
     implementation(libs("batik-swing"))
+    implementation(libs("commonmark"))
 
     testImplementation(libs("junit-jupiter-api"))
     testImplementation(libs("junit-jupiter-engine"))
