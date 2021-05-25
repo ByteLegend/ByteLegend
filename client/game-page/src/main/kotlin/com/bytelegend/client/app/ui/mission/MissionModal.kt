@@ -126,6 +126,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
     private fun RBuilder.renderQuestionChallenge(tabData: ChallengeTabData) {
         child(QuestionChallengeTab::class) {
             attrs.game = game
+            attrs.missionId = props.missionId
             attrs.challengeSpec = tabData.data
         }
     }

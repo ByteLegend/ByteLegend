@@ -121,7 +121,7 @@ fun GameScene.pubGirl() = objects {
             if (playerMissions.missionAccomplished(COFFEE_MACHINE_MISSION)) {
                 scripts {
                     speech(HERO_ID, "WillYouGoOutWithMe")
-                    speech(bartenderId, "ImAProgrammer")
+                    speech(bartenderId, "StayAwayFromMyDaughter")
                     speech(girlId, "SorryMyFatherDoesntAllow")
                     speech(HERO_ID, "Why")
                     speech(girlId, "HugeBugsOnJavaIsland")

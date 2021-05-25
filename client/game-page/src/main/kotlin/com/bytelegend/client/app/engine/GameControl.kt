@@ -48,6 +48,7 @@ class GameControl(
     }
 
     private fun onMouseClickOnCanvas(event: GameMouseEvent) {
+        logger.debug("User clicked ${event.mapCoordinate} ${event.humanReadableCoordinate}")
         val mainChannel = gameRuntime.activeScene.unsafeCast<DefaultGameScene>().mainChannelDirector
         val mainChannelRunning = mainChannel.isRunning
         mainChannel.onMouseClickOnCanvas(event)

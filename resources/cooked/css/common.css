@@ -74,6 +74,7 @@ body {
 
 .items-widget {
     white-space: nowrap;
+    display: inline-block;
 }
 
 .right-sidebar .list-group-item:hover {
@@ -486,12 +487,6 @@ p.speech-bubble::after {
     color: #192229;
 }
 
-.sidebar-item-widget {
-    max-width: 64px;
-    border-radius: 8px;
-    padding: 8px;
-}
-
 .mission-modal-tutorial-item {
     cursor: pointer;
 }
@@ -539,4 +534,11 @@ p.speech-bubble::after {
 .mission-tab-content textarea {
     width: 100%;
     border: black 1px solid;
+}
+
+.center-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

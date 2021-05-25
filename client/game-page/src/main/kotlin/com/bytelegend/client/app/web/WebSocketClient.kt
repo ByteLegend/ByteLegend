@@ -2,6 +2,7 @@
 
 package com.bytelegend.client.app.web
 
+import com.bytelegend.app.client.api.Banner
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.GameRuntime
@@ -184,7 +185,12 @@ class WebSocketClient(
         client.onclose = {
             connected = false
             console.warn("Server closed WS connection unexpectedly: ${JSON.stringify(it)}")
-            gameRuntime.bannerController.showWarningBanner(gameRuntime.i("SeemsToBeDisconnectedFromServer"))
+            gameRuntime.bannerController.showBanner(
+                Banner(
+                    gameRuntime.i("SeemsToBeDisconnectedFromServer"),
+                    "warning"
+                )
+            )
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
     }

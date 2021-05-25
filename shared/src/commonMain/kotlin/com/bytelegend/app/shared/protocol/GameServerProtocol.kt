@@ -28,6 +28,7 @@ const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
 
 /***************** Point-to-point events from server to client-side EventBus ***********************/
 const val STAR_UPDATE_EVENT = "protocol.star.update"
+const val ITEMS_STATES_UPDATE_EVENT = "protocol.items.states.update"
 const val MISSION_UPDATE_EVENT = "protocol.mission.update"
 const val REMOVE_STATE = "protocol.remove.state"
 const val PUT_STATE = "protocol.put.state"

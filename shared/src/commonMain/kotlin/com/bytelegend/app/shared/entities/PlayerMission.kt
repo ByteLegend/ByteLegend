@@ -36,6 +36,9 @@ open class PlayerMission {
  */
 @DynamoDbBean
 class MissionAnswer {
+    /**
+     * How many stars the player can get from this answer?
+     */
     var star: Int = 0
     var answer: String? = null
     var accomplished: Boolean = false

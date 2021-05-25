@@ -7,7 +7,7 @@ external fun delete(p: dynamic): Boolean = definedExternally
 
 // https://youtrack.jetbrains.com/issue/KT-42743
 class JSObjectBackedMap<V>(
-    private val delegate: dynamic
+    val delegate: dynamic
 ) : MutableMap<String, V> {
     constructor() : this(jsObject())
 

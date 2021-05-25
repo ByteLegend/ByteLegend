@@ -16,6 +16,7 @@ import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.toGameMouseEvent
 import com.bytelegend.client.app.engine.toGridCoordinate
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import org.w3c.dom.events.Event
 import react.RBuilder
@@ -112,7 +113,7 @@ abstract class GameUIComponent<P : GameProps, S : RState> : RComponent<P, S> {
         }
     }
 
-    fun RBuilder.containerFillingDiv(zIndex: Int, classes: Set<String> = emptySet(), block: RDOMBuilder<DIV>.() -> Unit = {}) {
+    fun RBuilder.containerFillingDiv(zIndex: Int? = null, classes: Set<String> = jsObjectBackedSetOf(), block: RDOMBuilder<DIV>.() -> Unit = {}) {
         absoluteDiv(
             left = 0,
             top = 0,

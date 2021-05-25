@@ -1,9 +1,11 @@
 package com.bytelegend.client.app.ui.mission
 
 import BootstrapFormRow
+import com.bytelegend.app.client.api.Banner
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAccordion
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAccordionCollapse
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAccordionToggle
+import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapCard
 import com.bytelegend.app.client.ui.bootstrap.BootstrapCardHeader
@@ -11,6 +13,8 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapCol
 import com.bytelegend.app.client.ui.bootstrap.BootstrapRow
 import com.bytelegend.app.shared.entities.MissionAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
+import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
+import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.util.format
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.external.TextareaAutosize
@@ -19,7 +23,11 @@ import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeH4
 import com.bytelegend.client.app.ui.unsafeSpan
+import com.bytelegend.client.app.web.submitMissionAnswer
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.html.classes
+import org.w3c.dom.HTMLTextAreaElement
 import react.RBuilder
 import react.RState
 import react.dom.br
@@ -27,15 +35,33 @@ import react.dom.div
 import react.dom.h4
 import react.dom.p
 import react.dom.pre
-import kotlin.js.Date
+import react.dom.span
+import react.setState
 
 interface QuestionChallengeTabProps : GameProps {
     var missionId: String
     var challengeSpec: ChallengeSpec
 }
 
-class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, RState>() {
+interface QuestionChallengeTabState : RState {
+    var loading: Boolean
+}
+
+class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, QuestionChallengeTabState>() {
+    lateinit var textarea: HTMLTextAreaElement
+
+    override fun QuestionChallengeTabState.init() {
+        loading = false
+    }
+
     override fun RBuilder.render() {
+        if (game.heroPlayer.isAnonymous) {
+            BootstrapAlert {
+                attrs.show = true
+                attrs.variant = "warning"
+                unsafeSpan("${game.i("YouAreNotLoggedIn")}.${game.i("ClickHereToLogin")}")
+            }
+        }
         unsafeH4(i("TLDR"))
         unsafeDiv(i(props.challengeSpec.tldr))
         h4 {
@@ -45,45 +71,77 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, RState>(
             BootstrapCol {
                 attrs.xs = 10
                 TextareaAutosize {
+                    attrs.disabled = state.loading || game.heroPlayer.isAnonymous
                     attrs.minRows = 2
                     attrs.maxRows = 5
+                    attrs.ref = { it: dynamic ->
+                        textarea = it
+                    }
                 }
             }
             BootstrapCol {
                 attrs.xs = 2
-                BootstrapButton {
-                    +i("Submit")
+
+                if (state.loading) {
+                    BootstrapButton {
+                        attrs.disabled = true
+                        span {
+                            attrs.classes = jsObjectBackedSetOf("spinner-border", "spinner-border-sm")
+                        }
+                        +("Checking...")
+                    }
+                } else {
+                    BootstrapButton {
+                        +i("Submit")
+                        attrs.disabled = game.heroPlayer.isAnonymous
+                        attrs.className = "modal-submit-answer-button"
+                        attrs.onClick = {
+                            GlobalScope.launch {
+                                onClickSubmitAnswer()
+                            }
+                        }
+                    }
                 }
             }
         }
         br { }
 
-//        val answers = game.activeScene.playerMissions.missionAnswers(props.missionId)
-        val answers = listOf(
-            MissionAnswer().apply {
-                answer = "zsh: command not found: java"
-                accomplished = false
-                createdAt = Date().getTime().toLong() - 1000000
-            },
-            MissionAnswer().apply {
-                answer = """
-                    java -version
-                    openjdk version "11.0.11" 2021-04-20
-                    OpenJDK Runtime Environment AdoptOpenJDK-11.0.11+9 (build 11.0.11+9)
-                    OpenJDK 64-Bit Server VM AdoptOpenJDK-11.0.11+9 (build 11.0.11+9, mixed mode)
-                """.trimIndent()
-                accomplished = true
-                createdAt = Date().getTime().toLong()
-            },
-        )
+        val answers = game.activeScene.playerMissions.missionAnswers(props.missionId)
 
         renderPlayerAnswers(answers)
 
         h4 {
-            +i("Description")
+            +i("Problem")
         }
         p {
             unsafeSpan(i(props.challengeSpec.readme))
+        }
+    }
+
+    private suspend fun onClickSubmitAnswer() {
+        if (game.heroPlayer.isAnonymous || textarea.value.isBlank()) {
+            return
+        }
+        setState {
+            loading = true
+        }
+
+        val missionUpdateEventData = submitMissionAnswer(props.missionId, textarea.value)
+        game.eventBus.emit(MISSION_UPDATE_EVENT, missionUpdateEventData)
+        if (missionUpdateEventData.change.accomplished) {
+            game.bannerController.showBanner(
+                Banner(
+                    game.i("AnswerCorrect"),
+                    "success",
+                    true,
+                    true
+                )
+            )
+        }
+        game.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+
+        setState {
+            loading = false
         }
     }
 
@@ -128,7 +186,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, RState>(
                         attrs.eventKey = index.toString()
                         com.bytelegend.app.client.ui.bootstrap.BootstrapCardBody {
                             pre {
-                                attrs.classes = com.bytelegend.client.app.engine.util.jsObjectBackedSetOf("pre-scrollable")
+                                attrs.classes = jsObjectBackedSetOf("pre-scrollable", "bg-light")
                                 +missionAnswer.answer!!
                             }
                         }

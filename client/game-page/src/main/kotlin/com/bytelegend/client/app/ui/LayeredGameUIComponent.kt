@@ -8,7 +8,7 @@ interface GameContainerProps : GameProps
 
 class GameContainer : GameUIComponent<GameContainerProps, RState>() {
     override fun RBuilder.render() {
-        containerFillingDiv(Layer.GameContainer.zIndex()) {
+        containerFillingDiv {
             attrs.id = "game-container-layer"
             children()
         }

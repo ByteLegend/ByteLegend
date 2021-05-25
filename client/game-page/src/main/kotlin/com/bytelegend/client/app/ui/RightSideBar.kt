@@ -15,9 +15,9 @@ fun GameCanvasState.determineRightSideBarCoordinateInGameContainerRightTop() = P
     getUICoordinateInGameContainer().y + AVATAR_HEIGHT
 )
 
-fun GameCanvasState.determineRightSideBarCoordinateInGameContainerLeftTop() =
+fun GameCanvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() =
     determineRightSideBarCoordinateInGameContainerRightTop().let {
-        PixelCoordinate(gameContainerSize.width - it.x, it.y)
+        PixelCoordinate(gameContainerSize.width - it.x - 80, it.y)
     }
 
 class RightSideBar : GameUIComponent<RightSideBarProps, RState>() {

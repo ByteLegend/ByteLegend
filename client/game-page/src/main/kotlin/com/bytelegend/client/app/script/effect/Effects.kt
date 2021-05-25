@@ -2,13 +2,13 @@
 
 package com.bytelegend.client.app.script.effect
 
+import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.app.ui.Layer
 import kotlinext.js.jsObject
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.css.body
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLCanvasElement
@@ -19,13 +19,15 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlin.js.Date
 
+val gsap = window.asDynamic().gsap
+
 suspend fun fadeInEffect(gameContainerSize: PixelSize): Unit = suspendCoroutine { continuation ->
     val id = "fadeIn-${Date().getTime().toLong()}"
     val fadeInLayer = createFullscreenDiv(id, Layer.FadeInFadeOut.zIndex(), gameContainerSize) {
         style.backgroundColor = "black"
         className = "fade-in-layer"
     }
-    window.asDynamic().gsap.fromTo(
+    gsap.fromTo(
         "#$id",
         jsObject {
             autoAlpha = 1
@@ -71,7 +73,7 @@ suspend fun numberIncrementEffect(
         appendChild(incrementAnimationDiv)
     }
 
-    window.asDynamic().gsap.fromTo(
+    gsap.fromTo(
         "#$divId",
         jsObject {
             autoAlpha = 1
@@ -112,6 +114,96 @@ fun showArrowGif(
     div.appendChild(textNode)
     document.body?.appendChild(div)
     return div
+}
+
+/**
+ * Fly to center of window, then fly to item box
+ */
+suspend fun itemPopupEffect(
+    item: String,
+    gameContainerSize: PixelSize,
+    startCoordinateInGameContainer: PixelCoordinate,
+    endCoordinateInGameContainer: PixelCoordinate,
+    durationSecond: Double
+) {
+    // 1/3 time to fly to center of screen
+    // 1/3 time to scale
+    // 1/3 time to fly to item box
+    val itemId = "item-$item"
+    val itemDiv = document.createAndAppend<HTMLDivElement>("div") {
+        id = itemId
+        style.zIndex = (Layer.ScriptWidget.zIndex() + 1).toString()
+        style.backgroundColor = "transparent"
+        style.position = "absolute"
+        className = "$item inline-icon"
+    }
+
+    itemFlyTo(
+        itemId,
+        startCoordinateInGameContainer,
+        PixelCoordinate(gameContainerSize.width / 2, gameContainerSize.height / 2),
+        durationSecond / 3
+    ) {
+        itemScale(itemId, gameContainerSize, startCoordinateInGameContainer, endCoordinateInGameContainer, durationSecond)
+    }
+    gsap.timeline().to(
+        "#$itemId",
+        jsObject {
+            scale = 4
+        }
+    )
+}
+
+private fun itemFlyTo(
+    itemId: String,
+    start: PixelCoordinate,
+    end: PixelCoordinate,
+    durationSecond: Double,
+    onCompleteFunction: UnitFunction
+) {
+    gsap.fromTo(
+        "#$itemId",
+        jsObject {
+            x = start.x
+            y = start.y
+        },
+        jsObject {
+            x = end.x
+            y = end.y
+            duration = durationSecond
+            onComplete = onCompleteFunction
+        }
+    )
+}
+
+private fun itemScale(
+    itemId: String,
+    gameContainerSize: PixelSize,
+    startCoordinateInGameContainer: PixelCoordinate,
+    endCoordinateInGameContainer: PixelCoordinate,
+    totalDurationSecond: Double
+) {
+    val onCompleteFunction = {
+        itemFlyTo(
+            itemId,
+            PixelCoordinate(gameContainerSize.width / 2, gameContainerSize.height / 2),
+            endCoordinateInGameContainer,
+            totalDurationSecond / 3
+        ) {
+            document.body?.removeChild(document.getElementById(itemId)!!)
+        }
+    }
+    gsap.fromTo(
+        "#$itemId",
+        jsObject {
+            scale = 5
+        },
+        jsObject {
+            scale = 2
+            duration = totalDurationSecond / 3
+            onComplete = onCompleteFunction
+        },
+    )
 }
 
 suspend fun starFlyEffect(

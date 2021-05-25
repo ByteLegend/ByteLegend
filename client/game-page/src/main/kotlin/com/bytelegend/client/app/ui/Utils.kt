@@ -11,8 +11,6 @@ import kotlinx.css.px
 import kotlinx.css.top
 import kotlinx.css.width
 import kotlinx.html.DIV
-import kotlinx.html.IMG
-import kotlinx.html.SPAN
 import kotlinx.html.classes
 import react.Component
 import react.RBuilder
@@ -23,7 +21,6 @@ import react.dom.RDOMBuilder
 import react.dom.div
 import react.dom.h3
 import react.dom.h4
-import react.dom.img
 import react.dom.jsStyle
 import react.dom.span
 import styled.StyledBuilder
@@ -70,7 +67,7 @@ fun RBuilder.absoluteDiv(
     bottom: Int? = null,
     width: Int? = null,
     height: Int? = null,
-    zIndex: Int = 0,
+    zIndex: Int? = null,
     opacity: String = "1",
     classes: Set<String> = emptySet(),
     extraStyleBuilder: dynamic.() -> Unit = {},
@@ -100,94 +97,9 @@ fun RBuilder.absoluteDiv(
                 if (height != null) {
                     this.height = "${height}px"
                 }
-                this.zIndex = zIndex.toString()
-                this.opacity = opacity
-            }
-            jsStyle(extraStyleBuilder)
-            block()
-        }
-    }
-}
-
-@Suppress("UnsafeCastFromDynamic")
-fun RBuilder.absoluteSpan(
-    left: Int? = null,
-    top: Int? = null,
-    right: Int? = null,
-    bottom: Int? = null,
-    width: Int? = null,
-    height: Int? = null,
-    zIndex: Int = 0,
-    opacity: String = "1",
-    classes: Set<String> = emptySet(),
-    extraStyleBuilder: dynamic.() -> Unit = {},
-    content: String = "UNDEFINED",
-    block: RDOMBuilder<SPAN>.() -> Unit = {}
-) {
-    span {
-        attrs {
-            this.classes = classes
-
-            jsStyle {
-                position = "absolute"
-                if (left != null) {
-                    this.left = "${left}px"
+                if (zIndex != null) {
+                    this.zIndex = zIndex.toString()
                 }
-                if (right != null) {
-                    this.right = "${right}px"
-                }
-                if (top != null) {
-                    this.top = "${top}px"
-                }
-                if (bottom != null) {
-                    this.bottom = "${bottom}px"
-                }
-                if (width != null) {
-                    this.width = "${width}px"
-                }
-                if (height != null) {
-                    this.height = "${height}px"
-                }
-                this.zIndex = zIndex.toString()
-                this.opacity = opacity
-            }
-            jsStyle(extraStyleBuilder)
-            +content
-
-            block()
-        }
-    }
-}
-
-@Suppress("UnsafeCastFromDynamic")
-fun RBuilder.absoluteImg(
-    url: String,
-    left: Int,
-    top: Int,
-    width: Int? = null,
-    height: Int? = null,
-    zIndex: Int = 0,
-    opacity: String = "1",
-    classes: Set<String> = emptySet(),
-    extraStyleBuilder: dynamic.() -> Unit = {},
-    block: RDOMBuilder<IMG>.() -> Unit = {}
-) {
-    img {
-        attrs {
-            src = url
-            this.classes = classes
-
-            jsStyle {
-                position = "absolute"
-                this.left = "${left}px"
-                this.top = "${top}px"
-                if (width != null) {
-                    this.width = "${width}px"
-                }
-                if (height != null) {
-                    this.height = "${height}px"
-                }
-                this.zIndex = zIndex.toString()
                 this.opacity = opacity
             }
             jsStyle(extraStyleBuilder)

@@ -267,8 +267,18 @@ interface ModalController {
     fun showModal(contentId: String, titleId: String? = null, onClose: UnitFunction = {})
 }
 
+data class Banner(
+    val contentHtml: String,
+    /**
+     * success/warning, etc.
+     */
+    val variant: String,
+    val dismissible: Boolean = true,
+    val autoHide: Boolean = false
+)
+
 interface BannerController {
-    fun showWarningBanner(content: String)
+    fun showBanner(banner: Banner)
 }
 
 interface ToastController {

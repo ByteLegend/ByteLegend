@@ -115,6 +115,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         )
         game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg"), 1), false)
         game.resourceLoader.loadAsync(AudioResource("starfly", game.resolve("/audio/starfly.mp3"), 1), false)
+        game.resourceLoader.loadAsync(AudioResource("popup", game.resolve("/audio/popup.mp3"), 1), false)
         game.webSocketClient.self = game.resourceLoader.loadAsync(game.webSocketClient)
 
         if (game.heroPlayer.isAnonymous) {

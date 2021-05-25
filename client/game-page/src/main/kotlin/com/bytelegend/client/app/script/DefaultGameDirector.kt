@@ -55,6 +55,7 @@ interface GameScript {
 const val STAR_BYTELEGEND_MISSION_ID = "star-bytelegend"
 const val MAIN_CHANNEL = "MainChannel"
 const val STAR_FLYING_CHANNEL = "StarFlying"
+const val ITEM_POPUP_CHANNEL = "ItemPopup"
 
 /**
  * A director directs the scripts running on the scene, in a specific channel.
@@ -304,7 +305,6 @@ class DefaultGameDirector(
             character.moveTo(destMapCoordinate) {
                 callback()
                 character.direction = Direction.DOWN
-                console.log(3333)
                 next()
             }
         }
@@ -328,7 +328,6 @@ class DefaultGameDirector(
         override fun start() {
             GlobalScope.launch {
                 fn()
-                console.log(3333)
                 next()
             }
         }

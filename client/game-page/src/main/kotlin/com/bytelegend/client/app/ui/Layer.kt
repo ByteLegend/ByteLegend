@@ -1,7 +1,6 @@
 package com.bytelegend.client.app.ui
 
 enum class Layer {
-    GameContainer,
     MapCanvas,
     PlayerNames,
     CursorWidget,
@@ -21,12 +20,4 @@ enum class Layer {
     FadeInFadeOut;
 
     fun zIndex() = 10 * ordinal
-}
-
-interface ZIndexed {
-    var zIndex: Int
-}
-
-interface Layered {
-    var layer: Layer
 }

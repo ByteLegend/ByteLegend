@@ -13,6 +13,8 @@ external interface TextareaAutosizeProps : RProps {
     var className: String
     var maxRows: Int
     var minRows: Int
+    var disabled: Boolean
     var onHeightChange: Any
     var cacheMeasurements: Boolean
+    var ref: Any
 }

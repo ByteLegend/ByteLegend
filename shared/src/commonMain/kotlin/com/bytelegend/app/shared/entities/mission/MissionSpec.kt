@@ -33,7 +33,7 @@ data class MissionSpec(
     /**
      * Special actions to be performed when the mission is accomplished
      */
-    val onFinish: OnFinishSpec?
+    val onFinish: OnFinishSpec = OnFinishSpec()
 )
 
 

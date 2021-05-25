@@ -1,7 +1,9 @@
 package com.bytelegend.client.app.engine
 
+import com.bytelegend.app.client.api.Banner
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ModalController
@@ -11,6 +13,8 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.MissionAnswer
 import com.bytelegend.app.shared.entities.PlayerMission
+import com.bytelegend.app.shared.objects.GameMapMission
+import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
@@ -18,10 +22,11 @@ import com.bytelegend.app.shared.protocol.StarUpdateEventData
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.STAR_BYTELEGEND_MISSION_ID
 import com.bytelegend.client.app.script.STAR_FLYING_CHANNEL
+import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.script.effect.starFlyEffect
 import com.bytelegend.client.app.ui.NumberIncrementEvent
 import com.bytelegend.client.app.ui.STAR_INCREMENT_EVENT
-import com.bytelegend.client.app.ui.determineRightSideBarCoordinateInGameContainerLeftTop
+import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
 import com.bytelegend.client.app.ui.menu.determineMenuCoordinateInGameContainer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -59,6 +64,31 @@ class DefaultPlayerMissionContainer(
         return modalController.visible || !gameControl.isWindowVisible
     }
 
+    fun onItemsUpdate(eventData: ItemsStatesUpdateEventData) {
+        val mission = gameScene!!.objects.getByIdOrNull<GameMission>(eventData.missionId)?.gameMapMission ?: return
+
+        if (isCanvasInvisible()) {
+            gameScene?.scripts(STAR_FLYING_CHANNEL, false) {
+                eventData.onFinishSpec.items.add.forEach { item ->
+                    this.unsafeCast<DefaultGameDirector>().suspendAnimation {
+                        itemPopup(item, mission)
+                    }
+                }
+            }
+        } else {
+
+            GlobalScope.launch {
+                eventData.onFinishSpec.items.add.forEach { item ->
+                    itemPopup(item, mission)
+                }
+            }
+        }
+    }
+
+    private fun GameCanvasState.missionCoordinateInGameContainer(mission: GameMapMission): PixelCoordinate {
+        return mission.point * gameScene!!.map.tileSize - getCanvasCoordinateInMap() + getCanvasCoordinateInGameContainer()
+    }
+
     private fun onStarUpdate(eventData: StarUpdateEventData) {
         val currentMap: String = gameScene?.map?.id ?: return
         if (currentMap == eventData.map) {
@@ -66,14 +96,14 @@ class DefaultPlayerMissionContainer(
             // respond to the event
             val mission = gameScene!!.objects.getById<GameMission>(eventData.missionId).gameMapMission
             val canvasState = gameScene!!.canvasState
-            val endCoordinateInGameContainer: PixelCoordinate = canvasState.determineRightSideBarCoordinateInGameContainerLeftTop()
+            val endCoordinateInGameContainer: PixelCoordinate = canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer()
             val startCoordinateInGameContainer: PixelCoordinate =
                 if (mission.id == STAR_BYTELEGEND_MISSION_ID)
                 // See MenuItem, from the GitHub menu icon
                     canvasState.determineMenuCoordinateInGameContainer()
                 else
-                    mission.point * gameScene!!.map.tileSize -
-                        canvasState.getCanvasCoordinateInMap() + canvasState.getCanvasCoordinateInGameContainer()
+                    canvasState.missionCoordinateInGameContainer(mission)
+
             if (isCanvasInvisible()) {
                 gameScene?.scripts(STAR_FLYING_CHANNEL, false) {
                     this.unsafeCast<DefaultGameDirector>().suspendAnimation {
@@ -117,6 +147,29 @@ class DefaultPlayerMissionContainer(
         }
     }
 
+    private suspend fun itemPopup(item: String, mission: GameMapMission) {
+        game.bannerController.showBanner(
+            Banner(
+                game.i("GetItem", "Coffee"),
+                "success",
+                true,
+                true
+            )
+        )
+        getAudioElementOrNull("popup")?.apply {
+            loop = false
+            play()
+        }
+        val canvasState = gameScene!!.canvasState
+        itemPopupEffect(
+            item,
+            canvasState.gameContainerSize,
+            canvasState.missionCoordinateInGameContainer(mission),
+            canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(0, 200), /* items box offset */
+            3.0
+        )
+    }
+
     private suspend fun starFlyThenIncrement(
         gameContainerSize: PixelSize,
         startCoordinateInGameContainer: PixelCoordinate,
@@ -158,6 +211,7 @@ class DefaultPlayerMissionContainer(
     }
 
     fun close() {
+        eventBus.remove(MISSION_UPDATE_EVENT, missionUpdateEventListener)
         eventBus.remove(STAR_UPDATE_EVENT, starUpdateEventListener)
     }
 }

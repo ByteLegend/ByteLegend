@@ -2,6 +2,7 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.EventBus
+import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameContainerSizeAware
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
@@ -16,7 +17,10 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.obj.PlayerSprite
 import com.bytelegend.client.app.ui.DefaultBannerController
 import com.bytelegend.client.app.ui.DefaultModalController
@@ -107,6 +111,8 @@ class Game(
     override val toastController = DefaultToastController(eventBus)
     override val bannerController = DefaultBannerController(eventBus)
 
+    private val onItemsStatesUpdateEventListener: EventListener<ItemsStatesUpdateEventData> = this::onItemsStatesUpdateEvent
+
     fun start() {
         gameControl.start()
         animate()
@@ -122,6 +128,7 @@ class Game(
             },
             1000 / GAME_CLOCK_50HZ
         )
+        eventBus.on(ITEMS_STATES_UPDATE_EVENT, onItemsStatesUpdateEventListener)
     }
 
     private fun animate() {
@@ -140,6 +147,30 @@ class Game(
     }
 
     fun resolve(path: String) = "${RRBD}$path"
+
+    private fun onItemsStatesUpdateEvent(itemsStatesUpdateEvent: ItemsStatesUpdateEventData) {
+        if (!itemsStatesUpdateEvent.onFinishSpec.items.isEmpty()) {
+            val set = jsObjectBackedSetOf().apply { addAll(heroPlayer.items) }
+            itemsStatesUpdateEvent.onFinishSpec.items.add.forEach {
+                set.add(it)
+            }
+            itemsStatesUpdateEvent.onFinishSpec.items.remove.forEach {
+                set.remove(it)
+            }
+            heroPlayer.items.clear()
+            heroPlayer.items.addAll(set)
+            activeScene.unsafeCast<DefaultGameScene>().playerMissions.onItemsUpdate(itemsStatesUpdateEvent)
+        }
+        if (!itemsStatesUpdateEvent.onFinishSpec.states.isEmpty()) {
+            itemsStatesUpdateEvent.onFinishSpec.states.put.forEach {
+                heroPlayer.states[it.key] = it.value
+            }
+            itemsStatesUpdateEvent.onFinishSpec.states.remove.forEach {
+                heroPlayer.states.remove(it)
+            }
+        }
+        eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+    }
 }
 
 private fun List<GameMapDefinition>.toMap(): Map<String, GameMapDefinition> {

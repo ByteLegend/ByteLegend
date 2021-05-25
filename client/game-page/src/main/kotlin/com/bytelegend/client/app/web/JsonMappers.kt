@@ -23,6 +23,9 @@ import com.bytelegend.app.shared.entities.TutorialsTabData
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.entities.mission.ChallengeType
 import com.bytelegend.app.shared.entities.mission.DiscussionsSpec
+import com.bytelegend.app.shared.entities.mission.OnFinishItemsChange
+import com.bytelegend.app.shared.entities.mission.OnFinishSpec
+import com.bytelegend.app.shared.entities.mission.OnFinishStatesChange
 import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.entities.mission.TutorialType
@@ -30,6 +33,8 @@ import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.i18n.LocalizedTextFormat
+import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
@@ -47,9 +52,31 @@ fun parseServerEvent(eventMessage: dynamic): Any {
         event == ONLINE_COUNTER_UPDATE_EVENT -> eventMessage.payload
         event == STAR_UPDATE_EVENT -> toStarUpdateEventData(eventMessage.payload)
         event == MISSION_UPDATE_EVENT -> toMissionUpdateEventData(eventMessage.payload)
+        event == ITEMS_STATES_UPDATE_EVENT -> toItemsStatesUpdateEventData(eventMessage.payload)
         else -> throw IllegalStateException("Unsupported event: $event")
     }
 }
+
+fun toItemsStatesUpdateEventData(jsonObject: dynamic) = ItemsStatesUpdateEventData(
+    jsonObject.playerId,
+    jsonObject.missionId,
+    toOnFinishSpec(jsonObject.onFinishSpec)
+)
+
+fun toOnFinishSpec(jsonObject: dynamic) = OnFinishSpec(
+    toOnFinishItemsChange(jsonObject.items),
+    toOnFinishStatesChange(jsonObject.states)
+)
+
+fun toOnFinishItemsChange(jsonObject: dynamic) = OnFinishItemsChange(
+    JSArrayBackedList(delegate = jsonObject.add),
+    JSArrayBackedList(delegate = jsonObject.remove)
+)
+
+fun toOnFinishStatesChange(jsonObject: dynamic) = OnFinishStatesChange(
+    JSObjectBackedMap(delegate = jsonObject.put),
+    JSArrayBackedList(delegate = jsonObject.remove)
+)
 
 fun toStarUpdateEventData(jsonObject: dynamic) = StarUpdateEventData(
     jsonObject.playerId,
@@ -104,6 +131,13 @@ fun toSceneInitData(jsonObject: dynamic) = SceneInitData(
 fun toMissionModalData(jsonObject: dynamic) = MissionModalData(
     toTypedList(jsonObject.tabs, ::toMissionTabData)
 )
+
+fun toPlayerMission(jsonObject: dynamic) = PlayerMission().apply {
+    this.id = jsonObject.id
+    this.playerId = jsonObject.playerId
+    this.map = jsonObject.map
+    this.answers = toTypedList(jsonObject.answers, ::toMissionAnswer).asDynamic()
+}
 
 fun toMissionTabData(jsonObject: dynamic): MissionTabData<*> {
     return when (valueOf(jsonObject.type)) {
