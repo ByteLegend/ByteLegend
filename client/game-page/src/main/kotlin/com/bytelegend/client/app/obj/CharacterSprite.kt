@@ -14,6 +14,7 @@ import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
+import com.bytelegend.client.app.engine.atTileBorder
 import com.bytelegend.client.app.engine.logger
 import org.w3c.dom.CanvasRenderingContext2D
 
@@ -27,7 +28,7 @@ const val CHARACTER_ANIMATION_FPS = 2
 @Suppress("UNUSED_PARAMETER")
 abstract class CharacterSprite(
     override val gameScene: GameScene,
-    override var pixelCoordinate: PixelCoordinate,
+    private var _pixelCoordinate: PixelCoordinate,
     private val animationSet: AnimationSet
 ) : AbstractSprite(), GameSceneAware, Character {
     override val layer: Int = PLAYER_LAYER
@@ -48,13 +49,40 @@ abstract class CharacterSprite(
         gameScene.gameRuntime.eventBus.remove(GAME_CLOCK_50HZ_EVENT, clockEventListener)
     }
 
+    override var pixelCoordinate: PixelCoordinate
+        get() = _pixelCoordinate
+        set(value) {
+            val tileSize = gameScene.map.tileSize
+            val oldGridCoordinate = _pixelCoordinate / tileSize
+            val newGridCoordinate = value / tileSize
+            val oldPixelCoordinate = _pixelCoordinate
+
+            _pixelCoordinate = value
+
+            if (oldPixelCoordinate.x == -1) {
+                enterTile(newGridCoordinate)
+            } else if (oldGridCoordinate != newGridCoordinate) {
+                // TODO what if fps is very low, and this setter is not called in every tile?
+                leaveTile(oldGridCoordinate)
+                enterTile(newGridCoordinate)
+            }
+
+            if (callbackOnDestination != null &&
+                newGridCoordinate == movePath.last() &&
+                atTileBorder(tileSize, _pixelCoordinate) &&
+                _pixelCoordinate != oldPixelCoordinate
+            ) {
+                callbackOnDestination!!()
+                callbackOnDestination = null
+            }
+        }
+
     override var gridCoordinate: GridCoordinate
-        get() = pixelCoordinate / gameScene.map.tileSize
+        get() = _pixelCoordinate / gameScene.map.tileSize
         set(value) {
             require(movePath.isEmpty()) {
                 "Setting grid coordinate when character is moving!"
             }
-            // leave old tile and enter new tile.
             pixelCoordinate = value * gameScene.map.tileSize
         }
 
@@ -126,13 +154,8 @@ abstract class CharacterSprite(
                 lastAnimationTime = Timestamp.now()
                 break
             } else {
-                leaveTile(gridCoordinate)
-
                 pixelCoordinate = coordinatePlusPixel(pixelCoordinate, currentDirection, distance)
                 distanceToMove -= distance
-
-                // Now step into a new tile
-                enterTile(gridCoordinate)
 
                 if (gridCoordinate == movePath.last()) {
                     // stop
@@ -146,9 +169,6 @@ abstract class CharacterSprite(
 
     open fun enterTile(gridCoordinate: GridCoordinate) {
         gameScene.objects.putIntoCoordinate(this, gridCoordinate)
-        if (callbackOnDestination != null && gridCoordinate == movePath.last()) {
-            callbackOnDestination!!()
-        }
     }
 
     open fun leaveTile(gridCoordinate: GridCoordinate) {

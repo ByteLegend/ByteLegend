@@ -2,8 +2,8 @@ package com.bytelegend.client.app.ui
 
 enum class Layer {
     MapCanvas,
-    PlayerNames,
     CursorWidget,
+    PlayerNames,
     UserMouseInteraction,
     MissionTitle,
     ScrollButtons,

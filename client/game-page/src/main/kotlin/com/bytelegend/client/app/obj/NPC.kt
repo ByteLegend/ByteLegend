@@ -19,13 +19,12 @@ class NPC(
     private val onClickFunction: UnitFunction = {}
 ) : CharacterSprite(
     gameScene,
-    PixelCoordinate(0, 0),
+    PixelCoordinate(-1, -1),
     MapTilesetAnimationSet(gameScene, dynamicSprite)
 ) {
     override fun init() {
         super.init()
         onInitFunction()
-        enterTile(gridCoordinate)
     }
 
     override val roles: Set<String> = jsObjectBackedSetOf(

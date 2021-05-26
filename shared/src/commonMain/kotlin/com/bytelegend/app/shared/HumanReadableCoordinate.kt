@@ -114,4 +114,5 @@ data class GridCoordinate(val x: Int, val y: Int) {
     fun outOf(gridSize: GridSize) = x < 0 || y < 0 || x >= gridSize.width || y >= gridSize.height
     fun compress(): List<Int> = listOf(x, y)
     override fun toString() = "($x,$y)"
+    fun toHumanReadableCoordinate() = HumanReadableCoordinate(this)
 }
