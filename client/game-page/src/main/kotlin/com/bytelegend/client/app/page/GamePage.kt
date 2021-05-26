@@ -107,8 +107,8 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     private fun loadResourcesAndStart() {
         game.resourceLoader.loadAsync(
             I18nTextResource(
-                "common-${game.locale.toLowerCase()}",
-                game.resolve("/i18n/common/${game.locale.toLowerCase()}.json"),
+                "common-${game.locale.lowercase()}",
+                game.resolve("/i18n/common/${game.locale.lowercase()}.json"),
                 1,
                 game.i18nTextContainer
             )

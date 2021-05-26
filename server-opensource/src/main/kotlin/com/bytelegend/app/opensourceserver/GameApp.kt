@@ -79,7 +79,7 @@ class IndexController(
                     PlayerContext.get(),
                     Locale.EN,
                     "/static",
-                    ServerLocation.SEOUL
+                    ServerLocation.Seoul
                 )
             )
             flush()

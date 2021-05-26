@@ -8,7 +8,7 @@ import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLImageElement
 
 fun isFirefox(): Boolean {
-    return window.navigator.userAgent.toLowerCase().indexOf("firefox") > -1
+    return window.navigator.userAgent.lowercase().indexOf("firefox") > -1
 }
 
 fun uuid(): String {

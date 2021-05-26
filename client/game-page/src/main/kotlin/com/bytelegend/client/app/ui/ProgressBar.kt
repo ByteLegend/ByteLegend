@@ -84,7 +84,7 @@ class ProgressBar : RComponent<ProgressBarProps, ProgressBarState>() {
     override fun RBuilder.render() {
         BootstrapProgressBar {
             attrs.now = state.now
-            attrs.variant = ProgressBarVariant.WARNING.name.toLowerCase()
+            attrs.variant = ProgressBarVariant.WARNING.name.lowercase()
             attrs.animated = true
         }
     }

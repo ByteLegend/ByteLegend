@@ -11,7 +11,7 @@ object BrowserConsoleLogger : Logger {
     override val logLevel: LogLevel by lazy {
         try {
             val params = URLSearchParams(window.location.search)
-            LogLevel.valueOf(params.get("logLevel")!!.toLowerCase().capitalize())
+            LogLevel.valueOf(params.get("logLevel")!!.lowercase().capitalize())
         } catch (e: Exception) {
             DEFAULT_LOG_LEVEL
         }

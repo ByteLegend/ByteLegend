@@ -110,7 +110,7 @@ fun generate(gameDataDir: File, outputI18nDir: File, outputAllJson: File) {
 
         val outputDir = outputI18nDir.resolve(i18ResourceOfOneMap.mapId).apply { mkdirs() }
         Locale.values().forEach { locale ->
-            val outputJson = outputDir.resolve("${locale.toLowerCase()}.json")
+            val outputJson = outputDir.resolve("${locale.lowercase()}.json")
             val outputData = textsOnOneMap.associate { it.id to it.getTextOrDefaultLocale(locale) }
 
             uglyObjectMapper.writeValue(outputJson, outputData)

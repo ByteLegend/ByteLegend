@@ -28,8 +28,11 @@ dependencies {
     implementation(libs("java-jwt"))
     implementation(libs("bcprov-jdk15on"))
     implementation(libs("jackson-dataformat-yaml"))
-    implementation(libs("jackson-module-kotlin"))
+    implementation(libs("jackson-module-kotlin")) {
+        exclude(group = "org.jetbrains.kotlin")
+    }
     implementation(libs("opencc4j"))
+    implementation(libs("kotlin-reflect"))
     implementation(libs("kotlinx-serialization-json"))
     implementation(libs("batik-svggen"))
     implementation(libs("batik-dom"))

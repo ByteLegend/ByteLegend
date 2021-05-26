@@ -16,6 +16,7 @@ import org.w3c.dom.HTMLCanvasElement
 import react.RBuilder
 import react.RState
 import react.dom.RDOMBuilder
+import react.dom.attrs
 import react.dom.canvas
 import react.dom.jsStyle
 

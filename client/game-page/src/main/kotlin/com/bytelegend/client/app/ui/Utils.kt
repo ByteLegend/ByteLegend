@@ -18,6 +18,7 @@ import react.RElementBuilder
 import react.RHandler
 import react.ReactElement
 import react.dom.RDOMBuilder
+import react.dom.attrs
 import react.dom.div
 import react.dom.h3
 import react.dom.h4

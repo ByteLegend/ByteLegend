@@ -29,7 +29,7 @@ dependencies {
     api(libs("kotlin-react-dom"))
     api(npm("react", libVersions("react")))
     api(npm("react-dom", libVersions("react")))
-    api(libs("kotlinx-coroutines-core-common"))
+    api(libs("kotlinx-coroutines-core-js"))
     api(libs("kotlinx-browser"))
     api(libs("kotlin-styled"))
     api(npm("styled-components", libVersions("styled-components")))

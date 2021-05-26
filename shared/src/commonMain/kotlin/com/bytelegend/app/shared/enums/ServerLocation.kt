@@ -11,8 +11,8 @@ enum class ServerLocation(
      */
     val serverIdOffset: Int
 ) {
-    BEIJING("cn-north-1", 0),
-    SEOUL("ap-northeast-2", 1_000_000);
+    Beijing("cn-north-1", 0),
+    Seoul("ap-northeast-2", 1_000_000);
 
-    fun displayNameId() = "${name.toLowerCase().capitalize()}ServerDisplayNameId"
+    fun displayNameId() = "${name}ServerDisplayNameId"
 }

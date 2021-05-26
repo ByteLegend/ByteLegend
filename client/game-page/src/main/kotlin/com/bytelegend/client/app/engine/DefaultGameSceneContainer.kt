@@ -27,7 +27,7 @@ fun mapJsonResourceId(mapId: String) = "$mapId-map"
 fun mapTilesetResourceId(mapId: String) = "$mapId-tileset"
 fun mapRoadmapResourceId(mapId: String) = "$mapId-roadmap"
 fun mapScriptResourceId(mapId: String) = "$mapId-script"
-fun mapTextResourceId(mapId: String, locale: Locale) = "$mapId-${locale.toLowerCase()}"
+fun mapTextResourceId(mapId: String, locale: Locale) = "$mapId-${locale.lowercase()}"
 
 class DefaultGameSceneContainer(
     override val di: DI,
@@ -89,7 +89,7 @@ class DefaultGameSceneContainer(
         val map = resourceLoader.loadAsync(GameMapResource(mapJsonResourceId(mapId), "$RRBD/map/$mapId/map.json", 1))
         val tileset = resourceLoader.loadAsync(ImageResource(mapTilesetResourceId(mapId), "$RRBD/map/$mapId/tileset.png", 1))
         val mapScript = resourceLoader.loadAsync(TextAjaxResource(mapScriptResourceId(mapId), "$RRBD/js/game-$mapId.js", 1))
-        val i18nText = resourceLoader.loadAsync(I18nTextResource(mapTextResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.toLowerCase()}.json", 1, game.i18nTextContainer))
+        val i18nText = resourceLoader.loadAsync(I18nTextResource(mapTextResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.lowercase()}.json", 1, game.i18nTextContainer))
         val sceneInitData = resourceLoader.loadAsync(GameSceneInitResource(mapId, game.webSocketClient))
 
         if (game.idToMapDefinition.getValue(mapId).roadmap) {

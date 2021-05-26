@@ -34,7 +34,7 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
             zIndex = Layer.IcpServerLocationWidget.zIndex(),
             classes = jsObjectBackedSetOf("flex-center", "white-text-black-shadow-1")
         ) {
-            if (game.serverLocation == ServerLocation.BEIJING) {
+            if (game.serverLocation == ServerLocation.Beijing) {
                 a {
                     attrs.target = "_blank"
                     attrs.href = "https://beian.miit.gov.cn"

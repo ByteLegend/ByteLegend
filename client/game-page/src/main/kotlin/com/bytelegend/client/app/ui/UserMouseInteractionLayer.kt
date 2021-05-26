@@ -10,6 +10,7 @@ import kotlinx.html.js.onMouseMoveFunction
 import kotlinx.html.js.onMouseOutFunction
 import react.RBuilder
 import react.RState
+import react.dom.attrs
 
 /*
  This layer is a transparent layer on top of map canvas layer, it responds to user mouse interaction

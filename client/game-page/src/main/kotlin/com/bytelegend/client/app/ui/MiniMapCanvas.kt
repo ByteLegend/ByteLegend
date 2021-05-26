@@ -27,6 +27,7 @@ import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 import react.RBuilder
 import react.RState
+import react.dom.attrs
 import react.dom.jsStyle
 import react.setState
 import kotlin.math.PI

@@ -10,9 +10,8 @@ val vertxVersion = "4.0.3"
 val guiceVersion = "4.2.3-SNAPSHOT"
 val guavaVersion = "30.1.1-jre"
 val jacksonVersion = "2.12.2"
-val kotlinVersion = "1.4.32"
-val kotlinCoroutinesCommonVersion = "1.3.8"
-val kotlinxVersion = "1.4.3"
+val kotlinVersion = "1.5.10"
+val kotlinxVersion = "1.5.0"
 val junitVersion = "5.7.0"
 val junit4Version = "4.13"
 val mockKVersion = "1.11.0"
@@ -29,7 +28,6 @@ val gebVersion = "3.4"
 val seleniumVersion = "3.141.59"
 val groovyVersion = "2.5.14"
 val findBugsAnnotationVersion = "3.0.1"
-val httpclient = "4.5.12"
 val mockitoVersion = "3.5.10"
 val apacheCommonsCodecVersion = "1.10"
 val postgreVersion = "42.2.18"
@@ -43,12 +41,12 @@ val kotlinxSerializationVersion = "1.0.1"
 val dynamodbCrossRegionReplicationVersion = "1.2.1.16"
 val caffeineVersion = "2.8.8"
 val testContainersVersion = "1.15.1"
-val kodeinVersion = "7.2.0"
-val kotlinReactVersion = "17.0.2-pre.153-kotlin-1.4.32"
+val kodeinVersion = "7.6.0"
+val kotlinReactVersion = "17.0.2-pre.204-kotlin-1.5.0"
 val reactVersion = "17.0.2"
-val kotlinStyledVersion = "5.2.3-pre.153-kotlin-1.4.32"
-val styledComponentsVersion = "5.2.3"
-val reactBootstrapVersion = "1.5.2"
+val kotlinStyledVersion = "5.3.0-pre.204-kotlin-1.5.0"
+val styledComponentsVersion = "5.3.0"
+val reactBootstrapVersion = "1.6.0"
 val materialUIVersion = "4.11.2"
 val kotlinBrowserVersion = "0.2"
 val reactTransitionGroupVersion = "4.4.1"
@@ -88,10 +86,10 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("com.zaxxer:HikariCP:$hikariVersion"),
 
     OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion"),
-    OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:$kotlinCoroutinesCommonVersion"),
     OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinxVersion"),
     OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinxVersion"),
     OpenSourceLibrary("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"),
+    OpenSourceLibrary("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"),
     OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion"),
 
     OpenSourceLibrary("javax.inject:javax.inject:1"),
@@ -142,7 +140,6 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("org.codehaus.groovy:groovy-all:$groovyVersion"),
     OpenSourceLibrary("com.google.code.findbugs:annotations:$findBugsAnnotationVersion"),
 
-    OpenSourceLibrary("org.apache.httpcomponents:httpclient:$httpclient"),
     OpenSourceLibrary("org.mockito:mockito-core:$mockitoVersion"),
     OpenSourceLibrary("org.mockito:mockito-junit-jupiter:$mockitoVersion"),
 
@@ -172,11 +169,11 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("GSAP", "https://greensock.com/", GreenSockStanardLicense),
     OpenSourceLibrary("fireworks-canvas", "https://github.com/tswaters/fireworks", WTFPL),
 
-    OpenSourceLibrary("org.jetbrains:kotlin-react:$kotlinReactVersion"),
-    OpenSourceLibrary("org.jetbrains:kotlin-react-dom:$kotlinReactVersion"),
+    OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-react:$kotlinReactVersion"),
+    OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-react-dom:$kotlinReactVersion"),
     OpenSourceLibrary("kotlin-react", "https://github.com/JetBrains/kotlin-wrappers", Apache2),
     OpenSourceLibrary(name = "react", version = reactVersion, creditName = "React", url = "https://reactjs.org", license = MIT),
-    OpenSourceLibrary("org.jetbrains:kotlin-styled:$kotlinStyledVersion"),
+    OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-styled:$kotlinStyledVersion"),
     OpenSourceLibrary(name = "styled-components", version = styledComponentsVersion),
     OpenSourceLibrary(name = "react-bootstrap", version = reactBootstrapVersion),
     OpenSourceLibrary(creditName = "Bootstrap", url = "https://getbootstrap.com", license = MIT),

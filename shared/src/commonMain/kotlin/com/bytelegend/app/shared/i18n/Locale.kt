@@ -47,7 +47,7 @@ enum class Language {
     ALL;
 
     val code: String
-        get() = toString().toLowerCase()
+        get() = toString().lowercase()
 }
 
 // A writing system for language
@@ -66,7 +66,7 @@ enum class CountryRegion {
     TW;
 
     val code: String
-        get() = toString().toLowerCase()
+        get() = toString().lowercase()
 }
 
 enum class Locale(
@@ -81,13 +81,13 @@ enum class Locale(
     // A special locale for filter
     ALL("All", Language.ALL, true, null, null),
     EN("English", Language.EN, false, null, null) {
-        override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.toLowerCase().startsWith("en")
+        override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.lowercase().startsWith("en")
     },
     ZH_HANS("简体中文", Language.ZH, false, LanguageScript.HANS, CountryRegion.CN) {
-        override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.toLowerCase() == "zh-cn" || acceptLanguageHeader.toLowerCase() == "zh"
+        override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.lowercase() == "zh-cn" || acceptLanguageHeader.lowercase() == "zh"
     },
     ZH_HANT("繁體中文", Language.ZH, true, LanguageScript.HANT, CountryRegion.TW) {
-        override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.toLowerCase() == "zh-tw"
+        override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.lowercase() == "zh-tw"
     },
 
     // Spanish
@@ -131,20 +131,20 @@ enum class Locale(
     }
 
     val javascriptLocale: String
-        get() = if (countryRegion == null) this.toLowerCase()
+        get() = if (countryRegion == null) this.lowercase()
         // zh-CN, zh-TW
-        else "${language.code.toLowerCase()}-${countryRegion}"
+        else "${language.code.lowercase()}-${countryRegion}"
 
     val googleTranslateApiCode: String
         get() =
-            if (countryRegion == null) this.toLowerCase()
+            if (countryRegion == null) this.lowercase()
             // zh-CN, zh-TW
-            else "${language.code.toLowerCase()}-${countryRegion}"
+            else "${language.code.lowercase()}-${countryRegion}"
 
     companion object {
         fun of(str: String?, default: Locale = EN): Locale =
             try {
-                str?.toUpperCase()?.let { valueOf(it) } ?: default
+                str?.uppercase()?.let { valueOf(it) } ?: default
             } catch (e: Throwable) {
                 default
             }
@@ -158,7 +158,7 @@ enum class Locale(
         }
     }
 
-    fun toLowerCase() = toString().toLowerCase()
+    fun lowercase() = toString().lowercase()
 }
 
 fun List<Locale>.joinToString() = joinToString(",")

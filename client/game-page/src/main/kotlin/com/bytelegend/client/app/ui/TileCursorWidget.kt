@@ -108,6 +108,6 @@ class TileCursorWidget : GameUIComponent<GameProps, TileCursorWidgetState>() {
 
     private fun isClickable(cursorCoordinate: GridCoordinate) =
         game.activeScene.objects.getByCoordinate(cursorCoordinate).any {
-            it.roles.contains(GameObjectRole.Clickable)
+            it.roles.contains(GameObjectRole.Clickable.toString())
         }
 }

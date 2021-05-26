@@ -32,7 +32,7 @@ class GoogleCloudApiTranslator : Translator {
         println("Translating '$text' from $src to $dest")
         return translate.translate(
             text,
-            Translate.TranslateOption.format(format.toString().toLowerCase()),
+            Translate.TranslateOption.format(format.toString().lowercase()),
             Translate.TranslateOption.sourceLanguage(src.googleTranslateApiCode),
             Translate.TranslateOption.targetLanguage(dest.googleTranslateApiCode)
         ).translatedText
