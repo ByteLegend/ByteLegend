@@ -54,6 +54,7 @@ abstract class CharacterSprite(
             require(movePath.isEmpty()) {
                 "Setting grid coordinate when character is moving!"
             }
+            // leave old tile and enter new tile.
             pixelCoordinate = value * gameScene.map.tileSize
         }
 

@@ -55,9 +55,13 @@ open class Player {
     @JsonIgnore
     var server: Int = 0
 
-    // TODO @ReadOnly
+    @get: ReadOnly
     var star: Int = 0
+
+    @get: ReadOnly
     var coin: Int = 0
+
+    @get: ReadOnly
     var reputation: Int = 0
 
     /**

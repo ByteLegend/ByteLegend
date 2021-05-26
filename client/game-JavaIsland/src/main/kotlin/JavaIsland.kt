@@ -138,8 +138,6 @@ fun GameScene.newbieVillageOldMan() = objects {
                 gameRuntime.heroPlayer.items.contains(COFFEE) -> {
                     scripts {
                         speech(oldManId, "ThankYouForYourCoffee")
-                        putState(NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE)
-                        // TODO non-atomic operation
                         removeItem(COFFEE)
                         characterMove(oldManId, oldManDestination)
                     }
