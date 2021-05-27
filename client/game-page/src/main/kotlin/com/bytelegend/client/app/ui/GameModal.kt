@@ -11,7 +11,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalProps
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.client.app.engine.GAME_SCRIPT_NEXT
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
-import com.bytelegend.client.app.script.STAR_FLYING_CHANNEL
+import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import org.kodein.di.DI
 import org.kodein.di.instance
 import react.RBuilder
@@ -63,7 +63,7 @@ class DefaultModalController(
 
     override fun hide() {
         currentModal = initModalAction
-        eventBus.emit(GAME_SCRIPT_NEXT, STAR_FLYING_CHANNEL)
+        eventBus.emit(GAME_SCRIPT_NEXT, ASYNC_ANIMATION_CHANNEL)
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)
     }
 }

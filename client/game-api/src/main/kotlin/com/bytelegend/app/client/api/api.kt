@@ -19,6 +19,7 @@ val HERO_ID = "hero"
 interface GameObjectContainer {
     fun <T : GameObject> getByIdOrNull(id: String): T?
     fun <T : GameObject> getById(id: String): T
+    fun getPointById(id: String): GridCoordinate
     fun add(gameObject: GameObject)
     fun <T : GameObject> remove(id: String): T?
     fun getByCoordinate(coordinate: GridCoordinate): List<GameObject>
@@ -128,7 +129,7 @@ How we calculate the container size:
 3. If game map is bigger than "max game canvas size", use model 1.
 4. Otherwise, use model 2.
 */
-interface GameCanvasState : GameContainerSizeAware {
+interface GameCanvasState : GameContainerSizeAware, GameMap {
     /**
      * The canvas' top-left corner pixel coordinate in the game container, and the pixel size
      */

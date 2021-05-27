@@ -1141,6 +1141,18 @@
                  "width":32,
                  "x":1094.5,
                  "y":2632.5
+                }, 
+                {
+                 "height":0,
+                 "id":136,
+                 "name":"JavaCastleDoor",
+                 "point":true,
+                 "rotation":0,
+                 "type":"GameMapPoint",
+                 "visible":true,
+                 "width":0,
+                 "x":2475.33333333333,
+                 "y":465.333333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1745,7 +1757,7 @@
          "y":0
         }],
  "nextlayerid":72,
- "nextobjectid":136,
+ "nextobjectid":137,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.6.0",

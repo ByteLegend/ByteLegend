@@ -7,7 +7,6 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.shared.entities.SceneInitData
-import com.bytelegend.app.shared.protocol.ADD_ITEM
 import com.bytelegend.app.shared.protocol.ENTER_SCENE
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.GameServerProtocol
@@ -209,10 +208,6 @@ class WebSocketClient(
 
     override suspend fun removeState(key: String) {
         send<Unit>(REMOVE_STATE, key)
-    }
-
-    override suspend fun addItem(item: String) {
-        send<Unit>(ADD_ITEM, item)
     }
 
     override suspend fun removeItem(item: String) {

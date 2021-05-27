@@ -8,7 +8,8 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ModalController
 import com.bytelegend.app.client.api.PlayerMissionContainer
-import com.bytelegend.app.client.misc.getAudioElementOrNull
+import com.bytelegend.app.client.misc.playAudio
+import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.MissionAnswer
@@ -19,9 +20,9 @@ import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
+import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.STAR_BYTELEGEND_MISSION_ID
-import com.bytelegend.client.app.script.STAR_FLYING_CHANNEL
 import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.script.effect.starFlyEffect
 import com.bytelegend.client.app.ui.NumberIncrementEvent
@@ -68,7 +69,7 @@ class DefaultPlayerMissionContainer(
         val mission = gameScene!!.objects.getByIdOrNull<GameMission>(eventData.missionId)?.gameMapMission ?: return
 
         if (isCanvasInvisible()) {
-            gameScene?.scripts(STAR_FLYING_CHANNEL, false) {
+            gameScene?.scripts(ASYNC_ANIMATION_CHANNEL, false) {
                 eventData.onFinishSpec.items.add.forEach { item ->
                     this.unsafeCast<DefaultGameDirector>().suspendAnimation {
                         itemPopup(item, mission)
@@ -85,10 +86,6 @@ class DefaultPlayerMissionContainer(
         }
     }
 
-    private fun GameCanvasState.missionCoordinateInGameContainer(mission: GameMapMission): PixelCoordinate {
-        return mission.point * gameScene!!.map.tileSize - getCanvasCoordinateInMap() + getCanvasCoordinateInGameContainer()
-    }
-
     private fun onStarUpdate(eventData: StarUpdateEventData) {
         val currentMap: String = gameScene?.map?.id ?: return
         if (currentMap == eventData.map) {
@@ -96,16 +93,17 @@ class DefaultPlayerMissionContainer(
             // respond to the event
             val mission = gameScene!!.objects.getById<GameMission>(eventData.missionId).gameMapMission
             val canvasState = gameScene!!.canvasState
-            val endCoordinateInGameContainer: PixelCoordinate = canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer()
+            val endCoordinateInGameContainer: PixelCoordinate =
+                canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer()
             val startCoordinateInGameContainer: PixelCoordinate =
                 if (mission.id == STAR_BYTELEGEND_MISSION_ID)
                 // See MenuItem, from the GitHub menu icon
                     canvasState.determineMenuCoordinateInGameContainer()
                 else
-                    canvasState.missionCoordinateInGameContainer(mission)
+                    canvasState.calculateCoordinateInGameContainer(mission.point)
 
             if (isCanvasInvisible()) {
-                gameScene?.scripts(STAR_FLYING_CHANNEL, false) {
+                gameScene?.scripts(ASYNC_ANIMATION_CHANNEL, false) {
                     this.unsafeCast<DefaultGameDirector>().suspendAnimation {
                         starFlyThenIncrement(
                             canvasState.gameContainerSize,
@@ -133,7 +131,7 @@ class DefaultPlayerMissionContainer(
             // only add star
             if (isCanvasInvisible()) {
                 // if modal is visible, add to script list
-                gameScene?.scripts(STAR_FLYING_CHANNEL, false) {
+                gameScene?.scripts(ASYNC_ANIMATION_CHANNEL, false) {
                     this.unsafeCast<DefaultGameDirector>().suspendAnimation {
                         starIncrement(eventData)
                     }
@@ -156,16 +154,16 @@ class DefaultPlayerMissionContainer(
                 true
             )
         )
-        getAudioElementOrNull("popup")?.apply {
-            loop = false
-            play()
-        }
+        playAudio("popup")
         val canvasState = gameScene!!.canvasState
         itemPopupEffect(
             item,
             canvasState.gameContainerSize,
-            canvasState.missionCoordinateInGameContainer(mission),
-            canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(0, 200), /* items box offset */
+            canvasState.calculateCoordinateInGameContainer(mission.point),
+            canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(
+                0,
+                200
+            ), /* items box offset */
             3.0
         )
     }
@@ -176,10 +174,7 @@ class DefaultPlayerMissionContainer(
         endCoordinateInGameContainer: PixelCoordinate,
         eventData: StarUpdateEventData
     ) {
-        getAudioElementOrNull("starfly")?.apply {
-            loop = false
-            play()
-        }
+        playAudio("starfly")
         starFlyEffect(
             gameContainerSize,
             startCoordinateInGameContainer,
@@ -190,10 +185,7 @@ class DefaultPlayerMissionContainer(
     }
 
     private fun starIncrement(eventData: StarUpdateEventData) {
-        getAudioElementOrNull("starfly")?.apply {
-            loop = false
-            play()
-        }
+        playAudio("starfly")
         game.eventBus.emit(STAR_INCREMENT_EVENT, eventData)
     }
 
@@ -214,4 +206,8 @@ class DefaultPlayerMissionContainer(
         eventBus.remove(MISSION_UPDATE_EVENT, missionUpdateEventListener)
         eventBus.remove(STAR_UPDATE_EVENT, starUpdateEventListener)
     }
+}
+
+fun GameCanvasState.calculateCoordinateInGameContainer(mapCoordinate: GridCoordinate): PixelCoordinate {
+    return mapCoordinate * tileSize - getCanvasCoordinateInMap() + getCanvasCoordinateInGameContainer()
 }

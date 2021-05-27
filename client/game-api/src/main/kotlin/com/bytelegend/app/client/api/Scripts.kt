@@ -51,6 +51,10 @@ interface ScriptsBuilder {
     fun startBeginnerGuide()
     fun putState(key: String, value: String = "1")
     fun removeState(key: String)
-    fun removeItem(item: String)
-    fun addItem(item: String)
+
+    /**
+     * Remove item with an optional animation. The optional `targetCoordinate`
+     * specify the destination coordinate on map.
+     */
+    fun removeItem(item: String, targetCoordinate: GridCoordinate? = null)
 }

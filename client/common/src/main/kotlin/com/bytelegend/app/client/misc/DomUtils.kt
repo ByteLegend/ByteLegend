@@ -14,8 +14,19 @@ fun getImageElement(imageId: String): HTMLImageElement {
         ) as HTMLImageElement
 }
 
-fun getAudioElementOrNull(imageId: String): HTMLAudioElement? {
-    val elementId = "audio-container-$imageId"
+/**
+ * TODO make this a suspend function
+ * Note that this has potential risk that when two `play()` calls are too close,
+ * there might be only one
+ */
+fun playAudio(audioId: String) = getAudioElementOrNull(audioId)?.apply {
+    loop = false
+    currentTime = 0.0
+    play()
+}
+
+fun getAudioElementOrNull(audioId: String): HTMLAudioElement? {
+    val elementId = "audio-container-$audioId"
     return document.getElementById(elementId).asDynamic()
 }
 

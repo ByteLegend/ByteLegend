@@ -10,6 +10,7 @@ import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.dom.HTMLAudioElement
 import org.w3c.dom.HTMLImageElement
+import org.w3c.dom.events.Event
 import org.w3c.fetch.Response
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -40,9 +41,11 @@ class AudioResource(
         element.src = url
         element.preload = "auto"
         element.loop = true
-        element.oncanplay = {
+        val oncanplay = { it: Event ->
             continuation.resume(it.target.unsafeCast<HTMLAudioElement>())
+            element.oncanplay = null
         }
+        element.oncanplay = oncanplay
         element.onerror = { _, _, _, _, _ ->
             continuation.resumeWithException(Exception("Can't load $url"))
         }

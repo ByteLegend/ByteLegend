@@ -6,7 +6,7 @@ import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.misc.getAudioElementOrNull
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
-import com.bytelegend.client.app.script.STAR_FLYING_CHANNEL
+import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.browser.document
 import org.kodein.di.DI
@@ -41,7 +41,7 @@ class GameControl(
             "visibilitychange",
             {
                 if (isWindowVisible) {
-                    eventBus.emit(GAME_SCRIPT_NEXT, STAR_FLYING_CHANNEL)
+                    eventBus.emit(GAME_SCRIPT_NEXT, ASYNC_ANIMATION_CHANNEL)
                 }
             }
         )

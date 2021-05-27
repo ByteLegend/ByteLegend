@@ -39,17 +39,13 @@ class DefaultGameCanvasState(
     override val di: DI,
     private val gameMap: GameMap,
     initContainerSize: PixelSize
-) : GameCanvasState, DIAware {
+) : GameCanvasState, DIAware, GameMap by gameMap {
     private val sceneContainer: GameSceneContainer by di.instance()
     private val eventBus: EventBus by di.instance()
     private val isActiveScene: Boolean
         get() = sceneContainer.activeScene?.map?.id == gameMap.id
 
-    private val tileSize
-        get() = gameMap.tileSize
-
-    private val gameMapGridSize
-        get() = gameMap.size
+    private val gameMapGridSize = gameMap.size
     override var gameContainerSize: PixelSize = initContainerSize
         set(newContainerSize) {
             field = newContainerSize

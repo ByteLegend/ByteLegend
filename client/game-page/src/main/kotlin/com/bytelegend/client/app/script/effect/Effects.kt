@@ -130,7 +130,7 @@ suspend fun itemPopupEffect(
     // 1/3 time to scale
     // 1/3 time to fly to item box
     val itemId = "item-$item"
-    val itemDiv = document.createAndAppend<HTMLDivElement>("div") {
+    document.createAndAppend<HTMLDivElement>("div") {
         id = itemId
         style.zIndex = (Layer.ScriptWidget.zIndex() + 1).toString()
         style.backgroundColor = "transparent"

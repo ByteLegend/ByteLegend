@@ -138,7 +138,9 @@ fun GameScene.newbieVillageOldMan() = objects {
                 gameRuntime.heroPlayer.items.contains(COFFEE) -> {
                     scripts {
                         speech(oldManId, "ThankYouForYourCoffee")
-                        removeItem(COFFEE)
+                        putState(NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE)
+                        // TODO atomic operation
+                        removeItem(COFFEE, oldManStartPoint)
                         characterMove(oldManId, oldManDestination)
                     }
                 }
@@ -163,9 +165,9 @@ fun GameScene.newbieVillageHead() = objects {
 
         onInit = {
             if (playerMissions.missionAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
-                helpers.getCharacter(villageHeadId).gridCoordinate = startPoint
-            } else {
                 helpers.getCharacter(villageHeadId).gridCoordinate = destPoint
+            } else {
+                helpers.getCharacter(villageHeadId).gridCoordinate = startPoint
             }
         }
 
@@ -174,21 +176,26 @@ fun GameScene.newbieVillageHead() = objects {
                 if (playerMissions.missionAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
                     scripts {
                         speech(villageHeadId, "OutsideWorldIsDangerousButIHaveToLetYouGo")
-                        speech(villageHeadId, "GoodLuck", arrow = false)
+                        speech(villageHeadId, "GoodLuckPursueHolyJavaCoffee", arrow = false)
                         characterMove(villageHeadId, destPoint)
                     }
                 } else {
-                    val noticeboardPoint = objects.getById<GameMapPoint>(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID).point
+                    val noticeboardPoint = objects.getPointById(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID).toHumanReadableCoordinate().toString()
+                    val javaCastlePoint = objects.getPointById("JavaCastleDoor").toHumanReadableCoordinate().toString()
 
                     scripts {
                         speech(villageHeadId, "OutsideWorldIsDangerous")
-                        speech(HERO_ID, "ButIHaveTo")
-                        speech(villageHeadId, "LeaveYourName", args = arrayOf(HumanReadableCoordinate(noticeboardPoint).toString()), arrow = false)
+                        speech(HERO_ID, "ButIHaveToDoSomething")
+                        speech(villageHeadId, "YouCanFindHolyJavaCoffee", args = arrayOf(javaCastlePoint))
+                        speech(villageHeadId, "HolyJavaCoffeeIsAntidote")
+                        speech(villageHeadId, "ButYouHaveToGoThroughJavaIsland")
+                        speech(HERO_ID, "WithItICanDate")
+                        speech(villageHeadId, "LeaveYourName", args = arrayOf(noticeboardPoint), arrow = false)
                     }
                 }
             } else {
                 scripts {
-                    speech(villageHeadId, "GoodLuck", arrow = false)
+                    speech(villageHeadId, "GoodLuckPursueHolyJavaCoffee", arrow = false)
                 }
             }
         }
@@ -257,7 +264,7 @@ fun ScriptsBuilder.talkAboutFirstStar(guardId: String, objects: GameObjectContai
     speech(
         guardId, "IDontKnowTakeALookAtStarBytelegend",
         arrayOf(
-            HumanReadableCoordinate(objects.getById<GameObject>(STAR_BYTELEGEND_MISSION_ID).unsafeCast<CoordinateAware>().gridCoordinate).toString()
+            objects.getPointById(STAR_BYTELEGEND_MISSION_ID).toHumanReadableCoordinate().toString()
         )
     )
 }

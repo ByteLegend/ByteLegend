@@ -1,3 +1,5 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.bytelegend.client.app.script
 
 import com.bytelegend.app.client.api.EventBus
@@ -7,6 +9,7 @@ import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
 import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.client.misc.playAudio
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
@@ -16,20 +19,24 @@ import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
 import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
+import com.bytelegend.client.app.engine.calculateCoordinateInGameContainer
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.obj.CharacterSprite
+import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.script.effect.showArrowGif
 import com.bytelegend.client.app.ui.BEGINNER_GUIDE_FINISHED_STATE
 import com.bytelegend.client.app.ui.COORDINATE_BORDER_FLICKER
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.HIGHTLIGHT_MISSION_EVENT
+import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
@@ -54,8 +61,7 @@ interface GameScript {
 
 const val STAR_BYTELEGEND_MISSION_ID = "star-bytelegend"
 const val MAIN_CHANNEL = "MainChannel"
-const val STAR_FLYING_CHANNEL = "StarFlying"
-const val ITEM_POPUP_CHANNEL = "ItemPopup"
+const val ASYNC_ANIMATION_CHANNEL = "AsyncAnimation"
 
 /**
  * A director directs the scripts running on the scene, in a specific channel.
@@ -103,7 +109,9 @@ class DefaultGameDirector(
     init {
         eventBus.on<String?>(GAME_SCRIPT_NEXT) { channel ->
             if (channel == this.channel && gameScene.isActive) {
-                next()
+                if (scripts.isNotEmpty()) {
+                    next()
+                }
             }
         }
     }
@@ -135,7 +143,7 @@ class DefaultGameDirector(
         if (scripts.isEmpty()) {
             throw IllegalStateException("Scripts should not be empty!")
         }
-        if (channel == STAR_FLYING_CHANNEL && (!gameControl.isWindowVisible || game.modalController.visible)) {
+        if (channel == ASYNC_ANIMATION_CHANNEL && (!gameControl.isWindowVisible || game.modalController.visible)) {
             return
         }
 
@@ -228,24 +236,8 @@ class DefaultGameDirector(
         )
     }
 
-    override fun addItem(item: String) {
-        scripts.add(
-            RunSuspendFunctionScript {
-                webSocketClient.addItem(item)
-                if (!game.heroPlayer.items.contains(item)) {
-                    game.heroPlayer.items.add(item)
-                }
-            }
-        )
-    }
-
-    override fun removeItem(item: String) {
-        scripts.add(
-            RunSuspendFunctionScript {
-                webSocketClient.removeItem(item)
-                game.heroPlayer.items.remove(item)
-            }
-        )
+    override fun removeItem(item: String, targetCoordinate: GridCoordinate?) {
+        scripts.add(RemoveItemScript(item, targetCoordinate))
     }
 
     inner class BeginnerGuideScript : GameScript {
@@ -319,6 +311,40 @@ class DefaultGameDirector(
 //            , {
 //                next()
 //            })
+        }
+    }
+
+    inner class RemoveItemScript(
+        private val item: String,
+        private val destination: GridCoordinate?
+    ) : GameScript {
+        override fun start() {
+            if (destination != null) {
+                itemDisappearAnimation()
+                GlobalScope.launch {
+                    playAudio("popup")
+                    val canvasState = gameScene.canvasState
+                    itemPopupEffect(
+                        item,
+                        canvasState.gameContainerSize,
+                        canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(0, 200), /* items box offset */
+                        canvasState.calculateCoordinateInGameContainer(destination),
+                        3.0
+                    )
+                    delay(3000)
+                    next()
+                }
+            } else {
+                itemDisappearAnimation()
+            }
+        }
+
+        fun itemDisappearAnimation() {
+            GlobalScope.launch {
+                game.heroPlayer.items.remove(item)
+                game.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+                webSocketClient.removeItem(item)
+            }
         }
     }
 
