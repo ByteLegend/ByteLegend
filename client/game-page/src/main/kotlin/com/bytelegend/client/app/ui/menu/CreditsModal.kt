@@ -78,6 +78,9 @@ class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
                 unsafeSpan(i("SpecialThanksTiledParagraph"))
             }
             li {
+                unsafeSpan(i("SpecialThanksIdeaParagraph"))
+            }
+            li {
                 aTag(i("ClickHere")) {
                     setState {
                         activeTabIndex = 1
