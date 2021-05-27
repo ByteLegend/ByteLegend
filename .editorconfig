@@ -1,0 +1,28 @@
+# http://editorconfig.org
+root = true
+
+[*.{kt,kts}]
+disabled_rules=import-ordering,no-wildcard-imports,indent
+
+[*]
+charset = utf-8
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{yml,yaml,json,xml}]
+indent_style = space
+indent_size = 2
+
+[*.java]
+align_multiline_chained_methods=true
+align_multiline_parameters=true
+align_multiline_parameters_in_calls=true
+align_multiline_ternary_operation=true
+align_subsequent_simple_methods=true
+
