@@ -5,6 +5,8 @@ import com.bytelegend.buildsupport.getAllMaps
 import com.bytelegend.buildsupport.getEnvironment
 import com.bytelegend.buildsupport.toJsonString
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.time.*
+import java.time.format.*
 
 plugins {
     kotlin("jvm")
@@ -53,7 +55,12 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-fun registerExecTask(name: String, mainClassName: String, vararg args: String, configuration: JavaExec.() -> Unit = {}) =
+fun registerExecTask(
+    name: String,
+    mainClassName: String,
+    vararg args: String,
+    configuration: JavaExec.() -> Unit = {}
+) =
     tasks.register<JavaExec>(name) {
         classpath = sourceSets["main"].runtimeClasspath
         workingDir = rootProject.rootDir
@@ -65,9 +72,11 @@ fun registerExecTask(name: String, mainClassName: String, vararg args: String, c
 
         this.configuration()
     }
-
-//val buildTimestamp = DateTimeFormatter.ofPattern("yyyyMMddHHmmss").withZone(ZoneId.systemDefault()).format(Instant.now())
+// TODO put to timestamp directory when building production resources
+//val buildTimestamp =
+//    DateTimeFormatter.ofPattern("yyyyMMddHHmmss").withZone(ZoneId.systemDefault()).format(Instant.now())
 val RRBD = project.buildDir.resolve("game-resources")
+//val RRBD = project.buildDir.resolve(buildTimestamp)
 
 // Rename the Tiled JSONs because Json2Java plugin generation is name-based
 tasks.register<Copy>("copyMapJson") {
@@ -234,17 +243,10 @@ tasks.register("processGameProductionResources") {
 
 tasks.register<Exec>("compressPng") {
     dependsOn(processResourcesTasks)
-    val pngFiles = rrbdMapDataDir.walk()
-        .filter { it.name.endsWith(".png") }
-        .map { rrbdMapDataDir.toPath().relativize(it.absoluteFile.toPath()) }
-        .toList()
 
-    commandLine("docker", "run", "-v", "${rrbdMapDataDir.absolutePath}:/var/workdir/", "kolyadin/pngquant", "-f")
-    args(pngFiles)
-    args("--ext", ".png")
+    println("${rrbdMapDataDir.absolutePath}:/var/workingdir/")
+    commandLine(
+        "docker", "run", "-v", "${rrbdMapDataDir.absolutePath}:/var/workdir/", "kolyadin/pngquant",
+        "find", ".", "-type", "f", "-name", "*.png", "-exec", "pngquant", "-f", "--ext", ".png", "{}", ";"
+    )
 }
-
-
-
-
-
