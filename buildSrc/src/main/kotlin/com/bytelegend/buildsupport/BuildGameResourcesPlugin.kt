@@ -75,16 +75,8 @@ class BuildGameResourcesPlugin : Plugin<Project> {
 
         val compressPngTask = project.createCompressPngTask(processResourcesTasks)
 
-        project.createBuildResourcesTasks(
-            Variant.Development,
-            project.developmentRRBD,
-            processResourcesTasks
-        )
-        project.createBuildResourcesTasks(
-            Variant.Production,
-            project.productionRRBD,
-            processResourcesTasks
-        )
+        project.createBuildResourcesTasks(Variant.Development, project.developmentRRBD, processResourcesTasks)
+        project.createBuildResourcesTasks(Variant.Production, project.productionRRBD, processResourcesTasks)
         project.createBuildResourcesTasks(
             Variant.Release,
             project.releaseRRBD,
