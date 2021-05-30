@@ -5,7 +5,7 @@ import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 
-val forestVersion = "0.3.6-SNAPSHOT"
+val forestVersion = "0.3.7-SNAPSHOT"
 val vertxVersion = "4.0.3"
 val guiceVersion = "4.2.3-SNAPSHOT"
 val guavaVersion = "30.1.1-jre"

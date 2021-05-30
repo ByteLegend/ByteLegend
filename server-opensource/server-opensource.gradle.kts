@@ -36,11 +36,11 @@ tasks.named<JavaExec>("bootRun") {
     jvmArgs("-Dlocal.RRBD=${rootProject.file("utils/build/game-resources").absolutePath}")
 }
 
-val localRRBD = rootProject.file("utils/build/game-resources").absolutePath
+val localProductionRRBD = rootProject.file("utils/build/game-resources-production").absolutePath
 tasks.named<Test>("test") {
-    dependsOn(":utils:processGameProductionResources")
+    dependsOn(":utils:buildProductionGameResources")
     useJUnitPlatform()
-    systemProperty("local.RRBD", localRRBD)
+    systemProperty("local.RRBD", localProductionRRBD)
     systemProperty("project.dir", rootProject.projectDir.absolutePath)
     systemProperty("build.tmp.dir", temporaryDir)
 }

@@ -1,3 +1,4 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
 
 package com.bytelegend.app.client.api
 

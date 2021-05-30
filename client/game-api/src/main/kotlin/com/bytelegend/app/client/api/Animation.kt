@@ -27,7 +27,7 @@ class FramePlayingAnimation(
     // For example
     // `GameMapDynamicSprite.frames=[0,1,2,3]`, frames=[1,2,3]
     // When lastFramePlayingIndex=0, it refers to frames[0], i.e. GameMapDynamicSprite.frames[1]
-    private val totalTime = frames.sumBy { it.durationMs }
+    private val totalTime = frames.sumOf { it.durationMs }
     // Note this is the index of `frames`, not the original `GameMapDynamicSprite.frames`
     override fun getNextFrameIndex(): Int {
         var elapsedTimeMs = startTime.elapsedTimeMs()

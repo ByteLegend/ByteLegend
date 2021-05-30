@@ -1,6 +1,5 @@
 plugins {
-    kotlin("js")
-    id("configure-ktlint")
+    id("configure-kotlin-js")
 }
 
 val libs: (String) -> String by rootProject.ext
@@ -11,18 +10,9 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":client:common"))
-    implementation(project(":client:game-api"))
     implementation(libs("kodein-di"))
     implementation(npm("react-player", libVersions("react-player")))
     implementation(npm("react-select", libVersions("react-select")))
     implementation(npm("react-textarea-autosize", libVersions("react-textarea-autosize")))
     testImplementation(kotlin("test-js"))
-}
-
-kotlin {
-    js {
-        browser {
-        }
-    }
 }
