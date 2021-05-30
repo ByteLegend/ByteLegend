@@ -10,7 +10,7 @@ on:
 jobs:
   member-check:
     runs-on: 'ubuntu-latest'
-    if: secrets.BYTELEGENDBOT_TOKEN != ''
+    if: ${{ github.event.pull_request.author_association != 'CONTRIBUTOR' }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -35,7 +35,7 @@ jobs:
         run: ./gradlew check --scan
   contributor-check:
     runs-on: 'ubuntu-latest'
-    if: secrets.BYTELEGENDBOT_TOKEN == ''
+    if: ${{ github.event.pull_request.author_association == 'CONTRIBUTOR' }}
     steps:
       - uses: actions/checkout@v2
         with:
