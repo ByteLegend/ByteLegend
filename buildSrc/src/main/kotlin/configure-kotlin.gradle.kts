@@ -1,5 +1,6 @@
-apply(plugin = "java-library")
-apply(plugin = "org.jetbrains.kotlin.jvm")
+plugins {
+    kotlin("jvm")
+}
 
 val libs: (String) -> String by (rootProject.extensions.getByName("ext") as ExtraPropertiesExtension)
 

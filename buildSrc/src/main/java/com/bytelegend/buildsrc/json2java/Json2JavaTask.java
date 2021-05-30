@@ -2,12 +2,13 @@ package com.bytelegend.buildsrc.json2java;
 
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.InputFiles;
+import org.gradle.api.tasks.OutputFiles;
 import org.gradle.api.tasks.TaskAction;
 import org.jsonschema2pojo.DefaultGenerationConfig;
 import org.jsonschema2pojo.GenerationConfig;
 import org.jsonschema2pojo.Jsonschema2Pojo;
 import org.jsonschema2pojo.SourceType;
-import org.jsonschema2pojo.rules.RuleFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,26 +16,38 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Json2JavaTask extends DefaultTask {
     Json2JavaConversion conversion;
 
+    @InputFiles
+    public List<File> getInputJsons() {
+        if (conversion.getSrcFile() != null) {
+            return Collections.singletonList(conversion.getSrcFile());
+        } else {
+            return Arrays.stream(conversion.getSrcDir().listFiles())
+                    .filter(it -> it.getName().endsWith(".json"))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    @OutputFiles
+    public List<File> getOutputJavas() {
+        return getInputJsons().stream()
+                .map(it -> {
+                    File javaDestDir = new File(conversion.getDestDir(), conversion.getTargetPackage().replace('.', '/'));
+                    return new File(javaDestDir, it.getName().replace(".json", ".java"));
+                })
+                .collect(Collectors.toList());
+    }
+
     @TaskAction
     public void run() {
-        File sourceDir = conversion.getSrcDir();
-        File sourceFile = conversion.getSrcFile();
-        File targetDir = conversion.getDestDir();
-        String targetPackage = conversion.getTargetPackage();
-
-        if (sourceFile != null) {
-            generate(sourceFile, targetDir, targetPackage);
-        } else {
-            Stream.of(sourceDir.listFiles())
-                    .filter(it -> it.getName().endsWith(".json"))
-                    .forEach(it -> generate(it, targetDir, targetPackage));
-        }
+        getInputJsons().forEach(it -> generate(it, conversion.getDestDir(), conversion.getTargetPackage()));
     }
 
     // This only supports generating 1 class for 1 JSON in each generate call

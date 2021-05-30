@@ -1,9 +1,9 @@
 plugins {
     id("idea")
-    kotlin("jvm") version "1.5.10" apply false
-    kotlin("js") version "1.5.10" apply false
-    kotlin("multiplatform") version "1.5.10" apply false
-    kotlin("plugin.serialization") version "1.5.10" apply false
+    kotlin("jvm") apply false
+    kotlin("js") apply false
+    kotlin("multiplatform") apply false
+    kotlin("plugin.serialization") apply false
     id("build-scan")
     id("dependencies")
 }
