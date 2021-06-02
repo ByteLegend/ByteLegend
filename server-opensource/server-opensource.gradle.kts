@@ -31,7 +31,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 }
 
 tasks.named<JavaExec>("bootRun") {
-    dependsOn(":utils:processGameDevResources")
+    dependsOn(":utils:buildDevelopmentGameResources")
 
     jvmArgs("-Dlocal.RRBD=${rootProject.file("utils/build/game-resources").absolutePath}")
 }
