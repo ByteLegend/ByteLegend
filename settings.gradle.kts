@@ -24,6 +24,7 @@ if (settingsDir.resolve("server/server.gradle.kts").isFile) {
     include(":server:sync-server")
     include(":server:dal-dynamodb")
     include(":server:dal-api")
+    include(":server:deployment")
 }
 
 rootProject.children.forEach { it.configureBuildScriptName() }

@@ -33,7 +33,7 @@ val hikariVersion = "3.4.5"
 val javaJwtVersion = "3.11.0"
 val bouncycastleVersion = "1.59"
 val awsSdkV1Version = "1.11.978"
-val awsSdkV2Version = "2.16.22"
+val awsSdkV2Version = "2.16.78"
 val opencc4jVersion = "1.6.0"
 val kotlinxSerializationVersion = "1.0.1"
 val dynamodbCrossRegionReplicationVersion = "1.2.1.19"
@@ -151,6 +151,7 @@ val dependencies: List<OpenSourceLibrary> = listOf(
 
     // This is for cross region replication and Kinesis, which doesn't support V2
     OpenSourceLibrary("com.amazonaws:aws-java-sdk:$awsSdkV1Version"),
+    OpenSourceLibrary("software.amazon.awssdk:s3:$awsSdkV2Version"),
     OpenSourceLibrary("software.amazon.awssdk:dynamodb:$awsSdkV2Version"),
     OpenSourceLibrary("software.amazon.awssdk:dynamodb-enhanced:$awsSdkV2Version"),
     OpenSourceLibrary("software.amazon.awssdk:netty-nio-client:$awsSdkV2Version"),

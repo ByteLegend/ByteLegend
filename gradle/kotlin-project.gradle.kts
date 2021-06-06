@@ -9,9 +9,6 @@ rootProject.extensions.configure<ExtraPropertiesExtension>("ext") {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
         }
-        tasks.withType<Test> {
-            useJUnitPlatform()
-        }
 
         dependencies {
             add("testImplementation", libs("kotlinx-coroutines-jdk8"))

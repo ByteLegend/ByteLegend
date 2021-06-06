@@ -1,15 +1,10 @@
 import com.bytelegend.buildsupport.OpenSourceLibrary
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm")
     id("configure-ktlint")
     id("json2Java")
     id("buildGameResources")
-}
-
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
 }
 
 val libs: (String) -> String by rootProject.ext
@@ -37,13 +32,4 @@ dependencies {
     testImplementation(libs("junit-jupiter-api"))
     testImplementation(libs("junit-jupiter-engine"))
     testImplementation(libs("junit-jupiter-params"))
-}
-
-repositories {
-    mavenCentral()
-    maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
-}
-
-tasks.named<Test>("test") {
-    useJUnitPlatform()
 }

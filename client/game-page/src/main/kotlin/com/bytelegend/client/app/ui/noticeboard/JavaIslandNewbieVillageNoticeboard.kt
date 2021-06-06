@@ -1,3 +1,5 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.bytelegend.client.app.ui.noticeboard
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody

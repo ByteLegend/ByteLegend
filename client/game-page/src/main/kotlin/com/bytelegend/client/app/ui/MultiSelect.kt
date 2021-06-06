@@ -31,7 +31,7 @@ data class Option(
 }
 
 interface MultiSelectProps : RProps {
-    var className: String
+    var className: String?
     var initOptions: List<Option>
     var id: String
     var allOptions: List<Option>

@@ -88,7 +88,7 @@ interface ScrollButtonsState : RState {
 }
 
 // cursor-scroll-left-up
-fun Direction.cursorCssClass() = if (this == NONE) "" else "cursor-scroll-${name.toLowerCase().replace('_', '-')}"
+fun Direction.cursorCssClass() = if (this == NONE) "" else "cursor-scroll-${name.lowercase().replace('_', '-')}"
 
 class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsState>() {
     private val verticalButtonWidth

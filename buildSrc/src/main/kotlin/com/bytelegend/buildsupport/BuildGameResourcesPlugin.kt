@@ -19,9 +19,9 @@ import java.util.function.Consumer
 
 /**
  * There are 3 variants of game resource building tasks:
- * 1. `buildDevelopmentResources` uses development webpack config, generated resources are in `build/game-resources-development`.
- * 2. `buildProductionResources` uses production webpack config, generated resources are in `build/game-resources-production`.
- * 3. `buildReleaseResources` uses production webpack config, generated resources are in `build/game-resources-{timestamp}`.
+ * 1. `buildDevelopmentGameResources` uses development webpack config, generated resources are in `build/game-resources-development`.
+ * 2. `buildProductionGameResources` uses production webpack config, generated resources are in `build/game-resources-production`.
+ * 3. `buildReleaseGameResources` uses production webpack config, generated resources are in `build/game-resources-{timestamp}`.
  */
 class BuildGameResourcesPlugin : Plugin<Project> {
     private lateinit var rootProject: Project
@@ -280,7 +280,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
         this.configuration()
     }
 
-    fun forEachMapWithProject(consumer: Consumer<String>) {
+    private fun forEachMapWithProject(consumer: Consumer<String>) {
         allMaps.filter { rootProject.findProject(":client:game-$it") != null }.forEach(consumer)
     }
 }

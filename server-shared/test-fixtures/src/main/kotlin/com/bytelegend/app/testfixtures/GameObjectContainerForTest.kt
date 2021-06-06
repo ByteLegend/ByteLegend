@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.bytelegend.app.testfixtures
 
 import com.bytelegend.app.shared.CompressedGameMap
