@@ -5,9 +5,8 @@ import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 
-val forestVersion = "0.3.9-SNAPSHOT"
+val forestVersion = "0.3.10-SNAPSHOT"
 val vertxVersion = "4.1.0"
-val guiceVersion = "4.2.3-SNAPSHOT"
 val guavaVersion = "30.1.1-jre"
 val jacksonVersion = "2.12.3"
 val kotlinVersion = "1.5.10"
@@ -92,7 +91,6 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion"),
 
     OpenSourceLibrary("javax.inject:javax.inject:1"),
-    OpenSourceLibrary("io.forestframework:guice:$guiceVersion"),
     OpenSourceLibrary("javax.ws.rs:jsr311-api:1.1.1"),
 
     OpenSourceLibrary("com.github.blindpirate:annotation-magic:$annotationMagicVersion"),
