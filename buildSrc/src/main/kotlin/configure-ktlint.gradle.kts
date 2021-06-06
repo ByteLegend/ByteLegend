@@ -21,6 +21,10 @@ val ktlintTask = tasks.register<JavaExec>("ktlint") {
     mustRunAfter(tasks.withType<AbstractCompile>())
 }
 
+tasks.withType<Test>() {
+    mustRunAfter(ktlintTask)
+}
+
 tasks.named("check").configure { dependsOn(ktlintTask) }
 
 tasks.register<JavaExec>("ktlintFormat") {

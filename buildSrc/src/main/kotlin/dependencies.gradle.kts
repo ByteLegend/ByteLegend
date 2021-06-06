@@ -5,11 +5,11 @@ import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 
-val forestVersion = "0.3.7-SNAPSHOT"
-val vertxVersion = "4.0.3"
+val forestVersion = "0.3.9-SNAPSHOT"
+val vertxVersion = "4.1.0"
 val guiceVersion = "4.2.3-SNAPSHOT"
 val guavaVersion = "30.1.1-jre"
-val jacksonVersion = "2.12.2"
+val jacksonVersion = "2.12.3"
 val kotlinVersion = "1.5.10"
 val kotlinxVersion = "1.5.0"
 val junitVersion = "5.7.0"
@@ -26,7 +26,6 @@ val annotationMagicVersion = "0.2.5"
 val jsr311ApiVersion = "1.1.1"
 val gebVersion = "3.4"
 val seleniumVersion = "3.141.59"
-val groovyVersion = "2.5.14"
 val findBugsAnnotationVersion = "3.0.1"
 val mockitoVersion = "3.5.10"
 val apacheCommonsCodecVersion = "1.10"
@@ -38,7 +37,7 @@ val awsSdkV1Version = "1.11.978"
 val awsSdkV2Version = "2.16.22"
 val opencc4jVersion = "1.6.0"
 val kotlinxSerializationVersion = "1.0.1"
-val dynamodbCrossRegionReplicationVersion = "1.2.1.16"
+val dynamodbCrossRegionReplicationVersion = "1.2.1.19"
 val caffeineVersion = "2.8.8"
 val testContainersVersion = "1.15.1"
 val kodeinVersion = "7.6.0"
@@ -106,8 +105,12 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     ),
     OpenSourceLibrary("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"),
     OpenSourceLibrary("com.fasterxml.jackson.core:jackson-annotations:$jacksonVersion"),
+    OpenSourceLibrary("com.fasterxml.jackson:jackson-bom:$jacksonVersion"),
     OpenSourceLibrary("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"),
     OpenSourceLibrary("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion"),
+    OpenSourceLibrary("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"),
+    OpenSourceLibrary("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"),
+    OpenSourceLibrary("com.fasterxml.jackson.module:jackson-module-parameter-names:$jacksonVersion"),
     OpenSourceLibrary("commons-codec:commons-codec:$apacheCommonsCodecVersion"),
 
     OpenSourceLibrary(
@@ -137,7 +140,6 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("org.seleniumhq.selenium:selenium-chrome-driver:${seleniumVersion}"),
     OpenSourceLibrary("org.seleniumhq.selenium:selenium-remote-driver:${seleniumVersion}"),
     OpenSourceLibrary("org.seleniumhq.selenium:selenium-support:${seleniumVersion}"),
-    OpenSourceLibrary("org.codehaus.groovy:groovy-all:$groovyVersion"),
     OpenSourceLibrary("com.google.code.findbugs:annotations:$findBugsAnnotationVersion"),
 
     OpenSourceLibrary("org.mockito:mockito-core:$mockitoVersion"),

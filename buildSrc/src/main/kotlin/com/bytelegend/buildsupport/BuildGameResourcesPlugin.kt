@@ -5,7 +5,6 @@ import com.bytelegend.buildsrc.json2java.Json2JavaTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.ExtensionAware
-import org.gradle.api.plugins.ExtraPropertiesExtension
 import org.gradle.api.tasks.ClasspathNormalizer
 import org.gradle.api.tasks.Copy
 import org.gradle.api.tasks.Exec
@@ -15,9 +14,7 @@ import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.api.tasks.TaskProvider
 import java.io.File
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+
 import java.util.function.Consumer
 
 /**
@@ -49,9 +46,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
         get() = buildDir.resolve("game-resources-production")
     private val Project.releaseRRBD: File
         get() {
-            val timestamp = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
-                .withZone(ZoneId.systemDefault())
-                .format(Instant.now())
+            val timestamp = rootProject.extensions.extraProperties["buildTimestamp"]
             return buildDir.resolve("game-resources-$timestamp")
         }
 
@@ -211,7 +206,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
 
     private fun Project.createGenerateOssJsonTask() = tasks.register("generateOSSJson") {
         val ossJson = intermediateRRBD.resolve("misc/oss.json")
-        val oss = (rootProject.extensions.getByName("ext") as ExtraPropertiesExtension)["oss"]!!
+        val oss = rootProject.extensions.extraProperties["oss"]!!
         inputs.property("ossLibraries", oss)
         outputs.file(ossJson)
 

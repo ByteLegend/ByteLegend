@@ -2,13 +2,11 @@ package com.bytelegend.app.opensourceserver
 
 import com.bytelegend.app.servershared.AbstractIndexPageRenderer
 import com.bytelegend.app.servershared.AbstractRRBDResourceProvider
+import com.bytelegend.app.servershared.DefaultJsonMapper
 import com.bytelegend.app.servershared.JsonMapper
-import com.bytelegend.app.servershared.WebSocketMessageDeserializer
 import com.bytelegend.app.servershared.dal.SESSION_COOKIE_NAME
-import com.bytelegend.app.servershared.install
 import com.bytelegend.app.servershared.mock.anonymousPlayer
 import com.bytelegend.app.servershared.mock.mockPlayer
-import com.bytelegend.app.servershared.registerMapMissionSpecMapping
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.enums.ServerLocation
@@ -22,11 +20,6 @@ import com.bytelegend.app.shared.protocol.SendMessage
 import com.bytelegend.app.shared.protocol.SubscribeUnsubscribeMessage
 import com.bytelegend.app.shared.protocol.WebSocketMessage
 import com.bytelegend.app.shared.protocol.WebSocketMessageType
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -122,25 +115,7 @@ class SprintBootRRBDResourceProvider(
 ) : AbstractRRBDResourceProvider(System.getProperty("local.RRBD"), jsonMapper)
 
 @Service
-class JacksonJsonMapper : JsonMapper {
-    private val objectMapper = ObjectMapper().apply {
-        setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        registerModule(KotlinModule())
-        registerMapMissionSpecMapping()
-        install(WebSocketMessage::class.java, WebSocketMessageDeserializer())
-    }
-    private val yamlMapper = ObjectMapper(YAMLFactory()).apply {
-        registerModule(KotlinModule())
-    }
-
-    override fun toJson(obj: Any): String = objectMapper.writeValueAsString(obj)
-    override fun toPrettyJson(obj: Any) = toJson(obj)
-    override fun toUglyJson(obj: Any) = toJson(obj)
-    override fun <T> fromJson(string: String, klass: Class<T>): T = objectMapper.readValue(string, klass)
-    override fun <T> fromJson(string: String, tr: TypeReference<T>): T = objectMapper.readValue(string, tr)
-    override fun <T> fromYaml(string: String, klass: Class<T>): T = yamlMapper.readValue(string, klass)
-    override fun <T> fromYaml(string: String, tr: TypeReference<T>): T = yamlMapper.readValue(string, tr)
-}
+class JacksonJsonMapper : DefaultJsonMapper(true)
 
 @EnableWebSocket
 @Configuration

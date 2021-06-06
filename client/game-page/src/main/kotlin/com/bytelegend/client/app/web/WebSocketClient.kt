@@ -7,6 +7,7 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.shared.entities.SceneInitData
+import com.bytelegend.app.shared.protocol.DEFAULT_REPLY_TIMEOUT_SECONDS
 import com.bytelegend.app.shared.protocol.ENTER_SCENE
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.GameServerProtocol
@@ -41,20 +42,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-const val DEFAULT_AUTO_RECONNECT_ATTEMPTS = 3
-
-// Start reconnecting upon network issues
-const val GAME_SERVER_RECONNECTING_START = "game.server.reconnecting.start"
-
-// Successfully reconnected
-const val GAME_SERVER_RECONNECTING_SUCCESS = "game.server.reconnecting.success"
-
-// Failed after {DEFAULT_AUTO_RECONNECT_ATTEMPTS} attempts
-const val GAME_SERVER_RECONNECTING_FAIL = "game.server.reconnecting.fail"
-
 typealias ReplyHandler = (ReplyMessage<Any>) -> Unit
-
-const val DEFAULT_REPLY_TIMEOUT_SECONDS = 10
 
 /**
  * Web socket is a global resource.

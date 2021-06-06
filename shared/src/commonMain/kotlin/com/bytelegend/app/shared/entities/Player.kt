@@ -41,8 +41,8 @@ open class Player {
      * Note that this is not realtime, e.g. only the location which the player "is supposed to be",
      * e.g. player click mouse on a location.
      */
-    var x: Int? = null
-    var y: Int? = null
+    var x: Int = -1
+    var y: Int = -1
 
     /**
      * Whether the player is currently keeping a connection to server.
@@ -108,7 +108,7 @@ open class Player {
     /**
      * The character id for display.
      */
-    var characterId: Int? = null
+    var characterId: Int = -1
 
     val isAnonymous: Boolean
         @JsonIgnore
@@ -117,15 +117,31 @@ open class Player {
 
     @JsonIgnore
     @DynamoDbIgnore
-    fun getPartialEntity() = Player().apply {
-        this.id = this@Player.id
-        this.username = this@Player.username
-        this.nickname = this@Player.nickname
-        this.map = this@Player.map
-        this.x = this@Player.x
-        this.y = this@Player.y
-        this.characterId = this@Player.characterId
-    }
+    fun getPartialEntity() = PartialPlayer(
+        this@Player.id,
+        this@Player.username,
+        this@Player.nickname,
+        this@Player.map,
+        this@Player.x,
+        this@Player.y,
+        this@Player.characterId,
+        this@Player.server
+    )
+}
+
+data class PartialPlayer(
+    val id: String?,
+    val username: String?,
+    val nickname: String?,
+    val map: String,
+    val x: Int,
+    val y: Int,
+    val characterId: Int,
+    val server: Int
+) {
+    val isAnonymous: Boolean
+        @JsonIgnore
+        get() = id?.startsWith("anon#") == true
 }
 
 fun ghLoginToPlayerId(ghLogin: String) = "gh#$ghLogin"

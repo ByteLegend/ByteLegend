@@ -54,6 +54,8 @@ interface GameServerProtocol {
     suspend fun enterScene(srcMapId: String, destMapId: String)
 }
 
+const val DEFAULT_REPLY_TIMEOUT_SECONDS = 10
+
 interface WebSocketMessage {
     val type: WebSocketMessageType
 }
@@ -78,7 +80,7 @@ data class SendMessage(
  * When type == REPLY, payload is the return value
  * when type == REPLY_ERROR, payload is the error message
  */
-class ReplyMessage<T>(
+data class ReplyMessage<T>(
     override val type: WebSocketMessageType,
     val replyAddress: String,
     val payload: T

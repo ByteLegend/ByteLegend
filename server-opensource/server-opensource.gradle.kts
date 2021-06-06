@@ -12,14 +12,38 @@ repositories {
 }
 
 val libs: (String) -> String by rootProject.ext
+val libVersions: (String) -> String by rootProject.ext
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
+
+    listOf(
+        "jackson-databind",
+        "jackson-core",
+        "jackson-bom",
+        "jackson-annotations",
+        "jackson-datatype-jdk8",
+        "jackson-datatype-jsr310",
+        "jackson-module-parameter-names",
+        "jackson-dataformat-yaml"
+    ).forEach {
+        implementation(libs(it).substringBeforeLast(":")) {
+            version {
+                strictly(libVersions(it).substringAfter(":"))
+            }
+        }
+    }
+
+    implementation(libs("jackson-module-kotlin")) {
+        version {
+            strictly(libVersions("jackson-module-kotlin").substringAfter(":"))
+        }
+        exclude(group = "org.jetbrains.kotlin")
+    }
+
     implementation("org.springframework.boot:spring-boot-starter-websocket")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation(libs("jackson-dataformat-yaml"))
     implementation(project(":shared"))
     implementation(project(":server-shared:common"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -35,12 +59,9 @@ tasks.named<JavaExec>("bootRun") {
 
     jvmArgs("-Dlocal.RRBD=${rootProject.file("utils/build/game-resources").absolutePath}")
 }
-
-val localProductionRRBD = rootProject.file("utils/build/game-resources-production").absolutePath
 tasks.named<Test>("test") {
     dependsOn(":utils:buildProductionGameResources")
-    useJUnitPlatform()
-    systemProperty("local.RRBD", localProductionRRBD)
+    systemProperty("local.RRBD", rootProject.file("utils/build/game-resources-production").absolutePath)
     systemProperty("project.dir", rootProject.projectDir.absolutePath)
     systemProperty("build.tmp.dir", temporaryDir)
 }

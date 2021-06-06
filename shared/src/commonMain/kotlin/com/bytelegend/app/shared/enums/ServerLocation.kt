@@ -9,10 +9,19 @@ enum class ServerLocation(
      * The gap is calculated by: if we have 100 servers which restarts 10 times per day,
      * then we run out of 10_000_000 after 3 years.
      */
-    val serverIdOffset: Int
+    val serverIdOffset: Int,
+    val dynamoDbEndpoint: String
 ) {
-    Beijing("cn-north-1", 0),
-    Seoul("ap-northeast-2", 1_000_000);
+    Beijing(
+        "cn-north-1",
+        0,
+        "https://dynamodb.cn-north-1.amazonaws.com.cn"
+    ),
+    Seoul(
+        "ap-northeast-2",
+        1_000_000,
+        "https://dynamodb.ap-northeast-2.amazonaws.com"
+    );
 
     fun displayNameId() = "${name}ServerDisplayNameId"
 }
