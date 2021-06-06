@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache node modules
+      - name: Cache Gradle chaches
         uses: actions/cache@v1
         env:
           cache-name: cache-gradle-user-home
@@ -33,6 +33,11 @@ jobs:
         run: ./gradlew --version
       - name: Build with Gradle
         run: ./gradlew check --scan
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: screen-recordings
+          path: server/app/build/tmp/test/**/*.flv
   contributor-check:
     runs-on: 'ubuntu-latest'
     if: ${{ github.event.pull_request.author_association == 'CONTRIBUTOR' }}
