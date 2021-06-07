@@ -68,15 +68,9 @@ class BuildGameResourcesPlugin : Plugin<Project> {
             project.createMapGeneratorTask(it, processResourcesTasks)
         }
 
-        val compressPngTask = project.createCompressPngTask(processResourcesTasks)
-
         project.createBuildResourcesTasks(Variant.Development, project.developmentRRBD, processResourcesTasks)
         project.createBuildResourcesTasks(Variant.Production, project.productionRRBD, processResourcesTasks)
-        project.createBuildResourcesTasks(
-            Variant.Release,
-            project.releaseRRBD,
-            processResourcesTasks + listOf(compressPngTask)
-        )
+        project.createBuildResourcesTasks(Variant.Release, project.releaseRRBD, processResourcesTasks)
     }
 
     enum class WebpackMode {
@@ -90,11 +84,11 @@ class BuildGameResourcesPlugin : Plugin<Project> {
         Release(WebpackMode.Production)
     }
 
-    private fun Project.createCompressPngTask(processResourcesTasks: List<TaskProvider<*>>) =
+    private fun Project.createCompressPngTask() =
         tasks.register("compressAllPngs", Exec::class.java) {
-            mustRunAfter(processResourcesTasks)
+            mustRunAfter("copyIntermediateToReleaseRRBD")
             commandLine(
-                "docker", "run", "-v", "${intermediateRRBD.absolutePath}:/var/workdir/", "kolyadin/pngquant",
+                "docker", "run", "-v", "${releaseRRBD.absolutePath}:/var/workdir/", "kolyadin/pngquant",
                 "find", ".", "-type", "f", "-name", "*.png", "-exec", "pngquant", "-f", "--ext", ".png", "{}", ";"
             )
         }
@@ -122,8 +116,15 @@ class BuildGameResourcesPlugin : Plugin<Project> {
             into(outputRRBD.resolve("js"))
         }
 
+        val compressPngTask = if (variant == Variant.Release) {
+            createCompressPngTask()
+        } else null
+
         tasks.register("build${variant}GameResources") {
             dependsOn(copyIntermediateToFinalRRBD, processGameJs)
+            if (compressPngTask != null) {
+                dependsOn(compressPngTask)
+            }
             doLast {
                 println("Game resources has been generated in ${outputRRBD.absolutePath}")
             }
