@@ -213,7 +213,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
 
         doLast {
             ossJson.parentFile.mkdirs()
-            ossJson.writeText(toJsonString(oss))
+            ossJson.writeText(toUglyJson(oss))
         }
     }
 
@@ -261,27 +261,30 @@ class BuildGameResourcesPlugin : Plugin<Project> {
         }
     }
 
-    private fun Project.sourceSet(name: String): SourceSet {
-        return ((this as ExtensionAware).extensions.getByName("sourceSets") as SourceSetContainer).getByName(name)
-    }
-
-    private fun Project.registerExecTask(
-        name: String,
-        mainClassName: String,
-        vararg args: String,
-        configuration: JavaExec.() -> Unit = {}
-    ) = tasks.register(name, JavaExec::class.java) {
-        classpath = project.sourceSet("main").runtimeClasspath
-        workingDir = rootProject.rootDir
-        mainClass.set(mainClassName)
-        args(*args)
-        jvmArgs("-Denvironment=${project.getEnvironment()}")
-
-        inputs.files(sourceSet("main").runtimeClasspath).withNormalizer(ClasspathNormalizer::class.java)
-        this.configuration()
-    }
-
     private fun forEachMapWithProject(consumer: Consumer<String>) {
         allMaps.filter { rootProject.findProject(":client:game-$it") != null }.forEach(consumer)
     }
+}
+
+internal fun Project.sourceSet(name: String): SourceSet {
+    return ((this as ExtensionAware).extensions.getByName("sourceSets") as SourceSetContainer).getByName(name)
+}
+
+internal fun Project.registerExecTask(
+    name: String,
+    mainClassName: String,
+    vararg args: String,
+    configuration: JavaExec.() -> Unit = {}
+): TaskProvider<JavaExec> = tasks.register(name, JavaExec::class.java) {
+    classpath = project.sourceSet("main").runtimeClasspath
+    workingDir = rootProject.rootDir
+    mainClass.set(mainClassName)
+    args(*args)
+    jvmArgs("-Denvironment=${project.getEnvironment()}")
+
+    inputs.files(sourceSet("main").runtimeClasspath).withNormalizer(ClasspathNormalizer::class.java)
+    // https://youtrack.jetbrains.com/issue/KTIJ-630
+    // enableAssertions are also changed when running in IDEA
+    enableAssertions = false
+    this.configuration()
 }

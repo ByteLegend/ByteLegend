@@ -1,0 +1,47 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      buildTimestamp:
+        description: 'Build timestamp (empty to deploy the latest)'
+        required: true
+        default: 'latest'
+
+jobs:
+  deploy:
+    name: Deploy {{ github.event.inputs.buildTimestamp }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          token: ${{ secrets.BYTELEGENDBOT_TOKEN }}
+      - name: Cache Gradle chaches
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-gradle-user-home
+        with:
+          path: ~/.gradle
+          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
+            ${{ runner.os }}-
+      - name: Deploy to k8s
+        run: ./gradlew deploy -PbuildTimestamp={{ github.event.inputs.buildTimestamp }}
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target_url: https://bytelegend.com
+          state: "success"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target_url: https://bytelegend.com
+          state: "failure"
+          deployment_id: ${{ steps.deployment.outputs.deployment_id }}

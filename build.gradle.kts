@@ -5,7 +5,7 @@ plugins {
     kotlin("multiplatform") apply false
     kotlin("plugin.serialization") apply false
     id("build-scan")
-    id("build-receipt")
+    id("setupBuildVersion")
     id("dependencies")
 }
 

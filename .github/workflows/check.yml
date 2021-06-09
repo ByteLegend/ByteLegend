@@ -21,16 +21,15 @@ jobs:
         with:
           java-version: 11
       - name: Cache Gradle chaches
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         env:
           cache-name: cache-gradle-user-home
         with:
           path: ~/.gradle
           key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: |
+            ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
             ${{ runner.os }}-
-      - name: Show Gradle version
-        run: ./gradlew --version
       - name: Build with Gradle
         run: ./gradlew check --scan
       - uses: actions/upload-artifact@v2

@@ -26,3 +26,7 @@ align_multiline_parameters_in_calls=true
 align_multiline_ternary_operation=true
 align_subsequent_simple_methods=true
 
+[*.{java,kt}]
+wildcard_import_limit = 999
+ij_kotlin_name_count_to_use_star_import = 999
+ij_kotlin_name_count_to_use_star_import_for_members = 999
