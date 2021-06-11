@@ -5,7 +5,7 @@ import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 
-val forestVersion = "0.3.10-SNAPSHOT"
+val forestVersion = "0.3.11-SNAPSHOT"
 val vertxVersion = "4.1.0"
 val guavaVersion = "30.1.1-jre"
 val jacksonVersion = "2.12.3"
@@ -15,7 +15,6 @@ val junitVersion = "5.7.0"
 val junit4Version = "4.13"
 val mockKVersion = "1.11.0"
 val apiGuadianVersion = "1.1.0"
-val log4jVersion = "2.13.3"
 val logbackVersion = "1.2.3"
 val slf4jVersion = "1.7.30"
 val junitExtensionsVersion = "2.4.0"
@@ -61,6 +60,9 @@ val reactPlayerVersion = "2.9.0"
 val reactSelectVersion = "4.3.0"
 val commonmarkVersion = "0.17.2"
 val reactTextAreaAutosizeVersion = "8.3.2"
+// for sync-server because it useus JCL underlying
+val jclOverSlf4JVersion = "1.7.30"
+val logbackCloudWatchAppenderVersion = "1.0.6.3"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -119,8 +121,6 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("commons-io:commons-io:$commonsIOVersion"),
     OpenSourceLibrary("com.google.guava:guava:$guavaVersion"),
 
-    OpenSourceLibrary("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion"),
-    OpenSourceLibrary("org.apache.logging.log4j:log4j-core:$log4jVersion"),
 
     OpenSourceLibrary("org.apiguardian:apiguardian-api:$apiGuadianVersion"),
 
@@ -144,8 +144,10 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("org.mockito:mockito-core:$mockitoVersion"),
     OpenSourceLibrary("org.mockito:mockito-junit-jupiter:$mockitoVersion"),
 
+    OpenSourceLibrary("org.slf4j:jcl-over-slf4j:$jclOverSlf4JVersion"),
     OpenSourceLibrary("ch.qos.logback:logback-classic:$logbackVersion"),
     OpenSourceLibrary("ch.qos.logback:logback-core:$logbackVersion"),
+    OpenSourceLibrary("com.github.blindpirate:cloudwatch-logback-appender:$logbackCloudWatchAppenderVersion"),
 
     OpenSourceLibrary("com.auth0:java-jwt:$javaJwtVersion"),
     OpenSourceLibrary("org.bouncycastle:bcprov-jdk15on:$bouncycastleVersion"),
