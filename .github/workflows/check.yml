@@ -42,7 +42,9 @@ jobs:
         if: failure()
         with:
           name: screen-recordings
-          path: server/app/build/tmp/test/**/*.flv
+          path: |
+            server/app/build/tmp/test/**/*.flv
+            server/app/build/reports/tests
   contributor-check:
     runs-on: 'ubuntu-latest'
     if: ${{ github.event.pull_request.author_association == 'CONTRIBUTOR' }}
@@ -69,3 +71,10 @@ jobs:
         run: ./gradlew --version
       - name: Build with Gradle
         run: ./gradlew ktlint server-opensource:check --scan
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: screen-recordings
+          path: |
+            server/app/build/tmp/test/**/*.flv
+            server/app/build/reports/tests
