@@ -41,3 +41,4 @@ jobs:
           file_pattern: versions.json
           commit_user_name: ByteLegendBot
           commit_user_email: bot@bytelegend.com
+          commit_author: ByteLegendBot <bot@bytelegend.com>
