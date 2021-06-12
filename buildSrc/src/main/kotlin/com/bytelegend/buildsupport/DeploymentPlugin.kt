@@ -42,7 +42,6 @@ class DeploymentPlugin : Plugin<Project> {
 
         project.tasks.register("release") {
             dependsOn(updateVersionsTask)
-            dependsOn("releaseBeijing") //, "releaseSeoul")
             doLast {
                 println("::warning ::Release successfully $buildTimestamp")
             }
@@ -52,7 +51,9 @@ class DeploymentPlugin : Plugin<Project> {
         }
     }
 
-    private fun Project.createUpdateVersionsTask() = tasks.register("updateVersionsJsonOnMaster", UpdateVersionsJsonTask::class.java)
+    private fun Project.createUpdateVersionsTask() = tasks.register("updateVersionsJsonOnMaster", UpdateVersionsJsonTask::class.java) {
+        dependsOn("releaseBeijing") //, "releaseSeoul")
+    }
 
     private fun Project.createDockerPushTask(region: String, image: String, dockerBuildTask: String) = registerReleaseExecTask(
         "dockerPush${image.capitalize()}To$region",
