@@ -68,7 +68,7 @@ open class UpdateVersionsJsonTask : DefaultTask() {
 
         val bot = CommitterOrAuthor("ByteLegendBot", "bot@bytelegend.com")
         val payload = PutContentRequest(
-            "Release new version $buildTimestamp",
+            "Release $buildTimestamp",
             base64Encode(toPrettyJson(currentVersions + latestRelease)),
             sha,
             "master",
