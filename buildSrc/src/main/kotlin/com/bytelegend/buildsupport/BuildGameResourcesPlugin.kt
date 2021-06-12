@@ -98,13 +98,13 @@ class BuildGameResourcesPlugin : Plugin<Project> {
        error: cannot open './img/player/animation-set-0.png.tmp' for writing
        ....
      */
-    private fun Project.createChmod666Task() = tasks.register("chmod666", Exec::class.java) {
+    private fun Project.createChmod777Task() = tasks.register("chmod666", Exec::class.java) {
         mustRunAfter("copyIntermediateToReleaseRRBD")
-        commandLine("sudo", "chmod", "-R", "666", releaseRRBD.absolutePath)
+        commandLine("sudo", "chmod", "-R", "777", releaseRRBD.absolutePath)
     }
 
     private fun Project.createCompressPngTask(): TaskProvider<Exec> {
-        val chmod666Task = createChmod666Task()
+        val chmod666Task = createChmod777Task()
         return tasks.register("compressAllPngs", Exec::class.java) {
             if (System.getenv("GITHUB_ACTION") != null) {
                 dependsOn(chmod666Task)
