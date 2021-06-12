@@ -89,12 +89,11 @@ class DeploymentPlugin : Plugin<Project> {
     ) {
         dependsOn(mergeK8sYamlsTask)
         doFirst {
-            val js = "https://cdn.bytelegend.com/${buildTimestamp}/map/hierarchy.yml"
-            val httpClient = HttpClient.newHttpClient()
-            val request = HttpRequest.newBuilder().uri(URI.create(js)).GET().build()
-            val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+            val marker = "https://cdn.bytelegend.com/${buildTimestamp}/map/hierarchy.yml"
+            val request = HttpRequest.newBuilder().uri(URI.create(marker)).GET().build()
+            val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
             require(response.statusCode() in 200..399) {
-                "$js not found. Was it released?"
+                "$marker not found, was it released?\n${response.statusCode()}\n${response.body()}"
             }
         }
     }
