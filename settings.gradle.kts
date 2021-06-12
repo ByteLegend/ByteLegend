@@ -1,5 +1,9 @@
 rootProject.name = "ByteLegend"
 
+require(JavaVersion.current() >= JavaVersion.VERSION_11) {
+    "You must use at least Java 11 to build the project, you're currently using ${System.getProperty("java.version")}"
+}
+
 include(":shared")
 include(":utils")
 
