@@ -100,7 +100,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
      */
     private fun Project.createChmod666Task() = tasks.register("chmod666", Exec::class.java) {
         mustRunAfter("copyIntermediateToReleaseRRBD")
-        commandLine("chmod", "-R", "666", releaseRRBD.absolutePath)
+        commandLine("sudo", "chmod", "-R", "666", releaseRRBD.absolutePath)
     }
 
     private fun Project.createCompressPngTask(): TaskProvider<Exec> {
