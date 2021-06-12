@@ -9,7 +9,6 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.time.Instant
 
 /**
  * Configure release/deploy related tasks.
@@ -39,7 +38,7 @@ class DeploymentPlugin : Plugin<Project> {
             }
         }
 
-        val updateVersionsTask = project.updateVersionsTask()
+        val updateVersionsTask = project.createUpdateVersionsTask()
 
         project.tasks.register("release") {
             dependsOn(updateVersionsTask)
@@ -53,18 +52,7 @@ class DeploymentPlugin : Plugin<Project> {
         }
     }
 
-    private fun Project.updateVersionsTask() = tasks.register("updateVersions") {
-        enabled = project.hasProperty("updateVersions")
-        doLast {
-            val commit = System.getenv("GITHUB_SHA")
-                ?: Runtime.getRuntime().exec("git rev-parse HEAD").let {
-                    require(it.waitFor() == 0)
-                    it.inputStream.bufferedReader().readText().trim()
-                }
-            val buildVersions = readBuildVersions() + BuildVersion(commit, buildTimestamp, Instant.now())
-            writeBuildVersions(buildVersions)
-        }
-    }
+    private fun Project.createUpdateVersionsTask() = tasks.register("updateVersionsJsonOnMaster", UpdateVersionsJsonTask::class.java)
 
     private fun Project.createDockerPushTask(region: String, image: String, dockerBuildTask: String) = registerReleaseExecTask(
         "dockerPush${image.capitalize()}To$region",
