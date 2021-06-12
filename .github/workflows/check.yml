@@ -6,11 +6,13 @@ on:
       - release
     paths-ignore:
       - '**/*.md'
+      - versions.json
   pull_request:
     branches-ignore:
       - release
     paths-ignore:
       - '**/*.md'
+      - versions.json
 jobs:
   member-check:
     runs-on: 'ubuntu-latest'
