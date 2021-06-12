@@ -27,6 +27,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
             ${{ runner.os }}-
+      - uses: chrnorm/deployment-action@releases/v1
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target_url: https://bytelegend.com
+          environment: production
       - name: Deploy to k8s
         run: ./gradlew deploy "-PbuildTimestamp=${{ github.event.inputs.buildTimestamp }}"
         env:
