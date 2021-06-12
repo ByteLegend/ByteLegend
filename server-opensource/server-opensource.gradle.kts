@@ -61,7 +61,7 @@ tasks.named<JavaExec>("bootRun") {
 }
 tasks.named<Test>("test") {
     dependsOn(":utils:buildProductionGameResources")
-    systemProperty("local.RRBD", rootProject.file("utils/build/game-resources-production").absolutePath)
+    systemProperty("local.RRBD", rootProject.file(rootProject.ext["productionRRBD"].toString()))
     systemProperty("project.dir", rootProject.projectDir.absolutePath)
     systemProperty("build.tmp.dir", temporaryDir)
 }
