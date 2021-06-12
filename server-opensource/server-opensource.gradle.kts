@@ -7,6 +7,8 @@ plugins {
     id("configure-ktlint")
 }
 
+evaluationDependsOn(":utils")
+
 repositories {
     mavenCentral()
 }
