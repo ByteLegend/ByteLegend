@@ -43,13 +43,13 @@ class DeploymentPlugin : Plugin<Project> {
 
         project.tasks.register("release") {
             dependsOn(updateVersionsTask)
-            dependsOn("releaseBeijing", "releaseSeoul")
+            dependsOn("releaseBeijing") //, "releaseSeoul")
             doLast {
                 println("::warning ::Release successfully $buildTimestamp")
             }
         }
         project.tasks.register("deploy") {
-            dependsOn("deployBeijing", "deploySeoul")
+            dependsOn("deployBeijing") //, "deploySeoul")
         }
     }
 
