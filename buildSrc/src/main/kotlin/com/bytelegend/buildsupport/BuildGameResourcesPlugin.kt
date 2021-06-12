@@ -71,6 +71,13 @@ class BuildGameResourcesPlugin : Plugin<Project> {
         project.createBuildResourcesTasks(Variant.Development, project.developmentRRBD, processResourcesTasks)
         project.createBuildResourcesTasks(Variant.Production, project.productionRRBD, processResourcesTasks)
         project.createBuildResourcesTasks(Variant.Release, project.releaseRRBD, processResourcesTasks)
+
+        rootProject.extensions.extraProperties["developmentRRBDName"] = project.developmentRRBD.name
+        rootProject.extensions.extraProperties["productionRRBDName"] = project.productionRRBD.name
+        rootProject.extensions.extraProperties["releaseRRBDName"] = project.releaseRRBD.name
+        rootProject.extensions.extraProperties["developmentRRBD"] = project.developmentRRBD.absolutePath
+        rootProject.extensions.extraProperties["productionRRBD"] = project.productionRRBD.absolutePath
+        rootProject.extensions.extraProperties["releaseRRBD"] = project.releaseRRBD.absolutePath
     }
 
     enum class WebpackMode {
@@ -84,14 +91,31 @@ class BuildGameResourcesPlugin : Plugin<Project> {
         Release(WebpackMode.Production)
     }
 
-    private fun Project.createCompressPngTask() =
-        tasks.register("compressAllPngs", Exec::class.java) {
+    /*
+       To avoid permission issues on GitHub actions
+       error: cannot open './img/logo/logo.png.tmp' for writing
+       error: cannot open './img/attribution/google-translate.png.tmp' for writing
+       error: cannot open './img/player/animation-set-0.png.tmp' for writing
+       ....
+     */
+    private fun Project.createChmod666Task() = tasks.register("chmod666", Exec::class.java) {
+        mustRunAfter("copyIntermediateToReleaseRRBD")
+        commandLine("chmod", "-R", "666", releaseRRBD.absolutePath)
+    }
+
+    private fun Project.createCompressPngTask(): TaskProvider<Exec> {
+        val chmod666Task = createChmod666Task()
+        return tasks.register("compressAllPngs", Exec::class.java) {
+            if (System.getenv("GITHUB_ACTION") != null) {
+                dependsOn(chmod666Task)
+            }
             mustRunAfter("copyIntermediateToReleaseRRBD")
             commandLine(
                 "docker", "run", "-v", "${releaseRRBD.absolutePath}:/var/workdir/", "kolyadin/pngquant",
                 "find", ".", "-type", "f", "-name", "*.png", "-exec", "pngquant", "-f", "--ext", ".png", "{}", ";"
             )
         }
+    }
 
     private fun Project.createBuildResourcesTasks(
         variant: Variant,
