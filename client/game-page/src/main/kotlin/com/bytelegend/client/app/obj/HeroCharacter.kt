@@ -1,3 +1,5 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.GameScene
@@ -14,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class HeroCharacter(
     gameScene: GameScene,
-    player: Player,
+    player: Player
 ) : PlayerSprite(gameScene, player) {
     override val id: String = "hero"
     override val roles: Set<String> = jsObjectBackedSetOf(

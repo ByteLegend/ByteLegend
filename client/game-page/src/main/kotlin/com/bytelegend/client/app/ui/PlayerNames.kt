@@ -1,7 +1,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
-import com.bytelegend.app.shared.entities.Player
+import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
@@ -33,11 +33,11 @@ class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
             }
     }
 
-    private fun RBuilder.renderOne(player: Player, sprite: CharacterSprite, isHero: Boolean) {
+    private fun RBuilder.renderOne(player: BasePlayer, sprite: CharacterSprite, isHero: Boolean) {
         val imageBlockOnCanvas = sprite.getImageBlockOnCanvas()
         val x = imageBlockOnCanvas.x + canvasCoordinateInGameContainer.x + activeScene.map.tileSize.width / 2
         val y = imageBlockOnCanvas.y + canvasCoordinateInGameContainer.y - 10
-        val name = player.nickname!!
+        val name = player.nickname
         child(PlayerNameSpan::class) {
             attrs.x = x
             attrs.y = y

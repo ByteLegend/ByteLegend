@@ -68,7 +68,7 @@ class DefaultGameCanvasState(
          * If user is anonymous, determine from map predefined location ("XInitCenterPoint")
          */
         if (!game.heroPlayer.isAnonymous && game.heroPlayer.map == gameMap.id) {
-            onResizeGameContainer(gameContainerSize, GridCoordinate(game.heroPlayer.x!!, game.heroPlayer.y!!))
+            onResizeGameContainer(gameContainerSize, GridCoordinate(game.heroPlayer.x, game.heroPlayer.y))
         } else {
             onResizeGameContainer(gameContainerSize, getDefaultMapCenterPoint())
         }

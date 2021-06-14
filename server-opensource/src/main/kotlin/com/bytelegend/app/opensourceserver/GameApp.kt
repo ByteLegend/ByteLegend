@@ -211,6 +211,7 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
             val returnValue = when (message.name) {
                 MOVE_TO -> ""
                 GET_SCENE_INIT_DATA -> SceneInitData(
+                    1,
                     emptyList(),
                     emptyMap()
                 )

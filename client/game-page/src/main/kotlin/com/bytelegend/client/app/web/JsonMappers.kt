@@ -4,6 +4,7 @@ package com.bytelegend.client.app.web
 
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition
+import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.entities.ChallengeTabData
 import com.bytelegend.app.shared.entities.DiscussionsTabData
 import com.bytelegend.app.shared.entities.MissionAnswer
@@ -42,13 +43,14 @@ import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
 import com.bytelegend.client.app.engine.util.JSArrayBackedList
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
+import com.bytelegend.client.app.page.game
 
 // PublishMessage<Any>
 @Suppress("UnsafeCastFromDynamic")
 fun parseServerEvent(eventMessage: dynamic): Any {
     val event: String = eventMessage.event
     return when {
-        event.startsWith("protocol.player") -> toPlayer(eventMessage.payload)
+        event.startsWith("protocol.player") -> toBasePlayer(eventMessage.payload)
         event == ONLINE_COUNTER_UPDATE_EVENT -> eventMessage.payload
         event == STAR_UPDATE_EVENT -> toStarUpdateEventData(eventMessage.payload)
         event == MISSION_UPDATE_EVENT -> toMissionUpdateEventData(eventMessage.payload)
@@ -94,22 +96,28 @@ fun toMissionUpdateEventData(jsonObject: dynamic) = MissionUpdateEventData(
 )
 
 fun toPlayer(jsonObject: dynamic) = Player().apply {
-    id = jsonObject.id
-    username = jsonObject.username
-    nickname = jsonObject.nickname
-    map = jsonObject.map
-    x = jsonObject.x
-    y = jsonObject.y
-    server = jsonObject.server
+    configureBasePlayer(jsonObject)
     star = jsonObject.star
     coin = jsonObject.coin
     reputation = jsonObject.reputation
     locale = jsonObject.locale
-    characterId = jsonObject.characterId
     avatarUrl = jsonObject.avatarUrl
     items = JSArrayBackedList(delegate = jsonObject.items)
     states = JSObjectBackedMap(jsonObject.states)
 }
+
+private fun BasePlayer.configureBasePlayer(jsonObject: dynamic) {
+    this.id = jsonObject.id
+    this.username = jsonObject.username
+    this.nickname = jsonObject.nickname
+    this.map = jsonObject.map
+    this.x = jsonObject.x
+    this.y = jsonObject.y
+    this.characterId = jsonObject.characterId
+    this.server = jsonObject.server
+}
+
+fun toBasePlayer(jsonObject: dynamic) = BasePlayer().apply { configureBasePlayer(jsonObject) }
 
 fun <T> toTypedList(jsonArray: dynamic, mapper: (dynamic) -> T): List<T> {
     return jsonArray.unsafeCast<Array<dynamic>>().map(mapper)
@@ -124,7 +132,8 @@ fun <T> toTypedMap(jsonObject: dynamic, valueMapper: (dynamic) -> T): Map<String
 }
 
 fun toSceneInitData(jsonObject: dynamic) = SceneInitData(
-    toTypedList(jsonObject.players, ::toPlayer),
+    jsonObject.online as Int,
+    toTypedList(jsonObject.players, ::toBasePlayer).filter { it.id != game.heroPlayer.id },
     toTypedMap(jsonObject.missions, ::toMission)
 )
 
