@@ -115,9 +115,7 @@ open class Player {
         @DynamoDbIgnore
         get() = id!!.startsWith("anon#")
 
-    @JsonIgnore
-    @DynamoDbIgnore
-    fun getPartialEntity() = PartialPlayer(
+    fun toPartialEntity() = PartialPlayer(
         this@Player.id,
         this@Player.username,
         this@Player.nickname,

@@ -41,7 +41,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
     private val Project.intermediateRRBD: File
         get() = buildDir.resolve("game-resources-intermediate")
     private val Project.developmentRRBD: File
-        get() = buildDir.resolve("game-resources-dev")
+        get() = buildDir.resolve("game-resources-development")
     private val Project.productionRRBD: File
         get() = buildDir.resolve("game-resources-production")
     private val Project.releaseRRBD: File
