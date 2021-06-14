@@ -27,11 +27,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
             ${{ runner.os }}-
+      - uses: chrnorm/deployment-action@releases/v1
+        name: Create GitHub deployment
+        id: deployment
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target_url: https://bytelegend.com
+          environment: production
       - name: Deploy to k8s
-        run: ./gradlew deploy "-PbuildTimestamp={{ github.event.inputs.buildTimestamp }}"
+        run: ./gradlew deploy "-PbuildTimestamp=${{ github.event.inputs.buildTimestamp }}"
         env:
           ACCESS_KEY_ID_BEIJING: ${{ secrets.ACCESS_KEY_ID_BEIJING }}
           SECRET_ACCESS_KEY_BEIJING: ${{ secrets.SECRET_ACCESS_KEY_BEIJING }}
+          ACCESS_KEY_ID_SEOUL: ${{ secrets.ACCESS_KEY_ID_SEOUL }}
+          SECRET_ACCESS_KEY_SEOUL: ${{ secrets.SECRET_ACCESS_KEY_SEOUL }}
       - name: Update deployment status (success)
         if: success()
         uses: chrnorm/deployment-status@releases/v1

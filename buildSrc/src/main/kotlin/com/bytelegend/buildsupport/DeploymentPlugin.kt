@@ -42,17 +42,18 @@ class DeploymentPlugin : Plugin<Project> {
 
         project.tasks.register("release") {
             dependsOn(updateVersionsTask)
-            dependsOn("releaseBeijing") //, "releaseSeoul")
             doLast {
                 println("::warning ::Release successfully $buildTimestamp")
             }
         }
         project.tasks.register("deploy") {
-            dependsOn("deployBeijing") //, "deploySeoul")
+            dependsOn("deployBeijing", "deploySeoul")
         }
     }
 
-    private fun Project.createUpdateVersionsTask() = tasks.register("updateVersionsJsonOnMaster", UpdateVersionsJsonTask::class.java)
+    private fun Project.createUpdateVersionsTask() = tasks.register("updateVersionsJsonOnMaster", UpdateVersionsJsonTask::class.java) {
+        dependsOn("releaseBeijing", "releaseSeoul")
+    }
 
     private fun Project.createDockerPushTask(region: String, image: String, dockerBuildTask: String) = registerReleaseExecTask(
         "dockerPush${image.capitalize()}To$region",
@@ -88,12 +89,11 @@ class DeploymentPlugin : Plugin<Project> {
     ) {
         dependsOn(mergeK8sYamlsTask)
         doFirst {
-            val js = "https://cdn.bytelegend.com/${buildTimestamp}/map/hierarchy.yml"
-            val httpClient = HttpClient.newHttpClient()
-            val request = HttpRequest.newBuilder().uri(URI.create(js)).GET().build()
-            val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+            val marker = "https://cdn.bytelegend.com/${buildTimestamp}/map/hierarchy.yml"
+            val request = HttpRequest.newBuilder().uri(URI.create(marker)).GET().build()
+            val response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString())
             require(response.statusCode() in 200..399) {
-                "$js not found. Was it released?"
+                "$marker not found, was it released?\n${response.statusCode()}\n${response.body()}"
             }
         }
     }
