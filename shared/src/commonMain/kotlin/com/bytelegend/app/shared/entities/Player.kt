@@ -1,60 +1,12 @@
 package com.bytelegend.app.shared.entities
 
 import com.bytelegend.app.shared.annotations.DynamoDbIgnore
-import com.bytelegend.app.shared.annotations.DynamoDbSecondaryPartitionKey
 import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.annotations.ReadOnly
-import kotlinx.serialization.Serializable
 
 val ANONYMOUS_DUMMY_MAP = "ANONYMOUS_DUMMY_MAP"
 
-@Serializable
-open class Player {
-    /**
-     * ID for human reading, e.g.
-     *
-     * anno#1a2b3c
-     * gh#blindpirate
-     * gt#blindpirate
-     * wc#1234567
-     */
-    @get: DynamoDbIgnore
-    var id: String? = null
-
-    /**
-     * The username in 3rd-party system, e.g. GitHub account.
-     */
-    var username: String? = null
-
-    /**
-     * The name for display
-     */
-    var nickname: String? = null
-
-    /**
-     * The map where player is currently on.
-     */
-    var map: String = ANONYMOUS_DUMMY_MAP
-
-    /**
-     * The grid coordinate of player on the map.
-     * Note that this is not realtime, e.g. only the location which the player "is supposed to be",
-     * e.g. player click mouse on a location.
-     */
-    var x: Int = -1
-    var y: Int = -1
-
-    /**
-     * Whether the player is currently keeping a connection to server.
-     *
-     * 0: the player is offline.
-     * positive number: the id of the server which the player connects to.
-     *
-     */
-    @get: DynamoDbSecondaryPartitionKey(indexNames = ["serverIndex"])
-    @JsonIgnore
-    var server: Int = 0
-
+open class Player : BasePlayer() {
     @get: ReadOnly
     var star: Int = 0
 
@@ -105,41 +57,16 @@ open class Player {
     @JsonIgnore
     var emails: MutableList<String> = ArrayList()
 
-    /**
-     * The character id for display.
-     */
-    var characterId: Int = -1
-
-    val isAnonymous: Boolean
-        @JsonIgnore
-        @DynamoDbIgnore
-        get() = id!!.startsWith("anon#")
-
-    fun toPartialEntity() = PartialPlayer(
-        this@Player.id,
-        this@Player.username,
-        this@Player.nickname,
-        this@Player.map,
-        this@Player.x,
-        this@Player.y,
-        this@Player.characterId,
-        this@Player.server
-    )
-}
-
-data class PartialPlayer(
-    val id: String?,
-    val username: String?,
-    val nickname: String?,
-    val map: String,
-    val x: Int,
-    val y: Int,
-    val characterId: Int,
-    val server: Int
-) {
-    val isAnonymous: Boolean
-        @JsonIgnore
-        get() = id?.startsWith("anon#") == true
+    fun toPartialEntity() = BasePlayer().apply {
+        this.id = this@Player.id
+        this.username = this@Player.username
+        this.nickname = this@Player.nickname
+        this.map = this@Player.map
+        this.x = this@Player.x
+        this.y = this@Player.y
+        this.characterId = this@Player.characterId
+        this.server = this@Player.server
+    }
 }
 
 fun ghLoginToPlayerId(ghLogin: String) = "gh#$ghLogin"

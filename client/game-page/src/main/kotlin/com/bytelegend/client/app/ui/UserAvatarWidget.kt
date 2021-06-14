@@ -98,7 +98,7 @@ class UserAvatarWidget : GameUIComponent<GameProps, UserAvatarWidgetState>() {
                     }
                     BootstrapDropdownMenu {
                         BootstrapDropdownItem {
-                            +(game.heroPlayer.nickname ?: "#Error")
+                            +game.heroPlayer.nickname
                             attrs.onClick = {
                                 window.open("https://github.com/${game.heroPlayer.username}", "_blank")
                             }

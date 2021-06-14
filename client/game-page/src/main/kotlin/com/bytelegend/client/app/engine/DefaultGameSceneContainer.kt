@@ -1,3 +1,5 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.EventBus
@@ -6,6 +8,7 @@ import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.client.app.engine.resource.GameMapResource
 import com.bytelegend.client.app.engine.resource.I18nTextResource
 import com.bytelegend.client.app.engine.resource.ImageResource
@@ -99,10 +102,14 @@ class DefaultGameSceneContainer(
         i18nContainer.putAll(i18nText.await())
 
         val scene = DefaultGameScene(di, map.await(), tileset.await(), gameContainerSize)
-        scene.players = PlayerContainer(mapId, eventBus, game.webSocketClient, resourceLoader, sceneInitData.await().players).apply { init(scene) }
+        val initData = sceneInitData.await()
+
+        scene.players = PlayerContainer(mapId, eventBus, game.webSocketClient, resourceLoader, initData.players).apply { init(scene) }
         scene.playerMissions = DefaultPlayerMissionContainer(di, sceneInitData.await().missions.asDynamic()).apply { init(scene) }
         scenes[mapId] = scene
         switchScene(oldScene, scene, switchAfterLoading, action)
+
+        eventBus.emit(ONLINE_COUNTER_UPDATE_EVENT, initData.online)
 
         eval(mapScript.await())
         resourceLoader.resetSession()

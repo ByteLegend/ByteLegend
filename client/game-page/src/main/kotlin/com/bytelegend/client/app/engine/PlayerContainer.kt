@@ -1,3 +1,5 @@
+@file:Suppress("DeferredResultUnused")
+
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.EventBus
@@ -5,7 +7,7 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.entities.Player
+import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.playerAnimationSetResourceId
 import com.bytelegend.app.shared.protocol.playerEnterSceneEvent
 import com.bytelegend.app.shared.protocol.playerLeaveSceneEvent
@@ -23,12 +25,12 @@ class PlayerContainer(
     private val eventBus: EventBus,
     private val client: WebSocketClient,
     private val resourceLoader: ResourceLoader,
-    private val players: List<Player>
+    private val players: List<BasePlayer>
 ) {
     lateinit var gameScene: GameScene
-    private val idToPlayer: MutableMap<String, Player> = JSObjectBackedMap<Player>().apply {
+    private val idToPlayer: MutableMap<String, BasePlayer> = JSObjectBackedMap<BasePlayer>().apply {
         players.forEach {
-            put(it.id!!, it)
+            put(it.id, it)
         }
     }
     private val idToSprite: MutableMap<String, PlayerSprite> = JSObjectBackedMap()
@@ -56,28 +58,32 @@ class PlayerContainer(
         }
     }
 
-    private fun onPlayerMoveOnScene(player: Player) {
+    private fun onPlayerMoveOnScene(player: BasePlayer) {
         if (player.id == game.heroPlayer.id) {
             return
         }
-        val currentPlayer = idToPlayer[player.id!!] ?: return
-        idToSprite[player.id!!]?.apply {
-            moveTo(GridCoordinate(player.x!!, player.y!!))
+        val currentPlayer = idToPlayer[player.id]
+        if (currentPlayer == null) {
+            onPlayerEnterScene(player)
+        } else {
+            idToSprite[player.id]?.apply {
+                moveTo(GridCoordinate(player.x, player.y))
+            }
+            currentPlayer.x = player.x
+            currentPlayer.y = player.y
         }
-        currentPlayer.x = player.x!!
-        currentPlayer.y = player.y!!
     }
 
-    private fun onPlayerLeaveScene(player: Player) {
+    private fun onPlayerLeaveScene(player: BasePlayer) {
         if (player.id != game.heroPlayer.id) {
-            idToPlayer.remove(player.id!!)
+            idToPlayer.remove(player.id)
             idToSprite.remove(player.id)?.close()
         }
     }
 
-    private fun onPlayerEnterScene(player: Player) {
+    private fun onPlayerEnterScene(player: BasePlayer) {
         if (player.id != game.heroPlayer.id) {
-            idToPlayer[player.id!!] = player
+            idToPlayer[player.id] = player
         }
     }
 
@@ -86,7 +92,7 @@ class PlayerContainer(
         for (it in idToPlayer.values) {
             val sprite = idToSprite[it.id]
             if (sprite == null) {
-                val animationSetId = playerAnimationSetResourceId(it.characterId!!)
+                val animationSetId = playerAnimationSetResourceId(it.characterId)
                 val animationSet = resourceLoader.getLoadedResourceOrNull<AnimationSet>(animationSetId)
                 if (animationSet == null) {
                     if (!resourceLoader.isResourceLoading(animationSetId)) {
@@ -102,7 +108,7 @@ class PlayerContainer(
                 } else {
                     val character = PlayerSprite(gameScene, it)
                     character.init()
-                    idToSprite[it.id!!] = character
+                    idToSprite[it.id] = character
                     if (!character.outOfCanvas()) {
                         ret.add(character)
                     }

@@ -77,7 +77,8 @@ class MissionAnswer {
 }
 
 class SceneInitData(
-    val players: List<Player>,
+    val online: Int,
+    val players: List<BasePlayer>,
     val missions: Map<String, PlayerMission>
 )
 

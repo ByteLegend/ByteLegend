@@ -111,10 +111,10 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
     override fun <T> getLoadedResourceOrNull(id: String): T? = allLoadedResources[id] as T?
 
     override fun currentProgress(): Int {
-        val loadingSum = loadingResourcesInSession.values.sumBy { it.weight }
-        val sum = loadFailedResourcesInSession.values.sumBy { it.weight } +
+        val loadingSum = loadingResourcesInSession.values.sumOf { it.weight }
+        val sum = loadFailedResourcesInSession.values.sumOf { it.weight } +
             loadingSum +
-            loadedResourcesInSession.values.sumBy { it.weight }
+            loadedResourcesInSession.values.sumOf { it.weight }
         return if (sum == 0) {
             100
         } else {

@@ -123,7 +123,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                 game.start()
             }
         } else {
-            val animationSetId = playerAnimationSetResourceId(GAME_INIT_DATA.player.characterId!!)
+            val animationSetId = playerAnimationSetResourceId(GAME_INIT_DATA.player.characterId)
             val animationSetDeferred = game.resourceLoader.loadAsync(
                 ImageResource(
                     animationSetId,

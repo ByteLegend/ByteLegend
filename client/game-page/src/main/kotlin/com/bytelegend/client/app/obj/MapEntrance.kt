@@ -1,3 +1,5 @@
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.CoordinateAware
@@ -27,6 +29,7 @@ class MapEntrance(
     override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.MapEntrance, GameObjectRole.CoordinateAware)
     override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
 
+    @Suppress("UnsafeCastFromDynamic")
     override fun onTouch(character: GameObject) {
         if (gameRuntime.hero != null && gameRuntime.hero!!.id == character.id) {
             val heroId = gameRuntime.hero!!.id
@@ -37,7 +40,7 @@ class MapEntrance(
             gameRuntime.sceneContainer.loadScene(destMapId) { oldScene, newScene ->
                 val oldHero = oldScene!!.objects.getById<HeroCharacter>(heroId)
 
-                val newHero = HeroCharacter(newScene, oldHero.player)
+                val newHero = HeroCharacter(newScene, oldHero.player.asDynamic())
                 newHero.direction = oldHero.direction
                 val newMapEntrance = newScene.objects.getById<GameMapPoint>(backEntrancePointId).point
                 newHero.pixelCoordinate = newMapEntrance * newScene.map.tileSize
