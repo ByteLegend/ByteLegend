@@ -47,12 +47,12 @@ class DeploymentPlugin : Plugin<Project> {
             }
         }
         project.tasks.register("deploy") {
-            dependsOn("deployBeijing") //, "deploySeoul")
+            dependsOn("deployBeijing", "deploySeoul")
         }
     }
 
     private fun Project.createUpdateVersionsTask() = tasks.register("updateVersionsJsonOnMaster", UpdateVersionsJsonTask::class.java) {
-        dependsOn("releaseBeijing") //, "releaseSeoul")
+        dependsOn("releaseBeijing", "releaseSeoul")
     }
 
     private fun Project.createDockerPushTask(region: String, image: String, dockerBuildTask: String) = registerReleaseExecTask(
