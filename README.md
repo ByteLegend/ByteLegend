@@ -1,5 +1,7 @@
 ## ByteLegend - learn programming while playing a game
 
+[![check](https://github.com/ByteLegend/ByteLegend/actions/workflows/check.yml/badge.svg)](https://github.com/ByteLegend/ByteLegend/actions/workflows/check.yml)
+
 [![Watch the video](https://img.youtube.com/vi/F8A3_XaS-As/maxresdefault.jpg)](https://www.youtube.com/watch?v=F8A3_XaS-As)
 
 
