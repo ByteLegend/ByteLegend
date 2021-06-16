@@ -18,9 +18,30 @@ allprojects {
         maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 
-    tasks.withType<Test> {
+    tasks.withType<AbstractArchiveTask>().configureEach {
+        // KotlinWebpack.runtimeClasspath normalization is AbsoluteFile
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
+    }
+    tasks.withType<Test>().configureEach {
         useJUnitPlatform()
     }
+    tasks.withType<org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack>().configureEach {
+        outputs.cacheIf { true }
+    }
+    tasks.withType<org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask>().configureEach {
+        outputs.cacheIf { true }
+    }
+    tasks.withType<org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinPackageJsonTask>().configureEach {
+        outputs.cacheIf { true }
+    }
+    tasks.withType<org.jetbrains.kotlin.gradle.targets.js.npm.tasks.RootPackageJsonTask>().configureEach {
+        outputs.cacheIf { true }
+    }
+//    tasks.withType<org.jetbrains.kotlin.gradle.targets.js.dukat.IntegratedDukatTask>().configureEach {
+//        // it takes 8s to fingerprint the inputs
+//        outputs.upToDateWhen { false }
+//    }
 }
 
 idea {

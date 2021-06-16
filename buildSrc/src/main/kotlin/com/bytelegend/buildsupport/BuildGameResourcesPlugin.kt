@@ -255,7 +255,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
             inputs.files(fileTree(gameDataInputDir) {
                 include("**/i18n*.yml")
             }).withPathSensitivity(PathSensitivity.RELATIVE)
-            outputs.files(fileTree(gameDataInputDir) {
+            inputs.files(fileTree(gameDataInputDir) {
                 include("**/i18n*.json")
             })
             outputs.dir(i18nOutputDir)
@@ -306,6 +306,7 @@ internal fun Project.registerExecTask(
     args(*args)
     jvmArgs("-Denvironment=${project.getEnvironment()}")
 
+    outputs.cacheIf { true }
     inputs.files(sourceSet("main").runtimeClasspath).withNormalizer(ClasspathNormalizer::class.java)
     // https://youtrack.jetbrains.com/issue/KTIJ-630
     // enableAssertions are also changed when running in IDEA
