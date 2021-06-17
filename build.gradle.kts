@@ -1,3 +1,5 @@
+import com.bytelegend.buildsupport.isCI
+
 plugins {
     id("idea")
     kotlin("jvm") apply false
@@ -25,6 +27,9 @@ allprojects {
     }
     tasks.withType<Test>().configureEach {
         useJUnitPlatform()
+        if (isCI()) {
+            jvmArgs("-Djava.io.tmpdir=${rootProject.buildDir.resolve("tmp").absolutePath}")
+        }
     }
     tasks.withType<org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack>().configureEach {
         outputs.cacheIf { true }

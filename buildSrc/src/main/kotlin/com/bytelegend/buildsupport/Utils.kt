@@ -8,6 +8,8 @@ import org.gradle.api.Project
 import java.io.File
 import java.util.*
 
+fun Project.isCI() = System.getenv("CI") != null
+
 fun Project.getEnvironment() = findProperty("environment") ?: "dev"
 
 fun Project.isDebug() = findProperty("debug") !== null || findProperty("debug")?.toString() == "true"
