@@ -36,6 +36,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
             ${{ runner.os }}-
+      - name: Ktlint
+        run: ./gradlew ktlint --scan
       - name: Build with Gradle
         run: ./gradlew check --scan
       - uses: actions/upload-artifact@v2
@@ -66,8 +68,8 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: |
             ${{ runner.os }}-
-      - name: Show Gradle version
-        run: ./gradlew --version
+      - name: Ktlint
+        run: ./gradlew ktlint --scan
       - name: Build with Gradle
         run: ./gradlew ktlint server-opensource:check --scan
       - uses: actions/upload-artifact@v2
