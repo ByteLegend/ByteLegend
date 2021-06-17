@@ -7,6 +7,7 @@ import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.playerAnimationSetResourceId
+import com.bytelegend.client.app.engine.BrowserConsoleLogger
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.SCENE_LOADING_END_EVENT
@@ -82,6 +83,10 @@ val game = init(GAME_INIT_DATA).apply {
 }
 
 fun main() {
+    window.onerror = { a: dynamic, b: String, c: Int, d: Int, e: Any? ->
+        BrowserConsoleLogger.error("$a $b $c $d $e")
+    }
+
     render(document.getElementById("app")) {
         child(GamePage::class) {
         }

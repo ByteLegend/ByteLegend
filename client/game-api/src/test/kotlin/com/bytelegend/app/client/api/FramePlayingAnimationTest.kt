@@ -15,23 +15,23 @@ class FramePlayingAnimationTest {
     fun repeatingTest() = runBlockingTest {
         val animation = FramePlayingAnimation(
             listOf(
-                AnimationFrame(1, 100),
-                AnimationFrame(3, 100),
-                AnimationFrame(5, 100)
+                AnimationFrame(1, 200),
+                AnimationFrame(3, 200),
+                AnimationFrame(5, 200)
             ),
             true
         )
 
         assertEquals(1, animation.getNextFrameIndex())
-        delay(50)
-        assertEquals(1, animation.getNextFrameIndex())
         delay(100)
+        assertEquals(1, animation.getNextFrameIndex())
+        delay(200)
         assertEquals(3, animation.getNextFrameIndex())
-        delay(100)
+        delay(200)
         assertEquals(5, animation.getNextFrameIndex())
-        delay(100)
+        delay(200)
         assertEquals(1, animation.getNextFrameIndex())
-        delay(100)
+        delay(200)
         assertEquals(3, animation.getNextFrameIndex())
     }
 

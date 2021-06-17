@@ -36,18 +36,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
             ${{ runner.os }}-
+      - name: Ktlint
+        run: ./gradlew ktlint --scan
       - name: Build with Gradle
         run: ./gradlew check --scan
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: screen-recordings
+          name: artifacts
           path: |
             server/app/build/tmp/test/**/*.flv
             server/app/build/reports/tests
   contributor-check:
     runs-on: 'ubuntu-latest'
-    if: ${{ github.event.pull_request.author_association == 'CONTRIBUTOR' }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -67,14 +68,14 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
           restore-keys: |
             ${{ runner.os }}-
-      - name: Show Gradle version
-        run: ./gradlew --version
+      - name: Ktlint
+        run: ./gradlew ktlint --scan
       - name: Build with Gradle
         run: ./gradlew ktlint server-opensource:check --scan
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: screen-recordings
+          name: artifacts
           path: |
             server/app/build/tmp/test/**/*.flv
             server/app/build/reports/tests
