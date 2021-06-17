@@ -41,13 +41,12 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: screen-recordings
+          name: artifacts
           path: |
             server/app/build/tmp/test/**/*.flv
             server/app/build/reports/tests
   contributor-check:
     runs-on: 'ubuntu-latest'
-    if: ${{ github.event.pull_request.author_association == 'CONTRIBUTOR' }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -74,7 +73,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
-          name: screen-recordings
+          name: artifacts
           path: |
             server/app/build/tmp/test/**/*.flv
             server/app/build/reports/tests
