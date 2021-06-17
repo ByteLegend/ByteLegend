@@ -42,6 +42,7 @@ object BrowserConsoleLogger : Logger {
     override fun error(message: String) {
         if (errorEnabled) {
             console.error(message)
+            console.asDynamic().trace()
         }
     }
 }
