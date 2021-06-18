@@ -5,6 +5,7 @@ import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.misc.getOrCreateAudioElement
 import com.bytelegend.app.client.misc.getOrCreateImageElement
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import kotlinx.browser.window
 import kotlinx.coroutines.await
@@ -25,6 +26,9 @@ class I18nTextResource(
     override suspend fun decode(response: Response): Map<String, String> {
         return response.text().await().let {
             val result = JSObjectBackedMap<String>(JSON.parse(it))
+            if (id.startsWith("common")) {
+                logger.debug("$id i18n resource size: ${result.size}, ${result.get("BeijingServerDisplayNameId")}")
+            }
             i18nContainer.putAll(result)
             result
         }
