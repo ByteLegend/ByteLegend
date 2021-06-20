@@ -35,9 +35,9 @@ typealias ResourceLoadingFailureEventListener = (ResourceLoadingFailureEvent) ->
 class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
     private val eventBus: EventBus by di.instance()
     private val allLoadedResources: MutableMap<String, Any> = JSObjectBackedMap()
-    private val loadingResourcesInSession: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
-    private val loadedResourcesInSession: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
-    private val loadFailedResourcesInSession: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
+    private val loadingSceneBlockingResources: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
+    private val loadedSceneBlockingResources: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
+    private val loadFailedSceneBlockingResources: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
 
     override suspend fun <T> load(
         resource: ExpensiveResource<out T>,
@@ -53,10 +53,10 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
         }
     }
 
-    override fun resetSession() {
-        loadFailedResourcesInSession.clear()
-        loadingResourcesInSession.clear()
-        loadedResourcesInSession.clear()
+    override fun clearSceneBlockingResources() {
+        loadFailedSceneBlockingResources.clear()
+        loadingSceneBlockingResources.clear()
+        loadedSceneBlockingResources.clear()
     }
 
     private suspend fun <T> load(
@@ -87,21 +87,21 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
     private suspend fun <T> loadSceneBlockingResource(
         resource: ExpensiveResource<out T>,
     ): T {
-        loadingResourcesInSession[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
+        loadingSceneBlockingResources[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
         return load(
             resource,
             { _ ->
-                loadingResourcesInSession.remove(resource.id)
-                loadedResourcesInSession[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
+                loadingSceneBlockingResources.remove(resource.id)
+                loadedSceneBlockingResources[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
             },
             { _ ->
-                loadingResourcesInSession.remove(resource.id)
-                loadFailedResourcesInSession[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
+                loadingSceneBlockingResources.remove(resource.id)
+                loadFailedSceneBlockingResources[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
             }
         )
     }
 
-    override fun isResourceLoading(id: String): Boolean = loadingResourcesInSession.containsKey(id)
+    override fun isResourceLoading(id: String): Boolean = loadingSceneBlockingResources.containsKey(id)
 
     @Suppress("UnsafeCastFromDynamic")
     override fun <T> getLoadedResource(id: String): T {
@@ -111,10 +111,10 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
     override fun <T> getLoadedResourceOrNull(id: String): T? = allLoadedResources[id] as T?
 
     override fun currentProgress(): Int {
-        val loadingSum = loadingResourcesInSession.values.sumOf { it.weight }
-        val sum = loadFailedResourcesInSession.values.sumOf { it.weight } +
+        val loadingSum = loadingSceneBlockingResources.values.sumOf { it.weight }
+        val sum = loadFailedSceneBlockingResources.values.sumOf { it.weight } +
             loadingSum +
-            loadedResourcesInSession.values.sumOf { it.weight }
+            loadedSceneBlockingResources.values.sumOf { it.weight }
         return if (sum == 0) {
             100
         } else {

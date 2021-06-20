@@ -94,14 +94,14 @@ fun main() {
 }
 
 interface GamePageState : RState {
-    var loading: Boolean
+    var sceneLoading: Boolean
 }
 
 interface GamePageProps : RProps
 
 class GamePage : RComponent<GamePageProps, GamePageState>() {
     override fun GamePageState.init() {
-        loading = true
+        sceneLoading = true
     }
 
     init {
@@ -110,7 +110,8 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     }
 
     private fun loadResourcesAndStart() {
-        game.resourceLoader.loadAsync(
+        // TODO: refine resource loading mechanism
+        val commonDeferred = game.resourceLoader.loadAsync(
             I18nTextResource(
                 "common-${game.locale.lowercase()}",
                 game.resolve("/i18n/common/${game.locale.lowercase()}.json"),
@@ -125,6 +126,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
         if (game.heroPlayer.isAnonymous) {
             game.sceneContainer.loadScene(GAME_INIT_DATA.initMapId) { _, _ ->
+                commonDeferred.await()
                 game.start()
             }
         } else {
@@ -146,6 +148,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
             )
 
             game.sceneContainer.loadScene(GAME_INIT_DATA.player.map) { _, newScene ->
+                commonDeferred.await()
                 animationSetDeferred.await()
 
                 val obj = HeroCharacter(newScene, GAME_INIT_DATA.player)
@@ -158,7 +161,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     }
 
     private fun onWindowResize() {
-        if (!state.loading) {
+        if (!state.sceneLoading) {
             // Do nothing if page is still loading
             game.gameContainerSize = PixelSize(window.innerWidth, window.innerHeight)
             game.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
@@ -166,7 +169,9 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     }
 
     override fun RBuilder.render() {
-        if (state.loading) {
+        if (state.sceneLoading) {
+            // some global resources like `common-en.json` still requires to be loaded
+            // GameScene.load() doesn't take this into consideration
             child(LoadingPage::class) {
                 attrs.eventBus = game.eventBus
             }
@@ -214,10 +219,10 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         setState { }
     }
     private val sceneLoadingStartEventListener: EventListener<Nothing> = {
-        setState { loading = true }
+        setState { sceneLoading = true }
     }
     private val sceneLoadingEndEventListener: EventListener<Nothing> = {
-        setState { loading = false }
+        setState { sceneLoading = false }
     }
 
     override fun componentDidMount() {

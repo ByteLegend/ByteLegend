@@ -42,7 +42,7 @@ interface ResourceLoader {
     /**
      * Reset the session (esp. the loading progress).
      */
-    fun resetSession()
+    fun clearSceneBlockingResources()
 
     /**
      * Whether a specific resource is loading or not.

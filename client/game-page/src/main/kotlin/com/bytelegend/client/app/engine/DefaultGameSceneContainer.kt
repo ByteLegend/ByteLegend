@@ -1,4 +1,4 @@
-@file:Suppress("EXPERIMENTAL_API_USAGE")
+@file:Suppress("EXPERIMENTAL_API_USAGE", "DeferredResultUnused")
 
 package com.bytelegend.client.app.engine
 
@@ -112,6 +112,6 @@ class DefaultGameSceneContainer(
         eventBus.emit(ONLINE_COUNTER_UPDATE_EVENT, initData.online)
 
         eval(mapScript.await())
-        resourceLoader.resetSession()
+        resourceLoader.clearSceneBlockingResources()
     }
 }
