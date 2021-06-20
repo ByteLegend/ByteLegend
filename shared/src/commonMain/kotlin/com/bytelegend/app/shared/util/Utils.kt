@@ -11,3 +11,5 @@ inline fun <K, V> Map<K, V>.ifNotEmpty(fn: Map<K, V>.() -> Unit) {
         this.fn()
     }
 }
+
+expect fun currentTimeMillis(): Long

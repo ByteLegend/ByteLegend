@@ -12,12 +12,12 @@ interface Replicable {
     /**
      * The region name where the record is updated recently, e.g. cn-north-1
      */
-    var lastUpdatedIn: String?
+    val lastUpdatedIn: String
 
     /**
      * Last updated timestamp, in epoch milliseconds.
      */
-    var lastUpdatedMs: Long?
+    val lastUpdatedMs: Long
 }
 
 // This is an adapter layer for application and database layer
@@ -39,8 +39,8 @@ const val PLAYER_SORT_KEY = "P"
 const val MISSION_SORT_KEY = "M"
 
 interface StoredInPlayerTable : Replicable {
-    var pk: String
-    var sk: String
+    val pk: String
+    val sk: String
 
     @get:DynamoDbIgnore
     @get: JsonIgnore

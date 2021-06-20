@@ -7,7 +7,6 @@ import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.entities.ChallengeTabData
 import com.bytelegend.app.shared.entities.DiscussionsTabData
-import com.bytelegend.app.shared.entities.MissionAnswer
 import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.MissionTabData
 import com.bytelegend.app.shared.entities.MissionTabType.Discussions
@@ -19,6 +18,7 @@ import com.bytelegend.app.shared.entities.MissionTabType.Tutorials
 import com.bytelegend.app.shared.entities.MissionTabType.valueOf
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.entities.PlayerMission
+import com.bytelegend.app.shared.entities.PlayerMissionAnswer
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.entities.TutorialsTabData
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
@@ -119,8 +119,12 @@ private fun BasePlayer.configureBasePlayer(jsonObject: dynamic) {
 
 fun toBasePlayer(jsonObject: dynamic) = BasePlayer().apply { configureBasePlayer(jsonObject) }
 
-fun <T> toTypedList(jsonArray: dynamic, mapper: (dynamic) -> T): List<T> {
-    return jsonArray.unsafeCast<Array<dynamic>>().map(mapper)
+fun <T> toTypedList(jsonArray: dynamic, mapper: (dynamic) -> T): MutableList<T> {
+    val ret = JSArrayBackedList<T>()
+    jsonArray.unsafeCast<Array<dynamic>>().forEach {
+        ret.add(mapper(it))
+    }
+    return ret
 }
 
 fun <T> toTypedMap(jsonObject: dynamic, valueMapper: (dynamic) -> T): Map<String, T> {
@@ -141,12 +145,12 @@ fun toMissionModalData(jsonObject: dynamic) = MissionModalData(
     toTypedList(jsonObject.tabs, ::toMissionTabData)
 )
 
-fun toPlayerMission(jsonObject: dynamic) = PlayerMission().apply {
-    this.id = jsonObject.id
-    this.playerId = jsonObject.playerId
-    this.map = jsonObject.map
-    this.answers = toTypedList(jsonObject.answers, ::toMissionAnswer).asDynamic()
-}
+fun toPlayerMission(jsonObject: dynamic) = PlayerMission(
+    jsonObject.playerId,
+    jsonObject.missionId,
+    jsonObject.map,
+    toTypedList(jsonObject.answers, ::toMissionAnswer).asDynamic()
+)
 
 fun toMissionTabData(jsonObject: dynamic): MissionTabData<*> {
     return when (valueOf(jsonObject.type)) {
@@ -202,19 +206,19 @@ fun toTutorial(jsonObject: dynamic): Tutorial {
     )
 }
 
-fun toMission(jsonObject: dynamic) = PlayerMission().apply {
-    id = jsonObject.id
-    playerId = jsonObject.id
-    map = jsonObject.map
-    jsonObject.answers.unsafeCast<Array<dynamic>>().forEach { answers.add(it) }
-}
+fun toMission(jsonObject: dynamic) = PlayerMission(
+    playerId = jsonObject.playerId,
+    missionId = jsonObject.missionId,
+    map = jsonObject.map,
+    answers = toTypedList(jsonObject.answers, ::toMissionAnswer)
+)
 
-fun toMissionAnswer(jsonObject: dynamic) = MissionAnswer().apply {
-    star = jsonObject.star
-    answer = jsonObject.answer
-    accomplished = jsonObject.accomplished
+fun toMissionAnswer(jsonObject: dynamic) = PlayerMissionAnswer(
+    star = jsonObject.star,
+    answer = jsonObject.answer,
+    accomplished = jsonObject.accomplished,
     createdAt = jsonObject.createdAt
-}
+)
 
 fun toGameMapDefinition(jsonObject: dynamic): GameMapDefinition = GameMapDefinition(
     jsonObject.id,

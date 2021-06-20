@@ -1,22 +1,22 @@
 package com.bytelegend.app.shared.entities
 
-import com.bytelegend.app.shared.annotations.DynamoDbBean
 import com.bytelegend.app.shared.annotations.DynamoDbIgnore
+import com.bytelegend.app.shared.util.currentTimeMillis
+import kotlin.jvm.JvmStatic
 
-open class PlayerMission {
-    /**
-     * Mission id for human.
-     */
+open class PlayerMission(
     @get: DynamoDbIgnore
-    var id: String? = null
-
-    @get: DynamoDbIgnore
-    var playerId: String? = null
+    val playerId: String,
 
     @get: DynamoDbIgnore
-    var map: String? = null
+    val missionId: String,
 
-    var answers: MutableList<MissionAnswer> = mutableListOf()
+    @get: DynamoDbIgnore
+    val map: String,
+
+    @get: DynamoDbIgnore
+    open val answers: MutableList<PlayerMissionAnswer>
+) {
 
     @get: DynamoDbIgnore
     val accomplished: Boolean
@@ -32,49 +32,19 @@ open class PlayerMission {
  * It can be an answer from frontend,
  * or answer from GitHub webhook event.
  *
- * An answer can be updated after created, or immutable after created.
+ * An answer is immutable after created.
  */
-@DynamoDbBean
-class MissionAnswer {
+open class PlayerMissionAnswer(
     /**
      * How many stars the player can get from this answer?
      */
-    var star: Int = 0
-    var answer: String? = null
-    var accomplished: Boolean = false
-
+    val star: Int,
+    val accomplished: Boolean,
+    val answer: String,
+    val data: Map<String, String> = emptyMap(),
     // Epoch ms
-    var createdAt: Long = 0
-
-    companion object {
-        fun create(star: Int, answer: String, accomplished: Boolean, epochMs: Long) = MissionAnswer().apply {
-            this.star = star
-            this.answer = answer
-            this.accomplished = accomplished
-            this.createdAt = epochMs
-        }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-
-        other as MissionAnswer
-
-        if (star != other.star) return false
-        if (answer != other.answer) return false
-        if (accomplished != other.accomplished) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = star
-        result = 31 * result + (answer?.hashCode() ?: 0)
-        result = 31 * result + accomplished.hashCode()
-        return result
-    }
-}
+    val createdAt: Long = currentTimeMillis()
+)
 
 class SceneInitData(
     val online: Int,

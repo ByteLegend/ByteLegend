@@ -1,6 +1,6 @@
 package com.bytelegend.app.shared.protocol
 
-import com.bytelegend.app.shared.entities.MissionAnswer
+import com.bytelegend.app.shared.entities.PlayerMissionAnswer
 import com.bytelegend.app.shared.entities.PlayerMission
 import com.bytelegend.app.shared.entities.mission.OnFinishSpec
 
@@ -19,7 +19,7 @@ data class StarUpdateEventData(
 data class MissionUpdateEventData(
     override val playerId: String,
     val map: String,
-    val change: MissionAnswer,
+    val change: PlayerMissionAnswer,
     val newValue: PlayerMission
 ) : UnicastEventData
 

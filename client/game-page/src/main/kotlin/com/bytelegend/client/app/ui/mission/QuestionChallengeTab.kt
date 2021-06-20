@@ -13,7 +13,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapCard
 import com.bytelegend.app.client.ui.bootstrap.BootstrapCardHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapCol
 import com.bytelegend.app.client.ui.bootstrap.BootstrapRow
-import com.bytelegend.app.shared.entities.MissionAnswer
+import com.bytelegend.app.shared.entities.PlayerMissionAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
@@ -147,7 +147,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         }
     }
 
-    private fun RBuilder.renderPlayerAnswers(answers: List<MissionAnswer>) {
+    private fun RBuilder.renderPlayerAnswers(answers: List<PlayerMissionAnswer>) {
         if (answers.isEmpty()) {
             return
         }
@@ -180,7 +180,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                             BootstrapCol {
                                 attrs.md = "auto"
                                 attrs.className = "mission-player-answer-inline"
-                                +missionAnswer.answer!!
+                                +missionAnswer.answer
                             }
                         }
                     }
@@ -189,7 +189,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                         com.bytelegend.app.client.ui.bootstrap.BootstrapCardBody {
                             pre {
                                 attrs.classes = jsObjectBackedSetOf("pre-scrollable", "bg-light")
-                                +missionAnswer.answer!!
+                                +missionAnswer.answer
                             }
                         }
                     }

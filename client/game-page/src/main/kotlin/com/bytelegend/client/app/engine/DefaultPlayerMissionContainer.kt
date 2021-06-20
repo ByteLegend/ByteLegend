@@ -14,8 +14,8 @@ import com.bytelegend.app.client.misc.playAudio
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.entities.MissionAnswer
 import com.bytelegend.app.shared.entities.PlayerMission
+import com.bytelegend.app.shared.entities.PlayerMissionAnswer
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
@@ -59,7 +59,7 @@ class DefaultPlayerMissionContainer(
         return missions[missionId]?.star ?: 0
     }
 
-    override fun missionAnswers(missionId: String): List<MissionAnswer> {
+    override fun missionAnswers(missionId: String): List<PlayerMissionAnswer> {
         return missions[missionId]?.answers ?: emptyList()
     }
 
@@ -194,7 +194,7 @@ class DefaultPlayerMissionContainer(
     private fun onMissionUpdate(eventData: MissionUpdateEventData) {
         val currentMap: String = gameScene?.map?.id ?: return
         if (currentMap == eventData.map) {
-            missions[eventData.newValue.id!!] = eventData.newValue
+            missions[eventData.newValue.missionId] = eventData.newValue
         }
     }
 

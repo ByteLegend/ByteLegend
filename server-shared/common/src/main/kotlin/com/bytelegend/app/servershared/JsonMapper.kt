@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import java.io.InputStream
 
 /**
  * Must be thread-safe.
@@ -21,6 +22,7 @@ interface JsonMapper {
     fun toUglyJson(obj: Any): String
 
     fun <T> fromJson(string: String, klass: Class<T>): T
+    fun <T> fromJson(inputStream: InputStream, klass: Class<T>): T
     fun <T> fromJson(string: String, tr: TypeReference<T>): T
     fun <T> fromYaml(string: String, klass: Class<T>): T
     fun <T> fromYaml(string: String, tr: TypeReference<T>): T
@@ -57,8 +59,8 @@ open class DefaultJsonMapper constructor(
     override fun toUglyJson(obj: Any) = uglyMapper.writeValueAsString(obj)
 
     override fun <T> fromJson(string: String, klass: Class<T>) = uglyMapper.readValue(string, klass)
+    override fun <T> fromJson(inputStream: InputStream, klass: Class<T>): T = uglyMapper.readValue(inputStream, klass)
     override fun <T> fromJson(string: String, tr: TypeReference<T>) = uglyMapper.readValue(string, tr)
-
     override fun <T> fromYaml(string: String, klass: Class<T>) = yamlMapper.readValue(string, klass)
     override fun <T> fromYaml(string: String, tr: TypeReference<T>) = yamlMapper.readValue(string, tr)
 }
