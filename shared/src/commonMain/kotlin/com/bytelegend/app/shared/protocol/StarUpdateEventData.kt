@@ -1,7 +1,7 @@
 package com.bytelegend.app.shared.protocol
 
-import com.bytelegend.app.shared.entities.PlayerMissionAnswer
 import com.bytelegend.app.shared.entities.PlayerMission
+import com.bytelegend.app.shared.entities.PlayerMissionAnswer
 import com.bytelegend.app.shared.entities.mission.OnFinishSpec
 
 interface UnicastEventData {
@@ -27,4 +27,9 @@ data class ItemsStatesUpdateEventData(
     override val playerId: String,
     val missionId: String,
     val onFinishSpec: OnFinishSpec
+) : UnicastEventData
+
+data class KickOffEventData(
+    override val playerId: String,
+    val reason: String
 ) : UnicastEventData

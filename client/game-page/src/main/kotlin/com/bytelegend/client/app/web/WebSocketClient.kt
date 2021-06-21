@@ -11,13 +11,15 @@ import com.bytelegend.app.shared.protocol.DEFAULT_REPLY_TIMEOUT_SECONDS
 import com.bytelegend.app.shared.protocol.ENTER_SCENE
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.GameServerProtocol
+import com.bytelegend.app.shared.protocol.KICK_OFF_EVENT
+import com.bytelegend.app.shared.protocol.KickOffEventData
 import com.bytelegend.app.shared.protocol.LEAVE_SCENE
 import com.bytelegend.app.shared.protocol.MOVE_TO
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
-import com.bytelegend.app.shared.protocol.PUT_STATE
+import com.bytelegend.app.shared.protocol.PUT_STATE_EVENT
 import com.bytelegend.app.shared.protocol.PublishMessage
-import com.bytelegend.app.shared.protocol.REMOVE_ITEM
-import com.bytelegend.app.shared.protocol.REMOVE_STATE
+import com.bytelegend.app.shared.protocol.REMOVE_ITEM_EVENT
+import com.bytelegend.app.shared.protocol.REMOVE_STATE_EVENT
 import com.bytelegend.app.shared.protocol.ReplyMessage
 import com.bytelegend.app.shared.protocol.SendMessage
 import com.bytelegend.app.shared.protocol.SubscribeUnsubscribeMessage
@@ -58,6 +60,7 @@ class WebSocketClient(
     private val gameRuntime: GameRuntime by di.instance()
     lateinit var self: Deferred<WebSocketClient>
     var connected = false
+    var offlineReasonId = "SeemsToBeDisconnectedFromServer"
 
     private val replyHandlers: MutableMap<String, ReplyHandler> = JSObjectBackedMap()
 
@@ -78,6 +81,13 @@ class WebSocketClient(
             }
         }
         subscribe(ONLINE_COUNTER_UPDATE_EVENT)
+        eventBus.on(KICK_OFF_EVENT, this::onKickOff)
+    }
+
+    private fun onKickOff(event: KickOffEventData) {
+        offlineReasonId = event.reason
+        client.close()
+        connected = false
     }
 
     /**
@@ -191,15 +201,15 @@ class WebSocketClient(
     }
 
     override suspend fun putState(key: String, value: String) {
-        send<Unit>(PUT_STATE, key, value)
+        send<Unit>(PUT_STATE_EVENT, key, value)
     }
 
     override suspend fun removeState(key: String) {
-        send<Unit>(REMOVE_STATE, key)
+        send<Unit>(REMOVE_STATE_EVENT, key)
     }
 
     override suspend fun removeItem(item: String) {
-        send<Unit>(REMOVE_ITEM, item)
+        send<Unit>(REMOVE_ITEM_EVENT, item)
     }
 
     override suspend fun leaveScene(srcMapId: String, destMapId: String) {
@@ -257,17 +267,11 @@ object UnrecognizedMessage : WebSocketMessage {
 class GameSceneInitResource(
     private val mapId: String,
     private val client: WebSocketClient
-//    private val eventBus: EventBus,
-//    private val resourceLoader: ResourceLoader
 ) : ExpensiveResource<SceneInitData> {
     override val id: String = "$mapId-players"
     override val weight: Int = 1
 
     override suspend fun load(): SceneInitData {
         return client.self.await().getSceneInitData(mapId)
-//        val players = PlayerContainer(mapId, eventBus, client, resourceLoader, data.players).apply { init() }
-//        val missions = DefaultMissionContainer(data.missions)
-//        val states = StateContainer(data.states)
-//        return Triple(players, missions, states)
     }
 }

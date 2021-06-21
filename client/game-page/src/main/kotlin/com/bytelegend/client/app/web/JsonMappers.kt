@@ -36,6 +36,8 @@ import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.i18n.LocalizedTextFormat
 import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
+import com.bytelegend.app.shared.protocol.KICK_OFF_EVENT
+import com.bytelegend.app.shared.protocol.KickOffEventData
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
@@ -55,9 +57,15 @@ fun parseServerEvent(eventMessage: dynamic): Any {
         event == STAR_UPDATE_EVENT -> toStarUpdateEventData(eventMessage.payload)
         event == MISSION_UPDATE_EVENT -> toMissionUpdateEventData(eventMessage.payload)
         event == ITEMS_STATES_UPDATE_EVENT -> toItemsStatesUpdateEventData(eventMessage.payload)
+        event == KICK_OFF_EVENT -> toKickOffEventData(eventMessage.payload)
         else -> throw IllegalStateException("Unsupported event: $event")
     }
 }
+
+fun toKickOffEventData(jsonObject: dynamic) = KickOffEventData(
+    jsonObject.playerId,
+    jsonObject.reason
+)
 
 fun toItemsStatesUpdateEventData(jsonObject: dynamic) = ItemsStatesUpdateEventData(
     jsonObject.playerId,
