@@ -47,7 +47,6 @@ import com.bytelegend.client.app.engine.util.JSArrayBackedList
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.page.game
 
-// PublishMessage<Any>
 @Suppress("UnsafeCastFromDynamic")
 fun parseServerEvent(eventMessage: dynamic): Any {
     val event: String = eventMessage.event

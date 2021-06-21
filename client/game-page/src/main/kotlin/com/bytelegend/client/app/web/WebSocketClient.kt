@@ -181,10 +181,10 @@ class WebSocketClient(
         }
         client.onclose = {
             connected = false
-            console.warn("Server closed WS connection unexpectedly: ${JSON.stringify(it)}")
+            console.warn("WS connection is closed: $offlineReasonId ${JSON.stringify(it)}")
             gameRuntime.bannerController.showBanner(
                 Banner(
-                    gameRuntime.i("SeemsToBeDisconnectedFromServer"),
+                    gameRuntime.i(offlineReasonId),
                     "warning"
                 )
             )
