@@ -9,10 +9,10 @@ open class PlayerMission(
     val playerId: String,
 
     @get: DynamoDbIgnore
-    val missionId: String,
+    val map: String,
 
     @get: DynamoDbIgnore
-    val map: String,
+    val missionId: String,
 
     @get: DynamoDbIgnore
     open val answers: MutableList<PlayerMissionAnswer>

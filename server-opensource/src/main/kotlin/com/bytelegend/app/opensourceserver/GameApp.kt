@@ -4,6 +4,7 @@ import com.bytelegend.app.servershared.AbstractIndexPageRenderer
 import com.bytelegend.app.servershared.AbstractRRBDResourceProvider
 import com.bytelegend.app.servershared.DefaultJsonMapper
 import com.bytelegend.app.servershared.JsonMapper
+import com.bytelegend.app.servershared.RRBDResourceProvider
 import com.bytelegend.app.servershared.dal.SESSION_COOKIE_NAME
 import com.bytelegend.app.servershared.mock.anonymousPlayer
 import com.bytelegend.app.servershared.mock.mockPlayer
@@ -55,7 +56,7 @@ class GameApp
 
 @Controller
 class IndexController(
-    rrbdResourceProvider: AbstractRRBDResourceProvider,
+    rrbdResourceProvider: RRBDResourceProvider,
     jsonMapper: JsonMapper
 ) : AbstractIndexPageRenderer(rrbdResourceProvider, jsonMapper) {
     @GetMapping("/")

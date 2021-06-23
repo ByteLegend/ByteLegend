@@ -1,7 +1,5 @@
 package com.bytelegend.app.shared.i18n
 
-import kotlinx.serialization.Serializable
-
 const val PREFERRED_LOCALE_COOKIE_NAME = "PREFERRED_LOCALE"
 
 // A language
@@ -185,4 +183,12 @@ enum class LocalizedTextFormat {
     TEXT,
     HTML,
     MARKDOWN
+}
+
+fun String.render(vararg args: String): String {
+    var ret = this
+    args.withIndex().forEach {
+        ret = ret.replace("{${it.index}}", it.value)
+    }
+    return ret
 }

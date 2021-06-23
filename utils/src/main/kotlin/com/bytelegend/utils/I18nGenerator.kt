@@ -94,6 +94,7 @@ fun generate(gameDataDir: File, outputI18nDir: File, outputAllJson: File) {
         .toMutableList()
         .apply {
             add(I18nResource("common", gameDataDir.resolve("i18n-common.yml")))
+            add(I18nResource("backend", gameDataDir.resolve("i18n-backend.yml")))
         }
 
     val idToTextAllMap: MutableMap<String, LocalizedText> = mutableMapOf()

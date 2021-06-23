@@ -5,8 +5,9 @@ import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 
+@Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 abstract class AbstractIndexPageRenderer(
-    private val rrbdResourceProvider: AbstractRRBDResourceProvider,
+    private val rrbdResourceProvider: RRBDResourceProvider,
     private val jsonMapper: JsonMapper
 ) {
     private val indexHtml = javaClass.getResource("/index.html").readText()

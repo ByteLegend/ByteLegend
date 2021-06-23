@@ -17,6 +17,7 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.app.shared.i18n.render
 import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
@@ -138,13 +139,7 @@ class Game(
         window.requestAnimationFrame { animate() }
     }
 
-    override fun i(textId: String, vararg args: String): String = i18nTextContainer.getValue(textId).let { template ->
-        var ret = template
-        args.withIndex().forEach {
-            ret = ret.replace("{${it.index}}", it.value)
-        }
-        return ret
-    }
+    override fun i(textId: String, vararg args: String): String = i18nTextContainer.getValue(textId).render(*args)
 
     fun resolve(path: String) = "${RRBD}$path"
 
