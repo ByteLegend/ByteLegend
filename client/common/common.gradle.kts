@@ -9,7 +9,7 @@ val libs: (String) -> String by rootProject.ext
 val libVersions: (String) -> String by rootProject.ext
 
 kotlin {
-    js {
+    js(IR) {
         browser {
             testTask {
                 useKarma {
@@ -22,7 +22,11 @@ kotlin {
 }
 
 dependencies {
-    api(project(":shared"))
+    api(project(":shared")) {
+        attributes {
+            attribute(Attribute.of("org.jetbrains.kotlin.js.compiler", org.jetbrains.kotlin.gradle.targets.js.KotlinJsCompilerAttribute::class.java), org.jetbrains.kotlin.gradle.targets.js.KotlinJsCompilerAttribute.ir)
+        }
+    }
 
     api(kotlin("stdlib-js"))
     api(libs("kotlin-react"))

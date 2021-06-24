@@ -8,7 +8,7 @@ val libs: (String) -> String by rootProject.ext
 kotlin {
     targets {
         jvm()
-        js {
+        js(IR) {
             browser {
             }
         }
@@ -58,7 +58,7 @@ kotlin {
             }
         }
     }
-    js {
+    js(IR) {
         compilations.getByName("main") {
             kotlinOptions {
                 freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"

@@ -1,9 +1,9 @@
 pluginManagement {
     plugins {
-        id("org.jetbrains.kotlin.js") version "1.5.10"
-        id("org.jetbrains.kotlin.jvm") version "1.5.10"
-        id("org.jetbrains.kotlin.multiplatform") version "1.5.10"
-        id("org.jetbrains.kotlin.plugin.serialization") version "1.5.10"
+        id("org.jetbrains.kotlin.js") version "1.5.20"
+        id("org.jetbrains.kotlin.jvm") version "1.5.20"
+        id("org.jetbrains.kotlin.multiplatform") version "1.5.20"
+        id("org.jetbrains.kotlin.plugin.serialization") version "1.5.20"
     }
 }
 
