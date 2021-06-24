@@ -31,8 +31,6 @@ dependencies {
     api(npm("react-dom", libVersions("react")))
     api(libs("kotlinx-coroutines-core-js"))
     api(libs("kotlinx-browser"))
-    api(libs("kotlin-styled"))
-    api(npm("styled-components", libVersions("styled-components")))
 
     api(npm("react-bootstrap", libVersions("react-bootstrap")))
     api(npm("bootstrap-switch-button-react", libVersions("bootstrap-switch-button-react")))

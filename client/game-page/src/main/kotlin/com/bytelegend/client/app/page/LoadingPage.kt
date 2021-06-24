@@ -3,32 +3,17 @@ package com.bytelegend.client.app.page
 import com.bytelegend.app.client.api.EventBusAware
 import com.bytelegend.client.app.engine.RESOURCE_LOADING_FAILURE_EVENT
 import com.bytelegend.client.app.engine.ResourceLoadingFailureEventListener
+import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import common.widget.ProgressBar
-import kotlinx.css.Align
-import kotlinx.css.Color
-import kotlinx.css.Display
-import kotlinx.css.JustifyContent
-import kotlinx.css.alignItems
-import kotlinx.css.backgroundColor
-import kotlinx.css.color
-import kotlinx.css.display
-import kotlinx.css.fontFamily
-import kotlinx.css.fontSize
-import kotlinx.css.height
-import kotlinx.css.justifyContent
-import kotlinx.css.px
-import kotlinx.css.vh
-import kotlinx.css.vw
-import kotlinx.css.width
+import kotlinx.html.classes
 import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
 import react.dom.br
+import react.dom.div
 import react.dom.img
 import react.setState
-import styled.css
-import styled.styledDiv
 
 interface LoadingPageProps : RProps, EventBusAware
 
@@ -57,78 +42,31 @@ class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
     }
 
     private fun RBuilder.logoDiv() {
-        styledDiv {
-            css {
-                width = 100.vw
-                height = 30.vh
-                display = Display.flex
-                alignItems = Align.center
-                justifyContent = JustifyContent.center
-                backgroundColor = Color.black
-            }
-
+        div {
+            attrs.classes = jsObjectBackedSetOf("startup-logo")
             img {
                 attrs.src = "${GAME_INIT_DATA.rrbd}/img/logo/logo.png"
             }
         }
-        styledDiv {
-            css {
-                width = 100.vw
-                height = 20.vh
-                display = Display.flex
-                alignItems = Align.center
-                justifyContent = JustifyContent.center
-                backgroundColor = Color.black
-                color = Color.white
-                fontSize = 20.px
-                fontFamily = "\"Courier 10 Pitch\", \"Courier New\", Courier, monospace"
-            }
-
+        div {
+            attrs.classes = jsObjectBackedSetOf("startup-logo-div")
             +GAME_INIT_DATA.enjoyProgrammingText
-
-//            styledDiv {
-//                css {
-//                    color = Color.white
-//                    height = 10.vh
-//                    width = 80.vw
-//                }
-//                +"GradleLegend"
-//            }
         }
     }
 
     private fun RBuilder.progressBarDiv() {
-        styledDiv {
-            css {
-                width = 100.vw
-                height = 10.vh
-                display = Display.flex
-                alignItems = Align.flexStart
-                justifyContent = JustifyContent.center
-                backgroundColor = Color.black
-            }
-            styledDiv {
-                css {
-                    height = 10.vh
-                    width = 80.vw
-                }
+        div {
+            attrs.classes = jsObjectBackedSetOf("startup-progress-bar-div")
+            div {
+                attrs.classes = jsObjectBackedSetOf("startup-progress-bar")
                 child(ProgressBar::class) {
                     attrs.eventBus = props.eventBus
                 }
             }
         }
 
-        styledDiv {
-            css {
-                width = 100.vw
-                height = 40.vh
-                display = Display.flex
-                alignItems = Align.flexStart
-                justifyContent = JustifyContent.center
-                backgroundColor = Color.black
-                color = Color.red
-            }
-
+        div {
+            attrs.classes = jsObjectBackedSetOf("startup-error-message-div ")
             state.errorMessages.forEach {
                 +it
                 br {}

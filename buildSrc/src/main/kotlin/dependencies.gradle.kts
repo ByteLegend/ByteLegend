@@ -42,8 +42,6 @@ val testContainersVersion = "1.15.1"
 val kodeinVersion = "7.6.0"
 val kotlinReactVersion = "17.0.2-pre.204-kotlin-1.5.0"
 val reactVersion = "17.0.2"
-val kotlinStyledVersion = "5.3.0-pre.204-kotlin-1.5.0"
-val styledComponentsVersion = "5.3.0"
 val reactBootstrapVersion = "1.6.0"
 val materialUIVersion = "4.11.2"
 val kotlinBrowserVersion = "0.2"
@@ -177,8 +175,6 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-react-dom:$kotlinReactVersion"),
     OpenSourceLibrary("kotlin-react", "https://github.com/JetBrains/kotlin-wrappers", Apache2),
     OpenSourceLibrary(name = "react", version = reactVersion, creditName = "React", url = "https://reactjs.org", license = MIT),
-    OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-styled:$kotlinStyledVersion"),
-    OpenSourceLibrary(name = "styled-components", version = styledComponentsVersion),
     OpenSourceLibrary(name = "react-bootstrap", version = reactBootstrapVersion),
     OpenSourceLibrary(creditName = "Bootstrap", url = "https://getbootstrap.com", license = MIT),
     OpenSourceLibrary(name = "@material-ui/core", version = materialUIVersion),

@@ -1,15 +1,6 @@
 package com.bytelegend.client.app.ui
 
-import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
-import kotlinx.css.Position
-import kotlinx.css.height
-import kotlinx.css.left
-import kotlinx.css.position
-import kotlinx.css.px
-import kotlinx.css.top
-import kotlinx.css.width
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import react.Component
@@ -24,36 +15,7 @@ import react.dom.h3
 import react.dom.h4
 import react.dom.jsStyle
 import react.dom.span
-import styled.StyledBuilder
-import styled.StyledDOMBuilder
-import styled.css
-import styled.styledDiv
 import kotlin.reflect.KClass
-
-fun StyledBuilder<*>.absolutePosition(left: Int, top: Int, width: Int, height: Int) {
-    css {
-        position = Position.absolute
-        this.top = top.px
-        this.left = left.px
-        this.width = width.px
-        this.height = height.px
-    }
-}
-
-fun RBuilder.absoluteStyledDiv(coordinate: PixelCoordinate, size: PixelSize, block: StyledDOMBuilder<DIV>.() -> Unit) {
-    absoluteStyledDiv(coordinate.x, coordinate.y, size.width, size.height, block)
-}
-
-fun RBuilder.absoluteStyledDiv(left: Int = 0, top: Int = 0, size: PixelSize, block: StyledDOMBuilder<DIV>.() -> Unit) {
-    absoluteStyledDiv(left, top, size.width, size.height, block)
-}
-
-fun RBuilder.absoluteStyledDiv(left: Int = 0, top: Int = 0, width: Int, height: Int, block: StyledDOMBuilder<DIV>.() -> Unit) {
-    styledDiv {
-        absolutePosition(left, top, width, height)
-        block()
-    }
-}
 
 inline fun <T : Any> jsObject(builder1: T.() -> Unit, builder2: T.() -> Unit): T =
     kotlinext.js.jsObject<T>().apply(builder1).apply(builder2)
@@ -106,12 +68,6 @@ fun RBuilder.absoluteDiv(
             jsStyle(extraStyleBuilder)
             block()
         }
-    }
-}
-
-fun StyledDOMBuilder<DIV>.pictureFrameBordered() {
-    attrs {
-        classes = classes.toMutableSet().apply { add("picture-frame-border") }
     }
 }
 

@@ -4,14 +4,13 @@ import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
-import kotlinx.css.zIndex
 import kotlinx.html.classes
 import kotlinx.html.id
 import react.RBuilder
 import react.RState
+import react.dom.jsStyle
+import react.dom.span
 import react.setState
-import styled.css
-import styled.styledSpan
 
 interface FpsCounterState : RState {
     var fps: Int
@@ -53,11 +52,12 @@ class FpsCounter : GameUIComponent<GameProps, FpsCounterState>() {
 
     @Suppress("UnsafeCastFromDynamic")
     override fun RBuilder.render() {
-        styledSpan {
+        val z = Layer.MapTitle.zIndex()
+        span {
             attrs.id = "fps-counter"
             attrs.classes = jsObjectBackedSetOf("map-title-widget", "map-title-text")
-            css {
-                zIndex = Layer.MapTitle.zIndex()
+            attrs.jsStyle {
+                zIndex = z
             }
 
             +"${state.fps} fps"
