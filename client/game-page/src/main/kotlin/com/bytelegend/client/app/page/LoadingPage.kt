@@ -3,9 +3,7 @@ package com.bytelegend.client.app.page
 import com.bytelegend.app.client.api.EventBusAware
 import com.bytelegend.client.app.engine.RESOURCE_LOADING_FAILURE_EVENT
 import com.bytelegend.client.app.engine.ResourceLoadingFailureEventListener
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import common.widget.ProgressBar
-import kotlinx.html.classes
 import react.RBuilder
 import react.RComponent
 import react.RProps
@@ -13,6 +11,7 @@ import react.RState
 import react.dom.br
 import react.dom.div
 import react.dom.img
+import react.dom.jsStyle
 import react.setState
 
 interface LoadingPageProps : RProps, EventBusAware
@@ -42,23 +41,51 @@ class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
     }
 
     private fun RBuilder.logoDiv() {
+        // Must be inlined styles, because CSS might not be loaded at this point.
         div {
-            attrs.classes = jsObjectBackedSetOf("startup-logo")
+            attrs.jsStyle {
+                width = "100vw"
+                height = "30vh"
+                display = "flex"
+                alignItems = "center"
+                justifyContent = "center"
+                backgroundColor = "black"
+            }
             img {
                 attrs.src = "${GAME_INIT_DATA.rrbd}/img/logo/logo.png"
             }
         }
         div {
-            attrs.classes = jsObjectBackedSetOf("startup-logo-div")
+            attrs.jsStyle {
+                width = "100vw"
+                height = "20vh"
+                display = "flex"
+                alignItems = "center"
+                justifyContent = "center"
+                backgroundColor = "black"
+                color = "white"
+                fontSize = "20px"
+                fontFamily = """"Courier 10 Pitch", "Courier New", Courier, monospace;"""
+            }
             +GAME_INIT_DATA.enjoyProgrammingText
         }
     }
 
     private fun RBuilder.progressBarDiv() {
         div {
-            attrs.classes = jsObjectBackedSetOf("startup-progress-bar-div")
+            attrs.jsStyle {
+                width = "100vw"
+                height = "10vh"
+                display = "flex"
+                alignItems = "flex-start"
+                justifyContent = "center"
+                backgroundColor = "black"
+            }
             div {
-                attrs.classes = jsObjectBackedSetOf("startup-progress-bar")
+                attrs.jsStyle {
+                    width = "80vw"
+                    height = "10vh"
+                }
                 child(ProgressBar::class) {
                     attrs.eventBus = props.eventBus
                 }
@@ -66,7 +93,15 @@ class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
         }
 
         div {
-            attrs.classes = jsObjectBackedSetOf("startup-error-message-div ")
+            attrs.jsStyle {
+                width = "100vw"
+                height = "40vh"
+                display = "flex"
+                alignItems = "flex-start"
+                justifyContent = "center"
+                backgroundColor = "black"
+                color = "red"
+            }
             state.errorMessages.forEach {
                 +it
                 br {}

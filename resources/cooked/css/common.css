@@ -3,51 +3,6 @@ body {
     background-color: black;
 }
 
-.startup-logo {
-    width: 100vw;
-    height: 30vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: black;
-}
-
-.startup-logo-div {
-    width: 100vw;
-    height: 20vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: black;
-    color: white;
-    font-size: 20px;
-    font-family: "Courier 10 Pitch", "Courier New", Courier, monospace;
-}
-
-.startup-progress-bar {
-    height: 10vh;
-    width: 80vw;
-}
-
-.startup-progress-bar-div {
-    width: 100vw;
-    height: 10vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    background-color: black;
-}
-
-.startup-error-message-div {
-    width: 100vw;
-    height: 40vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    background-color: black;
-    color: red;
-}
-
 .submap-name {
     margin-left: 10px;
 }
