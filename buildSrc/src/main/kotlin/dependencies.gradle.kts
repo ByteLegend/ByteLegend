@@ -61,6 +61,7 @@ val reactTextAreaAutosizeVersion = "8.3.2"
 // for sync-server because it useus JCL underlying
 val jclOverSlf4JVersion = "1.7.30"
 val logbackCloudWatchAppenderVersion = "1.0.6.3"
+val javaOptVersion = "0.2.0"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -230,6 +231,14 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         creditName = "commonmark-java",
         url = "https://github.com/commonmark/commonmark-java",
         license = BSD2Clause
+    ),
+    OpenSourceLibrary(
+        name = "java-otp",
+        groupArtifactId = "com.eatthepath:java-otp",
+        version = javaOptVersion,
+        creditName = "java-otp",
+        url = "https://github.com/jchambers/java-otp",
+        license = MIT
     ),
     OpenSourceLibrary(
         name = "react-textarea-autosize",

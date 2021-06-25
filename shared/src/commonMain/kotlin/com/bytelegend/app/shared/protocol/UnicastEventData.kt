@@ -40,3 +40,9 @@ data class KickOffEventData(
     override val playerId: String,
     val reason: String
 ) : UnicastEventData
+
+data class LogStreamEventData(
+    val mapId: String,
+    val missionId: String,
+    val lines: List<String>
+)
