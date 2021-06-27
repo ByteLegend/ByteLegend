@@ -24,9 +24,8 @@ import org.w3c.fetch.Response
 
 class GameMapResource(
     override val id: String,
-    url: String,
-    override val weight: Int
-) : AjaxResource<RawGameMap>(id, url, weight) {
+    url: String
+) : AjaxResource<RawGameMap>(id, url) {
     override suspend fun decode(response: Response): RawGameMap {
         val jsCompressedGameMap: dynamic = JSON.parse(response.text().await())
         val constantPool: List<ConstantPoolEntry> = (jsCompressedGameMap.constantPool as Array<dynamic>).map {

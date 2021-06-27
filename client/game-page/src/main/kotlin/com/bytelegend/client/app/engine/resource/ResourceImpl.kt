@@ -19,9 +19,8 @@ import kotlin.coroutines.suspendCoroutine
 class I18nTextResource(
     override val id: String,
     url: String,
-    override val weight: Int,
     private val i18nContainer: MutableMap<String, String>
-) : AjaxResource<Map<String, String>>(id, url, weight) {
+) : AjaxResource<Map<String, String>>(id, url) {
     override suspend fun decode(response: Response): Map<String, String> {
         return response.text().await().let {
             val result = JSObjectBackedMap<String>(JSON.parse(it))
@@ -33,8 +32,7 @@ class I18nTextResource(
 
 class AudioResource(
     override val id: String,
-    val url: String,
-    override val weight: Int
+    val url: String
 ) : ExpensiveResource<HTMLAudioElement> {
     override suspend fun load(): HTMLAudioElement = suspendCoroutine { continuation ->
         val element = getOrCreateAudioElement(id)
@@ -54,8 +52,7 @@ class AudioResource(
 
 class ImageResource(
     override val id: String,
-    val url: String,
-    override val weight: Int
+    val url: String
 ) : ExpensiveResource<ImageResourceData> {
     override suspend fun load(): ImageResourceData = suspendCoroutine { continuation ->
         val element = getOrCreateImageElement(id)
@@ -77,8 +74,7 @@ class ImageResource(
 
 abstract class AjaxResource<T>(
     override val id: String,
-    val url: String,
-    override val weight: Int
+    val url: String
 ) : ExpensiveResource<T> {
     abstract suspend fun decode(response: Response): T
 
@@ -99,8 +95,7 @@ abstract class AjaxResource<T>(
 
 class TextAjaxResource(
     override val id: String,
-    url: String,
-    override val weight: Int
-) : AjaxResource<String>(id, url, weight) {
+    url: String
+) : AjaxResource<String>(id, url) {
     override suspend fun decode(response: Response) = response.text().await()
 }

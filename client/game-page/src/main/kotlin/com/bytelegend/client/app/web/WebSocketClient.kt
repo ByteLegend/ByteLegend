@@ -54,8 +54,6 @@ class WebSocketClient(
     private val di: DI
 ) : ExpensiveResource<WebSocketClient>, GameServerProtocol {
     override val id: String = "websocket-client"
-    override val weight: Int = 1
-
     private val eventBus: EventBus by di.instance()
     private val gameRuntime: GameRuntime by di.instance()
     lateinit var self: Deferred<WebSocketClient>
@@ -269,7 +267,6 @@ class GameSceneInitResource(
     private val client: WebSocketClient
 ) : ExpensiveResource<SceneInitData> {
     override val id: String = "$mapId-players"
-    override val weight: Int = 1
 
     override suspend fun load(): SceneInitData {
         return client.self.await().getSceneInitData(mapId)

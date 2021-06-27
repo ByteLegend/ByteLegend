@@ -3,12 +3,9 @@
 package com.bytelegend.app.client.api
 
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
 
 interface ExpensiveResource<T> {
     val id: String
-    val weight: Int
 
     /**
      * Load a resource. Implementations must finish all work
@@ -24,25 +21,15 @@ interface ExpensiveResource<T> {
 
 interface ResourceLoader {
     /**
-     * Add a resource to be loaded in a session.
-     *
+     * Load a resource asynchronously, return the Deferred result.
      * The scene has to wait for all "blockingScene" resources to be loaded.
      *
+     * If calling on same resources multiple times, the same Deferred result will be returned.
      */
-    suspend fun <T> load(
-        resource: ExpensiveResource<out T>,
-        blockingScene: Boolean = true
-    ): T
-
     fun <T> loadAsync(
         resource: ExpensiveResource<out T>,
         blockingScene: Boolean = true
-    ): Deferred<T> = GlobalScope.async { load(resource, blockingScene) }
-
-    /**
-     * Reset the session (esp. the loading progress).
-     */
-    fun clearSceneBlockingResources()
+    ): Deferred<T>
 
     /**
      * Whether a specific resource is loading or not.

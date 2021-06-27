@@ -3,8 +3,7 @@ package common.widget
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapProgressBar
-import com.bytelegend.client.app.engine.RESOURCE_LOADING_FAILURE_EVENT
-import com.bytelegend.client.app.engine.RESOURCE_LOADING_SUCCESS_EVENT
+import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.page.game
 import kotlinx.browser.window
 import react.RBuilder
@@ -71,14 +70,12 @@ class ProgressBar : RComponent<ProgressBarProps, ProgressBarState>() {
 
     override fun componentWillUnmount() {
         window.clearInterval(timerId)
-        props.eventBus.remove(RESOURCE_LOADING_SUCCESS_EVENT, onProgressBarUpdate)
-        props.eventBus.remove(RESOURCE_LOADING_FAILURE_EVENT, onProgressBarUpdate)
+        props.eventBus.remove(GAME_UI_UPDATE_EVENT, onProgressBarUpdate)
     }
 
     override fun componentDidMount() {
         timerId = window.setInterval(this::onSecondTimer, 1000)
-        props.eventBus.on(RESOURCE_LOADING_SUCCESS_EVENT, onProgressBarUpdate)
-        props.eventBus.on(RESOURCE_LOADING_FAILURE_EVENT, onProgressBarUpdate)
+        props.eventBus.on(GAME_UI_UPDATE_EVENT, onProgressBarUpdate)
     }
 
     override fun RBuilder.render() {

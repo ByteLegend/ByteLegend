@@ -1,4 +1,4 @@
-@file:Suppress("UNCHECKED_CAST")
+@file:Suppress("UNCHECKED_CAST", "UnsafeCastFromDynamic", "EXPERIMENTAL_API_USAGE")
 
 package com.bytelegend.client.app.engine
 
@@ -6,11 +6,14 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
 
-const val RESOURCE_LOADING_SUCCESS_EVENT = "resource.loading.success"
 const val RESOURCE_LOADING_FAILURE_EVENT = "resource.loading.failure"
 
 class ResourceLoadingSuccessEvent<T>(
@@ -23,59 +26,90 @@ class ResourceLoadingFailureEvent(
     val message: String
 )
 
-typealias ResourceLoadingSuccessEventListener<T> = (ResourceLoadingSuccessEvent<T>) -> Unit
 typealias ResourceLoadingFailureEventListener = (ResourceLoadingFailureEvent) -> Unit
 
 /**
  * Coordinates loading expensive resources, such as images, map jsons, audios, etc. It does:
  *
- * 1. When any resource loading succeeds, emit a "resource.loading.success.$resourceId" event with the resource.
- * 2. When any resource loading fails, emit a "resource.loading.success.$resourceId" event with message so it can be displayed on UI.
+ * 1. When any resource loading fails, emit a "resource.loading.success.$resourceId" event with message so it can be displayed on UI.
+ * 2. When a scene-blocking resource is added, emit a "scene.loading.start" event.
+ * 3. When all scene-blocking resources are finished and GameScene is switched successfully, emit a "scene.loading.end" event.
+ *
  */
 class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
     private val eventBus: EventBus by di.instance()
     private val allLoadedResources: MutableMap<String, Any> = JSObjectBackedMap()
-    private val loadingSceneBlockingResources: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
-    private val loadedSceneBlockingResources: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
-    private val loadFailedSceneBlockingResources: MutableMap<String, ExpensiveResource<out Any>> = JSObjectBackedMap()
+    private val allLoadingResources: MutableMap<String, Deferred<Any>> = JSObjectBackedMap()
+    private val loadingSceneBlockingResources: MutableMap<String, Deferred<Any>> = JSObjectBackedMap()
 
-    override suspend fun <T> load(
-        resource: ExpensiveResource<out T>,
-        blockingScene: Boolean
-    ): T {
-        if (allLoadedResources.containsKey(resource.id)) {
-            console.warn("${resource.id} already loaded, did you duplicate the resource id?")
+    // For counting progress
+    private var loadFailedSceneBlockingResourcesCount = 0
+    private var loadSucceededSceneBlockingResourcesCount = 0
+
+    private var isSceneLoading = false
+
+    override fun <T> loadAsync(resource: ExpensiveResource<out T>, blockingScene: Boolean): Deferred<T> {
+        val loaded = allLoadedResources[resource.id]
+        if (loaded != null) {
+            return CompletableDeferred(loaded.asDynamic())
         }
+        val loading = allLoadingResources[resource.id]
+        if (loading != null) {
+            return loading.asDynamic()
+        }
+        val resourceDataDeferred = GlobalScope.async {
+            doLoad(resource, blockingScene)
+        }
+        allLoadingResources[resource.id] = resourceDataDeferred.asDynamic()
         if (blockingScene) {
-            return loadSceneBlockingResource(resource)
-        } else {
-            return load(resource, {}, {})
+            loadingSceneBlockingResources[resource.id] = resourceDataDeferred.asDynamic()
+        }
+        return resourceDataDeferred
+    }
+
+    fun sceneSwitchReady() {
+        logger.debug("Scene switch finished! Check loading status.")
+        isSceneLoading = false
+        checkSceneLoadingEnded()
+    }
+
+    private fun checkSceneLoadingEnded() {
+        if (!isSceneLoading && currentProgress() == 100) {
+            logger.debug("Scene switched and all resources loaded.")
+            eventBus.emit(SCENE_LOADING_END_EVENT, null)
+            loadingSceneBlockingResources.clear()
+            loadFailedSceneBlockingResourcesCount = 0
+            loadSucceededSceneBlockingResourcesCount = 0
         }
     }
 
-    override fun clearSceneBlockingResources() {
-        loadFailedSceneBlockingResources.clear()
-        loadingSceneBlockingResources.clear()
-        loadedSceneBlockingResources.clear()
-    }
-
-    private suspend fun <T> load(
-        resource: ExpensiveResource<out T>,
-        onSuccess: (T) -> Unit,
-        onFailure: (Throwable) -> Unit
-    ): T {
+    @Suppress("DeferredResultUnused")
+    private suspend fun <T> doLoad(resource: ExpensiveResource<out T>, blockingScene: Boolean): T {
         try {
+            logger.debug("Start loading ${resource.id}, blocking: $blockingScene")
+            if (!isSceneLoading && blockingScene) {
+                // edge-trigger
+                logger.debug("Loading ${resource.id} triggers scene loading event as it's the first one")
+                isSceneLoading = true
+                eventBus.emit(SCENE_LOADING_START_EVENT, null)
+            }
             val resourceData = resource.load()
+            logger.debug("Loaded ${resource.id} successfully!")
+            allLoadingResources.remove(resource.id)
             allLoadedResources[resource.id] = resourceData.unsafeCast<Any>()
-            onSuccess(resourceData)
-            // load LoadingPage if necessary, otherwise it complains
-            // "Can't perform a React state update on an unmounted component"
+            if (blockingScene) {
+                loadingSceneBlockingResources.remove(resource.id)
+                loadSucceededSceneBlockingResourcesCount++
+                checkSceneLoadingEnded()
+            }
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
-            eventBus.emit(RESOURCE_LOADING_SUCCESS_EVENT, ResourceLoadingSuccessEvent(resource.id, resourceData))
             return resourceData
         } catch (e: Throwable) {
-            onFailure(e)
-            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+            allLoadingResources.remove(resource.id)
+            if (blockingScene) {
+                loadingSceneBlockingResources.remove(resource.id)
+                loadFailedSceneBlockingResourcesCount++
+            }
             eventBus.emit(
                 RESOURCE_LOADING_FAILURE_EVENT,
                 ResourceLoadingFailureEvent(resource.id, "Loading resource ${resource.id} failed: ${e.message}")
@@ -84,24 +118,7 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
         }
     }
 
-    private suspend fun <T> loadSceneBlockingResource(
-        resource: ExpensiveResource<out T>,
-    ): T {
-        loadingSceneBlockingResources[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
-        return load(
-            resource,
-            { _ ->
-                loadingSceneBlockingResources.remove(resource.id)
-                loadedSceneBlockingResources[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
-            },
-            { _ ->
-                loadingSceneBlockingResources.remove(resource.id)
-                loadFailedSceneBlockingResources[resource.id] = resource.unsafeCast<ExpensiveResource<out Any>>()
-            }
-        )
-    }
-
-    override fun isResourceLoading(id: String): Boolean = loadingSceneBlockingResources.containsKey(id)
+    override fun isResourceLoading(id: String): Boolean = allLoadingResources.containsKey(id)
 
     @Suppress("UnsafeCastFromDynamic")
     override fun <T> getLoadedResource(id: String): T {
@@ -111,10 +128,8 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
     override fun <T> getLoadedResourceOrNull(id: String): T? = allLoadedResources[id] as T?
 
     override fun currentProgress(): Int {
-        val loadingSum = loadingSceneBlockingResources.values.sumOf { it.weight }
-        val sum = loadFailedSceneBlockingResources.values.sumOf { it.weight } +
-            loadingSum +
-            loadedSceneBlockingResources.values.sumOf { it.weight }
+        val loadingSum = loadingSceneBlockingResources.size
+        val sum = loadingSum + loadSucceededSceneBlockingResourcesCount + loadFailedSceneBlockingResourcesCount
         return if (sum == 0) {
             100
         } else {

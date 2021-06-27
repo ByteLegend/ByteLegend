@@ -110,23 +110,20 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     }
 
     private fun loadResourcesAndStart() {
-        // TODO: refine resource loading mechanism
-        val commonDeferred = game.resourceLoader.loadAsync(
+        game.resourceLoader.loadAsync(
             I18nTextResource(
                 "common-${game.locale.lowercase()}",
                 game.resolve("/i18n/common/${game.locale.lowercase()}.json"),
-                1,
                 game.i18nTextContainer
             )
         )
-        game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg"), 1), false)
-        game.resourceLoader.loadAsync(AudioResource("starfly", game.resolve("/audio/starfly.mp3"), 1), false)
-        game.resourceLoader.loadAsync(AudioResource("popup", game.resolve("/audio/popup.mp3"), 1), false)
+        game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg")), false)
+        game.resourceLoader.loadAsync(AudioResource("starfly", game.resolve("/audio/starfly.mp3")), false)
+        game.resourceLoader.loadAsync(AudioResource("popup", game.resolve("/audio/popup.mp3")), false)
         game.webSocketClient.self = game.resourceLoader.loadAsync(game.webSocketClient)
 
         if (game.heroPlayer.isAnonymous) {
             game.sceneContainer.loadScene(GAME_INIT_DATA.initMapId) { _, _ ->
-                commonDeferred.await()
                 game.start()
             }
         } else {
@@ -134,21 +131,18 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
             val animationSetDeferred = game.resourceLoader.loadAsync(
                 ImageResource(
                     animationSetId,
-                    game.resolve("/img/player/$animationSetId.png"),
-                    1
+                    game.resolve("/img/player/$animationSetId.png")
                 )
             )
             game.resourceLoader.loadAsync(
                 ImageResource(
                     HERO_AVATAR_IMG_ID,
-                    game.heroPlayer.avatarUrl!!,
-                    0
+                    game.heroPlayer.avatarUrl!!
                 ),
                 false
             )
 
             game.sceneContainer.loadScene(GAME_INIT_DATA.player.map) { _, newScene ->
-                commonDeferred.await()
                 animationSetDeferred.await()
 
                 val obj = HeroCharacter(newScene, GAME_INIT_DATA.player)

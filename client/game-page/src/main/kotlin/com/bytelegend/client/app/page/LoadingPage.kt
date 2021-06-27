@@ -65,7 +65,7 @@ class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
                 backgroundColor = "black"
                 color = "white"
                 fontSize = "20px"
-                fontFamily = """"Courier 10 Pitch", "Courier New", Courier, monospace;"""
+                fontFamily = """"Courier 10 Pitch", "Courier New", Courier, monospace"""
             }
             +GAME_INIT_DATA.enjoyProgrammingText
         }
