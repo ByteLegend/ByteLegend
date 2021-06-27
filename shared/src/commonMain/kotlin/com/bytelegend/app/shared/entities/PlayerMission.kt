@@ -1,6 +1,7 @@
 package com.bytelegend.app.shared.entities
 
 import com.bytelegend.app.shared.annotations.DynamoDbIgnore
+import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.util.currentTimeMillis
 import kotlin.jvm.JvmStatic
 
@@ -19,10 +20,12 @@ open class PlayerMission(
 ) {
 
     @get: DynamoDbIgnore
+    @get: JsonIgnore
     val accomplished: Boolean
         get() = answers.any { it.accomplished }
 
     @get: DynamoDbIgnore
+    @get: JsonIgnore
     val star: Int
         get() = answers.maxOfOrNull { it.star } ?: 0
 }
