@@ -34,7 +34,7 @@ const val REMOVE_STATE_EVENT = "protocol.remove.state"
 const val PUT_STATE_EVENT = "protocol.put.state"
 const val REMOVE_ITEM_EVENT = "protocol.remove.item"
 const val KICK_OFF_EVENT = "protocol.kick.off"
-const val LOG_STREAM_EVENT = "protocol.log.stream"
+fun logStreamEvent(mapId: String) = "protocol.log.stream.$mapId"
 
 
 interface GameServerProtocol {
