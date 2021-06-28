@@ -4,6 +4,7 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
+import com.bytelegend.app.shared.entities.PlayerMissionAnswer
 import com.bytelegend.app.shared.math.outOfCanvas
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameObjectRole
@@ -78,6 +79,7 @@ class MissionTitles : GameUIComponent<GameProps, MissionTitlesState>() {
             attrs.tileCoordinate = mission.gridCoordinate
             attrs.totalStar = mission.gameMapMission.totalStar
             attrs.currentStar = activeScene.playerMissions.missionStar(mission.id)
+            attrs.answers = activeScene.playerMissions.missionAnswers(mission.id)
             attrs.mission = mission
         }
     }
@@ -122,6 +124,7 @@ interface MissionTitleProps : RProps {
 
     var totalStar: Int
     var currentStar: Int
+    var answers: List<PlayerMissionAnswer>
     var mission: GameMission
 }
 
@@ -154,7 +157,7 @@ class MissionTile : RComponent<MissionTitleProps, MissionTitleState>() {
             left = props.left,
             bottom = props.bottom + getOffsetY(),
             zIndex = Layer.MissionTitle.zIndex() + if (state.hovered) 1 else 0,
-            classes = jsObjectBackedSetOf("checkpoint-title")
+            classes = jsObjectBackedSetOf("mission-title")
         ) {
             unsafeSpan(props.title)
             attrs.onClickFunction = {
@@ -173,23 +176,23 @@ class MissionTile : RComponent<MissionTitleProps, MissionTitleState>() {
             }
             absoluteDiv(
                 zIndex = Layer.MissionTitle.zIndex(),
-                classes = jsObjectBackedSetOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-left")
+                classes = jsObjectBackedSetOf("mission-title-bottom-border", "mission-title-bottom-border-left")
             )
             absoluteDiv(
                 zIndex = Layer.MissionTitle.zIndex(),
-                classes = jsObjectBackedSetOf("checkpoint-title-bottom-border", "checkpoint-title-bottom-border-right")
+                classes = jsObjectBackedSetOf("mission-title-bottom-border", "mission-title-bottom-border-right")
             )
 
             absoluteDiv(
                 zIndex = Layer.MissionTitle.zIndex() + 2,
-                classes = jsObjectBackedSetOf("checkpoint-title-triangle-container")
+                classes = jsObjectBackedSetOf("mission-title-triangle-container")
             ) {
                 absoluteDiv(
                     left = 0,
                     top = 0,
                     width = 0,
                     height = 0,
-                    classes = jsObjectBackedSetOf("checkpoint-title-triangle")
+                    classes = jsObjectBackedSetOf("mission-title-triangle")
                 )
             }
 

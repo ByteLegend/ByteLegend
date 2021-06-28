@@ -1,5 +1,21 @@
 package com.bytelegend.app.shared.objects
 
+import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.PixelCoordinate
+
+interface CoordinateMutable : CoordinateAware {
+    override var gridCoordinate: GridCoordinate
+    override var pixelCoordinate: PixelCoordinate
+}
+
+interface CoordinateAware : GridCoordinateAware {
+    val pixelCoordinate: PixelCoordinate
+}
+
+interface GridCoordinateAware {
+    val gridCoordinate: GridCoordinate
+}
+
 interface GameObject : Lifecycle {
     val id: String
     val layer: Int

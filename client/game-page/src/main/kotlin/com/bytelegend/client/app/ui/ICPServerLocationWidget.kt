@@ -13,7 +13,6 @@ import react.RState
 import react.dom.a
 import react.dom.h4
 import react.dom.img
-import react.dom.jsStyle
 import react.dom.p
 import react.dom.span
 
@@ -38,11 +37,7 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
                 a {
                     attrs.target = "_blank"
                     attrs.href = "https://beian.miit.gov.cn"
-                    attrs.jsStyle {
-                        color = "white"
-                        fontSize = "14px"
-                        margin = "0 5px 0 5px"
-                    }
+                    attrs.classes = jsObjectBackedSetOf("icp-widget")
                     +"沪ICP备2020033444号"
                 }
             }

@@ -1,6 +1,5 @@
 package com.bytelegend.client.app.obj
 
-import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.GridCoordinate
@@ -9,6 +8,7 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.math.imageBlockOnCanvas
 import com.bytelegend.app.shared.math.outOfCanvas
+import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 

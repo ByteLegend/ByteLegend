@@ -2,6 +2,7 @@ package com.bytelegend.app.client.api
 
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.Direction
+import com.bytelegend.app.shared.objects.CoordinateAware
 
 /**
  * We have to use instance method due to the defect of current module loading mechanism

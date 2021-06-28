@@ -26,6 +26,7 @@ import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.STAR_BYTELEGEND_MISSION_ID
 import com.bytelegend.client.app.script.effect.itemPopupEffect
+import com.bytelegend.client.app.script.effect.showConfetti
 import com.bytelegend.client.app.script.effect.starFlyEffect
 import com.bytelegend.client.app.ui.NumberIncrementEvent
 import com.bytelegend.client.app.ui.STAR_INCREMENT_EVENT
@@ -194,7 +195,11 @@ class DefaultPlayerMissionContainer(
     private fun onMissionUpdate(eventData: MissionUpdateEventData) {
         val currentMap: String = gameScene?.map?.id ?: return
         if (currentMap == eventData.map) {
-            missions[eventData.newValue.missionId] = eventData.newValue
+            val missionId = eventData.newValue.missionId
+            missions[missionId] = eventData.newValue
+            if (eventData.newValue.accomplished) {
+                showConfetti(gameScene!!.canvasState, gameScene!!.objects.getPointById(missionId))
+            }
         }
     }
 

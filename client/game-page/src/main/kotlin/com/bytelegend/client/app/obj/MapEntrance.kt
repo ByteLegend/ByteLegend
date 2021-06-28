@@ -2,12 +2,12 @@
 
 package com.bytelegend.client.app.obj
 
-import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneAware
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.INVISIBLE_OBJECT_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole

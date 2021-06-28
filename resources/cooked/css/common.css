@@ -151,7 +151,14 @@ body {
     transform: translate(-50%, -50%);
 }
 
-.checkpoint-title {
+.icp-widget {
+    color: white;
+    font-size: 14px;
+    margin: 0 5px 0 5px;
+    user-select: none;
+}
+
+.mission-title {
     text-align: center;
     max-width: 200px;
     user-select: none;
@@ -167,13 +174,18 @@ body {
 }
 
 .title-star-box {
+    white-space: nowrap;
     left: 50%;
     bottom: 100%;
-    white-space: nowrap;
     transform: translate(-50%, 0%);
 }
 
-.checkpoint-title-triangle-container {
+.title-star-button-box {
+    bottom: 0;
+    width: 100%;
+}
+
+.mission-title-triangle-container {
     left: 50%;
     bottom: -16px;
     width: 16px;
@@ -181,24 +193,24 @@ body {
     transform: translate(-50%, 0%);
 }
 
-.checkpoint-title-triangle {
+.mission-title-triangle {
     transform: rotate(180deg);
     border: 8px solid transparent;
     border-bottom: 8px solid rgba(0, 0, 0, 0.7);
 }
 
-.checkpoint-title-bottom-border {
+.mission-title-bottom-border {
     height: 1px;
     width: calc(50% - 9px);
     bottom: 0;
     border-bottom: 1px solid white;
 }
 
-.checkpoint-title-bottom-border-left {
+.mission-title-bottom-border-left {
     left: 1px
 }
 
-.checkpoint-title-bottom-border-right {
+.mission-title-bottom-border-right {
     right: 1px
 }
 

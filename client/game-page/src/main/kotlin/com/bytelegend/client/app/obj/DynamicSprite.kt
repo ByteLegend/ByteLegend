@@ -2,13 +2,13 @@ package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.Animation
 import com.bytelegend.app.client.api.AnimationFrame
-import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Static
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import kotlinx.browser.window
 import org.w3c.dom.CanvasRenderingContext2D

@@ -1,13 +1,13 @@
 package com.bytelegend.client.app.engine
 
-import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.mapToArrayWithIndex
-import com.bytelegend.app.shared.objects.GameMapPoint
+import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.client.app.engine.util.JSArrayBackedList
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.obj.BackgroundSpriteLayer
@@ -38,12 +38,7 @@ class DefaultGameObjectContainer(
     }
 
     override fun getPointById(id: String): GridCoordinate {
-        val obj = getById<GameObject>(id)
-        return if (obj.roles.contains(GameObjectRole.MapPoint.toString())) {
-            obj.unsafeCast<GameMapPoint>().point
-        } else {
-            obj.unsafeCast<CoordinateAware>().gridCoordinate
-        }
+        return getById<GameObject>(id).unsafeCast<GridCoordinateAware>().gridCoordinate
     }
 
     override fun putIntoCoordinate(gameObject: GameObject, newCoordinate: GridCoordinate) {

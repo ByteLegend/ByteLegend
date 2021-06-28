@@ -11,7 +11,6 @@ fun defaultMapEntranceDestinationId(mapEntranceId: String) = "$mapEntranceId-des
 
 fun defaultMapEntrancePointId(srcMapId: String, destMapId: String) = defaultMapEntrancePointId(defaultMapEntranceId(srcMapId, destMapId))
 
-
 class GameMapPoint(
     override val id: String,
     override val layer: Int,

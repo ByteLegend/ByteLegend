@@ -120,6 +120,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg")), false)
         game.resourceLoader.loadAsync(AudioResource("starfly", game.resolve("/audio/starfly.mp3")), false)
         game.resourceLoader.loadAsync(AudioResource("popup", game.resolve("/audio/popup.mp3")), false)
+        game.resourceLoader.loadAsync(AudioResource("tada", game.resolve("/audio/tada.mp3")), false)
         game.webSocketClient.self = game.resourceLoader.loadAsync(game.webSocketClient)
 
         if (game.heroPlayer.isAnonymous) {
@@ -197,7 +198,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                         reputationCountWidget(attrs)
                         itemWidget(attrs)
                     }
-                    checkpointTitleWidgets(attrs)
+                    missionTitleWidgets(attrs)
                     tileCursorWidget(attrs)
                     spriteNameWidget(attrs)
                     miniMap(attrs)
@@ -318,7 +319,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         return gameChild(parentProps, TileCursorWidget::class, block)
     }
 
-    private fun RElementBuilder<GameContainerProps>.checkpointTitleWidgets(
+    private fun RElementBuilder<GameContainerProps>.missionTitleWidgets(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {

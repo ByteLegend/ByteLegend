@@ -6,6 +6,7 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
+import react.dom.div
 import react.dom.img
 import react.dom.jsStyle
 import react.dom.span
@@ -27,18 +28,20 @@ interface TitleStarCounterProps : RProps {
 
 class TitleStarCounter : RComponent<TitleStarCounterProps, RState>() {
     override fun RBuilder.render() {
-        if (props.total > 5) {
-            span {
-                attrs.classes = jsObjectBackedSetOf("map-title-text")
-                +"${props.current}/${props.total}"
-            }
-            star(STAR_PNG_BASE64)
-        } else {
-            repeat(props.current) {
+        div {
+            if (props.total > 5) {
+                span {
+                    attrs.classes = jsObjectBackedSetOf("map-title-text")
+                    +"${props.current}/${props.total}"
+                }
                 star(STAR_PNG_BASE64)
-            }
-            repeat(props.total - props.current) {
-                star(HOLLOW_STAR_PNG_BASE64)
+            } else {
+                repeat(props.current) {
+                    star(STAR_PNG_BASE64)
+                }
+                repeat(props.total - props.current) {
+                    star(HOLLOW_STAR_PNG_BASE64)
+                }
             }
         }
     }

@@ -1,4 +1,3 @@
-import com.bytelegend.app.client.api.CoordinateAware
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
@@ -9,6 +8,7 @@ import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.HumanReadableCoordinate
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
+import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameObject
 import kotlinx.browser.window
