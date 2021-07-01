@@ -18,6 +18,9 @@ data class PixelBlock(
 
     @get:JsonIgnore
     val coordinate: PixelCoordinate = PixelCoordinate(x, y)
+
+    @get:JsonIgnore
+    val size: PixelSize = PixelSize(width, height)
 }
 
 enum class Direction {

@@ -40,7 +40,6 @@ import com.bytelegend.client.app.ui.MapSelectionDropdownProps
 import com.bytelegend.client.app.ui.MapTitleWidgets
 import com.bytelegend.client.app.ui.MapTitleWidgetsProps
 import com.bytelegend.client.app.ui.MiniMap
-import com.bytelegend.client.app.ui.MissionTitles
 import com.bytelegend.client.app.ui.OnlineCounter
 import com.bytelegend.client.app.ui.PlayerNames
 import com.bytelegend.client.app.ui.PlayerNamesProps
@@ -61,6 +60,7 @@ import com.bytelegend.client.app.ui.item.ItemWidgetProps
 import com.bytelegend.client.app.ui.item.ItemsWidget
 import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
+import com.bytelegend.client.app.ui.mission.MissionTitles
 import com.bytelegend.client.app.web.toGameInitData
 import kotlinx.browser.document
 import kotlinx.browser.window

@@ -37,6 +37,7 @@ import org.kodein.di.eagerSingleton
 import org.kodein.di.instance
 import org.kodein.di.singleton
 
+const val GAME_CLOCK_1HZ = 1 // Hertz
 const val GAME_CLOCK_10HZ = 10 // Hertz
 const val GAME_CLOCK_50HZ = 50 // Hertz
 
@@ -76,8 +77,8 @@ class Game(
     override val locale: Locale by di.instance()
     override val eventBus: EventBus by di.instance()
     override val sceneContainer: GameSceneContainer by di.instance()
-    override val currentTimeMillis: Long
-        get() = Timestamp.now() - startTime
+    override val elapsedTimeSinceStart: Long
+        get() = startTime.elapsedTimeMs()
     override var gameContainerSize: PixelSize
         get() = sceneContainer.gameContainerSize
         set(value) {
@@ -117,19 +118,19 @@ class Game(
     fun start() {
         gameControl.start()
         animate()
-        window.setInterval(
-            {
-                eventBus.emit(GAME_CLOCK_10HZ_EVENT, null)
-            },
-            1000 / GAME_CLOCK_10HZ
-        )
-        window.setInterval(
-            {
-                eventBus.emit(GAME_CLOCK_50HZ_EVENT, null)
-            },
-            1000 / GAME_CLOCK_50HZ
-        )
+        setClock(GAME_CLOCK_1HZ, GAME_CLOCK_1HZ_EVENT)
+        setClock(GAME_CLOCK_10HZ, GAME_CLOCK_10HZ_EVENT)
+        setClock(GAME_CLOCK_50HZ, GAME_CLOCK_50HZ_EVENT)
         eventBus.on(ITEMS_STATES_UPDATE_EVENT, onItemsStatesUpdateEventListener)
+    }
+
+    private fun setClock(hz: Int, eventName: String) {
+        window.setInterval(
+            {
+                eventBus.emit(eventName, null)
+            },
+            1000 / hz
+        )
     }
 
     private fun animate() {

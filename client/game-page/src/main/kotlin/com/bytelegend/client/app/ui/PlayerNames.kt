@@ -6,6 +6,7 @@ import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import com.bytelegend.client.app.obj.CharacterSprite
+import com.bytelegend.client.app.obj.getSpriteBlockOnCanvas
 import react.RBuilder
 import react.RComponent
 import react.RProps
@@ -34,7 +35,7 @@ class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
     }
 
     private fun RBuilder.renderOne(player: BasePlayer, sprite: CharacterSprite, isHero: Boolean) {
-        val imageBlockOnCanvas = sprite.getImageBlockOnCanvas()
+        val imageBlockOnCanvas = sprite.getSpriteBlockOnCanvas(activeScene)
         val x = imageBlockOnCanvas.x + canvasCoordinateInGameContainer.x + activeScene.map.tileSize.width / 2
         val y = imageBlockOnCanvas.y + canvasCoordinateInGameContainer.y - 10
         val name = player.nickname

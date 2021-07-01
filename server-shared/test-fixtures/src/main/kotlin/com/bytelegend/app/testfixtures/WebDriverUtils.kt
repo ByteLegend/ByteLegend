@@ -20,16 +20,25 @@ fun WebDriver.waitUntil(timeoutMs: Int = 5000, predicate: WebDriver.() -> Boolea
     com.bytelegend.app.testfixtures.waitUntil(timeoutMs) { predicate() }
 }
 
+fun <T> waitUntilFound(timeoutMs: Int = 5000, predicate: () -> T): T {
+    var ret: T? = null
+    waitUntil(timeoutMs) {
+        ret = predicate()
+        true
+    }
+    return ret!!
+}
+
 fun waitUntil(timeoutMs: Int = 5000, predicate: () -> Boolean) {
     val start = System.currentTimeMillis()
 
-    var exception: Exception? = null
+    var exception: Throwable? = null
     while (System.currentTimeMillis() - start < timeoutMs) {
         try {
             if (predicate()) {
                 return
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             exception = e
         }
         Thread.sleep(100)

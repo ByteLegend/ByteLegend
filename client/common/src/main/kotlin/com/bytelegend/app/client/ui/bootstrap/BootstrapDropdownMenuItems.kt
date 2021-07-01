@@ -26,5 +26,6 @@ external interface BootstrapDropdownItemProps : RProps {
 external interface BootstrapDropdownToggleProps : RProps {
     var id: String
     var variant: String
+    var split: Boolean
     var size: String
 }

@@ -4,6 +4,7 @@ package com.bytelegend.app.testfixtures
 
 import com.bytelegend.app.browsertest.JUnit5VncRecorder
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.openqa.selenium.By
@@ -19,6 +20,10 @@ import org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode
 import org.testcontainers.containers.DefaultRecordingFileFactory
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.io.File
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 import java.util.function.Supplier
 import java.util.logging.Level
 
@@ -30,9 +35,27 @@ fun BrowserWebDriverContainer<Nothing>.safeStop() {
     }
 }
 
+abstract class AbstractIntegrationTest {
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+    abstract val gameServerPort: Int
+    private val httpClient by lazy { HttpClient.newHttpClient() }
+
+    protected fun sendWebhookFromResource(event: String, resource: String) {
+        val json = javaClass.getResourceAsFile(resource).readText()
+        val request = HttpRequest.newBuilder()
+            .header("Content-Type", "application/json")
+            .header("X-GitHub-Event", event)
+            .uri(URI.create("http://localhost:$gameServerPort/github_webhook"))
+            .POST(HttpRequest.BodyPublishers.ofString(json))
+            .build()
+        val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+        Assertions.assertEquals(200, response.statusCode())
+    }
+}
+
 @Testcontainers
 @ExtendWith(JUnit5VncRecorder::class)
-abstract class AbstractBrowserTest {
+abstract class AbstractBrowserTest : AbstractIntegrationTest() {
     val browserWebDriverContainers: MutableList<BrowserWebDriverContainer<Nothing>> = ArrayList()
     open val webDriver: WebDriver
         get() = browserWebDriverContainers[0].webDriver
@@ -43,8 +66,6 @@ abstract class AbstractBrowserTest {
      */
     val buildTmpDir: File
         get() = File(System.getProperty("build.tmp.dir"), javaClass.simpleName)
-
-    abstract val gameServerPort: Int
 
     @BeforeEach
     fun setUp() {

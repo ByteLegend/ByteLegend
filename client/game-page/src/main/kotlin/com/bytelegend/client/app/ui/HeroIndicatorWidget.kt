@@ -71,7 +71,7 @@ class HeroIndicatorWidget : GameUIComponent<GameProps, HeroIndicatorWidgetState>
             return
         }
 
-        val animationOffset = ((game.currentTimeMillis * HERO_INDICATOR_ANIMATION_FPS / 1000).toInt() % 2) * ANIMATION_OFFSET
+        val animationOffset = ((game.elapsedTimeSinceStart * HERO_INDICATOR_ANIMATION_FPS / 1000).toInt() % 2) * ANIMATION_OFFSET
 
         val canvasX = canvasCoordinateInMap.x
         val canvasY = canvasCoordinateInMap.y

@@ -28,6 +28,8 @@ as well as "outline" versions (prefixed by 'outline-*')
      */
     var variant: String
     var onClick: Any
+    var onMouseOver: Any
+    var onMouseOut: Any
     var style: Any
     var title: String
 }

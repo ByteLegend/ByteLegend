@@ -1,6 +1,7 @@
 package com.bytelegend.app.shared.protocol
 
 import com.bytelegend.app.shared.entities.SceneInitData
+import kotlin.math.log
 
 
 /**
@@ -29,12 +30,15 @@ const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
 /***************** Point-to-point events from server to client-side EventBus ***********************/
 const val STAR_UPDATE_EVENT = "protocol.star.update"
 const val ITEMS_STATES_UPDATE_EVENT = "protocol.items.states.update"
-const val MISSION_UPDATE_EVENT = "protocol.mission.update"
+fun missionUpdateEvent(mapId: String) = "protocol.mission.update.${mapId}"
+val MISSION_UPDATE_EVENT_PREFIX = missionUpdateEvent("")
 const val REMOVE_STATE_EVENT = "protocol.remove.state"
 const val PUT_STATE_EVENT = "protocol.put.state"
 const val REMOVE_ITEM_EVENT = "protocol.remove.item"
 const val KICK_OFF_EVENT = "protocol.kick.off"
+
 fun logStreamEvent(mapId: String) = "protocol.log.stream.$mapId"
+val LOG_STREAM_EVENT_PREFIX = logStreamEvent("")
 
 
 interface GameServerProtocol {

@@ -15,7 +15,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapCol
 import com.bytelegend.app.client.ui.bootstrap.BootstrapRow
 import com.bytelegend.app.shared.entities.PlayerMissionAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
-import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.missionUpdateEvent
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.util.format
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
@@ -108,7 +108,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         }
         br { }
 
-        val answers = game.activeScene.playerMissions.missionAnswers(props.missionId)
+        val answers = game.activeScene.playerMissions.getPlayerMissionById(props.missionId)?.answers ?: emptyList()
 
         renderPlayerAnswers(answers)
 
@@ -129,7 +129,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         }
 
         val missionUpdateEventData = submitMissionAnswer(props.missionId, textarea.value)
-        game.eventBus.emit(MISSION_UPDATE_EVENT, missionUpdateEventData)
+        game.eventBus.emit(missionUpdateEvent(activeScene.map.id), missionUpdateEventData)
         if (missionUpdateEventData.change.accomplished) {
             game.bannerController.showBanner(
                 Banner(

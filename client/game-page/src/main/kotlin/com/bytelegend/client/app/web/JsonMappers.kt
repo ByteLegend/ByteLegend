@@ -38,13 +38,13 @@ import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
 import com.bytelegend.app.shared.protocol.KICK_OFF_EVENT
 import com.bytelegend.app.shared.protocol.KickOffEventData
+import com.bytelegend.app.shared.protocol.LOG_STREAM_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.LogStreamEventData
-import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
-import com.bytelegend.app.shared.protocol.logStreamEvent
 import com.bytelegend.client.app.engine.util.JSArrayBackedList
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.page.game
@@ -56,17 +56,20 @@ fun parseServerEvent(eventMessage: dynamic): Any {
         event.startsWith("protocol.player") -> toBasePlayer(eventMessage.payload)
         event == ONLINE_COUNTER_UPDATE_EVENT -> eventMessage.payload
         event == STAR_UPDATE_EVENT -> toStarUpdateEventData(eventMessage.payload)
-        event == MISSION_UPDATE_EVENT -> toMissionUpdateEventData(eventMessage.payload)
         event == ITEMS_STATES_UPDATE_EVENT -> toItemsStatesUpdateEventData(eventMessage.payload)
         event == KICK_OFF_EVENT -> toKickOffEventData(eventMessage.payload)
-        event.startsWith(logStreamEvent("")) -> toLogStreamEventData(eventMessage.payload)
+        event.startsWith(LOG_STREAM_EVENT_PREFIX) -> toLogStreamEventData(eventMessage.payload)
+        event.startsWith(MISSION_UPDATE_EVENT_PREFIX) -> toMissionUpdateEventData(eventMessage.payload)
         else -> throw IllegalStateException("Unsupported event: $event")
     }
 }
 
 fun toLogStreamEventData(jsonObject: dynamic) = LogStreamEventData(
+    jsonObject.last,
     jsonObject.mapId,
     jsonObject.missionId,
+    jsonObject.missionAnswer,
+    jsonObject.checkRunId,
     JSArrayBackedList(delegate = jsonObject.lines)
 )
 
@@ -233,7 +236,8 @@ fun toMissionAnswer(jsonObject: dynamic) = PlayerMissionAnswer(
     star = jsonObject.star,
     answer = jsonObject.answer,
     accomplished = jsonObject.accomplished,
-    createdAt = jsonObject.createdAt
+    createdAt = jsonObject.createdAt,
+    data = JSObjectBackedMap(jsonObject.data)
 )
 
 fun toGameMapDefinition(jsonObject: dynamic): GameMapDefinition = GameMapDefinition(

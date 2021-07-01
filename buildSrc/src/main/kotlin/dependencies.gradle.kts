@@ -62,6 +62,7 @@ val reactTextAreaAutosizeVersion = "8.3.2"
 val jclOverSlf4JVersion = "1.7.30"
 val logbackCloudWatchAppenderVersion = "1.0.6.3"
 val javaOptVersion = "0.2.0"
+val reactSyntaxHighlighterVersion = "15.4.3"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -245,6 +246,13 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         version = reactTextAreaAutosizeVersion,
         creditName = "react-textarea-autosize",
         url = "https://github.com/Andarist/react-textarea-autosize",
+        license = MIT
+    ),
+    OpenSourceLibrary(
+        name = "react-syntax-highlighter",
+        version = reactSyntaxHighlighterVersion,
+        creditName = "react-syntax-highlighter",
+        url = "https://github.com/react-syntax-highlighter/react-syntax-highlighter",
         license = MIT
     )
 )

@@ -7,11 +7,13 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.entities.PlayerMissionAnswer
 import com.bytelegend.app.shared.entities.Player
+import com.bytelegend.app.shared.entities.PlayerMission
+import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import kotlinx.coroutines.Deferred
 import org.w3c.dom.HTMLImageElement
 
 val HERO_ID = "hero"
@@ -54,7 +56,7 @@ interface GameRuntime {
     val locale: Locale
     val eventBus: EventBus
     val sceneContainer: GameSceneContainer
-    val currentTimeMillis: Long
+    val elapsedTimeSinceStart: Long
     val activeScene: GameScene
     val modalController: ModalController
     val bannerController: BannerController
@@ -212,6 +214,7 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
     val objects: GameObjectContainer
     val canvasState: GameCanvasState
     val playerMissions: PlayerMissionContainer
+    val logs: PullRequestLogContainer
 
     fun objects(block: ObjectsBuilder.() -> Unit)
     fun scripts(block: ScriptsBuilder.() -> Unit)
@@ -228,15 +231,14 @@ interface PlayerMissionContainer {
      */
     fun missionStar(missionId: String): Int
 
-    fun missionAnswers(missionId: String): List<PlayerMissionAnswer>
+    fun getPlayerMissionById(missionId: String): PlayerMission?
+
+    fun getPullRequestMissionAnswersByMissionId(missionId: String): List<PullRequestAnswer>
 }
 
-interface StateContainer {
-    fun hasState(state: String): Boolean
-    fun getState(name: String): String
-    suspend fun removeState(state: String)
-    suspend fun putState(key: String, value: String)
-    suspend fun putState(key: String) = putState(key, "1")
+interface PullRequestLogContainer {
+    fun getLiveLogsByAnswer(answer: PullRequestAnswer, checkRunId: String): List<String>
+    fun downloadLogByAnswerAsync(answer: PullRequestAnswer, checkRunId: String): Deferred<String>
 }
 
 interface GameSceneContainer : GameContainerSizeAware {

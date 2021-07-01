@@ -4,8 +4,10 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
 import kotlinx.browser.window
+import kotlinx.html.CommonAttributeGroupFacade
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLImageElement
+import org.w3c.dom.events.Event
 
 fun isFirefox(): Boolean {
     return window.navigator.userAgent.lowercase().indexOf("firefox") > -1
@@ -31,6 +33,17 @@ internal fun PixelCoordinate.outOfCanvas(gameScene: GameScene): Boolean {
             it.y < 0
     }
 }
+
+var CommonAttributeGroupFacade.onMouseLeaveFunction: (Event) -> Unit
+    get() = throw UnsupportedOperationException("You can't read variable onMouseLeave")
+    set(newValue) {
+        consumer.onTagEvent(this, "onmouseleave", newValue)
+    }
+var CommonAttributeGroupFacade.onMouseEnterFunction: (Event) -> Unit
+    get() = throw UnsupportedOperationException("You can't read variable onMouseLeave")
+    set(newValue) {
+        consumer.onTagEvent(this, "onmouseenter", newValue)
+    }
 
 internal fun CanvasRenderingContext2D.disableShadow() = setShadow("white", 0, 0, 0)
 

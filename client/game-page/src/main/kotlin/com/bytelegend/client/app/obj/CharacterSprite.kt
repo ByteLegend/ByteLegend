@@ -4,6 +4,7 @@ import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneAware
+import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.misc.search
@@ -30,7 +31,7 @@ abstract class CharacterSprite(
     override val gameScene: GameScene,
     private var _pixelCoordinate: PixelCoordinate,
     private val animationSet: AnimationSet
-) : AbstractSprite(), GameSceneAware, Character {
+) : Sprite, GameSceneAware, Character {
     override val layer: Int = PLAYER_LAYER
 
     var still = true
@@ -42,6 +43,10 @@ abstract class CharacterSprite(
     override fun init() {
         gameScene.objects.add(this)
         gameScene.gameRuntime.eventBus.on(GAME_CLOCK_50HZ_EVENT, clockEventListener)
+    }
+
+    override fun outOfCanvas(): Boolean {
+        return getSpriteBlockOnCanvas(gameScene).outOfCanvas(gameScene)
     }
 
     override fun close() {
@@ -242,7 +247,7 @@ abstract class CharacterSprite(
         canvas.drawImage(
             imageAndBlock.first,
             imageAndBlock.second,
-            getImageBlockOnCanvas()
+            getSpriteBlockOnCanvas(gameScene)
         )
     }
 

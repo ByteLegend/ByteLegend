@@ -90,7 +90,7 @@ class MainMapCanvasRenderer(
     private fun drawPrerenderedBackgroundLayer() {
         val gameScene = game.activeScene
         val mapId = gameScene.map.id
-        val currentFrameIndex = ((game.currentTimeMillis / 500) % (game.idToMapDefinition.getValue(mapId).frames)).toInt()
+        val currentFrameIndex = ((game.elapsedTimeSinceStart / 500) % (game.idToMapDefinition.getValue(mapId).frames)).toInt()
         val canvasElement = canvasCaches.getValue(mapId)[currentFrameIndex]
 
         val canvasPixelSize = gameScene.canvasState.getCanvasPixelSize()

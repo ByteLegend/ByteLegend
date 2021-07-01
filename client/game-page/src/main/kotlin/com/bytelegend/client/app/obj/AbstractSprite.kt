@@ -12,23 +12,19 @@ import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 
-abstract class AbstractSprite : Sprite {
-    abstract var pixelCoordinate: PixelCoordinate
-
-    override fun outOfCanvas() = getImageBlockOnCanvas().run {
-        x > gameScene.canvasState.getCanvasPixelSize().width ||
-            y > gameScene.canvasState.getCanvasPixelSize().height ||
-            x + width < 0 ||
-            y + height < 0
-    }
-
-    open fun getImageBlockOnCanvas() = PixelBlock(
-        pixelCoordinate.x - gameScene.canvasState.getCanvasCoordinateInMap().x,
-        pixelCoordinate.y - gameScene.canvasState.getCanvasCoordinateInMap().y,
-        gameScene.map.tileSize.width,
-        gameScene.map.tileSize.height
-    )
+fun PixelBlock.outOfCanvas(gameScene: GameScene): Boolean {
+    return x > gameScene.canvasState.getCanvasPixelSize().width ||
+        y > gameScene.canvasState.getCanvasPixelSize().height ||
+        x + width < 0 ||
+        y + height < 0
 }
+
+fun CoordinateAware.getSpriteBlockOnCanvas(gameScene: GameScene) = PixelBlock(
+    pixelCoordinate.x - gameScene.canvasState.getCanvasCoordinateInMap().x,
+    pixelCoordinate.y - gameScene.canvasState.getCanvasCoordinateInMap().y,
+    gameScene.map.tileSize.width,
+    gameScene.map.tileSize.height
+)
 
 /**
  * A sprite with static location (but might have animation frames,

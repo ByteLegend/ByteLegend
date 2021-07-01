@@ -14,5 +14,6 @@ dependencies {
     implementation(npm("react-player", libVersions("react-player")))
     implementation(npm("react-select", libVersions("react-select")))
     implementation(npm("react-textarea-autosize", libVersions("react-textarea-autosize")))
+    implementation(npm("react-syntax-highlighter", libVersions("react-syntax-highlighter")))
     testImplementation(kotlin("test-js"))
 }

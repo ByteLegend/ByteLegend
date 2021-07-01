@@ -1,5 +1,6 @@
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import kotlinx.html.classes
@@ -13,6 +14,7 @@ import react.dom.attrs
 import react.dom.div
 import react.dom.h3
 import react.dom.h4
+import react.dom.img
 import react.dom.jsStyle
 import react.dom.span
 import kotlin.reflect.KClass
@@ -21,6 +23,17 @@ inline fun <T : Any> jsObject(builder1: T.() -> Unit, builder2: T.() -> Unit): T
     kotlinext.js.jsObject<T>().apply(builder1).apply(builder2)
 
 fun js(builder1: dynamic.() -> Unit, builder2: dynamic.() -> Unit): dynamic = jsObject(builder1, builder2)
+
+fun RBuilder.icon(srcData: String, size: PixelSize = PixelSize(24, 24)) {
+    img {
+        attrs.jsStyle {
+            width = "${size.width}px"
+            height = "${size.height}px"
+            display = "inline-block"
+        }
+        attrs.src = srcData
+    }
+}
 
 @Suppress("UnsafeCastFromDynamic")
 fun RBuilder.absoluteDiv(

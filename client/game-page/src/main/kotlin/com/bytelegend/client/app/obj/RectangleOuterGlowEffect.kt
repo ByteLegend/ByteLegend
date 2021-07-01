@@ -24,7 +24,7 @@ class RectangleOuterGlowEffect(
     private val color: String
 ) : Effect {
     override fun draw(origin: PixelCoordinate, gameScene: GameScene, canvas: CanvasRenderingContext2D) {
-        val frameIndex = (gameScene.gameRuntime.currentTimeMillis * OUTER_GLOW_ANIMATION_FPS / 1000).toInt() % 2
+        val frameIndex = (gameScene.gameRuntime.elapsedTimeSinceStart * OUTER_GLOW_ANIMATION_FPS / 1000).toInt() % 2
         if (frameIndex == 0) {
             canvas.save()
             canvas.setShadow(color, 0, 0, blur)

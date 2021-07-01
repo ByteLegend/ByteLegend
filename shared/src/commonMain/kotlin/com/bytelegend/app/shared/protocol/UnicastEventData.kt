@@ -42,7 +42,10 @@ data class KickOffEventData(
 ) : UnicastEventData
 
 data class LogStreamEventData(
+    val last: Boolean?,
     val mapId: String,
     val missionId: String,
+    val missionAnswer: String,
+    val checkRunId: String,
     val lines: List<String>
 )

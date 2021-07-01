@@ -1,0 +1,81 @@
+package com.bytelegend.client.app.ui.mission
+
+import BootstrapDropdownItem
+import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
+import com.bytelegend.app.client.ui.bootstrap.BootstrapSplitButton
+import com.bytelegend.app.shared.entities.PullRequestAnswer
+import com.bytelegend.client.app.engine.GameMission
+import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.Layer
+import kotlinext.js.jsObject
+import kotlinx.html.js.onClickFunction
+import react.RBuilder
+import react.RState
+import react.createElement
+import react.dom.div
+import react.dom.jsStyle
+import react.rClass
+
+interface MissionTitleAnswersState : RState
+
+interface MissionTitleAnswerProps : GameProps {
+    var mission: GameMission
+}
+
+class MissionTitleAnswers : GameUIComponent<MissionTitleAnswerProps, MissionTitleAnswersState>() {
+    override fun RBuilder.render() {
+        div {
+            val z = Layer.MissionTitlePullRequestAnswerButton.zIndex()
+            attrs.jsStyle {
+                zIndex = z
+            }
+            attrs.onClickFunction = { it: dynamic ->
+                it.stopPropagation()
+            }
+
+            val pullRequestAnswers = activeScene.playerMissions.getPullRequestMissionAnswersByMissionId(props.mission.id)
+            if (pullRequestAnswers.isNotEmpty()) {
+                renderPullRequestAnswers(pullRequestAnswers)
+            }
+        }
+    }
+
+    private fun RBuilder.renderPullRequestAnswers(pullRequestAnswers: List<PullRequestAnswer>) {
+        if (pullRequestAnswers.size == 1) {
+            BootstrapButton {
+                attrs.variant = "light"
+                attrs.size = "sm"
+                child(MissionTitlePullRequestAnswerButton::class) {
+                    attrs.game = game
+                    attrs.pullRequestAnswer = pullRequestAnswers[0]
+                }
+            }
+        } else {
+            BootstrapSplitButton {
+                attrs.drop = "right"
+                attrs.variant = "light"
+                attrs.size = "sm"
+                attrs.title = createElement(MissionTitlePullRequestAnswerButton::class.rClass, jsObject<MissionTitlePullRequestAnswerButtonButtonProps> {
+                    this.game = props.game
+                    pullRequestAnswer = pullRequestAnswers[0]
+                })
+
+                pullRequestAnswers.forEachIndexed { index, pullRequestAnswer ->
+                    if (index != 0) {
+                        BootstrapDropdownItem {
+                            val z = Layer.MissionTitlePullRequestAnswerButton.zIndex() + 2
+                            attrs.style = jsObject {
+                                zIndex = z
+                            }
+                            child(MissionTitlePullRequestAnswerButton::class) {
+                                attrs.game = game
+                                attrs.pullRequestAnswer = pullRequestAnswer
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -5,6 +5,7 @@ val RED = RGBA(255, 0, 0, 255)
 val GREEN = RGBA(0, 255, 0, 255)
 val BLUE = RGBA(0, 0, 255, 255)
 val YELLOW = RGBA(255, 255, 0, 255)
+val WHITE = RGBA(255, 255, 255, 255)
 
 data class RGBA(
     val r: Int,

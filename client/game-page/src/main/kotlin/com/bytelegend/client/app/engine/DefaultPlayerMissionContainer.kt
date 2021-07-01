@@ -15,13 +15,15 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.PlayerMission
-import com.bytelegend.app.shared.entities.PlayerMissionAnswer
+import com.bytelegend.app.shared.entities.PullRequestAnswer
+import com.bytelegend.app.shared.entities.toPullRequestAnswers
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
-import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
+import com.bytelegend.app.shared.protocol.missionUpdateEvent
+import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.STAR_BYTELEGEND_MISSION_ID
@@ -48,6 +50,13 @@ class DefaultPlayerMissionContainer(
         game.modalController
     }
     var gameScene: DefaultGameScene? = null
+    private val pullRequestAnswers: MutableMap<String, List<PullRequestAnswer>> = JSObjectBackedMap()
+
+    init {
+        missions.forEach {
+            pullRequestAnswers[it.key] = it.value.answers.toPullRequestAnswers()
+        }
+    }
 
     private val starUpdateEventListener: EventListener<StarUpdateEventData> = this::onStarUpdate
     private val missionUpdateEventListener: EventListener<MissionUpdateEventData> = this::onMissionUpdate
@@ -60,8 +69,15 @@ class DefaultPlayerMissionContainer(
         return missions[missionId]?.star ?: 0
     }
 
-    override fun missionAnswers(missionId: String): List<PlayerMissionAnswer> {
-        return missions[missionId]?.answers ?: emptyList()
+    override fun getPlayerMissionById(missionId: String): PlayerMission? = missions[missionId]
+
+    override fun getPullRequestMissionAnswersByMissionId(missionId: String): List<PullRequestAnswer> {
+        return pullRequestAnswers[missionId] ?: emptyList()
+    }
+
+    private fun putMission(missionId: String, mission: PlayerMission) {
+        missions[missionId] = mission
+        pullRequestAnswers[missionId] = mission.answers.toPullRequestAnswers()
     }
 
     private fun isCanvasInvisible(): Boolean {
@@ -80,7 +96,6 @@ class DefaultPlayerMissionContainer(
                 }
             }
         } else {
-
             GlobalScope.launch {
                 eventData.onFinishSpec.items.add.forEach { item ->
                     itemPopup(item, mission)
@@ -193,24 +208,22 @@ class DefaultPlayerMissionContainer(
     }
 
     private fun onMissionUpdate(eventData: MissionUpdateEventData) {
-        val currentMap: String = gameScene?.map?.id ?: return
-        if (currentMap == eventData.map) {
-            val missionId = eventData.newValue.missionId
-            missions[missionId] = eventData.newValue
-            if (eventData.newValue.accomplished) {
-                showConfetti(gameScene!!.canvasState, gameScene!!.objects.getPointById(missionId))
-            }
+        val missionId = eventData.newValue.missionId
+        putMission(missionId, eventData.newValue)
+        if (eventData.newValue.accomplished) {
+            showConfetti(gameScene!!.canvasState, gameScene!!.objects.getPointById(missionId))
         }
+        eventBus.emit(GAME_UI_UPDATE_EVENT, null)
     }
 
     fun init(gameScene: GameScene) {
         this.gameScene = gameScene.unsafeCast<DefaultGameScene>()
         eventBus.on(STAR_UPDATE_EVENT, starUpdateEventListener)
-        eventBus.on(MISSION_UPDATE_EVENT, missionUpdateEventListener)
+        eventBus.on(missionUpdateEvent(gameScene.map.id), missionUpdateEventListener)
     }
 
     fun close() {
-        eventBus.remove(MISSION_UPDATE_EVENT, missionUpdateEventListener)
+        eventBus.remove(missionUpdateEvent(gameScene!!.map.id), missionUpdateEventListener)
         eventBus.remove(STAR_UPDATE_EVENT, starUpdateEventListener)
     }
 }

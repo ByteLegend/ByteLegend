@@ -10,6 +10,7 @@ import react.RProps
 external val BootstrapDropdown: RClass<BootstrapDropdownRProps>
 
 external interface BootstrapDropdownRProps : RProps {
+    var `as`: Any
     var id: String
     var size: String
     var show: Boolean

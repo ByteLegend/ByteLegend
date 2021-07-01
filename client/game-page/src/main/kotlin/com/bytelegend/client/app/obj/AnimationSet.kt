@@ -111,6 +111,6 @@ private fun animationFrameOf(gameScene: GameScene, frames: List<GridCoordinate>)
     //   250~499 -> 1
     //   500-749 -> 0
     //   750-999 -> 1
-    val frameIndex = (gameScene.gameRuntime.currentTimeMillis * CHARACTER_ANIMATION_FPS / 1000).toInt() % frames.size
+    val frameIndex = (gameScene.gameRuntime.elapsedTimeSinceStart * CHARACTER_ANIMATION_FPS / 1000).toInt() % frames.size
     return frames[frameIndex]
 }

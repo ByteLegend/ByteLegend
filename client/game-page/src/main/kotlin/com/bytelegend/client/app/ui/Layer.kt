@@ -8,6 +8,7 @@ enum class Layer {
     PlayerNames,
     UserMouseInteraction,
     MissionTitle,
+    MissionTitlePullRequestAnswerButton,
     ScrollButtons,
     MiniMapCanvas,
     ScriptWidget,

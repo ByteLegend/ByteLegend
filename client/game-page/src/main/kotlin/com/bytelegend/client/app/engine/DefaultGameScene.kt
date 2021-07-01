@@ -6,6 +6,7 @@ import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
+import com.bytelegend.app.client.api.PullRequestLogContainer
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
@@ -33,6 +34,7 @@ import com.bytelegend.client.app.obj.NPC
 import com.bytelegend.client.app.obj.createMissionSprite
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.MAIN_CHANNEL
+import com.bytelegend.client.app.ui.mission.DefaultPullRequestLogContainer
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
@@ -57,6 +59,7 @@ class DefaultGameScene(
     override val blockers: Array<Array<Int>> = map.rawTiles.mapToArray {
         it.blocker
     }
+    override val logs: PullRequestLogContainer = DefaultPullRequestLogContainer(this)
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
     private val channelToDirector: MutableMap<String, DefaultGameDirector> = JSObjectBackedMap()

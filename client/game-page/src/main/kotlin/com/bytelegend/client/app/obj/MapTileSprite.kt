@@ -139,6 +139,6 @@ class AnimationSprite(
     }
 
     private fun getCurrentFrameIndex(frames: Array<RawTileAnimationFrame>, duration: Int): Int {
-        return ((game.currentTimeMillis / duration) % frames.size).toInt()
+        return ((game.elapsedTimeSinceStart / duration) % frames.size).toInt()
     }
 }

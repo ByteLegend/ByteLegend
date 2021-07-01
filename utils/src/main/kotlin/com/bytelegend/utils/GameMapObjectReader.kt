@@ -129,15 +129,15 @@ class TiledObjectReader(
             nonZeroIds.map { it to layer.name }
         }.toMap()
 
-        val idToMissionDefinitions = missionDataReader.getMissionsOnMap(mapId).associateBy { it.id }
+        val idToMissionSpecs = missionDataReader.getMissionsOnMap(mapId).associateBy { it.id }
         return rawMissionObjects.map {
             // If this object is a tile, `gid` points to a tile id
             // If this object has "next", it has a property named "next"
             val next: Long? = it.properties.findPropertyOrNull("next")?.toLong()
             GameMapMission(
                 it.name,
-                idToMissionDefinitions.getValue(it.name).title,
-                idToMissionDefinitions.getValue(it.name).challenge?.star ?: 0,
+                idToMissionSpecs.getValue(it.name).title,
+                idToMissionSpecs.getValue(it.name).challenge?.star ?: 0,
                 mapId,
                 tileIdToSpriteIdMap.getValue(it.gid),
                 it.toPoint(),

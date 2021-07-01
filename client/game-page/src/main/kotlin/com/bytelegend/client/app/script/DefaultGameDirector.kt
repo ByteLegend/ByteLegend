@@ -25,11 +25,11 @@ import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.obj.CharacterSprite
 import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.script.effect.showArrowGif
-import com.bytelegend.client.app.ui.BEGINNER_GUIDE_FINISHED_STATE
+import com.bytelegend.client.app.ui.mission.BEGINNER_GUIDE_FINISHED_STATE
 import com.bytelegend.client.app.ui.COORDINATE_BORDER_FLICKER
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
-import com.bytelegend.client.app.ui.HIGHTLIGHT_MISSION_EVENT
+import com.bytelegend.client.app.ui.mission.HIGHTLIGHT_MISSION_EVENT
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
