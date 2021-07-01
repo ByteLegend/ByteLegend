@@ -87,6 +87,13 @@ fun main() {
         BrowserConsoleLogger.error("$a $b $c $d $e")
     }
 
+    // TODO make this js-load-order-agnostic
+    // https://github.com/PrismJS/prism/issues/1764
+    window.asDynamic().Prism.hooks.add("before-highlight") { env: dynamic ->
+        env.code = env.element.innerText
+        null
+    }
+
     render(document.getElementById("app")) {
         child(GamePage::class) {
         }

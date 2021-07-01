@@ -32,20 +32,7 @@ interface MissionTitlePullRequestAnswerButtonButtonProps : GameProps {
     var pullRequestAnswer: PullRequestAnswer
 }
 
-interface MissionTitlePullRequestAnswerButtonButtonState : RState {
-//    var hovered: Boolean
-
-    // To avoid flickering. Without it, when mouse enters/leaves the element,
-    // it might be resized, triggering another enter/leave event, and so on....
-//    var lastHoveredStateChangeTime: Long
-}
-
-class MissionTitlePullRequestAnswerButton : RComponent<MissionTitlePullRequestAnswerButtonButtonProps, MissionTitlePullRequestAnswerButtonButtonState>() {
-    override fun MissionTitlePullRequestAnswerButtonButtonState.init() {
-//        hovered = false
-//        lastHoveredStateChangeTime = 0
-    }
-
+class MissionTitlePullRequestAnswerButton : RComponent<MissionTitlePullRequestAnswerButtonButtonProps, RState>() {
     private fun RBuilder.pendingSpinner() {
         BootstrapSpinner {
             attrs.animation = "grow"
@@ -64,27 +51,12 @@ class MissionTitlePullRequestAnswerButton : RComponent<MissionTitlePullRequestAn
                 else -> icon(RED_CORSS_SVG_DATA, PixelSize(12, 12))
             }
 
-//            if (state.hovered) {
-//                openPullRequestButton()
-//
-//                if (props.pullRequestAnswer.latestCheckRunConclusion == null) {
-//                    openLiveLogButton()
-//                }
-//                openGitHubActionButton()
-//            } else {
             span {
                 attrs.jsStyle {
                     marginLeft = "10px"
                 }
                 +"Pull request #${props.pullRequestAnswer.number}"
             }
-//            }
-//            attrs.onMouseEnterFunction = {
-//                setHovered(true)
-//            }
-//            attrs.onMouseLeaveFunction = {
-//                setHovered(false)
-//            }
 
             attrs.onClickFunction = {
                 if (props.pullRequestAnswer.checkRuns.isEmpty()) {
@@ -123,28 +95,6 @@ class MissionTitlePullRequestAnswerButton : RComponent<MissionTitlePullRequestAn
         }
     }
 
-//    private fun RBuilder.openLiveLogButton() {
-//        a {
-//            attrs.classes = jsObjectBackedSetOf("btn", "btn-sm", "btn-outline-info")
-//            attrs.role = "button"
-//            +i("OpenLiveLog")
-//            attrs.onClickFunction = {
-//                game.modalController.show {
-//                    BootstrapModalHeader {
-//                        attrs.closeButton = true
-//                        BootstrapModalTitle {
-//                            openPullRequestButton()
-//                            openGitHubActionButton()
-//                        }
-//                    }
-//                    BootstrapModalBody {
-//                        child(PullRequestLogModal::class) {}
-//                    }
-//                }
-//            }
-//        }
-//    }
-
     private fun RBuilder.openPullRequestButton() {
         a {
             attrs.href = props.pullRequestAnswer.htmlUrl
@@ -154,18 +104,4 @@ class MissionTitlePullRequestAnswerButton : RComponent<MissionTitlePullRequestAn
             +"Pull request #${props.pullRequestAnswer.number} ↗"
         }
     }
-
-//    private fun setHovered(hovered: Boolean) {
-//        if (state.hovered == hovered) {
-//            return
-//        } else {
-//            val now = Date().getTime().toLong()
-//            if (now - state.lastHoveredStateChangeTime > 200) {
-//                setState {
-//                    lastHoveredStateChangeTime = now
-//                    this.hovered = hovered
-//                }
-//            }
-//        }
-//    }
 }

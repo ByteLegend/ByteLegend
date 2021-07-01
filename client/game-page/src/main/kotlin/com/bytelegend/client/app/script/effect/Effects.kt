@@ -8,6 +8,7 @@ import com.bytelegend.app.client.misc.playAudio
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.client.app.external.confetti
 import com.bytelegend.client.app.ui.Layer
 import kotlinext.js.assign
 import kotlinext.js.jsObject
@@ -27,9 +28,6 @@ import kotlin.random.Random
 
 val gsap
     get() = window.asDynamic().gsap
-
-val confetti
-    get() = window.asDynamic().confetti
 
 private fun fire(particleRatio: Double, origin: dynamic, opts: dynamic) {
     val count = 200

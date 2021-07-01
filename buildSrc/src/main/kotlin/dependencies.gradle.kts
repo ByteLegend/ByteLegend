@@ -2,6 +2,7 @@ import com.bytelegend.buildsupport.OpenSourceLibrary
 import com.bytelegend.buildsupport.OpenSourceLicense.Apache2
 import com.bytelegend.buildsupport.OpenSourceLicense.BSD2Clause
 import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
+import com.bytelegend.buildsupport.OpenSourceLicense.ISC
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 
@@ -62,7 +63,7 @@ val reactTextAreaAutosizeVersion = "8.3.2"
 val jclOverSlf4JVersion = "1.7.30"
 val logbackCloudWatchAppenderVersion = "1.0.6.3"
 val javaOptVersion = "0.2.0"
-val reactSyntaxHighlighterVersion = "15.4.3"
+val canvasConfettiVersion = "1.4.0"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -249,10 +250,17 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         license = MIT
     ),
     OpenSourceLibrary(
-        name = "react-syntax-highlighter",
-        version = reactSyntaxHighlighterVersion,
-        creditName = "react-syntax-highlighter",
-        url = "https://github.com/react-syntax-highlighter/react-syntax-highlighter",
+        name = "canvas-confetti",
+        version = canvasConfettiVersion,
+        creditName = "canvas-confetti",
+        url = "https://github.com/catdad/canvas-confetti",
+        license = ISC
+    ),
+    OpenSourceLibrary(
+        name = "prism",
+        version = "",
+        creditName = "Prism",
+        url = "https://prismjs.com/",
         license = MIT
     )
 )

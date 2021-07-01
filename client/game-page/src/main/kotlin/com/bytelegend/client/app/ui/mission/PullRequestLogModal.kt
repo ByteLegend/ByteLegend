@@ -9,7 +9,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.client.app.engine.GAME_CLOCK_1HZ_EVENT
-import com.bytelegend.client.app.external.SyntaxHighlighter
+import com.bytelegend.client.app.external.codeBlock
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import react.RBuilder
@@ -53,18 +53,18 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
         val liveLog = activeScene.logs.getLiveLogsByAnswer(props.answer, props.answer.checkRuns[state.activeTabIndex].id)
         val downloadedLog = activeScene.logs.downloadLogByAnswerAsync(props.answer, props.answer.checkRuns[state.activeTabIndex].id)
 
-        console.log("live: ${JSON.stringify(liveLog)}")
-
         if (props.answer.accomplished) {
             if (downloadedLog.isCompleted) {
-                SyntaxHighlighter {
+                codeBlock {
                     +downloadedLog.getCompleted()
+                    attrs.language = "log"
                 }
             } else {
                 // if the log is being downloaded, let's show the live log for now.
                 if (liveLog.isNotEmpty()) {
-                    SyntaxHighlighter {
-                        liveLog.joinToString("\n")
+                    codeBlock {
+                        +liveLog.joinToString("\n")
+                        attrs.language = "log"
                     }
                 }
                 BootstrapSpinner {
@@ -72,8 +72,9 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
                 }
             }
         } else {
-            SyntaxHighlighter {
+            codeBlock {
                 +liveLog.joinToString("\n")
+                attrs.language = "log"
             }
         }
     }

@@ -43,6 +43,7 @@ enum class OpenSourceLicense(val url: String) {
     Apache2("https://www.apache.org/licenses/LICENSE-2.0"),
     LGPL("https://www.gnu.org/licenses/lgpl-3.0.en.html"),
     MIT("https://en.wikipedia.org/wiki/MIT_License"),
+    ISC("https://en.wikipedia.org/wiki/ISC_license"),
     WTFPL("https://en.wikipedia.org/wiki/WTFPL"),
     GreenSockStanardLicense("https://greensock.com/standard-license/")
 }
