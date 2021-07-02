@@ -17,4 +17,3 @@ expect annotation class DynamoDbVersionAttribute()
 const val READ_ONLY_METADATA_KEY = "ReadOnly"
 
 expect annotation class ReadOnly()
-

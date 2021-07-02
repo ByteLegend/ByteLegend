@@ -6,5 +6,3 @@ data class Pagination<T>(
     val pageNumber: Int,
     val pageSize: Int
 )
-
-

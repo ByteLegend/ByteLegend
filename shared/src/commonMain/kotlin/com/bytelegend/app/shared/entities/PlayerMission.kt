@@ -3,7 +3,6 @@ package com.bytelegend.app.shared.entities
 import com.bytelegend.app.shared.annotations.DynamoDbIgnore
 import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.util.currentTimeMillis
-import kotlin.jvm.JvmStatic
 
 open class PlayerMission(
     @get: DynamoDbIgnore
@@ -78,4 +77,3 @@ class SceneInitData(
     val players: List<BasePlayer>,
     val missions: Map<String, PlayerMission>
 )
-

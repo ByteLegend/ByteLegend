@@ -25,7 +25,7 @@ val RIGHT_MOVE = listOf(RIGHT_MOVE_1, RIGHT_MOVE_2)
 
 fun playerAnimationSetResourceId(characterId: Int) = "animation-set-${animationSetId(characterId)}"
 
-fun playerAnimationSetId(animationSetId: Int) = "animation-set-${animationSetId}"
+fun playerAnimationSetId(animationSetId: Int) = "animation-set-$animationSetId"
 
 fun animationSetId(characterId: Int) = characterId / (ANIMATION_SET_HORIZONTAL_NUMBER * PLAYER_ANIMATION_SET_VERTICAL_NUMBER)
 

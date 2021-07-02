@@ -35,8 +35,3 @@ data class MissionSpec(
      */
     val onFinish: OnFinishSpec = OnFinishSpec()
 )
-
-
-
-
-

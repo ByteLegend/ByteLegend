@@ -100,4 +100,3 @@ inline fun <T, reified R> List<List<T>>.map(fn: (T) -> R): List<List<R>> {
 fun <T> Array<Array<T>>.toListList(): List<List<T>> {
     return this.toList().map { it.toList() }
 }
-

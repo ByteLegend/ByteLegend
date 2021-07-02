@@ -123,7 +123,6 @@ fun MutableMap<Any, Int>.recordRawConstantPoolEntries(vararg entries: Any) = ent
 
 fun <T> List<T>.mapToConstantPoolIndex(rawConstantPool: Map<Any, Int>): List<Int> = map { rawConstantPool.getValue(it as Any) }
 
-
 @Serializable
 data class RawGameMapTile(
     val layers: List<RawGameMapTileLayer>,
@@ -182,7 +181,6 @@ data class RawAnimationLayer(
         finalConstantPool.add(AnimationLayerEntry(frames.mapToConstantPoolIndex(rawConstantPool), layer))
         frames.forEach { finalConstantPool.add(AnimationFrameEntry(it)) }
     }
-
 }
 
 @Serializable
@@ -305,7 +303,6 @@ object ConstantPoolEntrySerializer : KSerializer<ConstantPoolEntry> {
         return type!!.of(value!!)
     }
 
-
     override fun serialize(encoder: Encoder, value: ConstantPoolEntry) {
         val composite = encoder.beginStructure(descriptor)
         composite.encodeIntElement(descriptor, 0, value.type.index)
@@ -323,7 +320,6 @@ interface ConstantPoolEntry {
     fun <T> decompress(constantPoolTable: Map<Int, ConstantPoolEntry>): T
 }
 
-
 data class GameTileConstantPoolEntry(
     val layers: List<Int>,
     val blocker: Int
@@ -339,11 +335,9 @@ data class GameTileConstantPoolEntry(
     }
 }
 
-
 class IndexedConstantPoolEntryWrapper(private val index: Int, private val delegate: ConstantPoolEntry) : ConstantPoolEntry by delegate {
     override fun getIndex() = index
 }
-
 
 data class CoordinateConstantPoolEntry(
     val coordinate: GridCoordinate
@@ -355,7 +349,6 @@ data class CoordinateConstantPoolEntry(
 
     override fun <T> decompress(constantPoolTable: Map<Int, ConstantPoolEntry>): T = coordinate as T
 }
-
 
 data class StaticImageLayerEntry(
     val coordinate: Int,
@@ -370,7 +363,6 @@ data class StaticImageLayerEntry(
         return RawStaticImageLayer(constantPoolTable.getValue(coordinate).decompress(constantPoolTable) as GridCoordinate, layer) as T
     }
 }
-
 
 data class AnimationLayerEntry(
     val frames: List<Int>,

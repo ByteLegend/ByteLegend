@@ -39,9 +39,9 @@ data class HumanReadableCoordinate(val x: Int, val y: Int) {
                 current /= 26
             } else {
                 if (charArray.isEmpty()) {
-                    charArray.add('A' + current);
+                    charArray.add('A' + current)
                 } else {
-                    charArray.add('A' + current - 1);
+                    charArray.add('A' + current - 1)
                 }
                 return charArray.reversed().joinToString("")
             }
@@ -49,7 +49,7 @@ data class HumanReadableCoordinate(val x: Int, val y: Int) {
     }
 
     override fun toString(): String {
-        return "(${letters}, $y)"
+        return "($letters, $y)"
     }
 }
 

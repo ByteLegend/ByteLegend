@@ -72,4 +72,3 @@ interface Lifecycle {
     fun close() {
     }
 }
-

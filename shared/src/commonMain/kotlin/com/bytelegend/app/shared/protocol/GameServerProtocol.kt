@@ -2,7 +2,6 @@ package com.bytelegend.app.shared.protocol
 
 import com.bytelegend.app.shared.entities.SceneInitData
 
-
 /**
  * Upon switching to a new scene, get all online players and missions/states on a map.
  */
@@ -15,11 +14,10 @@ const val MOVE_TO = "protocol.move.to"
 const val LEAVE_SCENE = "protocol.leave.scene"
 const val ENTER_SCENE = "protocol.enter.scene"
 
-
 /***************** Events broadcast from server to client-side EventBus ***********************/
-fun playerEnterSceneEvent(mapId: String) = "protocol.player.enter.${mapId}"
-fun playerLeaveSceneEvent(mapId: String) = "protocol.player.leave.${mapId}"
-fun playerMoveOnSceneEvent(mapId: String) = "protocol.player.move.${mapId}"
+fun playerEnterSceneEvent(mapId: String) = "protocol.player.enter.$mapId"
+fun playerLeaveSceneEvent(mapId: String) = "protocol.player.leave.$mapId"
+fun playerMoveOnSceneEvent(mapId: String) = "protocol.player.move.$mapId"
 
 /**
  * Periodically get online player number
@@ -29,7 +27,7 @@ const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
 /***************** Point-to-point events from server to client-side EventBus ***********************/
 const val STAR_UPDATE_EVENT = "protocol.star.update"
 const val ITEMS_STATES_UPDATE_EVENT = "protocol.items.states.update"
-fun missionUpdateEvent(mapId: String) = "protocol.mission.update.${mapId}"
+fun missionUpdateEvent(mapId: String) = "protocol.mission.update.$mapId"
 val MISSION_UPDATE_EVENT_PREFIX = missionUpdateEvent("")
 const val REMOVE_STATE_EVENT = "protocol.remove.state"
 const val PUT_STATE_EVENT = "protocol.put.state"
@@ -38,7 +36,6 @@ const val KICK_OFF_EVENT = "protocol.kick.off"
 
 fun logStreamEvent(mapId: String) = "protocol.log.stream.$mapId"
 val LOG_STREAM_EVENT_PREFIX = logStreamEvent("")
-
 
 interface GameServerProtocol {
     /**
@@ -90,7 +87,6 @@ data class ReplyMessage<T>(
     val replyAddress: String,
     val payload: T
 ) : WebSocketMessage
-
 
 data class PublishMessage<T>(
     val event: String,

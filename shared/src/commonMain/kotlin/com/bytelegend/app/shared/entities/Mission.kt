@@ -1,10 +1,10 @@
-//package com.bytelegend.app.shared.entities
+// package com.bytelegend.app.shared.entities
 //
-//import com.bytelegend.app.shared.entities.MissionType.None
+// import com.bytelegend.app.shared.entities.MissionType.None
 //
-//val NON_CHALLENGE_MISSION = MissionSpec(None, 0, "")
+// val NON_CHALLENGE_MISSION = MissionSpec(None, 0, "")
 //
-//data class Mission(
+// data class Mission(
 //    val id: String,
 //    val title: String,
 //    val children: List<Mission> = emptyList(),
@@ -19,9 +19,9 @@
 //    val checkpoint: Boolean = true,
 //    val spec: MissionSpec = NON_CHALLENGE_MISSION,
 //    val next: String?
-//)
+// )
 //
-//class MissionSpec(
+// class MissionSpec(
 //    val type: MissionType,
 //    val star: Int,
 //    /**
@@ -29,9 +29,9 @@
 //     * Type == Question -> correct answer regex
 //     */
 //    val spec: String,
-//)
+// )
 //
-//enum class MissionType {
+// enum class MissionType {
 //    // It has no challenges.
 //    None,
 //
@@ -45,13 +45,13 @@
 //
 //    // Answer a question
 //    Question
-//}
+// }
 //
-//fun Mission.flatten(): List<Mission> {
+// fun Mission.flatten(): List<Mission> {
 //    val ret = mutableListOf(this)
 //    children.forEach {
 //        ret.addAll(it.flatten())
 //    }
 //    return ret
-//}
+// }
 //

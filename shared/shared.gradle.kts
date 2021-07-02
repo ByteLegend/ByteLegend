@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
+    id("configure-ktlint")
 }
 
 val libs: (String) -> String by rootProject.ext
