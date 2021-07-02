@@ -8,6 +8,7 @@ class PullRequestAnswer(
     val number: String,
     val repoFullName: String,
     val accomplished: Boolean,
+    val lastUpdatedAt: Long,
     // order by start time desc
     val checkRuns: List<PullRequestCheckRun>
 ) {
@@ -28,7 +29,7 @@ enum class CheckRunConclusion {
 
 fun List<PlayerMissionAnswer>.toPullRequestAnswers(): List<PullRequestAnswer> {
     val groupByAnswers = filter { it.answer.startsWith("https://") }.groupBy { it.answer }
-    return groupByAnswers.mapNotNull { it.value.toPullRequestAnswer() }
+    return groupByAnswers.mapNotNull { it.value.toPullRequestAnswer() }.sortedBy { it.lastUpdatedAt }.reversed()
 }
 
 private fun List<PlayerMissionAnswer>.toPullRequestAnswer(): PullRequestAnswer? {
@@ -41,22 +42,22 @@ private fun List<PlayerMissionAnswer>.toPullRequestAnswer(): PullRequestAnswer? 
     val accomplished = any { it.accomplished }
     val sortedCheckRunByStartedTimeDesc = filter {
         it.data["event"] == "check_run"
-    }.sortedBy { -it.createdAt }
+    }.sortedBy { it.createdAt }.reversed()
 
     val idToConclusion = sortedCheckRunByStartedTimeDesc.filter {
         it.data["action"] == "completed"
     }.associate {
-        it.data["id"] to it.data.get("conclusion")?.let { CheckRunConclusion.valueOf(it.uppercase()) }
+        it.data["id"] to it.data["conclusion"]?.let { CheckRunConclusion.valueOf(it.uppercase()) }
     }
     val checkRuns = sortedCheckRunByStartedTimeDesc
         .filter { it.data["action"] == "created" }
         .map {
             val id = it.data["id"]!!
             val conclusion = idToConclusion[id]
-            val htmlUrl = "https://github.com/$repo/actions/runs/$id"
-            PullRequestCheckRun(id, htmlUrl, conclusion)
+            val actionHtmlUrl = "https://github.com/$repo/actions/runs/$id"
+            PullRequestCheckRun(id, actionHtmlUrl, conclusion)
         }
+    val maxCreatedAt = maxOf { it.createdAt }
 
-
-    return PullRequestAnswer(htmlUrl, number, repo, accomplished, checkRuns)
+    return PullRequestAnswer(htmlUrl, number, repo, accomplished, maxCreatedAt, checkRuns)
 }

@@ -47,7 +47,31 @@ open class PlayerMissionAnswer(
     val data: Map<String, String> = emptyMap(),
     // Epoch ms
     val createdAt: Long = currentTimeMillis()
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as PlayerMissionAnswer
+
+        if (star != other.star) return false
+        if (accomplished != other.accomplished) return false
+        if (answer != other.answer) return false
+        if (data != other.data) return false
+        if (createdAt != other.createdAt) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = star
+        result = 31 * result + accomplished.hashCode()
+        result = 31 * result + answer.hashCode()
+        result = 31 * result + data.hashCode()
+        result = 31 * result + createdAt.hashCode()
+        return result
+    }
+}
 
 class SceneInitData(
     val online: Int,

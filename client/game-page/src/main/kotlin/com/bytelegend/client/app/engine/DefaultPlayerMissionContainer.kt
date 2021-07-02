@@ -23,6 +23,7 @@ import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
 import com.bytelegend.app.shared.protocol.missionUpdateEvent
+import com.bytelegend.client.app.engine.util.JSArrayBackedList
 import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.script.DefaultGameDirector
@@ -76,8 +77,20 @@ class DefaultPlayerMissionContainer(
     }
 
     private fun putMission(missionId: String, mission: PlayerMission) {
-        missions[missionId] = mission
-        pullRequestAnswers[missionId] = mission.answers.toPullRequestAnswers()
+        val oldMission = missions[missionId]
+        if (oldMission == null) {
+            missions[missionId] = mission
+            pullRequestAnswers[missionId] = mission.answers.toPullRequestAnswers()
+        } else {
+            // When the answer events from server are misordered, it might be:
+            // [answer1, answer2, answer3] comes first and [answer1, answer2] comes later
+            // In this case, we need to make sure no answers missing
+            val set = oldMission.answers.toMutableSet().apply { addAll(mission.answers) }
+            mission.answers.clear()
+            mission.answers.addAll(JSArrayBackedList(set))
+            missions[missionId] = mission
+            pullRequestAnswers[missionId] = mission.answers.toPullRequestAnswers()
+        }
     }
 
     private fun isCanvasInvisible(): Boolean {
@@ -208,6 +221,9 @@ class DefaultPlayerMissionContainer(
     }
 
     private fun onMissionUpdate(eventData: MissionUpdateEventData) {
+        if (logger.debugEnabled) {
+            logger.debug("Received mission update event: ${eventData.newValue.missionId} ${eventData.change.answer} ${JSON.stringify(eventData.change.data)} ${eventData.change.createdAt}")
+        }
         val missionId = eventData.newValue.missionId
         putMission(missionId, eventData.newValue)
         if (eventData.newValue.accomplished) {

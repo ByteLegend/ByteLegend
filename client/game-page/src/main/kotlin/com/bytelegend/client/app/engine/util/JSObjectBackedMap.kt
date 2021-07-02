@@ -51,6 +51,23 @@ class JSObjectBackedMap<V>(
         delete(delegate[key])
         return value
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class.js != other::class.js) return false
+
+        other as JSObjectBackedMap<*>
+        return toJSON() == other.toJSON()
+    }
+
+    fun toJSON(): String {
+        val d = delegate
+        return js("JSON.stringify(d, Object.keys(d).sort())")
+    }
+
+    override fun hashCode(): Int {
+        return toJSON().hashCode()
+    }
 }
 
 internal class JSObjectBackedValueCollection<V>(

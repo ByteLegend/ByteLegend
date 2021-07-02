@@ -47,8 +47,12 @@ class MissionTitlePullRequestAnswerButton : RComponent<MissionTitlePullRequestAn
             attrs.classes = jsObjectBackedSetOf("pull-request-answer-button")
             when (props.pullRequestAnswer.latestCheckRun?.conclusion) {
                 null -> pendingSpinner()
-                CheckRunConclusion.SUCCESS -> icon(GREEN_TICK_SVG_DATA, PixelSize(12, 12))
-                else -> icon(RED_CORSS_SVG_DATA, PixelSize(12, 12))
+                CheckRunConclusion.SUCCESS -> icon(GREEN_TICK_SVG_DATA, PixelSize(12, 12)) {
+                    attrs.classes = jsObjectBackedSetOf("icon-status-success")
+                }
+                else -> icon(RED_CORSS_SVG_DATA, PixelSize(12, 12)) {
+                    attrs.classes = jsObjectBackedSetOf("icon-status-failure")
+                }
             }
 
             span {

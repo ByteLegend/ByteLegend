@@ -43,7 +43,7 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
                                     activeTabIndex = index
                                 }
                             }
-                            +i("Action ${checkRun.id}")
+                            +"Action ${checkRun.id}"
                         }
                     }
                 }

@@ -68,12 +68,12 @@ abstract class AbstractBrowserTest : AbstractIntegrationTest() {
         get() = File(System.getProperty("build.tmp.dir"), javaClass.simpleName)
 
     @BeforeEach
-    fun setUp() {
+    fun setUpAbstractBrowserTest() {
         exposeHostPorts(gameServerPort)
     }
 
     @AfterEach
-    fun tearDown() {
+    fun tearDownAbstractBrowserTest() {
         browserWebDriverContainers.forEach { it.safeStop() }
     }
 

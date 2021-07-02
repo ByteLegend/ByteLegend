@@ -3,6 +3,7 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.DIV
+import kotlinx.html.IMG
 import kotlinx.html.classes
 import react.Component
 import react.RBuilder
@@ -24,7 +25,11 @@ inline fun <T : Any> jsObject(builder1: T.() -> Unit, builder2: T.() -> Unit): T
 
 fun js(builder1: dynamic.() -> Unit, builder2: dynamic.() -> Unit): dynamic = jsObject(builder1, builder2)
 
-fun RBuilder.icon(srcData: String, size: PixelSize = PixelSize(24, 24)) {
+fun RBuilder.icon(
+    srcData: String,
+    size: PixelSize = PixelSize(24, 24),
+    config: RDOMBuilder<IMG>.() -> Unit = {}
+) {
     img {
         attrs.jsStyle {
             width = "${size.width}px"
@@ -32,6 +37,7 @@ fun RBuilder.icon(srcData: String, size: PixelSize = PixelSize(24, 24)) {
             display = "inline-block"
         }
         attrs.src = srcData
+        config()
     }
 }
 

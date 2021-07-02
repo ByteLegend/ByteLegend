@@ -1,7 +1,6 @@
 package com.bytelegend.app.shared.protocol
 
 import com.bytelegend.app.shared.entities.SceneInitData
-import kotlin.math.log
 
 
 /**
