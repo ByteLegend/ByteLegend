@@ -1,4 +1,4 @@
-package com.bytelegend.app.browsertest
+package com.bytelegend.app.testfixtures
 
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
 import org.junit.jupiter.api.extension.ExtensionContext

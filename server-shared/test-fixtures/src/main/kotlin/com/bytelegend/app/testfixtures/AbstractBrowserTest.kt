@@ -2,7 +2,6 @@
 
 package com.bytelegend.app.testfixtures
 
-import com.bytelegend.app.browsertest.JUnit5VncRecorder
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

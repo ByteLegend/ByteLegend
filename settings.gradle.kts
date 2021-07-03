@@ -38,6 +38,7 @@ if (settingsDir.resolve("server/server.gradle.kts").isFile) {
     include(":server:dal-dynamodb")
     include(":server:dal-api")
     include(":server:deployment")
+    include(":server:cookie-provider")
 }
 
 rootProject.children.forEach { it.configureBuildScriptName() }
