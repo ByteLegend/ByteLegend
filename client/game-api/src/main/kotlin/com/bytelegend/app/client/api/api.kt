@@ -10,6 +10,7 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.entities.PlayerMission
 import com.bytelegend.app.shared.entities.PullRequestAnswer
+import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
@@ -238,7 +239,7 @@ interface PlayerMissionContainer {
 
 interface PullRequestLogContainer {
     fun getLiveLogsByAnswer(answer: PullRequestAnswer, checkRunId: String): List<String>
-    fun downloadLogByAnswerAsync(answer: PullRequestAnswer, checkRunId: String): Deferred<String>
+    fun downloadLogByAnswerAsync(answer: PullRequestAnswer, checkRun: PullRequestCheckRun): Deferred<String>
 }
 
 interface GameSceneContainer : GameContainerSizeAware {

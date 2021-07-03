@@ -6,6 +6,7 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.PullRequestLogContainer
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.entities.PullRequestAnswer
+import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.logStreamEvent
 import com.bytelegend.client.app.engine.GameMission
@@ -51,18 +52,18 @@ class DefaultPullRequestLogContainer(
         return liveLogs[liveLogId(checkRunId)]?.lines ?: emptyList()
     }
 
-    override fun downloadLogByAnswerAsync(answer: PullRequestAnswer, checkRunId: String): Deferred<String> {
-        val id = downloadedLogId(checkRunId)
+    override fun downloadLogByAnswerAsync(answer: PullRequestAnswer, checkRun: PullRequestCheckRun): Deferred<String> {
+        val id = downloadedLogId(checkRun.id)
         var downloadedLog = downloadedLogs[id]
         if (downloadedLog == null) {
-            downloadedLog = GlobalScope.async { download(answer.repoFullName, checkRunId) }
+            downloadedLog = GlobalScope.async { download(answer.repoFullName, checkRun.sha, checkRun.id) }
             downloadedLogs[id] = downloadedLog
         }
         return downloadedLog
     }
 
-    private suspend fun download(repo: String, checkRunId: String): String {
-        return window.fetch("/game/api/log?repo=$repo&checkRunId=$checkRunId")
+    private suspend fun download(repo: String, sha: String, checkRunId: String): String {
+        return window.fetch("/game/api/log?repo=$repo&sha=$sha&checkRunId=$checkRunId")
             .await()
             .apply(Response::checkStatusCode)
             .text()

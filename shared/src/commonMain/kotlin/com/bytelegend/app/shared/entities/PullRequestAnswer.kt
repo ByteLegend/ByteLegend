@@ -18,6 +18,7 @@ class PullRequestAnswer(
 
 class PullRequestCheckRun(
     val id: String,
+    val sha: String,
     val htmlUrl: String,
     // null means it's still running
     val conclusion: CheckRunConclusion?
@@ -53,9 +54,10 @@ private fun List<PlayerMissionAnswer>.toPullRequestAnswer(): PullRequestAnswer? 
         .filter { it.data["action"] == "created" }
         .map {
             val id = it.data["id"]!!
+            val sha = it.data["sha"]!!
             val conclusion = idToConclusion[id]
             val actionHtmlUrl = "https://github.com/$repo/actions/runs/$id"
-            PullRequestCheckRun(id, actionHtmlUrl, conclusion)
+            PullRequestCheckRun(id, actionHtmlUrl, sha, conclusion)
         }
     val maxCreatedAt = maxOf { it.createdAt }
 

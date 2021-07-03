@@ -51,7 +51,7 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
         }
 
         val liveLog = activeScene.logs.getLiveLogsByAnswer(props.answer, props.answer.checkRuns[state.activeTabIndex].id)
-        val downloadedLog = activeScene.logs.downloadLogByAnswerAsync(props.answer, props.answer.checkRuns[state.activeTabIndex].id)
+        val downloadedLog = activeScene.logs.downloadLogByAnswerAsync(props.answer, props.answer.checkRuns[state.activeTabIndex])
 
         if (props.answer.accomplished) {
             if (downloadedLog.isCompleted) {
