@@ -18,25 +18,8 @@ class DeploymentPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         buildTimestamp = project.rootProject.extensions.extraProperties["buildTimestamp"]!!.toString()
 
-        listOf("Beijing", "Seoul").forEach { region ->
-            val dockerPushBytelegendTask = project.createDockerPushTask(region, "bytelegend", ":server:app:dockerBuild")
-            val dockerPushSyncserverTask = project.createDockerPushTask(region, "sync-server", ":server:sync-server:dockerBuild")
-            val uploadToS3Task = project.createUploadToS3Task(region)
-
-            val releaseTasks = listOf(dockerPushBytelegendTask, dockerPushSyncserverTask, uploadToS3Task)
-
-            val mergeK8sYamls = project.createMergeK8sYamlTask(region)
-            val deployToK8sTask = project.createDeployToK8sTask(region, mergeK8sYamls)
-
-            project.tasks.register("release$region") {
-                dependsOn(releaseTasks)
-            }
-
-            project.tasks.register("deploy$region") {
-                mustRunAfter(releaseTasks)
-                dependsOn(deployToK8sTask)
-            }
-        }
+        project.createDeployBeijingTasks("Beijing")
+        project.createDeploySeoulTasks("Seoul")
 
         val updateVersionsTask = project.createUpdateVersionsTask()
 
@@ -51,6 +34,39 @@ class DeploymentPlugin : Plugin<Project> {
         }
     }
 
+    private fun Project.createDeployBeijingTasks(region: String) {
+        val uploadToS3Task = project.createUploadToS3Task(region)
+
+        val releaseTasks = listOf(uploadToS3Task)
+
+        project.tasks.register("release$region") {
+            dependsOn(releaseTasks)
+        }
+
+        project.tasks.register("deploy$region") {
+            mustRunAfter(releaseTasks)
+        }
+    }
+
+    private fun Project.createDeploySeoulTasks(region: String) {
+        val dockerPushBytelegendTask = project.createDockerPushTask(region, "bytelegend", ":server:app:dockerBuild")
+        val uploadToS3Task = project.createUploadToS3Task(region)
+
+        val releaseTasks = listOf(dockerPushBytelegendTask, uploadToS3Task)
+
+        val mergeK8sYamls = project.createMergeK8sYamlTask(region)
+        val deployToK8sTask = project.createDeployToK8sTask(region, mergeK8sYamls)
+
+        project.tasks.register("release$region") {
+            dependsOn(releaseTasks)
+        }
+
+        project.tasks.register("deploy$region") {
+            mustRunAfter(releaseTasks)
+            dependsOn(deployToK8sTask)
+        }
+    }
+
     private fun Project.createUpdateVersionsTask() = tasks.register("updateVersionsJsonOnMaster", UpdateVersionsJsonTask::class.java) {
         dependsOn("releaseBeijing", "releaseSeoul")
     }
@@ -61,6 +77,7 @@ class DeploymentPlugin : Plugin<Project> {
         region,
         "$image:$buildTimestamp"
     ) {
+        enabled = region != "Beijing"
         dependsOn(dockerBuildTask)
     }
 
@@ -74,8 +91,7 @@ class DeploymentPlugin : Plugin<Project> {
     )
 
     private fun Project.createMergeK8sYamlTask(region: String) = tasks.register("MergeK8sYamls$region", Copy::class.java) {
-        from(file("bytelegend-production-shared"))
-        from(file("bytelegend-production-${region.toLowerCase()}"))
+        from(file("production"))
         into(buildDir.resolve("deploy-k8s-${region.toLowerCase()}-$buildTimestamp"))
         include("*.yaml", "*.yaml.template")
     }
