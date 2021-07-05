@@ -57,7 +57,7 @@ private fun List<PlayerMissionAnswer>.toPullRequestAnswer(): PullRequestAnswer? 
             val sha = it.data["sha"]!!
             val conclusion = idToConclusion[id]
             val actionHtmlUrl = "https://github.com/$repo/actions/runs/$id"
-            PullRequestCheckRun(id, actionHtmlUrl, sha, conclusion)
+            PullRequestCheckRun(id, sha, actionHtmlUrl, conclusion)
         }
     val maxCreatedAt = maxOf { it.createdAt }
 
