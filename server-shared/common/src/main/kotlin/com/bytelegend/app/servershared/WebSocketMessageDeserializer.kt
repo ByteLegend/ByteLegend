@@ -13,8 +13,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode
 class WebSocketMessageDeserializer : StdDeserializer<WebSocketMessage>(WebSocketMessage::class.java) {
     override fun deserialize(jp: JsonParser, ctx: DeserializationContext): WebSocketMessage {
         val node = jp.codec.readTree<JsonNode>(jp)
-        val type = WebSocketMessageType.valueOf(node.get("type").asText())
-        return when (type) {
+        return when (val type = WebSocketMessageType.valueOf(node.get("type").asText())) {
             WebSocketMessageType.SUBSCRIBE, WebSocketMessageType.UNSUBSCRIBE -> {
                 SubscribeUnsubscribeMessage(type, node.get("event").asText())
             }

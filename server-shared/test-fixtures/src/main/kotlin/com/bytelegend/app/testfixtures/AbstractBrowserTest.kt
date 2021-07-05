@@ -3,7 +3,8 @@
 package com.bytelegend.app.testfixtures
 
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.openqa.selenium.By
@@ -34,27 +35,46 @@ fun BrowserWebDriverContainer<Nothing>.safeStop() {
     }
 }
 
-abstract class AbstractIntegrationTest {
+abstract class AbstractByteLegendIntegrationTest {
     @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     abstract val gameServerPort: Int
     private val httpClient by lazy { HttpClient.newHttpClient() }
 
     protected fun sendWebhookFromResource(event: String, resource: String) {
         val json = javaClass.getResourceAsFile(resource).readText()
-        val request = HttpRequest.newBuilder()
-            .header("Content-Type", "application/json")
-            .header("X-GitHub-Event", event)
-            .uri(URI.create("http://localhost:$gameServerPort/github_webhook"))
-            .POST(HttpRequest.BodyPublishers.ofString(json))
-            .build()
-        val response = httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-        Assertions.assertEquals(200, response.statusCode())
+        post(
+            "http://localhost:$gameServerPort/github_webhook", json,
+            mapOf("Content-Type" to "application/json", "X-GitHub-Event" to event)
+        ).assert2XXStatusCode()
     }
+
+    protected fun post(uri: String, body: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {
+        val request = HttpRequest.newBuilder()
+            .apply {
+                headers.forEach { key, value -> header(key, value) }
+            }
+            .uri(URI.create(uri))
+            .POST(HttpRequest.BodyPublishers.ofString(body))
+            .build()
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+}
+
+fun HttpResponse<String>.assert2XXStatusCode(): HttpResponse<String> {
+    assertTrue(statusCode() in 200..299) {
+        "Received ${statusCode()} status code: ${body()}"
+    }
+    return this
+}
+
+fun HttpResponse<String>.assertStatusCode(expectedStatusCode: Int): HttpResponse<String> {
+    assertEquals(expectedStatusCode, statusCode())
+    return this
 }
 
 @Testcontainers
 @ExtendWith(JUnit5VncRecorder::class)
-abstract class AbstractBrowserTest : AbstractIntegrationTest() {
+abstract class AbstractBrowserTest : AbstractByteLegendIntegrationTest() {
     val browserWebDriverContainers: MutableList<BrowserWebDriverContainer<Nothing>> = ArrayList()
     open val webDriver: WebDriver
         get() = browserWebDriverContainers[0].webDriver

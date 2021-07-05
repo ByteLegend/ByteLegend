@@ -1,19 +1,11 @@
 package com.bytelegend.client.app.ui
 
-import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
-import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
-import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
-import com.bytelegend.app.shared.enums.ServerLocation
+import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
 import kotlinx.html.classes
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.title
 import react.RBuilder
 import react.RState
 import react.dom.a
-import react.dom.h4
-import react.dom.img
-import react.dom.p
 import react.dom.span
 
 val ICPServerLocationWidgetWidth = 300
@@ -33,7 +25,7 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
             zIndex = Layer.IcpServerLocationWidget.zIndex(),
             classes = jsObjectBackedSetOf("flex-center", "white-text-black-shadow-1")
         ) {
-            if (game.serverLocation == ServerLocation.Beijing) {
+            if (game.locale == Locale.ZH_HANS) {
                 a {
                     attrs.target = "_blank"
                     attrs.href = "https://beian.miit.gov.cn"
@@ -42,23 +34,7 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
                 }
             }
 
-            img {
-                attrs.height = "12px"
-                attrs.width = "12px"
-                attrs.src = game.resolve("/img/icon/server.png")
-            }
-
-            if (game.gameControl.online) {
-                a {
-                    attrs.classes = jsObjectBackedSetOf("server-location-link")
-                    attrs.title = getServerLocationTitle()
-                    attrs.onClickFunction = {
-                        showServerLocationModal()
-                    }
-
-                    +getServerLocationDisplayName()
-                }
-            } else {
+            if (!game.gameControl.online) {
                 span {
                     attrs.classes = jsObjectBackedSetOf("server-location-link-offline")
                     +i("OfflineMode")
@@ -66,27 +42,4 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidg
             }
         }
     }
-
-    private fun showServerLocationModal() {
-        game.modalController.show {
-            BootstrapModalHeader {
-                attrs.closeButton = true
-                BootstrapModalTitle {
-                    attrs.asDynamic().id = "contained-modal-title-vcenter"
-                    unsafeSpan(getServerLocationTitleHtml())
-                }
-            }
-
-            BootstrapModalBody {
-                h4 { +i("WhatIsTheServerLocation") }
-                p {
-                    +i("ServerLocationExplanation")
-                }
-            }
-        }
-    }
-
-    private fun getServerLocationDisplayName() = i(game.serverLocation.displayNameId())
-    private fun getServerLocationTitle() = i("ServerLocationTitle", getServerLocationDisplayName())
-    private fun getServerLocationTitleHtml() = i("ServerLocationTitleHtml", getServerLocationDisplayName())
 }

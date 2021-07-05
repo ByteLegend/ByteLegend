@@ -32,7 +32,8 @@ interface JsonMapper {
  * Serialize game object to frontend. The main purpose is to ignore some properties
  */
 open class DefaultJsonMapper constructor(
-    private val devMode: Boolean
+    private val devMode: Boolean,
+    configuration: ObjectMapper.() -> Unit = {}
 ) : JsonMapper {
 
     private val uglyMapper = ObjectMapper().apply {
@@ -40,6 +41,7 @@ open class DefaultJsonMapper constructor(
         registerModule(KotlinModule())
         registerMapMissionSpecMapping()
         install(WebSocketMessage::class.java, WebSocketMessageDeserializer())
+        configuration()
     }
     private val prettyMapper = uglyMapper.apply {
         install(WebSocketMessage::class.java, WebSocketMessageDeserializer())
