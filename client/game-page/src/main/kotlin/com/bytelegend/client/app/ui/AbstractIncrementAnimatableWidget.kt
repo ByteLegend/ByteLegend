@@ -4,7 +4,7 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.script.effect.numberIncrementEffect
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope

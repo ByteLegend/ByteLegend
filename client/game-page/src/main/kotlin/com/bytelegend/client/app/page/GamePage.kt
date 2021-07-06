@@ -61,7 +61,7 @@ import com.bytelegend.client.app.ui.item.ItemsWidget
 import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
 import com.bytelegend.client.app.ui.mission.MissionTitles
-import com.bytelegend.client.app.web.toGameInitData
+import com.bytelegend.client.utils.toGameInitData
 import kotlinx.browser.document
 import kotlinx.browser.window
 import react.RBuilder

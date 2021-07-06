@@ -17,6 +17,7 @@ include(":shared")
 include(":utils")
 
 include(":client:game-page")
+include(":client:game-utils")
 include(":client:game-api")
 include(":client:game-JavaIsland")
 include(":client:game-GradleIsland")

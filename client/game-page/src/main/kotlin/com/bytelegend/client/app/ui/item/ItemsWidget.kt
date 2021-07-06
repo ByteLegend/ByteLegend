@@ -1,7 +1,7 @@
 package com.bytelegend.client.app.ui.item
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import kotlinx.html.classes

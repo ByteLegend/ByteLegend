@@ -12,7 +12,7 @@ import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.Game
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

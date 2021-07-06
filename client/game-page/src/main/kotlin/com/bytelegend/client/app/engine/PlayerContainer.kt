@@ -13,8 +13,8 @@ import com.bytelegend.app.shared.protocol.playerEnterSceneEvent
 import com.bytelegend.app.shared.protocol.playerLeaveSceneEvent
 import com.bytelegend.app.shared.protocol.playerMoveOnSceneEvent
 import com.bytelegend.client.app.engine.resource.ImageResource
-import com.bytelegend.client.app.engine.util.JSArrayBackedList
-import com.bytelegend.client.app.engine.util.JSObjectBackedMap
+import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.app.obj.AnimationSet
 import com.bytelegend.client.app.obj.PlayerSprite
 import com.bytelegend.client.app.page.game

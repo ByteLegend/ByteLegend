@@ -8,7 +8,7 @@ import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.atTileBorder
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 
 class NPC(
     override val id: String,

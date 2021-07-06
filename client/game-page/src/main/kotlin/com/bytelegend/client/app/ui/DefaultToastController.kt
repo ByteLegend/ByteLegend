@@ -6,7 +6,7 @@ import com.bytelegend.app.client.api.ToastController
 import com.bytelegend.app.client.ui.bootstrap.BootstrapToast
 import com.bytelegend.app.client.ui.bootstrap.BootstrapToastBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapToastHeader
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
 import kotlinx.html.classes
 import react.RBuilder

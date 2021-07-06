@@ -7,7 +7,7 @@ import com.bytelegend.app.client.misc.getImageElement
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.CANVAS
 import kotlinx.html.classes
 import kotlinx.html.id

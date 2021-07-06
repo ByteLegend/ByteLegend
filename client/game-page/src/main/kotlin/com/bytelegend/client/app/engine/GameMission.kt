@@ -9,7 +9,7 @@ import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.obj.DynamicSprite
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.mission.MissionModal

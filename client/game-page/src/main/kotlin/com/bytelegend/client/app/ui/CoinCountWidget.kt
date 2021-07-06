@@ -1,11 +1,10 @@
 package com.bytelegend.client.app.ui
 
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import react.RState
 import react.dom.RDOMBuilder
-import react.dom.div
 import react.dom.span
 
 interface CoinCountWidgetProps : GameProps

@@ -1,6 +1,6 @@
 package com.bytelegend.client.app.ui.mission
 
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import react.RBuilder

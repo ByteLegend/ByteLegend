@@ -1,6 +1,6 @@
 package com.bytelegend.client.app.external
 
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
 import kotlinx.html.classes
 import org.w3c.dom.HTMLElement

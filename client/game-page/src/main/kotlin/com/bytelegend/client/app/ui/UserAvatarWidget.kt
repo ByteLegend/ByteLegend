@@ -7,7 +7,7 @@ import BootstrapDropdownItem
 import BootstrapDropdownMenu
 import BootstrapDropdownToggle
 import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdown
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.classes

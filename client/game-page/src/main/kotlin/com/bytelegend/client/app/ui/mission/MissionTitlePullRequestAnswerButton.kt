@@ -8,7 +8,7 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.CheckRunConclusion
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.icon
 import kotlinx.browser.window
@@ -68,6 +68,7 @@ class MissionTitlePullRequestAnswerButton : RComponent<MissionTitlePullRequestAn
                     window.open(props.pullRequestAnswer.htmlUrl, "_blank")
                 } else {
                     props.game.modalController.show {
+                        attrs.size = "xl"
                         BootstrapModalHeader {
                             attrs.closeButton = true
                             BootstrapModalTitle {
@@ -95,7 +96,7 @@ class MissionTitlePullRequestAnswerButton : RComponent<MissionTitlePullRequestAn
             attrs.classes = jsObjectBackedSetOf("btn", "btn-sm", "btn-outline-info")
             attrs.target = "_blank"
             attrs.role = "button"
-            +"Action ${checkRun.id} ↗"
+            +"Check ${checkRun.id} ↗"
         }
     }
 

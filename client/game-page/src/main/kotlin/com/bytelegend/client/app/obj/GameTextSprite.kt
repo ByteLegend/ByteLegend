@@ -4,7 +4,7 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.page.game
 import org.w3c.dom.CanvasRenderingContext2D
 import kotlin.math.PI

@@ -5,8 +5,8 @@ import com.bytelegend.app.client.api.BannerController
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
-import com.bytelegend.client.app.engine.util.JSArrayBackedList
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
 import kotlinx.html.classes
 import react.RBuilder

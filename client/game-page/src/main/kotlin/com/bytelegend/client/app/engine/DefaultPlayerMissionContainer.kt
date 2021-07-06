@@ -23,8 +23,6 @@ import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
 import com.bytelegend.app.shared.protocol.missionUpdateEvent
-import com.bytelegend.client.app.engine.util.JSArrayBackedList
-import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.STAR_BYTELEGEND_MISSION_ID
@@ -35,6 +33,8 @@ import com.bytelegend.client.app.ui.NumberIncrementEvent
 import com.bytelegend.client.app.ui.STAR_INCREMENT_EVENT
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
 import com.bytelegend.client.app.ui.menu.determineMenuCoordinateInGameContainer
+import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.client.utils.JSObjectBackedMap
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
@@ -226,7 +226,7 @@ class DefaultPlayerMissionContainer(
         }
         val missionId = eventData.newValue.missionId
         putMission(missionId, eventData.newValue)
-        if (eventData.newValue.accomplished) {
+        if (eventData.change.accomplished) {
             showConfetti(gameScene!!.canvasState, gameScene!!.objects.getPointById(missionId))
         }
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)

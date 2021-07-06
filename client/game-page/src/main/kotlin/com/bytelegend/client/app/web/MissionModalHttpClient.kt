@@ -5,7 +5,11 @@ import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
-import com.bytelegend.client.app.engine.util.JSObjectBackedMap
+import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.client.utils.toMissionModalData
+import com.bytelegend.client.utils.toMissionUpdateEventData
+import com.bytelegend.client.utils.toPagination
+import com.bytelegend.client.utils.toTutorial
 import kotlinext.js.jsObject
 import kotlinx.browser.window
 import kotlinx.coroutines.await

@@ -2,7 +2,7 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.page.GAME_INIT_DATA
 import kotlinext.js.jsObject
 import kotlinx.browser.document

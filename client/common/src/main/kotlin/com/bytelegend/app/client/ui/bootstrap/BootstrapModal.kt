@@ -9,7 +9,7 @@ import react.RProps
 @JsName("default")
 external val BootstrapModal: RClass<BootstrapModalProps>
 
-// https://react-bootstrap.github.io/components/badge/
+// https://react-bootstrap.github.io/components/modal/#modal-props
 external interface BootstrapModalProps : RProps {
     var size: String
     var className: String

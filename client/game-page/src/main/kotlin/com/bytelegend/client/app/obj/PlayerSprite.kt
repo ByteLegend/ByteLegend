@@ -4,7 +4,7 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 
 fun playerSpriteId(playerId: String) = "player-$playerId-sprite"
 

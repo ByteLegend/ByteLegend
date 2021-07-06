@@ -16,7 +16,7 @@ import com.bytelegend.app.shared.entities.MissionTabType
 import com.bytelegend.app.shared.entities.TutorialsTabData
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.MISSION_DATA_LOAD_FINISH
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import kotlinx.browser.window

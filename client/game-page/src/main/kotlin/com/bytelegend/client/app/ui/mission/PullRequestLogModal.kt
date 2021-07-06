@@ -8,7 +8,6 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
-import com.bytelegend.client.app.engine.GAME_CLOCK_1HZ_EVENT
 import com.bytelegend.client.app.external.codeBlock
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
@@ -43,7 +42,7 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
                                     activeTabIndex = index
                                 }
                             }
-                            +"Action ${checkRun.id}"
+                            +"Check ${checkRun.id}"
                         }
                     }
                 }
@@ -77,15 +76,5 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
                 attrs.language = "log"
             }
         }
-    }
-
-    override fun componentDidMount() {
-        super.componentDidMount()
-        props.game.eventBus.on(GAME_CLOCK_1HZ_EVENT, gameUiUpdateEventListener)
-    }
-
-    override fun componentWillUnmount() {
-        super.componentWillUnmount()
-        props.game.eventBus.remove(GAME_CLOCK_1HZ_EVENT, gameUiUpdateEventListener)
     }
 }

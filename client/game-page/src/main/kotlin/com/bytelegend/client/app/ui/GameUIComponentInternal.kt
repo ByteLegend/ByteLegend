@@ -16,7 +16,7 @@ import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.toGameMouseEvent
 import com.bytelegend.client.app.engine.toGridCoordinate
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import org.w3c.dom.events.Event
 import react.RBuilder

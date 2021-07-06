@@ -32,8 +32,10 @@ import com.bytelegend.app.shared.protocol.WebSocketMessageType.SEND
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.SUBSCRIBE
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.UNSUBSCRIBE
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
-import com.bytelegend.client.app.engine.util.JSObjectBackedMap
+import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.app.obj.uuid
+import com.bytelegend.client.utils.parseServerEvent
+import com.bytelegend.client.utils.toSceneInitData
 import kotlinext.js.js
 import kotlinx.browser.window
 import kotlinx.coroutines.Deferred
@@ -191,7 +193,7 @@ class WebSocketClient(
     }
 
     override suspend fun getSceneInitData(mapId: String): SceneInitData {
-        return toSceneInitData(send(GET_SCENE_INIT_DATA, mapId))
+        return toSceneInitData(gameRuntime.heroPlayer.id, send(GET_SCENE_INIT_DATA, mapId))
     }
 
     override suspend fun moveTo(x: Int, y: Int) {

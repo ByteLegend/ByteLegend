@@ -20,8 +20,8 @@ import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.render
 import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
-import com.bytelegend.client.app.engine.util.JSObjectBackedMap
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.obj.PlayerSprite
 import com.bytelegend.client.app.ui.DefaultBannerController
 import com.bytelegend.client.app.ui.DefaultModalController
@@ -118,7 +118,6 @@ class Game(
     fun start() {
         gameControl.start()
         animate()
-        setClock(GAME_CLOCK_1HZ, GAME_CLOCK_1HZ_EVENT)
         setClock(GAME_CLOCK_10HZ, GAME_CLOCK_10HZ_EVENT)
         setClock(GAME_CLOCK_50HZ, GAME_CLOCK_50HZ_EVENT)
         eventBus.on(ITEMS_STATES_UPDATE_EVENT, onItemsStatesUpdateEventListener)

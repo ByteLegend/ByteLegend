@@ -4,7 +4,7 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.obj.CharacterSprite
 import com.bytelegend.client.app.obj.getSpriteBlockOnCanvas
 import react.RBuilder

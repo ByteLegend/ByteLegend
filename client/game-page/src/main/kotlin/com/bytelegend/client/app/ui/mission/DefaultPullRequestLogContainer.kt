@@ -4,18 +4,21 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.PullRequestLogContainer
+import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.logStreamEvent
+import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.GameMission
-import com.bytelegend.client.app.engine.util.JSArrayBackedList
-import com.bytelegend.client.app.engine.util.JSObjectBackedMap
 import com.bytelegend.client.app.web.checkStatusCode
+import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.client.utils.JSObjectBackedMap
 import kotlinx.browser.window
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.asPromise
 import kotlinx.coroutines.async
 import kotlinx.coroutines.await
 import org.w3c.fetch.Response
@@ -25,9 +28,11 @@ class DefaultPullRequestLogContainer(
 ) : PullRequestLogContainer {
     private val liveLogs: MutableMap<String, LiveLog> = JSObjectBackedMap()
     private val downloadedLogs: MutableMap<String, Deferred<String>> = JSObjectBackedMap()
+    private val eventBus = gameScene.gameRuntime.eventBus
+    private var lastRefreshTime = Timestamp.now()
 
     init {
-        gameScene.gameRuntime.eventBus.on(logStreamEvent(gameScene.map.id), this::onLogStreamEvent)
+        eventBus.on(logStreamEvent(gameScene.map.id), this::onLogStreamEvent)
     }
 
     private fun liveLogId(checkRunId: String) = "$checkRunId-live-log"
@@ -46,6 +51,12 @@ class DefaultPullRequestLogContainer(
         } else {
             currentLiveLog.addLines(logStreamEventData.lines)
         }
+
+        if (lastRefreshTime.elapsedTimeMs() > 1000) {
+            // don't refresh too frequently because of performance
+            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+            lastRefreshTime = Timestamp.now()
+        }
     }
 
     override fun getLiveLogsByAnswer(answer: PullRequestAnswer, checkRunId: String): List<String> {
@@ -57,6 +68,10 @@ class DefaultPullRequestLogContainer(
         var downloadedLog = downloadedLogs[id]
         if (downloadedLog == null) {
             downloadedLog = GlobalScope.async { download(answer.repoFullName, checkRun.sha, checkRun.id) }
+            downloadedLog.asPromise().then {
+                eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+                it
+            }
             downloadedLogs[id] = downloadedLog
         }
         return downloadedLog

@@ -1,4 +1,4 @@
-package com.bytelegend.client.app.engine.util
+package com.bytelegend.client.utils
 
 import kotlinext.js.Object
 import kotlinext.js.jsObject

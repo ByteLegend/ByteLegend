@@ -1,7 +1,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.shared.i18n.Locale
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
 import react.RBuilder
 import react.RState

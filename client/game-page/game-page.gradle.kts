@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":client:game-utils"))
     implementation(libs("kodein-di"))
     implementation(npm("react-player", libVersions("react-player")))
     implementation(npm("react-select", libVersions("react-select")))

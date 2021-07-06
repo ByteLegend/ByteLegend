@@ -1,6 +1,6 @@
 @file:Suppress("UnsafeCastFromDynamic")
 
-package com.bytelegend.client.app.web
+package com.bytelegend.client.utils
 
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition
@@ -45,9 +45,6 @@ import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
-import com.bytelegend.client.app.engine.util.JSArrayBackedList
-import com.bytelegend.client.app.engine.util.JSObjectBackedMap
-import com.bytelegend.client.app.page.game
 
 @Suppress("UnsafeCastFromDynamic")
 fun parseServerEvent(eventMessage: dynamic): Any {
@@ -154,9 +151,9 @@ fun <T> toTypedMap(jsonObject: dynamic, valueMapper: (dynamic) -> T): Map<String
     }
 }
 
-fun toSceneInitData(jsonObject: dynamic) = SceneInitData(
+fun toSceneInitData(heroId: String, jsonObject: dynamic) = SceneInitData(
     jsonObject.online as Int,
-    toTypedList(jsonObject.players, ::toBasePlayer).filter { it.id != game.heroPlayer.id },
+    toTypedList(jsonObject.players, ::toBasePlayer).filter { it.id != heroId },
     toTypedMap(jsonObject.missions, ::toMission)
 )
 
@@ -235,7 +232,7 @@ fun toMission(jsonObject: dynamic) = PlayerMission(
 fun toMissionAnswer(jsonObject: dynamic) = PlayerMissionAnswer(
     star = jsonObject.star,
     answer = jsonObject.answer,
-    accomplished = jsonObject.accomplished,
+    accomplished = jsonObject.accomplished.toString() == "true",
     createdAt = jsonObject.createdAt,
     data = JSObjectBackedMap(jsonObject.data)
 )

@@ -18,7 +18,6 @@ const val GAME_ANIMATION_EVENT = "game.animation"
  * - Animation events **might** be stopped when browser tab becomes inactive.
  * - The clock event is emitted with a stabler frequency.
  */
-const val GAME_CLOCK_1HZ_EVENT = "game.clock.1hz"
 const val GAME_CLOCK_10HZ_EVENT = "game.clock.10hz"
 const val GAME_CLOCK_50HZ_EVENT = "game.clock.50hz"
 

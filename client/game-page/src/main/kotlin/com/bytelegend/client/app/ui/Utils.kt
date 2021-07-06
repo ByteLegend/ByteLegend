@@ -1,7 +1,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import kotlinx.html.IMG
 import kotlinx.html.classes

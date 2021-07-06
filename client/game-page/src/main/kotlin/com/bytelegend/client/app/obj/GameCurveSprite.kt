@@ -5,7 +5,7 @@ import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
 
 class GameCurveSprite(

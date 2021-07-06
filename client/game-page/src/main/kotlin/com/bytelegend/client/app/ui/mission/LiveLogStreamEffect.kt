@@ -8,8 +8,8 @@ import com.bytelegend.app.shared.LOG_STREAM_EFFECT_LAYER
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.engine.util.JSArrayBackedList
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.obj.outOfCanvas
 import org.w3c.dom.CENTER
 import org.w3c.dom.CanvasRenderingContext2D

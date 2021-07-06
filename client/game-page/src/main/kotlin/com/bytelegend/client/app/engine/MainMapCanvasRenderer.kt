@@ -6,8 +6,8 @@ import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.engine.util.JSArrayBackedList
-import com.bytelegend.client.app.engine.util.JSObjectBackedMap
+import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.app.obj.BackgroundSpriteLayer
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D

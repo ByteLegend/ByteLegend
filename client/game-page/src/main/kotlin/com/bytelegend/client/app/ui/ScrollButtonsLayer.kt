@@ -10,7 +10,7 @@ import com.bytelegend.app.shared.Direction.RIGHT
 import com.bytelegend.app.shared.Direction.RIGHT_DOWN
 import com.bytelegend.app.shared.Direction.RIGHT_UP
 import com.bytelegend.app.shared.Direction.UP
-import com.bytelegend.client.app.engine.util.jsObjectBackedSetOf
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onFocusFunction
