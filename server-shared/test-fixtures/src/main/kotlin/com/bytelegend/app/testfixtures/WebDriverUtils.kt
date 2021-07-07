@@ -29,6 +29,13 @@ fun <T> waitUntilFound(timeoutMs: Int = 5000, predicate: () -> T): T {
     return ret!!
 }
 
+fun waitUntilSucceed(timeoutMs: Int = 5000, action: () -> Unit) {
+    waitUntil(timeoutMs) {
+        action()
+        true
+    }
+}
+
 fun waitUntil(timeoutMs: Int = 5000, predicate: () -> Boolean) {
     val start = System.currentTimeMillis()
 

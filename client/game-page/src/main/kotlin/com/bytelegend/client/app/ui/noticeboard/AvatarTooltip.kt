@@ -34,8 +34,8 @@ class AvatarTooltip : RComponent<AvatarCardProps, RState>() {
             attrs.classes = jsObjectBackedSetOf("brave-people-avatar-tooltip")
             attrs.jsStyle {
                 position = "absolute"
-                left = "${props.tile.x + TOOLTIP_OFFSET_X}px"
-                top = "${props.tile.y + TOOLTIP_OFFSET_Y}px"
+                left = "${props.tile.x * AVATAR_TILE_SIZE + TOOLTIP_OFFSET_X}px"
+                top = "${props.tile.y * AVATAR_TILE_SIZE + TOOLTIP_OFFSET_Y}px"
                 width = "${TOOLTIP_WIDTH}px"
                 height = "${TOOLTIP_HEIGHT}px"
                 backgroundColor = props.tile.color
