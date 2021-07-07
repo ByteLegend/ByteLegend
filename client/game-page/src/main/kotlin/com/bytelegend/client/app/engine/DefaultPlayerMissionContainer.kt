@@ -40,6 +40,8 @@ import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
 
+const val MISSION_REPAINT_EVENT = "mission.repaint"
+
 class DefaultPlayerMissionContainer(
     di: DI,
     private val missions: MutableMap<String, PlayerMission>
@@ -229,7 +231,7 @@ class DefaultPlayerMissionContainer(
         if (eventData.change.accomplished) {
             showConfetti(gameScene!!.canvasState, gameScene!!.objects.getPointById(missionId))
         }
-        eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+        eventBus.emit(MISSION_REPAINT_EVENT, eventData)
     }
 
     fun init(gameScene: GameScene) {

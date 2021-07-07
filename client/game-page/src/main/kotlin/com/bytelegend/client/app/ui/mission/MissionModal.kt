@@ -19,6 +19,7 @@ import com.bytelegend.client.app.engine.MISSION_DATA_LOAD_FINISH
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.noticeboard.JavaIslandNewbieVillageNoticeboard
 import kotlinx.browser.window
 import kotlinx.html.classes
 import react.RBuilder
@@ -106,7 +107,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
     }
 
     private fun RBuilder.renderRememberBravePeopleChallenge(tab: ChallengeTabData) {
-        child(RememberBravePeopleChallengeTab::class) {
+        child(JavaIslandNewbieVillageNoticeboard::class) {
             attrs.game = game
         }
     }

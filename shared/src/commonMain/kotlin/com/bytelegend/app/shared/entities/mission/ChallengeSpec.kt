@@ -15,6 +15,10 @@ data class ChallengeSpec(
     val readme: String = ""
 )
 
-enum class ChallengeType {
-    None, Star, Noticeboard, PullRequest, Question
+enum class ChallengeType(val withGitHubRepo: Boolean) {
+    None(false),
+    Star(true),
+    Noticeboard(true),
+    PullRequest(true),
+    Question(false)
 }

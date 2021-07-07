@@ -6,11 +6,11 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapSplitButton
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.ui.GameProps
-import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import kotlinext.js.jsObject
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
+import react.RComponent
 import react.RState
 import react.createElement
 import react.dom.div
@@ -23,7 +23,7 @@ interface MissionTitleAnswerProps : GameProps {
     var mission: GameMission
 }
 
-class MissionTitleAnswers : GameUIComponent<MissionTitleAnswerProps, MissionTitleAnswersState>() {
+class MissionTitleAnswers : RComponent<MissionTitleAnswerProps, MissionTitleAnswersState>() {
     override fun RBuilder.render() {
         div {
             val z = Layer.MissionTitlePullRequestAnswerButton.zIndex()
@@ -34,7 +34,7 @@ class MissionTitleAnswers : GameUIComponent<MissionTitleAnswerProps, MissionTitl
                 it.stopPropagation()
             }
 
-            val pullRequestAnswers = activeScene.playerMissions.getPullRequestMissionAnswersByMissionId(props.mission.id)
+            val pullRequestAnswers = props.game.activeScene.playerMissions.getPullRequestMissionAnswersByMissionId(props.mission.id)
             if (pullRequestAnswers.isNotEmpty()) {
                 renderPullRequestAnswers(pullRequestAnswers)
             }
@@ -47,7 +47,7 @@ class MissionTitleAnswers : GameUIComponent<MissionTitleAnswerProps, MissionTitl
                 attrs.variant = "light"
                 attrs.size = "sm"
                 child(MissionTitlePullRequestAnswerButton::class) {
-                    attrs.game = game
+                    attrs.game = props.game
                     attrs.pullRequestAnswer = pullRequestAnswers[0]
                 }
             }
@@ -69,7 +69,7 @@ class MissionTitleAnswers : GameUIComponent<MissionTitleAnswerProps, MissionTitl
                                 zIndex = z
                             }
                             child(MissionTitlePullRequestAnswerButton::class) {
-                                attrs.game = game
+                                attrs.game = props.game
                                 attrs.pullRequestAnswer = pullRequestAnswer
                             }
                         }

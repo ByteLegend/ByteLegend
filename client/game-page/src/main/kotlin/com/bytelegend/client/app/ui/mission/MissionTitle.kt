@@ -3,7 +3,9 @@ package com.bytelegend.client.app.ui.mission
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.client.app.engine.GameMission
+import com.bytelegend.client.app.engine.MISSION_REPAINT_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
@@ -54,6 +56,14 @@ class MissionTitle : RComponent<MissionTitleProps, MissionTitleState>() {
     private val mouseOutOfMapListener: EventListener<Any> = {
         setState {
             hovered = false
+        }
+    }
+    private val onMissionRepaintListener: EventListener<MissionUpdateEventData> = this::onMissionRepaint
+
+    private fun onMissionRepaint(eventData: MissionUpdateEventData) {
+        // Refresh upon mission update event
+        if (eventData.newValue.missionId == props.mission.id) {
+            setState {}
         }
     }
 
@@ -137,10 +147,12 @@ class MissionTitle : RComponent<MissionTitleProps, MissionTitleState>() {
     override fun componentDidMount() {
         props.eventBus.on(MOUSE_MOVE_EVENT, mouseMoveListener)
         props.eventBus.on(MOUSE_OUT_OF_MAP_EVENT, mouseOutOfMapListener)
+        props.eventBus.on(MISSION_REPAINT_EVENT, onMissionRepaintListener)
     }
 
     override fun componentWillUnmount() {
         props.eventBus.remove(MOUSE_MOVE_EVENT, mouseMoveListener)
         props.eventBus.remove(MOUSE_OUT_OF_MAP_EVENT, mouseOutOfMapListener)
+        props.eventBus.remove(MISSION_REPAINT_EVENT, onMissionRepaintListener)
     }
 }

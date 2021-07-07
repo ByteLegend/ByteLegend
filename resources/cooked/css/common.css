@@ -554,3 +554,17 @@ p.speech-bubble::after {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.noticeboard-avatars-div {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    border: 1px solid black;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.noticeboard-avatars-img {
+    width: 100%;
+    height: 100%;
+}

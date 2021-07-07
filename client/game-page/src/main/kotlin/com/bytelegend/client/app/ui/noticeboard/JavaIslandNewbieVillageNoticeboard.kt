@@ -2,11 +2,14 @@
 
 package com.bytelegend.client.app.ui.noticeboard
 
+import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.shared.protocol.MissionUpdateEventData
+import com.bytelegend.client.app.engine.MISSION_REPAINT_EVENT
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.unsafeSpan
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
@@ -19,7 +22,9 @@ import org.w3c.dom.events.MouseEvent
 import react.RBuilder
 import react.RComponent
 import react.RState
+import react.dom.b
 import react.dom.div
+import react.dom.h2
 import react.dom.img
 import react.dom.jsStyle
 import react.dom.p
@@ -30,11 +35,7 @@ const val BRAVE_PEOPLE_IMG_URL = "https://bytelegend-brave-people.oss-cn-hongkon
 
 // Don't change these values. They are defined elsewhere:
 // https://github.com/ByteLegendQuest/remember-brave-people/blob/master/src/main/java/com/bytelegend/game/Constants.java#L26
-const val AVATAR_TILE_SIZE = 24
-const val AVATAR_HORIZONTAL_NUM = 25
-const val AVATAR_VERTICAL_NUM = 25
-const val AVATAR_DIV_WIDTH = AVATAR_TILE_SIZE * AVATAR_HORIZONTAL_NUM
-const val AVATAR_DIV_HEIGHT = AVATAR_TILE_SIZE * AVATAR_VERTICAL_NUM
+const val AVATAR_TILE_SIZE = 30
 
 // https://github.com/ByteLegendQuest/remember-brave-people/blob/master/src/main/java/com/bytelegend/game/SimpleTile.java
 // https://github.com/ByteLegendQuest/remember-brave-people/blob/master/src/main/java/com/bytelegend/game/AllInfoTile.java
@@ -56,12 +57,19 @@ interface JavaIslandNewbieVillageNoticeboardState : RState {
 class JavaIslandNewbieVillageNoticeboard :
     RComponent<GameProps, JavaIslandNewbieVillageNoticeboardState>() {
     private var loading = false
+    private val onMissionRepaintListener: EventListener<MissionUpdateEventData> = this::onMissionRepaint
 
-    override fun UNSAFE_componentWillReceiveProps(nextProps: GameProps) {
-        setState { }
+    private fun onMissionRepaint(eventData: MissionUpdateEventData) {
+        // Refresh upon mission finished event
+        if (eventData.change.accomplished && eventData.newValue.missionId == "remember-brave-people") {
+            setState {
+                init()
+            }
+        }
     }
 
     override fun JavaIslandNewbieVillageNoticeboardState.init() {
+        state.avatarTiles = undefined
         imageDisplay = "none"
     }
 
@@ -71,19 +79,18 @@ class JavaIslandNewbieVillageNoticeboard :
 
     override fun RBuilder.render() {
         BootstrapModalBody {
+            h2 {
+                attrs.jsStyle.textAlign = "center"
+                b {
+                    +props.game.i("BravePeopleBoard")
+                }
+            }
             p {
                 attrs.jsStyle.textAlign = "center"
                 unsafeSpan(props.game.i("BravePeopleDedication"))
             }
             div {
-                attrs.jsStyle {
-                    position = "relative"
-                    width = "${AVATAR_DIV_WIDTH}px"
-                    height = "${AVATAR_DIV_HEIGHT}px"
-                    border = "1px solid black"
-                    margin = "0 auto"
-                    cursor = "pointer"
-                }
+                attrs.classes = jsObjectBackedSetOf("noticeboard-avatars-div")
 
                 if (!imgAndJsonLoaded()) {
                     if (loading) {
@@ -120,6 +127,7 @@ class JavaIslandNewbieVillageNoticeboard :
 
     private fun RBuilder.avatarImg() {
         img {
+            attrs.classes = jsObjectBackedSetOf("noticeboard-avatars-img")
             attrs.src = BRAVE_PEOPLE_IMG_URL
             attrs.jsStyle {
                 display = state.imageDisplay
@@ -156,5 +164,13 @@ class JavaIslandNewbieVillageNoticeboard :
             attrs.joinedAtI18n = props.game.i("JoinedAt")
             attrs.tile = state.hoveredTile!!
         }
+    }
+
+    override fun componentDidMount() {
+        props.game.eventBus.on(MISSION_REPAINT_EVENT, onMissionRepaintListener)
+    }
+
+    override fun componentWillUnmount() {
+        props.game.eventBus.remove(MISSION_REPAINT_EVENT, onMissionRepaintListener)
     }
 }
