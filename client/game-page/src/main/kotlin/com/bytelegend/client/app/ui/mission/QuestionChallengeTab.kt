@@ -4,6 +4,8 @@ package com.bytelegend.client.app.ui.mission
 
 import BootstrapFormRow
 import com.bytelegend.app.client.api.Banner
+import com.bytelegend.app.client.api.Character
+import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAccordion
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAccordionCollapse
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAccordionToggle
@@ -17,8 +19,8 @@ import com.bytelegend.app.shared.entities.PlayerMissionAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.protocol.missionUpdateEvent
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
+import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.engine.util.format
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.external.TextareaAutosize
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
@@ -26,6 +28,7 @@ import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeH4
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.submitMissionAnswer
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.html.classes
@@ -56,12 +59,24 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         loading = false
     }
 
+    // If player is not adjacent to the mission, disable the input box and submit button
+    private fun isDisabled(): Boolean {
+        val heroInScene = activeScene.objects.getByIdOrNull<Character>(HERO_ID) ?: return true
+        return heroInScene.gridCoordinate.manhattanDistanceTo(activeScene.objects.getById<GameMission>(props.missionId).gridCoordinate) > 1
+    }
+
     override fun RBuilder.render() {
         if (game.heroPlayer.isAnonymous) {
             BootstrapAlert {
                 attrs.show = true
                 attrs.variant = "warning"
                 unsafeSpan("${game.i("YouAreNotLoggedIn")}.${game.i("ClickHereToLogin")}")
+            }
+        } else if (isDisabled()) {
+            BootstrapAlert {
+                attrs.show = true
+                attrs.variant = "warning"
+                +game.i("YouMustBeAdjacentToTheMission")
             }
         }
         unsafeH4(i("TLDR"))
@@ -121,7 +136,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
     }
 
     private suspend fun onClickSubmitAnswer() {
-        if (game.heroPlayer.isAnonymous || textarea.value.isBlank()) {
+        if (game.heroPlayer.isAnonymous || textarea.value.isBlank() || isDisabled()) {
             return
         }
         setState {
