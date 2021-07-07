@@ -29,10 +29,13 @@ import kotlin.random.Random
 val gsap
     get() = window.asDynamic().gsap
 
+// very high to be on top of modal
+const val EFFECT_Z_INDEX = 2000
+
 private fun fire(particleRatio: Double, origin: dynamic, opts: dynamic) {
     val count = 200
     val particleCount = floor(count * particleRatio)
-    val z = Layer.EffectCanvas.zIndex()
+    val z = EFFECT_Z_INDEX
     val options = assign(opts) {
         this.origin = origin
         this.particleCount = particleCount
@@ -282,14 +285,14 @@ suspend fun starFlyEffect(
 ): Unit = suspendCoroutine { continuation ->
     val canvas = document.createAndAppend<HTMLCanvasElement>("canvas") {
         id = "starfly-canvas"
-        style.zIndex = Layer.EffectCanvas.zIndex().toString()
+        style.zIndex = EFFECT_Z_INDEX.toString()
         style.position = "absolute"
         width = gameContainerSize.width
         height = gameContainerSize.height
     }
     val starDiv = document.createAndAppend<HTMLDivElement>("div") {
         id = "starfly-star"
-        style.zIndex = (Layer.EffectCanvas.zIndex() + 1).toString()
+        style.zIndex = (EFFECT_Z_INDEX + 1).toString()
         style.top = "0px"
         style.left = "0px"
         style.backgroundColor = "transparent"

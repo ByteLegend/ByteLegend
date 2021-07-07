@@ -227,10 +227,15 @@ body {
     margin-bottom: 0;
 }
 
+.modal-backdrop {
+    opacity:0.3;
+}
+
 .mission-modal .modal-dialog {
     max-width: 100%;
-    width: calc(100% - 64px);
-    height: calc(100% - 64px);
+    min-width: 800px;
+    width: calc(100% - 192px);
+    height: calc(100% - 192px);
 }
 
 .mission-modal .modal-content {

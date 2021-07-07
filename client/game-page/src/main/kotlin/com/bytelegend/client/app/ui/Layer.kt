@@ -2,8 +2,6 @@ package com.bytelegend.client.app.ui
 
 enum class Layer {
     MapCanvas,
-    // confetti, star flying particles, etc.
-    EffectCanvas,
     CursorWidget,
     PlayerNames,
     UserMouseInteraction,

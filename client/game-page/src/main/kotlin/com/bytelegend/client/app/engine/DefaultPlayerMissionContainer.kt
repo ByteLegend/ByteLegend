@@ -8,7 +8,6 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.ModalController
 import com.bytelegend.app.client.api.PlayerMissionContainer
 import com.bytelegend.app.client.misc.playAudio
 import com.bytelegend.app.shared.GridCoordinate
@@ -49,9 +48,6 @@ class DefaultPlayerMissionContainer(
     private val eventBus: EventBus by di.instance()
     private val game: GameRuntime by di.instance()
     private val gameControl: GameControl by di.instance()
-    private val modalController: ModalController by lazy {
-        game.modalController
-    }
     var gameScene: DefaultGameScene? = null
     private val pullRequestAnswers: MutableMap<String, List<PullRequestAnswer>> = JSObjectBackedMap()
 
@@ -96,7 +92,7 @@ class DefaultPlayerMissionContainer(
     }
 
     private fun isCanvasInvisible(): Boolean {
-        return modalController.visible || !gameControl.isWindowVisible
+        return !gameControl.isWindowVisible
     }
 
     fun onItemsUpdate(eventData: ItemsStatesUpdateEventData) {

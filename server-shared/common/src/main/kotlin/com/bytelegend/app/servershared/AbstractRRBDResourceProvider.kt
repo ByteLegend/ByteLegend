@@ -56,7 +56,7 @@ abstract class AbstractRRBDResourceProvider(
         .associateBy { it.id }
 
     private val repoToMissionSpec: Map<String, MissionSpec> = idToMissionSpec.values
-        .filter { it.challenge != null && (it.challenge?.type?.withGitHubRepo == true ) }
+        .filter { it.challenge != null && (it.challenge?.type?.withGitHubRepo == true) }
         .associateBy { it.challenge!!.spec }
 
     private val idToMaps: Map<String, FastAccessGameMap> = idToMapDefinitions.keys

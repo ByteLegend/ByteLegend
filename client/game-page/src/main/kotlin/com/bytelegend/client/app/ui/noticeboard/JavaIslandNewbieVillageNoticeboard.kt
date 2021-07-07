@@ -69,7 +69,7 @@ class JavaIslandNewbieVillageNoticeboard :
     }
 
     override fun JavaIslandNewbieVillageNoticeboardState.init() {
-        state.avatarTiles = undefined
+        avatarTiles = undefined
         imageDisplay = "none"
     }
 

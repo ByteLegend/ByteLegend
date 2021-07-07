@@ -62,7 +62,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
     // If player is not adjacent to the mission, disable the input box and submit button
     private fun isDisabled(): Boolean {
         val heroInScene = activeScene.objects.getByIdOrNull<Character>(HERO_ID) ?: return true
-        return heroInScene.gridCoordinate.manhattanDistanceTo(activeScene.objects.getById<GameMission>(props.missionId).gridCoordinate) > 1
+        return heroInScene.gridCoordinate.manhattanDistanceTo(activeScene.objects.getById<GameMission>(props.missionId).gridCoordinate) > 2
     }
 
     override fun RBuilder.render() {
@@ -88,7 +88,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
             BootstrapCol {
                 attrs.xs = 10
                 TextareaAutosize {
-                    attrs.disabled = state.loading || game.heroPlayer.isAnonymous
+                    attrs.disabled = state.loading || game.heroPlayer.isAnonymous || isDisabled()
                     attrs.minRows = 2
                     attrs.maxRows = 5
                     attrs.ref = { it: dynamic ->
@@ -110,7 +110,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                 } else {
                     BootstrapButton {
                         +i("Submit")
-                        attrs.disabled = game.heroPlayer.isAnonymous
+                        attrs.disabled = game.heroPlayer.isAnonymous || isDisabled()
                         attrs.className = "modal-submit-answer-button"
                         attrs.onClick = {
                             GlobalScope.launch {
