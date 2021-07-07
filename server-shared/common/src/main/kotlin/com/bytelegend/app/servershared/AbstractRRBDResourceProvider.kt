@@ -4,7 +4,6 @@ import com.bytelegend.app.shared.CompressedGameMap
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.entities.mission.ChallengeType
 import com.bytelegend.app.shared.entities.mission.MissionSpec
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.LocalizedText
