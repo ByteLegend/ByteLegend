@@ -8,12 +8,12 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.INVISIBLE_OBJECT_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
-import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.client.app.engine.Game
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.web.WebSocketClient
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -42,7 +42,7 @@ class MapEntrance(
 
                 val newHero = HeroCharacter(newScene, oldHero.player.asDynamic())
                 newHero.direction = oldHero.direction
-                val newMapEntrance = newScene.objects.getById<GameMapPoint>(backEntrancePointId).point
+                val newMapEntrance = newScene.objects.getPointById(backEntrancePointId)
                 newHero.pixelCoordinate = newMapEntrance * newScene.map.tileSize
                 gameRuntime.heroPlayer.map = newScene.map.id
                 gameRuntime.heroPlayer.x = newMapEntrance.x

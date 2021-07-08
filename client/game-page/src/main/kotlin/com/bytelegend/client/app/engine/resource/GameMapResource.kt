@@ -69,7 +69,7 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
         GameMapObjectType.GameMapPoint -> CompressedGameMapPoint(
             it.id,
             it.layer,
-            (it.point as Array<Int>).toList()
+            (it.gridCoordinate as Array<Int>).toList()
         )
         GameMapObjectType.GameMapDynamicSprite -> CompressedGameMapDynamicObject(
             it.id,

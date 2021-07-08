@@ -10,7 +10,6 @@ import com.bytelegend.app.shared.HumanReadableCoordinate
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.objects.CoordinateAware
-import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameObject
 import kotlinx.browser.window
 
@@ -34,7 +33,7 @@ fun GameScene.pubBartender() = objects {
     val helpers = GameScriptHelpers(this@pubBartender)
     npc {
         val bartenderId = "JavaIslandNewbieVillagePubBartender"
-        val bartenderPoint = objects.getById<GameMapPoint>("$bartenderId-point").point
+        val bartenderPoint = objects.getPointById("$bartenderId-point")
         id = bartenderId
         sprite = "$bartenderId-sprite"
         onInit = {
@@ -81,7 +80,7 @@ fun GameScene.pubEngineer() = objects {
         id = engineerId
         sprite = "$engineerId-sprite"
         onInit = {
-            helpers.getCharacter(engineerId).gridCoordinate = objects.getById<GameMapPoint>("$engineerId-point").point
+            helpers.getCharacter(engineerId).gridCoordinate = objects.getPointById("$engineerId-point")
         }
         onClick = helpers.standardNpcSpeech(engineerId) {
             scripts {
@@ -115,7 +114,7 @@ fun GameScene.pubGirl() = objects {
         id = girlId
         sprite = "$girlId-sprite"
         onInit = {
-            helpers.getCharacter(girlId).gridCoordinate = objects.getById<GameMapPoint>("$girlId-point").point
+            helpers.getCharacter(girlId).gridCoordinate = objects.getPointById("$girlId-point")
         }
         onClick = helpers.standardNpcSpeech(girlId) {
             if (playerMissions.missionAccomplished(COFFEE_MACHINE_MISSION)) {

@@ -9,7 +9,6 @@ import com.bytelegend.app.shared.HumanReadableCoordinate
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.objects.CoordinateAware
-import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameObject
 import kotlinx.browser.window
 
@@ -42,8 +41,8 @@ fun GameScene.pubGuard() = objects {
 
     npc {
         val guardId = "JavaIslandNewbieVillagePubGuard"
-        val guardStartPoint = objects.getById<GameMapPoint>("JavaNewbieVillagePubEntranceGuard-point").point
-        val guardMoveDestPoint = objects.getById<GameMapPoint>("JavaNewbieVillagePubEntranceGuard-destination").point
+        val guardStartPoint = objects.getPointById("JavaNewbieVillagePubEntranceGuard-point")
+        val guardMoveDestPoint = objects.getPointById("JavaNewbieVillagePubEntranceGuard-destination")
         id = guardId
         sprite = "JavaIslandNewbieVillagePubGuard-sprite"
         onInit = {
@@ -117,8 +116,8 @@ fun GameScene.newbieVillageOldMan() = objects {
 
     npc {
         val oldManId = "JavaIslandNewbieVillageOldMan"
-        val oldManStartPoint = objects.getById<GameMapPoint>("$oldManId-point").point
-        val oldManDestination = objects.getById<GameMapPoint>("$oldManId-destination").point
+        val oldManStartPoint = objects.getPointById("$oldManId-point")
+        val oldManDestination = objects.getPointById("$oldManId-destination")
         id = oldManId
         sprite = "$oldManId-sprite"
         onInit = {
@@ -158,8 +157,8 @@ fun GameScene.newbieVillageHead() = objects {
     val helpers = GameScriptHelpers(this@newbieVillageHead)
     npc {
         val villageHeadId = "JavaIslandNewbieVillageHead"
-        val startPoint = objects.getById<GameMapPoint>("$villageHeadId-point").point
-        val destPoint = objects.getById<GameMapPoint>("$villageHeadId-destination").point
+        val startPoint = objects.getPointById("$villageHeadId-point")
+        val destPoint = objects.getPointById("$villageHeadId-destination")
         id = villageHeadId
         sprite = "$villageHeadId-sprite"
 
@@ -206,7 +205,7 @@ fun GameScene.newbieVillageSailor() = objects {
     val helpers = GameScriptHelpers(this@newbieVillageSailor)
     npc {
         val sailorId = "JavaIslandNewbieVillageSailor"
-        val startPoint = objects.getById<GameMapPoint>("$sailorId-point").point
+        val startPoint = objects.getPointById("$sailorId-point")
         id = sailorId
         sprite = "$sailorId-sprite"
 
@@ -234,8 +233,8 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
     val helpers = GameScriptHelpers(this@newbieVillageBridgeSoldier)
     npc {
         val soldierId = "JavaIslandNewbieVillageBridgeSoldier"
-        val startPoint = objects.getById<GameMapPoint>("$soldierId-point").point
-        val destPoint = objects.getById<GameMapPoint>("$soldierId-destination").point
+        val startPoint = objects.getPointById("$soldierId-point")
+        val destPoint = objects.getPointById("$soldierId-destination")
         id = soldierId
         sprite = "$soldierId-sprite"
 

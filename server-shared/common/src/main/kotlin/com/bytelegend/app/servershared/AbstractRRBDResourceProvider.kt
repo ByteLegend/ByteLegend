@@ -78,7 +78,7 @@ abstract class AbstractRRBDResourceProvider(
     override fun getEntranceDestinationPoint(srcMapId: String, destMapId: String): GridCoordinate {
         return idToMaps.getValue(destMapId).getObjectById<GameMapPoint>(
             defaultMapEntranceDestinationId(defaultMapEntranceId(srcMapId, destMapId))
-        ).point
+        ).gridCoordinate
     }
 }
 

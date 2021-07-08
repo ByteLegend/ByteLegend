@@ -14,21 +14,21 @@ fun defaultMapEntrancePointId(srcMapId: String, destMapId: String) = defaultMapE
 class GameMapPoint(
     override val id: String,
     override val layer: Int,
-    val point: GridCoordinate
-) : GameMapObject, GameObject {
+    override val gridCoordinate: GridCoordinate
+) : GameMapObject, GameObject, GridCoordinateAware {
     override val type: GameMapObjectType = GameMapObjectType.GameMapPoint
     override val roles: Set<String> = setOf(GameObjectRole.MapPoint.toString())
 
-    override fun compress() = CompressedGameMapPoint(id, layer, point.compress())
+    override fun compress() = CompressedGameMapPoint(id, layer, gridCoordinate.compress())
 }
 
 @Serializable
 data class CompressedGameMapPoint(
     override val id: String,
     override val layer: Int,
-    val point: List<Int>
+    val gridCoordinate: List<Int>
 ) : CompressedGameMapObject {
     override val type: Int = GameMapObjectType.GameMapPoint.index
 
-    override fun decompress() = GameMapPoint(id, layer, GridCoordinate(point))
+    override fun decompress() = GameMapPoint(id, layer, GridCoordinate(gridCoordinate))
 }

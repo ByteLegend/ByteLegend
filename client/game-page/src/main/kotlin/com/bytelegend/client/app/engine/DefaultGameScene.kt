@@ -22,6 +22,8 @@ import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
+import com.bytelegend.app.shared.objects.GameObject
+import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.app.shared.objects.defaultMapEntranceDestinationId
 import com.bytelegend.app.shared.objects.defaultMapEntranceId
 import com.bytelegend.app.shared.objects.defaultMapEntrancePointId
@@ -123,7 +125,8 @@ class DefaultGameScene(
         val destMapId = builder.destMapId!!
         val entranceId = builder.id ?: defaultMapEntranceId(map.id, destMapId)
         val entrancePointId = builder.coordinatePointId ?: defaultMapEntrancePointId(entranceId)
-        val coordinate = objects.getById<GameMapPoint>(entrancePointId).point
+
+        val coordinate = objects.getPointById(entrancePointId)
         val backEntrancePointId = builder.backEntrancePointId ?: defaultMapEntranceDestinationId(entranceId)
 
         val mapEntrance = MapEntrance(

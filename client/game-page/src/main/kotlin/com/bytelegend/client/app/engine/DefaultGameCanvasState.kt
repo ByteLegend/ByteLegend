@@ -110,7 +110,7 @@ class DefaultGameCanvasState(
     private fun getDefaultMapCenterPoint(): GridCoordinate {
         return gameMap.objects.first {
             it.id == "${gameMap.id}InitCenterPoint"
-        }.unsafeCast<GameMapPoint>().point
+        }.unsafeCast<GameMapPoint>().gridCoordinate
     }
 
     private fun calculateCanvasCoordinateInMap(initMapCenterPoint: GridCoordinate?): PixelCoordinate {
