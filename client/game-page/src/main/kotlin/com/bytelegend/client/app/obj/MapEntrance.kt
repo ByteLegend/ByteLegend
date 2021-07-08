@@ -10,7 +10,6 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.web.WebSocketClient
 import com.bytelegend.client.utils.jsObjectBackedSetOf

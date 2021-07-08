@@ -17,12 +17,13 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapTabContainer
 import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.MultiSelect
 import com.bytelegend.client.app.ui.Option
 import com.bytelegend.client.app.web.getMissionTutorial
+import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.html.classes
@@ -43,6 +44,7 @@ interface TutorialTabState : RState {
     var tutorials: Pagination<Tutorial>
     var activeTutorialIndex: Int
 
+    // TODO dirty is not used now
     // The page data is dirty when filters are changed.
     var dirty: Boolean
     var loadingTutorials: Boolean
@@ -51,7 +53,7 @@ interface TutorialTabState : RState {
 
 class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, TutorialTabState>(props) {
     override fun TutorialTabState.init(props: TutorialTabProps) {
-        tutorials = props.initTutorials
+        tutorials = props.initTutorials.resortPage()
         locales = props.initLocales
         activeTutorialIndex = 0
         loadingTutorials = false
@@ -72,8 +74,9 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
             attrs.allOptions = Locale.values().map { Option(it.name, it.displayName) }
             attrs.initOptions = state.locales.map { Option(it.name, it.displayName) }
             attrs.onSelectComplete = { selectedOptions ->
-                val newLocales = selectedOptions.map { Locale.of(it.value) }.let {
-                    if (it.contains(Locale.ALL)) listOf(Locale.ALL) else it
+                val newLocales = selectedOptions.map { Locale.of(it.value) }.toMutableList()
+                if (state.locales.size == 1 && state.locales.first() == Locale.ALL && newLocales.size > 1) {
+                    newLocales.remove(Locale.ALL)
                 }
                 setState {
                     dirty = newLocales != state.locales
@@ -220,17 +223,28 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
             number = state.tutorials.totalPages
         }
 
-        if (number != state.tutorials.pageNumber || state.dirty) {
+        setState {
+            loadingTutorials = true
+        }
+        GlobalScope.launch {
+            val newData = getMissionTutorial(props.missionId, number, state.locales)
             setState {
-                loadingTutorials = true
-            }
-            GlobalScope.launch {
-                val newData = getMissionTutorial(props.missionId, pageNumber, state.locales)
-                setState {
-                    tutorials = newData
-                    loadingTutorials = false
-                }
+                tutorials = newData.resortPage()
+                loadingTutorials = false
             }
         }
+    }
+
+    private fun Pagination<Tutorial>.resortPage(): Pagination<Tutorial> {
+        val groupByCurrentLanguage = items.groupBy { it.languages.contains(game.locale) }
+        val result = JSArrayBackedList<Tutorial>()
+        result.addAll(groupByCurrentLanguage[true] ?: emptyList())
+        result.addAll(groupByCurrentLanguage[false] ?: emptyList())
+        return Pagination(
+            result,
+            totalPages,
+            pageNumber,
+            pageSize
+        )
     }
 }

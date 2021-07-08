@@ -228,7 +228,7 @@ body {
 }
 
 .modal-backdrop {
-    opacity:0.3;
+    opacity: 0.3;
 }
 
 .mission-modal .modal-dialog {
@@ -301,7 +301,8 @@ body {
 }
 
 .mission-tab-content {
-    margin: 16px
+    margin: 16px;
+    height: 100%
 }
 
 .user-mouse-interaction-layer {
@@ -384,6 +385,9 @@ body {
     width: 30%;
     margin-right: 16px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .mission-modal-tutorial-content-left-tutorials {
@@ -398,6 +402,14 @@ body {
 .mission-modal-tutorial-content-right {
     width: 70%;
     overflow-y: auto;
+    position: relative;
+}
+
+.tutorial-video-player {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /*.mission-modal-tutorial-content-row {*/

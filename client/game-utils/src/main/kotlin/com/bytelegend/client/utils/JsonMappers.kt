@@ -29,7 +29,6 @@ import com.bytelegend.app.shared.entities.mission.OnFinishSpec
 import com.bytelegend.app.shared.entities.mission.OnFinishStatesChange
 import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
-import com.bytelegend.app.shared.entities.mission.TutorialType
 import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.LocalizedText
@@ -216,7 +215,7 @@ fun toTutorial(jsonObject: dynamic): Tutorial {
     return Tutorial(
         jsonObject.id,
         jsonObject.title,
-        TutorialType(jsonObject.type.type, jsonObject.type.subtype),
+        jsonObject.type,
         jsonObject.href,
         toTypedList(jsonObject.languages) { Locale.of(it) }
     )
