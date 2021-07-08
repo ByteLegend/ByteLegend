@@ -4,6 +4,7 @@ package com.bytelegend.client.app.ui.mission
 
 import BootstrapNavItem
 import BootstrapNavLink
+import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.entities.PullRequestAnswer
@@ -24,6 +25,12 @@ interface PullRequestLogModalState : RState {
 }
 
 class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullRequestLogModalState>() {
+    private val logRefreshEventListener: EventListener<String> = { checkRunId ->
+        if (checkRunId == props.answer.checkRuns[state.activeTabIndex].id) {
+            setState { }
+        }
+    }
+
     override fun PullRequestLogModalState.init() {
         activeTabIndex = 0
     }
@@ -52,7 +59,7 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
         val liveLog = activeScene.logs.getLiveLogsByAnswer(props.answer, props.answer.checkRuns[state.activeTabIndex].id)
         val downloadedLog = activeScene.logs.downloadLogByAnswerAsync(props.answer, props.answer.checkRuns[state.activeTabIndex])
 
-        if (props.answer.accomplished) {
+        if (props.answer.checkRuns[state.activeTabIndex].conclusion != null) {
             if (downloadedLog.isCompleted) {
                 codeBlock {
                     +downloadedLog.getCompleted()
@@ -76,5 +83,13 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
                 attrs.language = "log"
             }
         }
+    }
+
+    override fun componentDidMount() {
+        game.eventBus.on(LOG_REFRESH_EVENT, logRefreshEventListener)
+    }
+
+    override fun componentWillUnmount() {
+        game.eventBus.remove(LOG_REFRESH_EVENT, logRefreshEventListener)
     }
 }

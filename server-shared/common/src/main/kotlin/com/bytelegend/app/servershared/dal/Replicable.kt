@@ -22,23 +22,24 @@ interface Replicable {
 
 // This is an adapter layer for application and database layer
 // For Player, the sk is "P"
-// For mission, the sk is "mapId#M#missionId"
-// For states, the sk is "mapId#S"
+// For mission, the sk is "M#mapId#missionId"
+// For headSha -> pull request, the sk is "H#headSha"
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 // | PartitionKey | SortKey                      | server     | map        | x  | y  | answers         | states     |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 // | gh#alice     | P                            | gh#alice@1 | JavaIsland | 20 | 80 |                 |            |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
-// | gh#alice     |   mapId#M#StarByteLegend     |            |            |    |    | [{star:0, ...}] |            |
+// | gh#alice     |   M#mapId#StarByteLegend     |            |            |    |    | [{star:0, ...}] |            |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
-// | gh#alice     |   mapId#M#XXX                |            |            |    |    | []              |            |
+// | gh#alice     |   M#mapId#XXX                |            |            |    |    | []              |            |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
-// | gh#alice     |       mapId#S                |            |            |    |    |                 | {A:1, B:2} |
+// | gh#alice     |   H#5843f14c34f5d0e05        | pullRequest: listOf(repo: github.com/ByteLegend/ByteLegend) number:1234 state:closed merged: true
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 const val PLAYER_SORT_KEY = "P"
 const val MISSION_SORT_KEY = "M"
+const val HEAD_SHA_SORT_KEY = "H"
 
-interface StoredInPlayerTable : Replicable {
+interface StoredInPlayerTable {
     val pk: String
     val sk: String
 
@@ -52,7 +53,7 @@ interface StoredInPlayerTable : Replicable {
 
     @get:DynamoDbIgnore
     @get: JsonIgnore
-    val primaryKey
+    val primaryKey: Key
         get() = Key.builder().partitionValue(pk)
             .sortValue(sk)
             .build()

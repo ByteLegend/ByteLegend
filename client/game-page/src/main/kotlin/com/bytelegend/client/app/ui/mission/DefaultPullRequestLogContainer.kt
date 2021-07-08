@@ -10,7 +10,6 @@ import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.logStreamEvent
-import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.web.checkStatusCode
 import com.bytelegend.client.utils.JSArrayBackedList
@@ -22,6 +21,8 @@ import kotlinx.coroutines.asPromise
 import kotlinx.coroutines.async
 import kotlinx.coroutines.await
 import org.w3c.fetch.Response
+
+const val LOG_REFRESH_EVENT = "log.refresh"
 
 class DefaultPullRequestLogContainer(
     private val gameScene: GameScene
@@ -54,7 +55,7 @@ class DefaultPullRequestLogContainer(
 
         if (lastRefreshTime.elapsedTimeMs() > 1000) {
             // don't refresh too frequently because of performance
-            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+            eventBus.emit(LOG_REFRESH_EVENT, logStreamEventData.checkRunId)
             lastRefreshTime = Timestamp.now()
         }
     }
@@ -69,7 +70,7 @@ class DefaultPullRequestLogContainer(
         if (downloadedLog == null) {
             downloadedLog = GlobalScope.async { download(answer.repoFullName, checkRun.sha, checkRun.id) }
             downloadedLog.asPromise().then {
-                eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+                eventBus.emit(LOG_REFRESH_EVENT, checkRun.id)
                 it
             }
             downloadedLogs[id] = downloadedLog

@@ -8,9 +8,9 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.CheckRunConclusion
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.icon
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
@@ -45,11 +45,12 @@ class MissionTitlePullRequestAnswerButton : RComponent<MissionTitlePullRequestAn
     override fun RBuilder.render() {
         div {
             attrs.classes = jsObjectBackedSetOf("pull-request-answer-button")
-            when (props.pullRequestAnswer.latestCheckRun?.conclusion) {
-                null -> pendingSpinner()
-                CheckRunConclusion.SUCCESS -> icon(GREEN_TICK_SVG_DATA, PixelSize(12, 12)) {
+            val latestConclusion = props.pullRequestAnswer.latestCheckRun?.conclusion
+            when {
+                props.pullRequestAnswer.accomplished || latestConclusion == CheckRunConclusion.SUCCESS -> icon(GREEN_TICK_SVG_DATA, PixelSize(12, 12)) {
                     attrs.classes = jsObjectBackedSetOf("icon-status-success")
                 }
+                latestConclusion == null -> pendingSpinner()
                 else -> icon(RED_CORSS_SVG_DATA, PixelSize(12, 12)) {
                     attrs.classes = jsObjectBackedSetOf("icon-status-failure")
                 }

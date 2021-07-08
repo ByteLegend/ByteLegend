@@ -142,11 +142,9 @@ class JavaIslandNewbieVillageNoticeboard :
                     val event = it.asDynamic().nativeEvent as MouseEvent
                     val hoveredTileX = event.offsetX.toInt() / AVATAR_TILE_SIZE
                     val hoveredTileY = event.offsetY.toInt() / AVATAR_TILE_SIZE
-                    console.log("hover", hoveredTileX, hoveredTileY)
                     var hoveredTile: AvatarTile? = undefined
                     for (tile in state.avatarTiles!!) {
                         if (tile.x == hoveredTileX && tile.y == hoveredTileY) {
-                            console.log("Found: ${tile.username}")
                             hoveredTile = tile
                             break
                         }
