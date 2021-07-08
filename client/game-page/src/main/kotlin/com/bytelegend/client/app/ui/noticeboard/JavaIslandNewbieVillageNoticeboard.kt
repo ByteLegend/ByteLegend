@@ -6,6 +6,7 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
+import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.engine.MISSION_REPAINT_EVENT
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.unsafeSpan
@@ -30,8 +31,8 @@ import react.dom.jsStyle
 import react.dom.p
 import react.setState
 
-const val BRAVE_PEOPLE_ALL_JSON_URL = "https://bytelegend-brave-people.oss-cn-hongkong.aliyuncs.com/brave-people-all.json"
-const val BRAVE_PEOPLE_IMG_URL = "https://bytelegend-brave-people.oss-cn-hongkong.aliyuncs.com/brave-people.png"
+fun bravePeopleJsonUrl(timestamp: Long) = "https://bytelegend-brave-people.oss-cn-hongkong.aliyuncs.com/brave-people-all.json?timestamp=$timestamp"
+fun bravePeopleImgUrl(timestamp: Long) = "https://bytelegend-brave-people.oss-cn-hongkong.aliyuncs.com/brave-people.png?timestamp=$timestamp"
 
 // Don't change these values. They are defined elsewhere:
 // https://github.com/ByteLegendQuest/remember-brave-people/blob/master/src/main/java/com/bytelegend/game/Constants.java#L26
@@ -52,6 +53,7 @@ interface JavaIslandNewbieVillageNoticeboardState : RState {
     var hoveredTile: AvatarTile?
     var avatarTiles: Array<AvatarTile>?
     var imageDisplay: String
+    var timestamp: Long
 }
 
 class JavaIslandNewbieVillageNoticeboard :
@@ -71,6 +73,7 @@ class JavaIslandNewbieVillageNoticeboard :
     override fun JavaIslandNewbieVillageNoticeboardState.init() {
         avatarTiles = undefined
         imageDisplay = "none"
+        timestamp = currentTimeMillis()
     }
 
     private fun imgAndJsonLoaded(): Boolean {
@@ -102,7 +105,7 @@ class JavaIslandNewbieVillageNoticeboard :
                         }
                     } else {
                         GlobalScope.launch {
-                            val json = window.fetch(BRAVE_PEOPLE_ALL_JSON_URL)
+                            val json = window.fetch(bravePeopleJsonUrl(state.timestamp))
                                 .await()
                                 .apply {
                                     if (status < 200 || status > 400) {
@@ -128,7 +131,7 @@ class JavaIslandNewbieVillageNoticeboard :
     private fun RBuilder.avatarImg() {
         img {
             attrs.classes = jsObjectBackedSetOf("noticeboard-avatars-img")
-            attrs.src = BRAVE_PEOPLE_IMG_URL
+            attrs.src = bravePeopleImgUrl(state.timestamp)
             attrs.jsStyle {
                 display = state.imageDisplay
             }
