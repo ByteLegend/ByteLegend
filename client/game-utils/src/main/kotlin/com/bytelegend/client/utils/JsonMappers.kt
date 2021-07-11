@@ -42,6 +42,8 @@ import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.PLAYER_SPEECH_EVENT_PREFIX
+import com.bytelegend.app.shared.protocol.PlayerSpeechEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
 
@@ -49,6 +51,7 @@ import com.bytelegend.app.shared.protocol.StarUpdateEventData
 fun parseServerEvent(eventMessage: dynamic): Any {
     val event: String = eventMessage.event
     return when {
+        event.startsWith(PLAYER_SPEECH_EVENT_PREFIX) -> toPlayerSpeechEventData(eventMessage.payload)
         event.startsWith("protocol.player") -> toBasePlayer(eventMessage.payload)
         event == ONLINE_COUNTER_UPDATE_EVENT -> eventMessage.payload
         event == STAR_UPDATE_EVENT -> toStarUpdateEventData(eventMessage.payload)
@@ -59,6 +62,11 @@ fun parseServerEvent(eventMessage: dynamic): Any {
         else -> throw IllegalStateException("Unsupported event: $event")
     }
 }
+
+fun toPlayerSpeechEventData(jsonObject: dynamic) = PlayerSpeechEventData(
+    jsonObject.playerId,
+    jsonObject.sentenceId
+)
 
 fun toLogStreamEventData(jsonObject: dynamic) = LogStreamEventData(
     jsonObject.last,

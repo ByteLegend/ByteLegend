@@ -21,6 +21,7 @@ import com.bytelegend.app.shared.protocol.PublishMessage
 import com.bytelegend.app.shared.protocol.REMOVE_ITEM_EVENT
 import com.bytelegend.app.shared.protocol.REMOVE_STATE_EVENT
 import com.bytelegend.app.shared.protocol.ReplyMessage
+import com.bytelegend.app.shared.protocol.SPEAK
 import com.bytelegend.app.shared.protocol.SendMessage
 import com.bytelegend.app.shared.protocol.SubscribeUnsubscribeMessage
 import com.bytelegend.app.shared.protocol.WebSocketMessage
@@ -218,6 +219,10 @@ class WebSocketClient(
 
     override suspend fun enterScene(srcMapId: String, destMapId: String) {
         send<Unit>(ENTER_SCENE, srcMapId, destMapId)
+    }
+
+    override suspend fun speak(sentenceId: String) {
+        send<Unit>(SPEAK, sentenceId)
     }
 }
 

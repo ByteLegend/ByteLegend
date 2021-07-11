@@ -28,6 +28,7 @@ import com.bytelegend.client.app.ui.GameModal
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameScriptWidgetDisplayLayer
 import com.bytelegend.client.app.ui.GameScriptWidgetDisplayLayerProps
+import com.bytelegend.client.app.ui.HeroControlButton
 import com.bytelegend.client.app.ui.HeroIndicatorWidget
 import com.bytelegend.client.app.ui.ICPServerLocationWidget
 import com.bytelegend.client.app.ui.LocaleSelectionDropdown
@@ -207,6 +208,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                     }
                     missionTitleWidgets(attrs)
                     tileCursorWidget(attrs)
+                    heroControlButton(attrs)
                     spriteNameWidget(attrs)
                     miniMap(attrs)
                     mapCanvas(attrs)
@@ -324,6 +326,13 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {
         return gameChild(parentProps, TileCursorWidget::class, block)
+    }
+
+    private fun RElementBuilder<GameContainerProps>.heroControlButton(
+        parentProps: GameContainerProps,
+        block: RElementBuilder<GameProps>.() -> Unit = {}
+    ): ReactElement {
+        return gameChild(parentProps, HeroControlButton::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.missionTitleWidgets(

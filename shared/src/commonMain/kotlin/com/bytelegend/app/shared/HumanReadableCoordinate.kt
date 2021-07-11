@@ -58,6 +58,7 @@ data class PixelSize(val width: Int, val height: Int) {
     constructor(another: PixelSize) : this(another.width, another.height)
 
     operator fun div(ratio: Ratio) = PixelSize((width / ratio.horizontal).toInt(), (height / ratio.vertical).toInt())
+    operator fun div(ratio: Int) = PixelSize(width / ratio, height / ratio)
     operator fun times(ratio: Ratio) = PixelSize((width * ratio.horizontal).toInt(), (height * ratio.vertical).toInt())
 
     operator fun times(gridCoordinate: GridCoordinate) = PixelCoordinate(width * gridCoordinate.x, height * gridCoordinate.y)

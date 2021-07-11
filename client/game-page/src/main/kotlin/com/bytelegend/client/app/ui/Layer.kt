@@ -8,6 +8,7 @@ enum class Layer {
     MissionTitle,
     MissionTitlePullRequestAnswerButton,
     ScrollButtons,
+    HeroControlButton,
     MiniMapCanvas,
     ScriptWidget,
     RightSideBar,

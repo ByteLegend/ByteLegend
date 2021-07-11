@@ -104,7 +104,7 @@ fun GameScene.pubGuard() = objects {
                 }
             } else {
                 scripts {
-                    speech(guardId, "NiceDayHub", arrow = false)
+                    speech(guardId, "NiceDayHuh", arrow = false)
                 }
             }
         }
@@ -131,7 +131,7 @@ fun GameScene.newbieVillageOldMan() = objects {
             when {
                 gameRuntime.heroPlayer.states.containsKey(NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE) -> {
                     scripts {
-                        speech(oldManId, "NiceDayHub", arrow = false)
+                        speech(oldManId, "NiceDayHuh", arrow = false)
                     }
                 }
                 gameRuntime.heroPlayer.items.contains(COFFEE) -> {

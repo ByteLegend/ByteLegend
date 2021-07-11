@@ -22,4 +22,5 @@ interface Character : GameObject, CoordinateMutable {
     fun moveTo(destination: GridCoordinate, callback: UnitFunction? = null)
     fun moveAlong(movePath: List<GridCoordinate>, callback: UnitFunction? = null)
     fun searchPath(destination: GridCoordinate): List<GridCoordinate>
+    fun isMoving(): Boolean
 }

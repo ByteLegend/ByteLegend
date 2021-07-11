@@ -18,7 +18,7 @@ interface TileCursorWidgetState : RState {
     var animationFrameIndex: Int
 }
 
-val ANIMATION_INTERVAL_MS = 300
+const val ANIMATION_INTERVAL_MS = 300
 
 class TileCursorWidget : GameUIComponent<GameProps, TileCursorWidgetState>() {
     private var timerId: Int? = null

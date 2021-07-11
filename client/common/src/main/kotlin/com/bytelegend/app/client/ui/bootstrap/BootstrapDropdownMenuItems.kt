@@ -10,6 +10,7 @@ val BootstrapDropdownDivider: RClass<BootstrapDropdownMenuProps> = BootstrapDrop
 
 external interface BootstrapDropdownMenuProps : RProps {
     var show: Boolean
+    var style: Any
     var rootCloseEvent: String
 }
 

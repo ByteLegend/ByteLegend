@@ -61,7 +61,7 @@ class JSObjectBackedMap<V>(
     }
 
     fun toJSON(): String {
-        val d = delegate
+        @Suppress("UNUSED_VARIABLE") val d = delegate
         return js("JSON.stringify(d, Object.keys(d).sort())")
     }
 

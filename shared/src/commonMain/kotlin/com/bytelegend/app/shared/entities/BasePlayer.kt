@@ -1,8 +1,10 @@
 package com.bytelegend.app.shared.entities
 
+import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.annotations.DynamoDbIgnore
 import com.bytelegend.app.shared.annotations.DynamoDbSecondaryPartitionKey
 import com.bytelegend.app.shared.annotations.JsonIgnore
+import com.bytelegend.app.shared.objects.GridCoordinateAware
 import kotlinx.serialization.Serializable
 
 /**
@@ -11,7 +13,7 @@ import kotlinx.serialization.Serializable
  * This should be kept sync with player table "server" index projection.
  */
 @Serializable
-open class BasePlayer {
+open class BasePlayer : GridCoordinateAware {
     /**
      * ID for human reading, e.g.
      *
@@ -69,4 +71,8 @@ open class BasePlayer {
     val isOnymous: Boolean
         @JsonIgnore
         get() = !id.startsWith("anon#")
+
+    override val gridCoordinate: GridCoordinate
+        @JsonIgnore
+        get() = GridCoordinate(x, y)
 }

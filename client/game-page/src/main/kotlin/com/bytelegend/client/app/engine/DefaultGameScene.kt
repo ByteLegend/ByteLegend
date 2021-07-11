@@ -32,7 +32,9 @@ import com.bytelegend.client.app.obj.NPC
 import com.bytelegend.client.app.obj.createMissionSprite
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.MAIN_CHANNEL
+import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.mission.DefaultPullRequestLogContainer
+import com.bytelegend.client.app.ui.script.Widget
 import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.JSObjectBackedMap
 import org.kodein.di.DI
@@ -67,6 +69,7 @@ class DefaultGameScene(
     val mainChannelDirector by lazy {
         getDirectorOfChannel(MAIN_CHANNEL)
     }
+    val scriptWidgets: MutableMap<String, Widget<out GameProps>> = JSObjectBackedMap()
 
     lateinit var players: PlayerContainer
 

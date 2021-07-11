@@ -4,7 +4,6 @@ package com.bytelegend.client.app.script
 
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
-import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
@@ -13,6 +12,7 @@ import com.bytelegend.app.client.misc.playAudio
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_SCRIPT_NEXT
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
@@ -21,20 +21,20 @@ import com.bytelegend.client.app.engine.GameMouseEvent
 import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.engine.calculateCoordinateInGameContainer
 import com.bytelegend.client.app.engine.logger
-import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.app.obj.CharacterSprite
 import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.script.effect.showArrowGif
-import com.bytelegend.client.app.ui.mission.BEGINNER_GUIDE_FINISHED_STATE
 import com.bytelegend.client.app.ui.COORDINATE_BORDER_FLICKER
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
-import com.bytelegend.client.app.ui.mission.HIGHTLIGHT_MISSION_EVENT
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
+import com.bytelegend.client.app.ui.mission.BEGINNER_GUIDE_FINISHED_STATE
+import com.bytelegend.client.app.ui.mission.HIGHTLIGHT_MISSION_EVENT
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.browser.document
+import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -69,7 +69,7 @@ const val ASYNC_ANIMATION_CHANNEL = "AsyncAnimation"
 class DefaultGameDirector(
     di: DI,
     private val channel: String,
-    private val gameScene: GameScene
+    private val gameScene: DefaultGameScene
 ) : ScriptsBuilder {
     private val gameControl: GameControl by di.instance()
     private val game: GameRuntime by di.instance()
@@ -102,12 +102,11 @@ class DefaultGameDirector(
      */
     private var counter = 0
 
-    val currentWidgets: MutableMap<String, Widget<out GameProps>> = JSObjectBackedMap()
     val isRunning: Boolean
         get() = index != -1
 
     init {
-        eventBus.on<String?>(GAME_SCRIPT_NEXT) { channel ->
+        eventBus.on<String>(GAME_SCRIPT_NEXT) { channel ->
             if (channel == this.channel && gameScene.isActive) {
                 if (scripts.isNotEmpty()) {
                     next()
@@ -187,17 +186,22 @@ class DefaultGameDirector(
         val builder = SpeechBuilder()
         builder.action()
 
-        val character = gameScene.objects.getById<CharacterSprite>(builder.objectId!!)
+        val speakerCoordinate = if (builder.objectCoordinate != null) {
+            builder.objectCoordinate!!
+        } else {
+            gameScene.objects.getById<CharacterSprite>(builder.objectId!!).pixelCoordinate
+        }
         scripts.add(
             DisplayWidgetScript(
                 SpeechBubbleWidget::class,
                 {
                     attrs.game = gameScene.gameRuntime.asDynamic()
-                    attrs.speakerCoordinate = character.pixelCoordinate
+                    attrs.speakerCoordinate = speakerCoordinate
                     attrs.contentHtml = gameScene.gameRuntime.i(builder.contentHtmlId!!, *builder.args)
                     attrs.arrow = builder.arrow
                 },
-                builder.contentHtmlId
+                builder.contentHtmlId,
+                builder.dismissMs
             )
         )
     }
@@ -266,20 +270,25 @@ class DefaultGameDirector(
     inner class DisplayWidgetScript<P : GameProps>(
         private val klass: KClass<out GameUIComponent<P, *>>,
         private val handler: RHandler<P>,
-        private val stringRepresentation: String?
+        private val stringRepresentation: String?,
+        private val dismissMs: Int = 0
     ) : GameScript {
-        constructor(klass: KClass<out GameUIComponent<P, *>>, handler: RHandler<P>) : this(klass, handler, null)
-
         private val id = "${gameScene.map.id}-ScriptWidget-$channel-${getAndIncrement()}"
         override fun start() {
             respondToClick(true)
-            currentWidgets[id] = Widget(klass, handler)
+            gameScene.scriptWidgets[id] = Widget(klass, handler)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+
+            if (dismissMs != 0) {
+                window.setTimeout({
+                    next()
+                }, dismissMs)
+            }
         }
 
         override fun stop() {
             respondToClick(false)
-            currentWidgets.remove(id)
+            gameScene.scriptWidgets.remove(id)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
 

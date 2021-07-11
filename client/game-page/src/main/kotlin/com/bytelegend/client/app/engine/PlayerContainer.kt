@@ -9,17 +9,22 @@ import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.playerAnimationSetResourceId
+import com.bytelegend.app.shared.protocol.PlayerSpeechEventData
 import com.bytelegend.app.shared.protocol.playerEnterSceneEvent
 import com.bytelegend.app.shared.protocol.playerLeaveSceneEvent
 import com.bytelegend.app.shared.protocol.playerMoveOnSceneEvent
+import com.bytelegend.app.shared.protocol.playerSpeechEvent
 import com.bytelegend.client.app.engine.resource.ImageResource
-import com.bytelegend.client.utils.JSArrayBackedList
-import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.app.obj.AnimationSet
 import com.bytelegend.client.app.obj.PlayerSprite
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.web.WebSocketClient
+import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.client.utils.JSObjectBackedMap
 
+/**
+ * Container of all players OTHER THAN hero
+ */
 class PlayerContainer(
     private val mapId: String,
     private val eventBus: EventBus,
@@ -38,6 +43,7 @@ class PlayerContainer(
         put(playerEnterSceneEvent(mapId), this@PlayerContainer::onPlayerEnterScene)
         put(playerLeaveSceneEvent(mapId), this@PlayerContainer::onPlayerLeaveScene)
         put(playerMoveOnSceneEvent(mapId), this@PlayerContainer::onPlayerMoveOnScene)
+        put(playerSpeechEvent(mapId), this@PlayerContainer::onPlayerSpeechOnScene)
     }
 
     fun init(gameScene: GameScene) {
@@ -55,6 +61,17 @@ class PlayerContainer(
         }
         idToSprite.values.forEach {
             it.close()
+        }
+    }
+
+    private fun onPlayerSpeechOnScene(playerSpeechEventData: PlayerSpeechEventData) {
+        val playerId = playerSpeechEventData.playerId
+        if (playerId == game.heroPlayer.id || !gameScene.isActive) {
+            return
+        }
+        val player = idToPlayer[playerId]
+        if (player != null) {
+            gameScene.showSpeechBubble(player, playerSpeechEventData)
         }
     }
 
@@ -119,5 +136,15 @@ class PlayerContainer(
             }
         }
         return ret
+    }
+}
+
+fun GameScene.showSpeechBubble(player: BasePlayer, playerSpeechEventData: PlayerSpeechEventData) {
+    unsafeCast<DefaultGameScene>().scripts("playerSpeech-${player.id}", true) {
+        speech {
+            objectCoordinate = GridCoordinate(player.x, player.y) * map.tileSize
+            contentHtmlId = playerSpeechEventData.sentenceId
+            dismissMs = 3000
+        }
     }
 }

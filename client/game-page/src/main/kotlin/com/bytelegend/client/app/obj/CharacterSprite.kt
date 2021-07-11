@@ -34,7 +34,7 @@ abstract class CharacterSprite(
 ) : Sprite, GameSceneAware, Character {
     override val layer: Int = PLAYER_LAYER
 
-    var still = true
+    private var still = true
 
     override var direction: Direction = Direction.DOWN
 
@@ -44,6 +44,8 @@ abstract class CharacterSprite(
         gameScene.objects.add(this)
         gameScene.gameRuntime.eventBus.on(GAME_CLOCK_50HZ_EVENT, clockEventListener)
     }
+
+    override fun isMoving() = !still
 
     override fun outOfCanvas(): Boolean {
         return getSpriteBlockOnCanvas(gameScene).outOfCanvas(gameScene)
