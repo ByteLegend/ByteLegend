@@ -14,7 +14,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
     implementation("com.github.blindpirate:jsonschema2pojo-core:1.1.0.4")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
 
     implementation(gradleApi())
 }
