@@ -118,6 +118,7 @@ class Game(
     fun start() {
         gameControl.start()
         animate()
+        setClock(GAME_CLOCK_1HZ, GAME_CLOCK_1HZ_EVENT)
         setClock(GAME_CLOCK_10HZ, GAME_CLOCK_10HZ_EVENT)
         setClock(GAME_CLOCK_50HZ, GAME_CLOCK_50HZ_EVENT)
         eventBus.on(ITEMS_STATES_UPDATE_EVENT, onItemsStatesUpdateEventListener)

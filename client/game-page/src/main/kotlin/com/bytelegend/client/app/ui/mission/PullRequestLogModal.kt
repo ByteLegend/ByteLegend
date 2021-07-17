@@ -9,11 +9,14 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
+import com.bytelegend.client.app.engine.GAME_CLOCK_1HZ_EVENT
 import com.bytelegend.client.app.external.codeBlock
 import com.bytelegend.client.app.ui.GameProps
-import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.unsafeSpan
 import react.RBuilder
+import react.RComponent
 import react.RState
+import react.dom.p
 import react.setState
 
 interface PullRequestLogModalProps : GameProps {
@@ -24,11 +27,9 @@ interface PullRequestLogModalState : RState {
     var activeTabIndex: Int
 }
 
-class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullRequestLogModalState>() {
-    private val logRefreshEventListener: EventListener<String> = { checkRunId ->
-        if (checkRunId == props.answer.checkRuns[state.activeTabIndex].id) {
-            setState { }
-        }
+class PullRequestLogModal : RComponent<PullRequestLogModalProps, PullRequestLogModalState>() {
+    private val refreshTimerEventListener: EventListener<String> = {
+        setState { }
     }
 
     override fun PullRequestLogModalState.init() {
@@ -36,7 +37,7 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
     }
 
     override fun RBuilder.render() {
-        if (props.answer.checkRuns.size > 2) {
+        if (props.answer.checkRuns.size > 1) {
             BootstrapNav {
                 attrs.variant = "tabs"
                 props.answer.checkRuns.forEachIndexed { index: Int, checkRun: PullRequestCheckRun ->
@@ -55,21 +56,34 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
                 }
             }
         }
+        renderTab()
+    }
 
-        val liveLog = activeScene.logs.getLiveLogsByAnswer(props.answer, props.answer.checkRuns[state.activeTabIndex].id)
-        val downloadedLog = activeScene.logs.downloadLogByAnswerAsync(props.answer, props.answer.checkRuns[state.activeTabIndex])
+    private fun RBuilder.renderTab() {
+        val liveLog = props.game.activeScene.logs.getLiveLogsByAnswer(props.answer, props.answer.checkRuns[state.activeTabIndex].id)
+        val downloadedLog = props.game.activeScene.logs.downloadLogByAnswerAsync(props.answer, props.answer.checkRuns[state.activeTabIndex])
 
         if (props.answer.checkRuns[state.activeTabIndex].conclusion != null) {
             if (downloadedLog.isCompleted) {
-                codeBlock {
-                    +downloadedLog.getCompleted()
-                    attrs.language = "log"
+                val exception = downloadedLog.getCompletionExceptionOrNull()
+                if (exception != null) {
+                    p {
+                        unsafeSpan("Unexpected failure, please report at <a target='_blank' href='https://github.com/ByteLegend/ByteLegend/issues'>https://github.com/ByteLegend/ByteLegend/issues</span>")
+                    }
+                    p {
+                        +exception.stackTraceToString()
+                    }
+                } else {
+                    codeBlock {
+                        attrs.lines = listOf(downloadedLog.getCompleted())
+                        attrs.language = "log"
+                    }
                 }
             } else {
                 // if the log is being downloaded, let's show the live log for now.
                 if (liveLog.isNotEmpty()) {
                     codeBlock {
-                        +liveLog.joinToString("\n")
+                        attrs.lines = liveLog
                         attrs.language = "log"
                     }
                 }
@@ -79,17 +93,17 @@ class PullRequestLogModal : GameUIComponent<PullRequestLogModalProps, PullReques
             }
         } else {
             codeBlock {
-                +liveLog.joinToString("\n")
+                attrs.lines = liveLog
                 attrs.language = "log"
             }
         }
     }
 
     override fun componentDidMount() {
-        game.eventBus.on(LOG_REFRESH_EVENT, logRefreshEventListener)
+        props.game.eventBus.on(GAME_CLOCK_1HZ_EVENT, refreshTimerEventListener)
     }
 
     override fun componentWillUnmount() {
-        game.eventBus.remove(LOG_REFRESH_EVENT, logRefreshEventListener)
+        props.game.eventBus.remove(GAME_CLOCK_1HZ_EVENT, refreshTimerEventListener)
     }
 }

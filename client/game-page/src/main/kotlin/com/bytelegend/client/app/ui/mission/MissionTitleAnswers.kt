@@ -1,10 +1,13 @@
 package com.bytelegend.client.app.ui.mission
 
 import BootstrapDropdownItem
+import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSplitButton
 import com.bytelegend.app.shared.entities.PullRequestAnswer
+import com.bytelegend.app.shared.protocol.MissionUpdateEventData
 import com.bytelegend.client.app.engine.GameMission
+import com.bytelegend.client.app.engine.MISSION_REPAINT_EVENT
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.Layer
 import kotlinext.js.jsObject
@@ -16,6 +19,7 @@ import react.createElement
 import react.dom.div
 import react.dom.jsStyle
 import react.rClass
+import react.setState
 
 interface MissionTitleAnswersState : RState
 
@@ -24,6 +28,12 @@ interface MissionTitleAnswerProps : GameProps {
 }
 
 class MissionTitleAnswers : RComponent<MissionTitleAnswerProps, MissionTitleAnswersState>() {
+    private val missionUpdateEventListener: EventListener<MissionUpdateEventData> = {
+        if (it.newValue.missionId == props.mission.id) {
+            setState { }
+        }
+    }
+
     override fun RBuilder.render() {
         div {
             val z = Layer.MissionTitlePullRequestAnswerButton.zIndex()
@@ -77,5 +87,13 @@ class MissionTitleAnswers : RComponent<MissionTitleAnswerProps, MissionTitleAnsw
                 }
             }
         }
+    }
+
+    override fun componentDidMount() {
+        props.game.eventBus.on(MISSION_REPAINT_EVENT, missionUpdateEventListener)
+    }
+
+    override fun componentWillUnmount() {
+        props.game.eventBus.remove(MISSION_REPAINT_EVENT, missionUpdateEventListener)
     }
 }

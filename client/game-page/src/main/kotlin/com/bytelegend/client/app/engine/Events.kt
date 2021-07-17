@@ -20,6 +20,7 @@ const val GAME_ANIMATION_EVENT = "game.animation"
  */
 const val GAME_CLOCK_10HZ_EVENT = "game.clock.10hz"
 const val GAME_CLOCK_50HZ_EVENT = "game.clock.50hz"
+const val GAME_CLOCK_1HZ_EVENT = "game.clock.1hz"
 
 // Most of the UI elements depends on properties of GameCanvasState
 // Update all UI elements after resizing, or other "update all UI elements" operations.

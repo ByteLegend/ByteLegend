@@ -589,3 +589,7 @@ p.speech-bubble::after {
     width: 100%;
     height: 100%;
 }
+
+.block-display {
+    display: block;
+}
