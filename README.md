@@ -9,7 +9,7 @@
 
 # 字节传说是什么
 
-[字节传说](https://bytelegend.com)是一个多人在线的RPG游戏，通过这个免费且开源的游戏，你可以学到现实世界里的编程技能。
+[字节传说](https://bytelegend.com)是一个免费、开源的多人在线RPG游戏，通过这个游戏，你可以学到现实世界里的编程技能。
 
 ![1](https://raw.githubusercontent.com/ByteLegend/ByteLegend/master/docs/images/index-page-zh.png)
 
@@ -63,7 +63,7 @@
 
 ## What is ByteLegend
 
-[ByteLegend](https://bytelegend.com) is an MMORPG game where you acquire realworld programming skills by playing a free, opensource game.
+[ByteLegend](https://bytelegend.com) is a free, opensource MMORPG game where you acquire realworld programming skills.
 
 ![Index page](https://raw.githubusercontent.com/ByteLegend/ByteLegend/master/docs/images/index-page-en.png)
 
@@ -79,7 +79,7 @@
   - Yes, it's free, as in "free beer". :-)
 - Opensource
   - Yes, it's opensource. This means everything you see in the game is customizable: game map, story, NPC conversations, i18n texts, ...
-  - Please don't hesitate to create issues/pull requests for anything bad you see in the game. We and millions of players appreciate your contribution very much.
+  - Please don't hesitate to create issues/pull requests for anything bad you see in the game. We and thousands of players appreciate your contribution very much.
   - See [here](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/CONTRIBUTING.md) for more information on how to contribute.
 - Fun
   - It's a game!
