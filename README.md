@@ -65,7 +65,7 @@
 
 [ByteLegend](https://bytelegend.com) is an MMORPG game where you acquire realworld programming skills by playing a free, opensource game.
 
-![1](https://raw.githubusercontent.com/ByteLegend/ByteLegend/master/docs/images/index-page-en.png)
+![Index page](https://raw.githubusercontent.com/ByteLegend/ByteLegend/master/docs/images/index-page-en.png)
 
 ## How to play
 
