@@ -3,6 +3,7 @@ package com.bytelegend.utils
 import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.i18n.LocalizedTextFormat
 import org.commonmark.node.Code
+import org.commonmark.node.Link
 import org.commonmark.node.Node
 import org.commonmark.parser.Parser
 import org.commonmark.renderer.html.AttributeProvider
@@ -18,6 +19,7 @@ object CommonmarkMarkdownRenderer : MarkdownRenderer {
             val parser: Parser = Parser.builder().build()
             val renderer: HtmlRenderer = HtmlRenderer.builder()
                 .attributeProviderFactory { NoTranslateClassAttributeProvider }
+                .attributeProviderFactory { TargetBlankLinkProvider }
                 .build()
 
             return LocalizedText(
@@ -35,6 +37,14 @@ object NoTranslateClassAttributeProvider : AttributeProvider {
     override fun setAttributes(node: Node, tagName: String, attributes: MutableMap<String, String>) {
         if (node is Code) {
             attributes["class"] = "notranslate"
+        }
+    }
+}
+
+object TargetBlankLinkProvider : AttributeProvider {
+    override fun setAttributes(node: Node, tagName: String, attributes: MutableMap<String, String>) {
+        if (node is Link) {
+            attributes["target"] = "_blank"
         }
     }
 }

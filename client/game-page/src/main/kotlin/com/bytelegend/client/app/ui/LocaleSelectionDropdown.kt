@@ -54,6 +54,16 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, RS
                 BootstrapDropdownItem {
                     span {
                         attrs.classes = jsObjectBackedSetOf("locale-selection-dropdown-item-span")
+                        +i("AddANewLanguage")
+                    }
+                    attrs.onClick = {
+                        showHelpUsImproveModal()
+                    }
+                }
+
+                BootstrapDropdownItem {
+                    span {
+                        attrs.classes = jsObjectBackedSetOf("locale-selection-dropdown-item-span")
                         +i("HelpUsImproveTheTranslationQuality")
                     }
                     attrs.onClick = {
