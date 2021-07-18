@@ -158,6 +158,10 @@ body {
     user-select: none;
 }
 
+.icp-widget:hover {
+    color: white;
+}
+
 .mission-title {
     text-align: center;
     max-width: 200px;
