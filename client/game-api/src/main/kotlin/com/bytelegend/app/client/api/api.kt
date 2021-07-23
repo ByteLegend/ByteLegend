@@ -8,7 +8,7 @@ import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.Player
-import com.bytelegend.app.shared.entities.PlayerMission
+import com.bytelegend.app.shared.entities.PlayerChallenge
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.app.shared.i18n.Locale
@@ -214,27 +214,32 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
     val blockers: Array<Array<Int>>
     val objects: GameObjectContainer
     val canvasState: GameCanvasState
-    val playerMissions: PlayerMissionContainer
+    val playerChallenges: PlayerChallengeContainer
     val logs: PullRequestLogContainer
 
     fun objects(block: ObjectsBuilder.() -> Unit)
     fun scripts(block: ScriptsBuilder.() -> Unit)
 }
 
-interface PlayerMissionContainer {
+interface PlayerChallengeContainer {
     /**
-     * Is the mission accomplished?
+     * Is the challenge accomplished?
      */
-    fun missionAccomplished(missionId: String): Boolean
+    fun challengeAccomplished(challengeId: String): Boolean
+
+    /**
+     * How many star the player gets from the challenge?
+     */
+    fun challengeStar(challengeId: String): Int
 
     /**
      * How many star the player gets from the mission?
      */
     fun missionStar(missionId: String): Int
 
-    fun getPlayerMissionById(missionId: String): PlayerMission?
+    fun getPlayerChallengesByMissionId(missionId: String): List<PlayerChallenge>
 
-    fun getPullRequestMissionAnswersByMissionId(missionId: String): List<PullRequestAnswer>
+    fun getPullRequestChallengeAnswersByMissionId(missionId: String): List<PullRequestAnswer>
 }
 
 interface PullRequestLogContainer {

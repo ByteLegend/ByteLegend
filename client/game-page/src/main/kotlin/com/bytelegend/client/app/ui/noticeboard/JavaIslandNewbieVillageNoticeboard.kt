@@ -5,7 +5,7 @@ package com.bytelegend.client.app.ui.noticeboard
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
-import com.bytelegend.app.shared.protocol.MissionUpdateEventData
+import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.engine.MISSION_REPAINT_EVENT
 import com.bytelegend.client.app.ui.GameProps
@@ -59,11 +59,11 @@ interface JavaIslandNewbieVillageNoticeboardState : RState {
 class JavaIslandNewbieVillageNoticeboard :
     RComponent<GameProps, JavaIslandNewbieVillageNoticeboardState>() {
     private var loading = false
-    private val onMissionRepaintListener: EventListener<MissionUpdateEventData> = this::onMissionRepaint
+    private val onChallengeRepaintListener: EventListener<ChallengeUpdateEventData> = this::onMissionRepaint
 
-    private fun onMissionRepaint(eventData: MissionUpdateEventData) {
+    private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
         // Refresh upon mission finished event
-        if (eventData.change.accomplished && eventData.newValue.missionId == "remember-brave-people") {
+        if (eventData.change.accomplished && eventData.newValue.challengeId == "remember-brave-people") {
             setState {
                 init()
             }
@@ -170,10 +170,10 @@ class JavaIslandNewbieVillageNoticeboard :
     }
 
     override fun componentDidMount() {
-        props.game.eventBus.on(MISSION_REPAINT_EVENT, onMissionRepaintListener)
+        props.game.eventBus.on(MISSION_REPAINT_EVENT, onChallengeRepaintListener)
     }
 
     override fun componentWillUnmount() {
-        props.game.eventBus.remove(MISSION_REPAINT_EVENT, onMissionRepaintListener)
+        props.game.eventBus.remove(MISSION_REPAINT_EVENT, onChallengeRepaintListener)
     }
 }

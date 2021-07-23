@@ -28,7 +28,6 @@ const val SCENE_LOADING_END_EVENT = "scene.loading.end"
 
 fun mapJsonResourceId(mapId: String) = "$mapId-map"
 fun mapTilesetResourceId(mapId: String) = "$mapId-tileset"
-fun mapRoadmapResourceId(mapId: String) = "$mapId-roadmap"
 fun mapScriptResourceId(mapId: String) = "$mapId-script"
 fun mapTextResourceId(mapId: String, locale: Locale) = "$mapId-${locale.lowercase()}"
 
@@ -93,17 +92,13 @@ class DefaultGameSceneContainer(
         val i18nText = resourceLoader.loadAsync(I18nTextResource(mapTextResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.lowercase()}.json", game.i18nTextContainer))
         val sceneInitData = resourceLoader.loadAsync(GameSceneInitResource(mapId, game.webSocketClient))
 
-        if (game.idToMapDefinition.getValue(mapId).roadmap) {
-            resourceLoader.loadAsync(ImageResource(mapRoadmapResourceId(mapId), "$RRBD/map/$mapId/roadmap.svg"))
-        }
-
         i18nContainer.putAll(i18nText.await())
 
         val scene = DefaultGameScene(di, map.await(), tileset.await(), gameContainerSize)
         val initData = sceneInitData.await()
 
         scene.players = PlayerContainer(mapId, eventBus, game.webSocketClient, resourceLoader, initData.players).apply { init(scene) }
-        scene.playerMissions = DefaultPlayerMissionContainer(di, sceneInitData.await().missions.asDynamic()).apply { init(scene) }
+        scene.playerChallenges = DefaultPlayerChallengeContainer(di, sceneInitData.await().playerChallenges.asDynamic()).apply { init(scene) }
         scenes[mapId] = scene
         switchScene(oldScene, scene, switchAfterLoading, action)
 

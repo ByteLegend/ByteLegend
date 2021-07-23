@@ -16,20 +16,20 @@ data class MissionSpec(
     /**
      * The challenge in this mission
      */
-    val challenge: ChallengeSpec?,
+    val challenges: List<ChallengeSpec> = emptyList(),
     /**
      * The tutorials in this mission
      */
-    val tutorials: TutorialsSpec?,
+    val tutorials: List<Tutorial> = emptyList(),
     /**
      * The discussions in this mission
      */
-    val discussions: DiscussionsSpec?,
+    val discussions: DiscussionsSpec? = null,
     /**
      * Some information of this mission is not maintained in YAML,
      * but in map JSON. See {@link GameMapMission}.
      */
-    val mapMissionSpec: MapMissionSpec?,
+    val mapMissionSpec: MapMissionSpec? = null,
     /**
      * Special actions to be performed when the mission is accomplished
      */

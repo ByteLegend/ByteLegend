@@ -15,9 +15,9 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapCard
 import com.bytelegend.app.client.ui.bootstrap.BootstrapCardHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapCol
 import com.bytelegend.app.client.ui.bootstrap.BootstrapRow
-import com.bytelegend.app.shared.entities.PlayerMissionAnswer
+import com.bytelegend.app.shared.entities.PlayerChallengeAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
-import com.bytelegend.app.shared.protocol.missionUpdateEvent
+import com.bytelegend.app.shared.protocol.challengeUpdateEvent
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.engine.util.format
@@ -27,7 +27,7 @@ import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeH4
 import com.bytelegend.client.app.ui.unsafeSpan
-import com.bytelegend.client.app.web.submitMissionAnswer
+import com.bytelegend.client.app.web.submitChallengeAnswer
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -126,7 +126,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         }
         br { }
 
-        val answers = game.activeScene.playerMissions.getPlayerMissionById(props.missionId)?.answers ?: emptyList()
+        val answers = game.activeScene.playerChallenges.getPlayerChallengesByMissionId(props.missionId).flatMap { it.answers }
 
         renderPlayerAnswers(answers)
 
@@ -146,9 +146,9 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
             loading = true
         }
 
-        val missionUpdateEventData = submitMissionAnswer(props.missionId, textarea.value)
-        game.eventBus.emit(missionUpdateEvent(activeScene.map.id), missionUpdateEventData)
-        if (missionUpdateEventData.change.accomplished) {
+        val challengeUpdateEventData = submitChallengeAnswer(props.missionId, props.challengeSpec.id, textarea.value)
+        game.eventBus.emit(challengeUpdateEvent(activeScene.map.id), challengeUpdateEventData)
+        if (challengeUpdateEventData.change.accomplished) {
             game.bannerController.showBanner(
                 Banner(
                     game.i("AnswerCorrect"),
@@ -165,7 +165,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         }
     }
 
-    private fun RBuilder.renderPlayerAnswers(answers: List<PlayerMissionAnswer>) {
+    private fun RBuilder.renderPlayerAnswers(answers: List<PlayerChallengeAnswer>) {
         if (answers.isEmpty()) {
             return
         }

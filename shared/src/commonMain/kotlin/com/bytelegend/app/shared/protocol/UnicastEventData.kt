@@ -1,7 +1,8 @@
 package com.bytelegend.app.shared.protocol
 
-import com.bytelegend.app.shared.entities.PlayerMission
-import com.bytelegend.app.shared.entities.PlayerMissionAnswer
+import com.bytelegend.app.shared.annotations.JsonIgnore
+import com.bytelegend.app.shared.entities.PlayerChallenge
+import com.bytelegend.app.shared.entities.PlayerChallengeAnswer
 import com.bytelegend.app.shared.entities.mission.OnFinishSpec
 
 interface UnicastEventData {
@@ -16,12 +17,14 @@ data class StarUpdateEventData(
     val newValue: Int,
 ) : UnicastEventData
 
-data class MissionUpdateEventData(
-    override val playerId: String,
-    val map: String,
-    val change: PlayerMissionAnswer,
-    val newValue: PlayerMission,
-) : UnicastEventData
+data class ChallengeUpdateEventData(
+    val change: PlayerChallengeAnswer,
+    val newValue: PlayerChallenge,
+) : UnicastEventData {
+    override val playerId: String
+        @JsonIgnore
+        get() = newValue.playerId
+}
 
 data class ItemsStatesUpdateEventData(
     override val playerId: String,
@@ -38,7 +41,8 @@ data class LogStreamEventData(
     val last: Boolean?,
     val mapId: String,
     val missionId: String,
-    val missionAnswer: String,
+    val challengeId: String,
+    val challengeAnswer: String,
     val checkRunId: String,
     val lines: List<String>
 )

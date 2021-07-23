@@ -28,12 +28,12 @@ enum class CheckRunConclusion {
     ACTION_REQUIRED, CANCELLED, FAILURE, NEUTRAL, SUCCESS, SKIPPED, STALE, TIMED_OUT
 }
 
-fun List<PlayerMissionAnswer>.toPullRequestAnswers(): List<PullRequestAnswer> {
+fun List<PlayerChallengeAnswer>.toPullRequestAnswers(): List<PullRequestAnswer> {
     val groupByAnswers = filter { it.answer.startsWith("https://") }.groupBy { it.answer }
     return groupByAnswers.mapNotNull { it.value.toPullRequestAnswer() }.sortedBy { it.lastUpdatedAt }.reversed()
 }
 
-private fun List<PlayerMissionAnswer>.toPullRequestAnswer(): PullRequestAnswer? {
+private fun List<PlayerChallengeAnswer>.toPullRequestAnswer(): PullRequestAnswer? {
     if (this.isEmpty()) {
         return null
     }

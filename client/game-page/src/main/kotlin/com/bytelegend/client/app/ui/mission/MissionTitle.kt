@@ -3,17 +3,17 @@ package com.bytelegend.client.app.ui.mission
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.protocol.MissionUpdateEventData
+import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.engine.MISSION_REPAINT_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
 import com.bytelegend.client.app.ui.unsafeSpan
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onMouseMoveFunction
 import kotlinx.html.js.onMouseOutFunction
@@ -58,9 +58,9 @@ class MissionTitle : RComponent<MissionTitleProps, MissionTitleState>() {
             hovered = false
         }
     }
-    private val onMissionRepaintListener: EventListener<MissionUpdateEventData> = this::onMissionRepaint
+    private val onMissionRepaintListener: EventListener<ChallengeUpdateEventData> = this::onMissionRepaint
 
-    private fun onMissionRepaint(eventData: MissionUpdateEventData) {
+    private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
         // Refresh upon mission update event
         if (eventData.newValue.missionId == props.mission.id) {
             setState {}

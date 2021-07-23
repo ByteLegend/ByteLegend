@@ -102,7 +102,7 @@ class PrismCodeBlock : RComponent<CodeBlockProps, RState>() {
     }
 
     override fun shouldComponentUpdate(nextProps: CodeBlockProps, nextState: RState): Boolean {
-        // TODO this can only handle appending case, but not modifiying case
+        // TODO this can only handle appending case, but not modifying case
         if (nextProps.lines === props.lines) {
             return nextProps.lines.size != displayedLineNumber
         }

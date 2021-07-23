@@ -58,8 +58,9 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
         )
         GameMapObjectType.GameMapRegion -> CompressedGameMapRegion(
             it.id,
-            it.layer,
-            (it.vertices as Array<Array<Int>>).mapToList { it }
+            (it.center as Array<Int>).toList(),
+            (it.vertices as Array<Array<Int>>).mapToList { it },
+            it.next
         )
         GameMapObjectType.GameMapCurve -> CompressedGameMapCurve(
             it.id,
@@ -79,11 +80,12 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
             it.id,
             it.title,
             it.totalStar,
+            (it.challenges as Array<String>).toList(),
             it.map,
             it.sprite,
             (it.point as Array<Int>).toList(),
-            (it.children as Array<String>).toList(),
-            it.next
+            (it.next as Array<String>).toList(),
+            it.region
         )
         else -> throw IllegalStateException("Unrecognized type: ${it.type}")
     }

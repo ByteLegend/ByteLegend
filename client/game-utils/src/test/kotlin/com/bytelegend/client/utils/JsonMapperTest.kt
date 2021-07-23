@@ -1,6 +1,5 @@
-package com.bytelegend.client.app
+package com.bytelegend.client.utils
 
-import com.bytelegend.client.utils.toMissionAnswer
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -9,7 +8,7 @@ import kotlin.test.assertTrue
 class JsonMapperTest {
     @Test
     fun testToMissionAnswer() {
-        val answer1 = toMissionAnswer(
+        val answer1 = toPlayerChallengeAnswer(
             JSON.parse(
                 """
             {"star": 0, "answer": "ThisIsAnswer", "accomplished": true, "createdAt":0, "data": {}}
@@ -22,7 +21,7 @@ class JsonMapperTest {
         assertEquals("0", answer1.createdAt.toString())
         assertTrue(answer1.data.isEmpty())
 
-        val answer2 = toMissionAnswer(
+        val answer2 = toPlayerChallengeAnswer(
             JSON.parse(
                 """
             {"star": 0, "answer": "ThisIsAnswer", "accomplished": false, "createdAt":1, "data": {"a": "1"}}

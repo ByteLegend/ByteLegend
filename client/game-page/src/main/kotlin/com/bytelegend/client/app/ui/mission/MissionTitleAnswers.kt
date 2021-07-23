@@ -5,7 +5,7 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSplitButton
 import com.bytelegend.app.shared.entities.PullRequestAnswer
-import com.bytelegend.app.shared.protocol.MissionUpdateEventData
+import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.engine.MISSION_REPAINT_EVENT
 import com.bytelegend.client.app.ui.GameProps
@@ -28,8 +28,8 @@ interface MissionTitleAnswerProps : GameProps {
 }
 
 class MissionTitleAnswers : RComponent<MissionTitleAnswerProps, MissionTitleAnswersState>() {
-    private val missionUpdateEventListener: EventListener<MissionUpdateEventData> = {
-        if (it.newValue.missionId == props.mission.id) {
+    private val challengeUpdateEventListener: EventListener<ChallengeUpdateEventData> = {
+        if (it.newValue.challengeId == props.mission.id) {
             setState { }
         }
     }
@@ -44,7 +44,7 @@ class MissionTitleAnswers : RComponent<MissionTitleAnswerProps, MissionTitleAnsw
                 it.stopPropagation()
             }
 
-            val pullRequestAnswers = props.game.activeScene.playerMissions.getPullRequestMissionAnswersByMissionId(props.mission.id)
+            val pullRequestAnswers = props.game.activeScene.playerChallenges.getPullRequestChallengeAnswersByMissionId(props.mission.id)
             if (pullRequestAnswers.isNotEmpty()) {
                 renderPullRequestAnswers(pullRequestAnswers)
             }
@@ -90,10 +90,10 @@ class MissionTitleAnswers : RComponent<MissionTitleAnswerProps, MissionTitleAnsw
     }
 
     override fun componentDidMount() {
-        props.game.eventBus.on(MISSION_REPAINT_EVENT, missionUpdateEventListener)
+        props.game.eventBus.on(MISSION_REPAINT_EVENT, challengeUpdateEventListener)
     }
 
     override fun componentWillUnmount() {
-        props.game.eventBus.remove(MISSION_REPAINT_EVENT, missionUpdateEventListener)
+        props.game.eventBus.remove(MISSION_REPAINT_EVENT, challengeUpdateEventListener)
     }
 }

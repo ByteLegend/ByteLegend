@@ -14,8 +14,9 @@ import kotlinx.browser.window
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
 const val NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE = "OldManGotCoffee"
-const val NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID = "remember-brave-people"
+const val NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID = "remember-brave-people-challenge"
 const val STAR_BYTELEGEND_MISSION_ID = "star-bytelegend"
+const val STAR_BYTELEGEND_CHALLENGE_ID = "star-bytelegend-challenge"
 
 val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
 
@@ -53,7 +54,7 @@ fun GameScene.pubGuard() = objects {
                         speech(guardId, "DoYouPreferToBeMediocre")
                     }
                 }
-                playerMissions.missionAccomplished(STAR_BYTELEGEND_MISSION_ID) -> {
+                playerChallenges.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
                     helpers.getCharacter(guardId).gridCoordinate = guardMoveDestPoint
                 }
                 else -> {
@@ -65,7 +66,7 @@ fun GameScene.pubGuard() = objects {
         onClick = helpers.standardNpcSpeech(guardId) {
             if (helpers.getCharacter(guardId).gridCoordinate == guardStartPoint) {
                 when {
-                    !gameRuntime.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE) && playerMissions.missionAccomplished(STAR_BYTELEGEND_MISSION_ID) -> {
+                    !gameRuntime.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE) && playerChallenges.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
                         // Player star first but hasn't finished beginner guide, show them
                         scripts {
                             startBeginnerGuide()
@@ -81,7 +82,7 @@ fun GameScene.pubGuard() = objects {
                             putState(BEGINNER_GUIDE_FINISHED_STATE)
                         }
                     }
-                    playerMissions.missionAccomplished(STAR_BYTELEGEND_MISSION_ID) -> {
+                    playerChallenges.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
                         // mission accomplished, let's celebrate!
                         scripts {
                             speech(guardId, "NiceJob", arrayOf("1", "0"))
@@ -163,7 +164,7 @@ fun GameScene.newbieVillageHead() = objects {
         sprite = "$villageHeadId-sprite"
 
         onInit = {
-            if (playerMissions.missionAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
+            if (playerChallenges.challengeAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
                 helpers.getCharacter(villageHeadId).gridCoordinate = destPoint
             } else {
                 helpers.getCharacter(villageHeadId).gridCoordinate = startPoint
@@ -172,7 +173,7 @@ fun GameScene.newbieVillageHead() = objects {
 
         onClick = helpers.standardNpcSpeech(villageHeadId) {
             if (helpers.getCharacter(villageHeadId).gridCoordinate == startPoint) {
-                if (playerMissions.missionAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
+                if (playerChallenges.challengeAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
                     scripts {
                         speech(villageHeadId, "OutsideWorldIsDangerousButIHaveToLetYouGo")
                         speech(villageHeadId, "GoodLuckPursueHolyJavaCoffee", arrow = false)

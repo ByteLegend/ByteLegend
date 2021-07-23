@@ -38,7 +38,7 @@ class DefaultPullRequestLogContainer(
         val id = liveLogId(logStreamEventData.checkRunId)
         var currentLiveLog = liveLogs[id]
         if (currentLiveLog == null) {
-            val point = gameScene.objects.getById<GameMission>(logStreamEventData.missionId).gameMapMission.point
+            val point = gameScene.objects.getById<GameMission>(logStreamEventData.missionId).gameMapMission.gridCoordinate
             currentLiveLog = LiveLog(id, point)
             liveLogs[id] = currentLiveLog
         }

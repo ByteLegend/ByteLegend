@@ -1,34 +1,42 @@
 package com.bytelegend.app.shared.objects
 
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.annotations.JsonIgnore
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class CompressedGameMapRegion(
     override val id: String,
-    override val layer: Int,
-    val vertices: List<List<Int>>
+    val center: List<Int>,
+    val vertices: List<List<Int>>,
+    val next: String? = null
 ) : CompressedGameMapObject {
     override val type: Int = GameMapObjectType.GameMapRegion.index
+    @get:JsonIgnore
+    override val layer: Int = 0
 
     override fun decompress() = GameMapRegion(
         id,
-        layer,
+        PixelCoordinate(center),
         vertices.map { PixelCoordinate(it) },
+        next
     )
 }
 
 class GameMapRegion(
     override val id: String,
-    override val layer: Int,
-    val vertices: List<PixelCoordinate>
+    val center: PixelCoordinate,
+    val vertices: List<PixelCoordinate>,
+    val next: String?
 ) : GameMapObject, GameObject {
+    override val layer: Int = 0
     override val type: GameMapObjectType = GameMapObjectType.GameMapRegion
     override val roles: Set<String> = setOf(GameObjectRole.MapRegion.toString())
 
     override fun compress() = CompressedGameMapRegion(
         id,
-        layer,
-        vertices.map { it.compress() }
+        center.compress(),
+        vertices.map { it.compress() },
+        next
     )
 }

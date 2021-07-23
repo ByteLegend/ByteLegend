@@ -3,6 +3,7 @@ package com.bytelegend.utils
 import com.bytelegend.app.shared.entities.mission.MissionSpec
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import java.io.File
+import java.lang.IllegalStateException
 
 /**
  * Read data under `game-data/` directory.
@@ -21,10 +22,16 @@ class MapData(ymlDir: File) {
     private val duplicateIdChecker: HashSet<String> = HashSet()
     val missionSpecs: Map<String, MissionSpec> = ymlDir.listFiles().filter {
         it.name.endsWith(".yml")
-    }.flatMap {
-        YAML_PARSER
-            .readValues(YAML_FACTORY.createParser(it), MissionSpec::class.java)
-            .readAll()
+    }.map {
+        try {
+            val missionSpec = YAML_PARSER.readValue(it, MissionSpec::class.java)
+            require(missionSpec.id == it.nameWithoutExtension) {
+                "${missionSpec.id} must be put into a file named '${missionSpec.id}.yml'!"
+            }
+            missionSpec
+        } catch (e: Throwable) {
+            throw IllegalStateException("Failed to parse ${it.absolutePath}", e)
+        }
     }.onEach {
         require(duplicateIdChecker.add(it.id)) { "Duplicate id: ${it.id}" }
     }.associateBy {
@@ -32,7 +39,7 @@ class MapData(ymlDir: File) {
     }
 
     val tutorials: Map<String, Tutorial> = missionSpecs.values.flatMap {
-        it.tutorials?.data ?: emptyList()
+        it.tutorials
     }.onEach {
         require(duplicateIdChecker.add(it.id)) { "Duplicate id: ${it.id}" }
     }.associateBy {

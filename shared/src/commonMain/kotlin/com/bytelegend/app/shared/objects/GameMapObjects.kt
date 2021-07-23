@@ -8,8 +8,8 @@ import kotlinx.serialization.Polymorphic
  */
 interface GameMapObject {
     val id: String
-    val layer: Int
     val type: GameMapObjectType
+    val layer: Int
 
     fun compress(): CompressedGameMapObject {
         throw UnsupportedOperationException("${this::class} doesn't support compress operation")
@@ -19,8 +19,8 @@ interface GameMapObject {
 @Polymorphic
 interface CompressedGameMapObject {
     val id: String
-    val layer: Int
     val type: Int
+    val layer: Int
 
     fun decompress(): GameMapObject
 }

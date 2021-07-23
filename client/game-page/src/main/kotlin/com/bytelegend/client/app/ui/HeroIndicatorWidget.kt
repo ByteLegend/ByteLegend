@@ -229,6 +229,7 @@ class HeroIndicatorWidget : GameUIComponent<GameProps, HeroIndicatorWidgetState>
             }
             attrs.jsStyle {
                 cursor = "pointer"
+                userSelect = "none"
             }
             attrs.onClickFunction = {
                 game.activeScene.canvasState.moveTo(game.hero!!.pixelCoordinate.offset(-canvasPixelSize.width / 2, -canvasPixelSize.height / 2))

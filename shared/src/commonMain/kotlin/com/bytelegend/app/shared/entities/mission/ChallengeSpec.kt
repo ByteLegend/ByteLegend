@@ -1,6 +1,7 @@
 package com.bytelegend.app.shared.entities.mission
 
 data class ChallengeSpec(
+    val id: String,
     val type: ChallengeType,
     val star: Int,
 

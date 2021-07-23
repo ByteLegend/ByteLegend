@@ -29,14 +29,12 @@ interface Replicable {
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 // | gh#alice     | P                            | gh#alice@1 | JavaIsland | 20 | 80 |                 |            |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
-// | gh#alice     |   M#mapId#StarByteLegend     |            |            |    |    | [{star:0, ...}] |            |
-// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
-// | gh#alice     |   M#mapId#XXX                |            |            |    |    | []              |            |
+// | gh#alice     |   PC#mapId#mission#challenge |            |            |    |    | [{star:0, ...}] |            |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 // | gh#alice     |   H#5843f14c34f5d0e05        | pullRequest: listOf(repo: github.com/ByteLegend/ByteLegend) number:1234 state:closed merged: true
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 const val PLAYER_SORT_KEY = "P"
-const val MISSION_SORT_KEY = "M"
+const val PLAYER_CHALLENGE_SORT_KEY = "PC"
 const val HEAD_SHA_SORT_KEY = "H"
 
 interface StoredInPlayerTable {

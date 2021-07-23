@@ -17,8 +17,8 @@ import com.bytelegend.app.shared.entities.MissionTabType.StarChallenge
 import com.bytelegend.app.shared.entities.MissionTabType.Tutorials
 import com.bytelegend.app.shared.entities.MissionTabType.valueOf
 import com.bytelegend.app.shared.entities.Player
-import com.bytelegend.app.shared.entities.PlayerMission
-import com.bytelegend.app.shared.entities.PlayerMissionAnswer
+import com.bytelegend.app.shared.entities.PlayerChallenge
+import com.bytelegend.app.shared.entities.PlayerChallengeAnswer
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.entities.TutorialsTabData
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
@@ -39,8 +39,8 @@ import com.bytelegend.app.shared.protocol.KICK_OFF_EVENT
 import com.bytelegend.app.shared.protocol.KickOffEventData
 import com.bytelegend.app.shared.protocol.LOG_STREAM_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.LogStreamEventData
-import com.bytelegend.app.shared.protocol.MISSION_UPDATE_EVENT_PREFIX
-import com.bytelegend.app.shared.protocol.MissionUpdateEventData
+import com.bytelegend.app.shared.protocol.CHALLENGE_UPDATE_EVENT_PREFIX
+import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PLAYER_SPEECH_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.PlayerSpeechEventData
@@ -58,7 +58,7 @@ fun parseServerEvent(eventMessage: dynamic): Any {
         event == ITEMS_STATES_UPDATE_EVENT -> toItemsStatesUpdateEventData(eventMessage.payload)
         event == KICK_OFF_EVENT -> toKickOffEventData(eventMessage.payload)
         event.startsWith(LOG_STREAM_EVENT_PREFIX) -> toLogStreamEventData(eventMessage.payload)
-        event.startsWith(MISSION_UPDATE_EVENT_PREFIX) -> toMissionUpdateEventData(eventMessage.payload)
+        event.startsWith(CHALLENGE_UPDATE_EVENT_PREFIX) -> toChallengeUpdateEventData(eventMessage.payload)
         else -> throw IllegalStateException("Unsupported event: $event")
     }
 }
@@ -72,7 +72,8 @@ fun toLogStreamEventData(jsonObject: dynamic) = LogStreamEventData(
     jsonObject.last,
     jsonObject.mapId,
     jsonObject.missionId,
-    jsonObject.missionAnswer,
+    jsonObject.challengeId,
+    jsonObject.challengeAnswer,
     jsonObject.checkRunId,
     JSArrayBackedList(delegate = jsonObject.lines)
 )
@@ -111,11 +112,9 @@ fun toStarUpdateEventData(jsonObject: dynamic) = StarUpdateEventData(
     jsonObject.newValue
 )
 
-fun toMissionUpdateEventData(jsonObject: dynamic) = MissionUpdateEventData(
-    jsonObject.playerId,
-    jsonObject.map,
-    toMissionAnswer(jsonObject.change),
-    toMission(jsonObject.newValue)
+fun toChallengeUpdateEventData(jsonObject: dynamic) = ChallengeUpdateEventData(
+    toPlayerChallengeAnswer(jsonObject.change),
+    toPlayerChallenge(jsonObject.newValue)
 )
 
 fun toPlayer(jsonObject: dynamic) = Player().apply {
@@ -161,18 +160,11 @@ fun <T> toTypedMap(jsonObject: dynamic, valueMapper: (dynamic) -> T): Map<String
 fun toSceneInitData(heroId: String, jsonObject: dynamic) = SceneInitData(
     jsonObject.online as Int,
     toTypedList(jsonObject.players, ::toBasePlayer).filter { it.id != heroId },
-    toTypedMap(jsonObject.missions, ::toMission)
+    toTypedMap(jsonObject.playerChallenges, ::toPlayerChallenge)
 )
 
 fun toMissionModalData(jsonObject: dynamic) = MissionModalData(
     toTypedList(jsonObject.tabs, ::toMissionTabData)
-)
-
-fun toPlayerMission(jsonObject: dynamic) = PlayerMission(
-    jsonObject.playerId,
-    jsonObject.missionId,
-    jsonObject.map,
-    toTypedList(jsonObject.answers, ::toMissionAnswer).asDynamic()
 )
 
 fun toMissionTabData(jsonObject: dynamic): MissionTabData<*> {
@@ -196,6 +188,7 @@ fun toMissionTabData(jsonObject: dynamic): MissionTabData<*> {
 
 fun toChallengeSpec(jsonObject: dynamic): ChallengeSpec {
     return ChallengeSpec(
+        jsonObject.id,
         ChallengeType.valueOf(jsonObject.type),
         jsonObject.star,
         jsonObject.spec,
@@ -229,14 +222,15 @@ fun toTutorial(jsonObject: dynamic): Tutorial {
     )
 }
 
-fun toMission(jsonObject: dynamic) = PlayerMission(
+fun toPlayerChallenge(jsonObject: dynamic) = PlayerChallenge(
     playerId = jsonObject.playerId,
     missionId = jsonObject.missionId,
+    challengeId = jsonObject.challengeId,
     map = jsonObject.map,
-    answers = toTypedList(jsonObject.answers, ::toMissionAnswer)
+    answers = toTypedList(jsonObject.answers, ::toPlayerChallengeAnswer)
 )
 
-fun toMissionAnswer(jsonObject: dynamic) = PlayerMissionAnswer(
+fun toPlayerChallengeAnswer(jsonObject: dynamic) = PlayerChallengeAnswer(
     star = jsonObject.star,
     answer = jsonObject.answer,
     accomplished = jsonObject.accomplished.toString() == "true",

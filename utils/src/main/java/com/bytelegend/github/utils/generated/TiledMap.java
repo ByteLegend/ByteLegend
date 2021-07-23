@@ -393,9 +393,9 @@ public class TiledMap {
         "width",
         "x",
         "y",
+        "layers",
         "draworder",
-        "objects",
-        "layers"
+        "objects"
     })
     @Generated("jsonschema2pojo")
     public static class Layer {
@@ -420,12 +420,12 @@ public class TiledMap {
         private Long x;
         @JsonProperty("y")
         private Long y;
+        @JsonProperty("layers")
+        private List<TiledMap.Layer2> layers = new ArrayList<TiledMap.Layer2>();
         @JsonProperty("draworder")
         private String draworder;
         @JsonProperty("objects")
         private List<TiledMap.Object> objects = new ArrayList<TiledMap.Object>();
-        @JsonProperty("layers")
-        private List<TiledMap.Layer2> layers = new ArrayList<TiledMap.Layer2>();
         @JsonIgnore
         private Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
@@ -452,7 +452,7 @@ public class TiledMap {
          * @param opacity
          * @param height
          */
-        public Layer(List<Long> data, Long height, Long id, String name, Long opacity, String type, Boolean visible, Long width, Long x, Long y, String draworder, List<TiledMap.Object> objects, List<TiledMap.Layer2> layers) {
+        public Layer(List<Long> data, Long height, Long id, String name, Long opacity, String type, Boolean visible, Long width, Long x, Long y, List<TiledMap.Layer2> layers, String draworder, List<TiledMap.Object> objects) {
             super();
             this.data = data;
             this.height = height;
@@ -464,9 +464,9 @@ public class TiledMap {
             this.width = width;
             this.x = x;
             this.y = y;
+            this.layers = layers;
             this.draworder = draworder;
             this.objects = objects;
-            this.layers = layers;
         }
 
         @JsonProperty("data")
@@ -569,6 +569,16 @@ public class TiledMap {
             this.y = y;
         }
 
+        @JsonProperty("layers")
+        public List<TiledMap.Layer2> getLayers() {
+            return layers;
+        }
+
+        @JsonProperty("layers")
+        public void setLayers(List<TiledMap.Layer2> layers) {
+            this.layers = layers;
+        }
+
         @JsonProperty("draworder")
         public String getDraworder() {
             return draworder;
@@ -587,16 +597,6 @@ public class TiledMap {
         @JsonProperty("objects")
         public void setObjects(List<TiledMap.Object> objects) {
             this.objects = objects;
-        }
-
-        @JsonProperty("layers")
-        public List<TiledMap.Layer2> getLayers() {
-            return layers;
-        }
-
-        @JsonProperty("layers")
-        public void setLayers(List<TiledMap.Layer2> layers) {
-            this.layers = layers;
         }
 
         @JsonAnyGetter
@@ -653,6 +653,10 @@ public class TiledMap {
             sb.append('=');
             sb.append(((this.y == null)?"<null>":this.y));
             sb.append(',');
+            sb.append("layers");
+            sb.append('=');
+            sb.append(((this.layers == null)?"<null>":this.layers));
+            sb.append(',');
             sb.append("draworder");
             sb.append('=');
             sb.append(((this.draworder == null)?"<null>":this.draworder));
@@ -660,10 +664,6 @@ public class TiledMap {
             sb.append("objects");
             sb.append('=');
             sb.append(((this.objects == null)?"<null>":this.objects));
-            sb.append(',');
-            sb.append("layers");
-            sb.append('=');
-            sb.append(((this.layers == null)?"<null>":this.layers));
             sb.append(',');
             sb.append("additionalProperties");
             sb.append('=');
@@ -987,6 +987,7 @@ public class TiledMap {
         "id",
         "name",
         "polygon",
+        "properties",
         "rotation",
         "type",
         "visible",
@@ -994,7 +995,6 @@ public class TiledMap {
         "x",
         "y",
         "point",
-        "properties",
         "gid",
         "text"
     })
@@ -1009,6 +1009,8 @@ public class TiledMap {
         private String name;
         @JsonProperty("polygon")
         private List<TiledMap.Polygon> polygon = new ArrayList<TiledMap.Polygon>();
+        @JsonProperty("properties")
+        private List<TiledMap.Property> properties = new ArrayList<TiledMap.Property>();
         @JsonProperty("rotation")
         private Long rotation;
         @JsonProperty("type")
@@ -1023,8 +1025,6 @@ public class TiledMap {
         private Double y;
         @JsonProperty("point")
         private Boolean point;
-        @JsonProperty("properties")
-        private List<TiledMap.Property> properties = new ArrayList<TiledMap.Property>();
         @JsonProperty("gid")
         private Long gid;
         @JsonProperty("text")
@@ -1056,12 +1056,13 @@ public class TiledMap {
          * @param properties
          * @param height
          */
-        public Object(Long height, Long id, String name, List<TiledMap.Polygon> polygon, Long rotation, String type, Boolean visible, Long width, Double x, Double y, Boolean point, List<TiledMap.Property> properties, Long gid, TiledMap.Text text) {
+        public Object(Long height, Long id, String name, List<TiledMap.Polygon> polygon, List<TiledMap.Property> properties, Long rotation, String type, Boolean visible, Long width, Double x, Double y, Boolean point, Long gid, TiledMap.Text text) {
             super();
             this.height = height;
             this.id = id;
             this.name = name;
             this.polygon = polygon;
+            this.properties = properties;
             this.rotation = rotation;
             this.type = type;
             this.visible = visible;
@@ -1069,7 +1070,6 @@ public class TiledMap {
             this.x = x;
             this.y = y;
             this.point = point;
-            this.properties = properties;
             this.gid = gid;
             this.text = text;
         }
@@ -1112,6 +1112,16 @@ public class TiledMap {
         @JsonProperty("polygon")
         public void setPolygon(List<TiledMap.Polygon> polygon) {
             this.polygon = polygon;
+        }
+
+        @JsonProperty("properties")
+        public List<TiledMap.Property> getProperties() {
+            return properties;
+        }
+
+        @JsonProperty("properties")
+        public void setProperties(List<TiledMap.Property> properties) {
+            this.properties = properties;
         }
 
         @JsonProperty("rotation")
@@ -1184,16 +1194,6 @@ public class TiledMap {
             this.point = point;
         }
 
-        @JsonProperty("properties")
-        public List<TiledMap.Property> getProperties() {
-            return properties;
-        }
-
-        @JsonProperty("properties")
-        public void setProperties(List<TiledMap.Property> properties) {
-            this.properties = properties;
-        }
-
         @JsonProperty("gid")
         public Long getGid() {
             return gid;
@@ -1244,6 +1244,10 @@ public class TiledMap {
             sb.append('=');
             sb.append(((this.polygon == null)?"<null>":this.polygon));
             sb.append(',');
+            sb.append("properties");
+            sb.append('=');
+            sb.append(((this.properties == null)?"<null>":this.properties));
+            sb.append(',');
             sb.append("rotation");
             sb.append('=');
             sb.append(((this.rotation == null)?"<null>":this.rotation));
@@ -1271,10 +1275,6 @@ public class TiledMap {
             sb.append("point");
             sb.append('=');
             sb.append(((this.point == null)?"<null>":this.point));
-            sb.append(',');
-            sb.append("properties");
-            sb.append('=');
-            sb.append(((this.properties == null)?"<null>":this.properties));
             sb.append(',');
             sb.append("gid");
             sb.append('=');

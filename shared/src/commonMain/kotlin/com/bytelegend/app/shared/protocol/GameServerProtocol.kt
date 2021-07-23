@@ -29,8 +29,8 @@ const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
 /***************** Point-to-point events from server to client-side EventBus ***********************/
 const val STAR_UPDATE_EVENT = "protocol.star.update"
 const val ITEMS_STATES_UPDATE_EVENT = "protocol.items.states.update"
-fun missionUpdateEvent(mapId: String) = "protocol.mission.update.$mapId"
-val MISSION_UPDATE_EVENT_PREFIX = missionUpdateEvent("")
+fun challengeUpdateEvent(mapId: String) = "protocol.challenge.update.$mapId"
+val CHALLENGE_UPDATE_EVENT_PREFIX = challengeUpdateEvent("")
 val PLAYER_SPEECH_EVENT_PREFIX = playerSpeechEvent("")
 const val REMOVE_STATE_EVENT = "protocol.remove.state"
 const val PUT_STATE_EVENT = "protocol.put.state"

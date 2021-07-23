@@ -59,12 +59,7 @@ val uglyObjectMapper = ObjectMapper().apply {
     registerModule(KotlinModule())
 }
 
-val prettyObjectMapper = ObjectMapper().apply {
-    setSerializationInclusion(JsonInclude.Include.NON_NULL)
-    registerModule(module)
-    registerModule(KotlinModule())
-    writerWithDefaultPrettyPrinter()
-}
+val prettyObjectMapper = uglyObjectMapper.writerWithDefaultPrettyPrinter()
 
 class MapGenerator(
     private val mapId: String,
@@ -77,7 +72,6 @@ class MapGenerator(
      *    |_ map.raw.json
      *    |_ map.json
      *    |_ tileset.png
-     *    |_ roadmap.svg
      *    |_ missions.json
      */
     private val outputDir: File
@@ -88,7 +82,6 @@ class MapGenerator(
 
     private val outputRawMapJson = outputDir.resolve("map.raw.json")
     private val outputCompressedMapJson = outputDir.resolve("map.json")
-    private val outputRoadmapSvg = outputDir.resolve("roadmap.svg")
     private val outputMissionsJson = outputDir.resolve("missions.json")
     private val tiledMap: TiledMap = uglyObjectMapper.readValue(tiledMapJson.readText(), TiledMap::class.java)
     private val mapDataReader = MissionDataReader(mapOf(mapId to mapMissionDataDir))
@@ -116,7 +109,34 @@ class MapGenerator(
 
     // Player layer is 0, layers above are positive, layers below are negative
     private val playerLayerIndex: Int = tiledMap.layers.indexOfFirst { it.name == "Player" }.apply { require(this != -1) }
-    private val rawLayerIdToIndexMap = tiledMap.layers.mapIndexed { i, layer ->
+    private val visibleFlattenedLayers: List<TiledMap.Layer> = tiledMap.layers.flatMap { layer ->
+        when {
+            layer.name == "Player" -> emptyList()
+            layer.name == "Blockers" -> emptyList()
+            layer.name == "DynamicSprites" -> emptyList()
+            !layer.visible -> emptyList()
+            layer.type == "tilelayer" -> listOf(layer)
+            layer.type == "group" -> layer.layers.map {
+                TiledMap.Layer(
+                    it.data,
+                    it.height,
+                    it.id,
+                    it.name,
+                    it.opacity,
+                    it.type,
+                    it.visible,
+                    it.width,
+                    it.x,
+                    it.y,
+                    emptyList(),
+                    layer.draworder,
+                    emptyList()
+                )
+            }
+            else -> listOf(layer)
+        }
+    }
+    private val rawLayerIdToIndexMap = visibleFlattenedLayers.mapIndexed { i, layer ->
         layer.id.toInt() to i - playerLayerIndex
     }.toMap()
     private val tiledObjectReader = TiledObjectReader(mapId, tiledMap, mapDataReader, rawLayerIdToIndexMap)
@@ -128,18 +148,16 @@ class MapGenerator(
 
         populateBlockersMap()
 
-        val visibleTileLayers: List<TiledMap.Layer> = tiledMap.layers.filter {
-            it.name != "Blockers" && it.visible && it.type == "tilelayer" && it.name != "Player"
-        }
-
         for (y in 0 until tiledMap.height) {
             for (x in 0 until tiledMap.width) {
-                val tileLayersAtCoordinate = visibleTileLayers.flatMap { layer ->
-                    val i = (y * tiledMap.width + x).toInt()
-                    val tileIndex = layer.data[i].toInt()
-                    if (tileIndex == 0) emptyList()
-                    else listOf(resolveTile(tileIndex, rawLayerIdToIndexMap.getValue(layer.id.toInt())))
-                }.removeRedundantLayers()
+                val tileLayersAtCoordinate = visibleFlattenedLayers
+                    .filter { it.type == "tilelayer" }
+                    .flatMap { layer ->
+                        val i = (y * tiledMap.width + x).toInt()
+                        val tileIndex = layer.data[i].toInt()
+                        if (tileIndex == 0) emptyList()
+                        else listOf(resolveTile(tileIndex, rawLayerIdToIndexMap.getValue(layer.id.toInt())))
+                    }.removeRedundantLayers()
                 srcTiles[GridCoordinate(x.toInt(), y.toInt())] = RawTileLayers(tileLayersAtCoordinate)
             }
         }
@@ -152,21 +170,11 @@ class MapGenerator(
         tilesetWriter.generateDestTilesetImage()
 
         generateDestGameMap(outputRawMapJson, outputCompressedMapJson)
-        generateRoadmapSvg()
         generateMissionsJson()
     }
 
     private fun generateMissionsJson() {
         outputMissionsJson.writeText(uglyObjectMapper.writeValueAsString(tiledObjectReader.readAndMergeMissionSpecs()))
-    }
-
-    private fun generateRoadmapSvg() {
-        RoadmapSvgGenerator(
-            tiledMap,
-            tiledObjectReader.readRegions(),
-            emptyList(),
-            outputRoadmapSvg
-        ).generate()
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -193,7 +201,7 @@ class MapGenerator(
         require(compressedMap.decompress().compress() == compressedMap)
 
         if ("dev" == System.getProperty("environment")) {
-            outputRawMapJson.writeText(uglyObjectMapper.writeValueAsString(rawMap))
+            prettyObjectMapper.writeValue(outputRawMapJson, rawMap)
         }
 
         outputCompressedMapJson.writeText(uglyObjectMapper.writeValueAsString(compressedMap))

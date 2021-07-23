@@ -4,6 +4,7 @@ import com.bytelegend.app.shared.CompressedGameMap
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.entities.mission.MissionSpec
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.LocalizedText
@@ -21,8 +22,9 @@ interface RRBDResourceProvider {
     val idToMapDefinitions: Map<String, GameMapDefinition>
     val allMaps: List<String>
 
-    fun getMissionSpecById(id: String): MissionSpec
-    fun getMissionSpecByRepoOrNull(repo: String): MissionSpec?
+    fun getMissionSpecByMissionId(missionId: String): MissionSpec?
+    fun getMissionChallengeByChallengeId(id: String): Pair<MissionSpec, ChallengeSpec>?
+    fun getMissionChallengeByRepo(repo: String): Pair<MissionSpec, ChallengeSpec>?
     fun getI18nText(id: String, locale: Locale, vararg args: String): String
     fun getEntranceDestinationPoint(srcMapId: String, destMapId: String): GridCoordinate
 }
@@ -51,13 +53,29 @@ abstract class AbstractRRBDResourceProvider(
     private val mapToMissionSpecs: Map<String, List<MissionSpec>> =
         idToMapDefinitions.keys.associateWith { serializer.fromJson(File(localRRBD, "map/$it/missions.json").readText(), object : TypeReference<List<MissionSpec>>() {}) }
 
-    private val idToMissionSpec: Map<String, MissionSpec> = mapToMissionSpecs.values
+    private val missionIdToMissionSpec: Map<String, MissionSpec> = mapToMissionSpecs.values
         .flatten()
         .associateBy { it.id }
 
-    private val repoToMissionSpec: Map<String, MissionSpec> = idToMissionSpec.values
-        .filter { it.challenge != null && (it.challenge?.type?.withGitHubRepo == true) }
-        .associateBy { it.challenge!!.spec }
+    private val challengeIdToMissionChallenge: Map<String, Pair<MissionSpec, ChallengeSpec>> = missionIdToMissionSpec.let {
+        val result = mutableMapOf<String, Pair<MissionSpec, ChallengeSpec>>()
+        it.values.forEach { missionSpec ->
+            missionSpec.challenges.forEach { challenge ->
+                result[challenge.id] = (missionSpec to challenge)
+            }
+        }
+        result
+    }
+
+    private val repoToMissionChallenge: Map<String, Pair<MissionSpec, ChallengeSpec>> = missionIdToMissionSpec.let {
+        val result = mutableMapOf<String, Pair<MissionSpec, ChallengeSpec>>()
+        it.values.forEach { missionSpec ->
+            missionSpec.challenges.filter { it.type.withGitHubRepo }.forEach { challenge ->
+                result[challenge.spec] = (missionSpec to challenge)
+            }
+        }
+        result
+    }
 
     private val idToMaps: Map<String, FastAccessGameMap> = idToMapDefinitions.keys
         .filter { File(localRRBD).resolve("map/$it/map.json").isFile }
@@ -72,8 +90,9 @@ abstract class AbstractRRBDResourceProvider(
         }
     }
 
-    override fun getMissionSpecById(id: String) = idToMissionSpec.getValue(id)
-    override fun getMissionSpecByRepoOrNull(repo: String) = repoToMissionSpec[repo]
+    override fun getMissionSpecByMissionId(missionId: String): MissionSpec? = missionIdToMissionSpec[missionId]
+    override fun getMissionChallengeByChallengeId(challengeId: String): Pair<MissionSpec, ChallengeSpec>? = challengeIdToMissionChallenge[challengeId]
+    override fun getMissionChallengeByRepo(repo: String) = repoToMissionChallenge[repo]
     override fun getI18nText(id: String, locale: Locale, vararg args: String) = localizedText.getValue(id).getTextOrDefaultLocale(locale).render(*args)
     override fun getEntranceDestinationPoint(srcMapId: String, destMapId: String): GridCoordinate {
         return idToMaps.getValue(destMapId).getObjectById<GameMapPoint>(

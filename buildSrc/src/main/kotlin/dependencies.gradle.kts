@@ -257,6 +257,13 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         license = ISC
     ),
     OpenSourceLibrary(
+        name = "echarts",
+        version = "",
+        creditName = "Apache ECharts",
+        url = "https://echarts.apache.org/",
+        license = Apache2
+    ),
+    OpenSourceLibrary(
         name = "prism",
         version = "",
         creditName = "Prism",

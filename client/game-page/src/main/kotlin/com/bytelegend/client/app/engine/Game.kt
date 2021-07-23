@@ -155,7 +155,7 @@ class Game(
             }
             heroPlayer.items.clear()
             heroPlayer.items.addAll(set)
-            activeScene.unsafeCast<DefaultGameScene>().playerMissions.onItemsUpdate(itemsStatesUpdateEvent)
+            activeScene.unsafeCast<DefaultGameScene>().playerChallenges.onItemsUpdate(itemsStatesUpdateEvent)
         }
         if (!itemsStatesUpdateEvent.onFinishSpec.states.isEmpty()) {
             itemsStatesUpdateEvent.onFinishSpec.states.put.forEach {

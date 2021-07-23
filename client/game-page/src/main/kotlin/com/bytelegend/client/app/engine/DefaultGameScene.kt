@@ -73,7 +73,7 @@ class DefaultGameScene(
 
     lateinit var players: PlayerContainer
 
-    override lateinit var playerMissions: DefaultPlayerMissionContainer
+    override lateinit var playerChallenges: DefaultPlayerChallengeContainer
 
     override fun objects(block: ObjectsBuilder.() -> Unit) {
         block()
@@ -110,7 +110,7 @@ class DefaultGameScene(
             }
         }
         missions.forEach { mission ->
-            val sprite = createMissionSprite(this, mission.point, mission.sprite)
+            val sprite = createMissionSprite(this, mission.gridCoordinate, mission.sprite)
             GameMission(
                 this,
                 mission,

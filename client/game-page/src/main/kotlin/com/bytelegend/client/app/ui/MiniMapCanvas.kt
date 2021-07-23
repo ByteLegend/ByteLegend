@@ -15,6 +15,7 @@ import com.bytelegend.app.shared.objects.GameObjectRole.MapRegion
 import com.bytelegend.client.app.obj.quadraticCurveTo
 import com.bytelegend.client.app.obj.setShadow
 import com.bytelegend.client.app.page.HERO_AVATAR_IMG_ID
+import kotlinx.browser.localStorage
 import kotlinx.html.id
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
@@ -48,8 +49,9 @@ interface MiniMapState : RState {
     var hoveredRegion: GameMapRegion?
 }
 
+const val MINIMAP_MOUSE_MOVE_EVENT = "minimap.mousemove"
 const val COLLAPSE_ANIMATION_SPEED_PERCENTAGE_PER_SECOND = 800 // 800% per second
-const val MINIMAP_AVATAR_SIZE = 16
+const val MINIMAP_AVATAR_SIZE = 32
 
 class MiniMap : AbstractMapCanvas<MiniMapState>() {
     private val miniMapWidth: Int
@@ -65,7 +67,7 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
 
     override fun MiniMapState.init() {
         cursor = "grab"
-        collapseProgress = 1.0
+        collapseProgress = if (localStorage.getItem("minimapCollapsed") == "true") 0.0 else 1.0
         animationDirection = Direction.NONE
     }
 
@@ -110,20 +112,8 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
             } else {
                 moveTo(determineCanvasCoordinateInMapOnMouseMove(currentCoordinate))
             }
-        } else {
-//            getRegions().forEach {
-//                if (it.center.toMiniMapPixelCoordinate().manhattanDistanceTo(currentCoordinate) < 10) {
-//                    setState {
-//                        hoveredRegion = it
-//                    }
-//                    return
-//                }
-//            }
-//
-//            setState {
-//                hoveredRegion = null
-//            }
         }
+        game.eventBus.emit(MINIMAP_MOUSE_MOVE_EVENT, event)
     }
 
     private fun onMouseClick(mouseEvent: Event) {
@@ -168,6 +158,19 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                 }
             }
 
+            if (isMaximized()) {
+                child(EChartsRoadmap::class) {
+                    attrs.zIndex = miniMapZIndex + 2
+                    attrs.width = 200
+                    attrs.height = 200
+                    attrs.top = 16
+                    attrs.left = 16
+                    attrs.theme = "light"
+                    attrs.renderer = "svg"
+                    attrs.gameScene = game.activeScene
+                }
+            }
+
             mapCanvas {
                 attrs {
                     onMouseDownFunction = this@MiniMap::onMouseDown
@@ -183,10 +186,10 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                         if (!isMaximized()) {
                             display = "none"
                         }
-                        backgroundImage = "url('${game.resolve("/map/${activeScene.map.id}/roadmap.svg")}')"
+//                        backgroundImage = "url('${game.resolve("/map/${activeScene.map.id}/roadmap.svg")}')"
                         backgroundSize = "100% 100%"
                         cursor = state.cursor
-                        zIndex = miniMapZIndex
+                        zIndex = miniMapZIndex + 3
                         position = "absolute"
                         top = "16px"
                         left = "16px"
@@ -197,7 +200,7 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
             BootstrapButton {
                 attrs.size = "sm"
                 attrs.style = kotlinext.js.js {
-                    zIndex = miniMapZIndex + 1
+                    zIndex = miniMapZIndex + 4
                     borderRadius = "50% 50%"
                     position = "absolute"
                     // 0.0 -> 32
@@ -225,7 +228,7 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                 BootstrapButton {
                     attrs.size = "sm"
                     attrs.style = kotlinext.js.js {
-                        zIndex = miniMapZIndex + 2
+                        zIndex = miniMapZIndex + 4
                         borderRadius = "50% 50%"
                         position = "absolute"
                         left = "0"
@@ -237,10 +240,12 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                     }
                     attrs.onClick = {
                         if (isMaximized()) {
+                            localStorage.setItem("minimapCollapsed", "true")
                             setState {
                                 animationDirection = Direction.DOWN
                             }
                         } else if (isMinimized()) {
+                            localStorage.setItem("minimapCollapsed", "false")
                             setState {
                                 animationDirection = Direction.UP
                             }

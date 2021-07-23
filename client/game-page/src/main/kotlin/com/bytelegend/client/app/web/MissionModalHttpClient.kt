@@ -4,10 +4,10 @@ import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
-import com.bytelegend.app.shared.protocol.MissionUpdateEventData
+import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.utils.toMissionModalData
-import com.bytelegend.client.utils.toMissionUpdateEventData
+import com.bytelegend.client.utils.toChallengeUpdateEventData
 import com.bytelegend.client.utils.toPagination
 import com.bytelegend.client.utils.toTutorial
 import kotlinext.js.jsObject
@@ -50,16 +50,17 @@ fun Map<String, String>.toDynamic(): dynamic {
     return ret
 }
 
-suspend fun submitMissionAnswer(
+suspend fun submitChallengeAnswer(
     missionId: String,
+    challengeId: String,
     answer: String
-): MissionUpdateEventData {
+): ChallengeUpdateEventData {
     val json = JSON.stringify(
         jsObject<dynamic> {
             this.answer = answer
         }
     )
-    return toMissionUpdateEventData(JSON.parse(post("/game/api/mission/$missionId/answer", json)))
+    return toChallengeUpdateEventData(JSON.parse(post("/game/api/mission/$missionId/$challengeId/answer", json)))
 }
 
 suspend fun getMissionModalData(

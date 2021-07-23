@@ -16,5 +16,8 @@ dependencies {
     implementation(npm("react-select", libVersions("react-select")))
     implementation(npm("react-textarea-autosize", libVersions("react-textarea-autosize")))
     implementation(npm("canvas-confetti", libVersions("canvas-confetti")))
+//    implementation(npm("echarts-for-react", "3.0.1"))
+//    implementation(npm("tslib", "2.3.0"))
+//    implementation(npm("echarts", "5.1.2"))
     testImplementation(kotlin("test-js"))
 }

@@ -1,6 +1,7 @@
 package com.bytelegend.app.shared.objects
 
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.entities.mission.MapMissionSpec
 import kotlinx.serialization.Serializable
 
@@ -12,24 +13,26 @@ class GameMapMission(
     override val id: String,
     val title: String,
     val totalStar: Int,
+    val challenges: List<String>,
     override val map: String,
     override val sprite: String,
-    override val point: GridCoordinate,
-    override val children: List<String>,
+    override val gridCoordinate: GridCoordinate,
     // Next mission id
-    override val next: String?
-) : GameMapObject, MapMissionSpec {
+    override val next: List<String>,
+    val region: String?,
+) : GameMapObject, MapMissionSpec, GridCoordinateAware {
     override val layer: Int = 0
     override val type: GameMapObjectType = GameMapObjectType.GameMapMission
     override fun compress() = CompressedGameMapMission(
         id,
         title,
         totalStar,
+        challenges,
         map,
         sprite,
-        point.toCompressedList(),
-        children,
-        next
+        gridCoordinate.toCompressedList(),
+        next,
+        region
     )
 
     override val roadmap: Boolean = true
@@ -40,12 +43,14 @@ data class CompressedGameMapMission(
     override val id: String,
     val title: String,
     val totalStar: Int,
+    val challenges: List<String>,
     val map: String,
     val sprite: String,
     val point: List<Int>,
-    val children: List<String>,
-    val next: String? = null
+    val next: List<String>,
+    val region: String? = null
 ) : CompressedGameMapObject {
+    @get:JsonIgnore
     override val layer: Int = 0
     override val type: Int = GameMapObjectType.GameMapMission.index
 
@@ -53,10 +58,11 @@ data class CompressedGameMapMission(
         id,
         title,
         totalStar,
+        challenges,
         map,
         sprite,
         GridCoordinate(point),
-        children,
-        next
+        next,
+        region,
     )
 }
