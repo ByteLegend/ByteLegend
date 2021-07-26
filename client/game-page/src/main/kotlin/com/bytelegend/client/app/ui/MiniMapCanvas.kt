@@ -15,6 +15,7 @@ import com.bytelegend.app.shared.objects.GameObjectRole.MapRegion
 import com.bytelegend.client.app.obj.quadraticCurveTo
 import com.bytelegend.client.app.obj.setShadow
 import com.bytelegend.client.app.page.HERO_AVATAR_IMG_ID
+import com.bytelegend.client.app.ui.roadmap.RoadmapModal
 import kotlinx.browser.localStorage
 import kotlinx.html.id
 import kotlinx.html.js.onBlurFunction
@@ -113,6 +114,7 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                 moveTo(determineCanvasCoordinateInMapOnMouseMove(currentCoordinate))
             }
         }
+        // No events during dragging because it's a bit expensive to update echarts options
         game.eventBus.emit(MINIMAP_MOUSE_MOVE_EVENT, event)
     }
 
@@ -159,7 +161,7 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
             }
 
             if (isMaximized()) {
-                child(EChartsRoadmap::class) {
+                child(EChartsMinimap::class) {
                     attrs.zIndex = miniMapZIndex + 2
                     attrs.width = 200
                     attrs.height = 200

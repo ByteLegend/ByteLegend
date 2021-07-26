@@ -92,6 +92,9 @@ class TiledObjectReader(
 
     private fun TiledMap.verify(): TiledMap {
         layers.flatMap { it.objects }.forEach {
+            require(it.type.isNotBlank()) {
+                "type not set for object with id ${it.id} on map $mapId"
+            }
             TiledObjectType.valueOf(it.type)
         }
         return this
@@ -172,7 +175,7 @@ class TiledObjectReader(
             // If this object is a tile, `gid` points to a tile id
             // Optionally, this object may have next1/next2/.../nextN, which point to the next objects
             val nextIds: List<String> = it.properties.filter { it.name.startsWith("next") }
-                .sortedBy { it.name.substringAfter("next").toInt() }
+                .sortedBy { it.name.substringAfter("next").toIntOrNull() ?: 0 }
                 .map { it.value }
             val regionId: String? = idToPolygons.entries.firstOrNull {
                 it.value.contains(Point(gridCoordinate.x * tileSize.width, gridCoordinate.y * tileSize.height))

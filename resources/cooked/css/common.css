@@ -227,6 +227,7 @@ body {
     /* overwrite max-width 800px */
     max-width: 100%;
     width: fit-content;
+    height: fit-content;
     margin-top: 0;
     margin-bottom: 0;
 }
@@ -248,12 +249,6 @@ body {
 
 .mission-modal-body {
     overflow-y: hidden;
-}
-
-.roadmap-dialog .modal-content {
-    /* overwrite background white */
-    background: none;
-    border: none;
 }
 
 .canvas-border {

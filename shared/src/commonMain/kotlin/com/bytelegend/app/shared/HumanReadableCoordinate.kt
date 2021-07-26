@@ -78,6 +78,7 @@ data class GridSize constructor(val width: Int, val height: Int) {
 
 @Serializable
 data class PixelCoordinate(val x: Int, val y: Int) {
+    constructor(x: Number, y: Number) : this(x.toInt(), y.toInt())
     constructor(list: List<Int>) : this(list[0], list[1])
     constructor(array: Array<Int>) : this(array[0], array[1])
 

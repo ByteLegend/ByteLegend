@@ -4,6 +4,7 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.ui.minimap.getMinimapEChartsOptions
 import com.bytelegend.client.app.ui.minimap.getMinimapMapFeatures
@@ -19,7 +20,7 @@ import react.RProps
 import react.RState
 import react.setState
 
-interface EChartsRoadmapProps : RProps {
+interface EChartsMinimapProps : RProps {
     var zIndex: Int
     var width: Int
     var height: Int
@@ -43,6 +44,7 @@ val minimapGraphSeries: dynamic = JSON.parse(
   "top": 0,
   "bottom": 0,
   "type": "graph",
+  "zoom": 1,
   "layout": "none",
   "edgeSymbol": ["none", "none"],
   "edgeSymbolSize": [0, 10],
@@ -62,7 +64,7 @@ interface EChartsRoadmapState : RState {
     var hoveredPosition: PixelCoordinate?
 }
 
-class EChartsRoadmap : RComponent<EChartsRoadmapProps, EChartsRoadmapState>() {
+class EChartsMinimap : RComponent<EChartsMinimapProps, EChartsRoadmapState>() {
     private val echartsContainerElementId = "echarts-container-${uuid()}"
 
     // https://echarts.apache.org/en/api.html#echarts.init
@@ -95,7 +97,7 @@ class EChartsRoadmap : RComponent<EChartsRoadmapProps, EChartsRoadmapState>() {
         }
     }
 
-    private fun init() {
+    private fun initIfNot() {
         if (echarts == undefined) {
             document.getElementById(echartsContainerElementId)?.apply {
                 echarts = window.asDynamic().echarts.init(this, props.theme, jsObject {
@@ -129,23 +131,23 @@ class EChartsRoadmap : RComponent<EChartsRoadmapProps, EChartsRoadmapState>() {
     }
 
     override fun componentDidMount() {
-        init()
+        initIfNot()
+        if (logger.debugEnabled) {
+            logger.debug("Set echarts options for minimap: ${JSON.stringify(options)}")
+        }
         echarts.setOption(options)
         echarts.on("mouseout", "series.map", this::onMouseout)
         echarts.on("mousemove", "series.map", this::onMousemove)
         props.gameScene.gameRuntime.eventBus.on(MINIMAP_MOUSE_MOVE_EVENT, this::onMouseMoveOnMinimap)
     }
 
-    override fun componentDidUpdate(prevProps: EChartsRoadmapProps, prevState: EChartsRoadmapState, snapshot: Any) {
-        if (prevProps.gameScene !== prevProps.gameScene) {
-            init()
-            echarts.setOption(options)
-        }
-    }
-
     override fun componentWillUnmount() {
         props.gameScene.gameRuntime.eventBus.remove(MINIMAP_MOUSE_MOVE_EVENT, this::onMouseMoveOnMinimap)
         echarts.off("mousemove", this::onMousemove)
         echarts.off("mouseout", this::onMousemove)
+    }
+
+    override fun shouldComponentUpdate(nextProps: EChartsMinimapProps, nextState: EChartsRoadmapState): Boolean {
+        return state.hoveredPosition != nextState.hoveredPosition || state.hoveredRegionName != nextState.hoveredRegionName
     }
 }

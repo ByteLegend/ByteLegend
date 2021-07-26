@@ -3,6 +3,7 @@ package com.bytelegend.client.app.obj
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
+import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.CommonAttributeGroupFacade
 import org.w3c.dom.CanvasRenderingContext2D
@@ -23,6 +24,13 @@ fun uuid(): String {
         })
     """
     )
+}
+
+fun htmlToText(html: String): String {
+    return document.createElement("div").let {
+        it.innerHTML = html
+        it.textContent ?: ""
+    }
 }
 
 internal fun PixelCoordinate.outOfCanvas(gameScene: GameScene): Boolean {
