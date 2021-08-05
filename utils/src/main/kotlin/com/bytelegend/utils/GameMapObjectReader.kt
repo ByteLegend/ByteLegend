@@ -124,12 +124,20 @@ class TiledObjectReader(
         // 2nd, populate the "next"
         return readObjects(TiledObjectType.GameMapRegion) { _, obj ->
             val vertices = obj.getPolygonCoordinates()
-            val nextId = obj.properties.findPropertyOrNull("next")
+            val nexts = obj.properties
+                .filter { it.name.startsWith("next") }
+                .map {
+                    (it.name.substringAfter("next").toIntOrNull() ?: 1) to it.value
+                }.sortedBy {
+                    it.first
+                }.map {
+                    it.second
+                }
             GameMapRegion(
                 obj.name,
                 vertices.getOrCalculateCenterPoint(obj.name),
                 vertices,
-                tiledIdToRegionId[nextId]
+                nexts.map { tiledIdToRegionId.getValue(it) }
             )
         }
     }

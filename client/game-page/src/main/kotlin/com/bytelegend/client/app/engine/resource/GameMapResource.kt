@@ -60,7 +60,7 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
             it.id,
             (it.center as Array<Int>).toList(),
             (it.vertices as Array<Array<Int>>).mapToList { it },
-            it.next
+            (it.next as Array<String>).toList()
         )
         GameMapObjectType.GameMapCurve -> CompressedGameMapCurve(
             it.id,

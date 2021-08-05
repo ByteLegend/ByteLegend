@@ -247,15 +247,16 @@ fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
         } else {
             "{Star|}".repeat(missionStars) + "{HollowStar|}".repeat(totalStars - missionStars)
         }
-        val labelOptions: dynamic = jsObject {
-            show = true
-            position = "inside"
-            distance = 0
-            align = "center"
-            formatter = """
+        val labelFormatter = if (totalStars == 0) title else """
                 $starsRichText
                 $title
             """.trimIndent()
+        val labelOptions: dynamic = jsObject {
+            show = true
+            position = "insideBottom"
+            distance = 0
+            align = "center"
+            formatter = labelFormatter
             backgroundColor = "#eee"
             borderColor = "#555"
             borderWidth = 2
@@ -271,7 +272,7 @@ fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
             rich = richStarAndHollowStar
         }
 
-        val symbolSize = nativeJsArrayOf(120, 40)
+        val symbolSize = nativeJsArrayOf(120, 50)
         nodes.push(jsObject {
             id = mission.id
             x = coordinate.x
@@ -322,10 +323,10 @@ fun GameScene.getMinimapRegionConnectionGraphSeries() {
             symbolSize = 0
         })
 
-        if (region.next != null) {
+        region.next.forEach { nextId ->
             edges.push(jsObject {
                 source = region.id
-                target = region.next
+                target = nextId
             })
         }
     }

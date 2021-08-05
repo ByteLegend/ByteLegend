@@ -1340,9 +1340,9 @@ public class TiledMap {
     public static class Polygon {
 
         @JsonProperty("x")
-        private Long x;
+        private Double x;
         @JsonProperty("y")
-        private Long y;
+        private Double y;
         @JsonIgnore
         private Map<String, java.lang.Object> additionalProperties = new HashMap<String, java.lang.Object>();
 
@@ -1358,29 +1358,29 @@ public class TiledMap {
          * @param x
          * @param y
          */
-        public Polygon(Long x, Long y) {
+        public Polygon(Double x, Double y) {
             super();
             this.x = x;
             this.y = y;
         }
 
         @JsonProperty("x")
-        public Long getX() {
+        public Double getX() {
             return x;
         }
 
         @JsonProperty("x")
-        public void setX(Long x) {
+        public void setX(Double x) {
             this.x = x;
         }
 
         @JsonProperty("y")
-        public Long getY() {
+        public Double getY() {
             return y;
         }
 
         @JsonProperty("y")
-        public void setY(Long y) {
+        public void setY(Double y) {
             this.y = y;
         }
 

@@ -9,7 +9,7 @@ data class CompressedGameMapRegion(
     override val id: String,
     val center: List<Int>,
     val vertices: List<List<Int>>,
-    val next: String? = null
+    val next: List<String>
 ) : CompressedGameMapObject {
     override val type: Int = GameMapObjectType.GameMapRegion.index
     @get:JsonIgnore
@@ -27,7 +27,7 @@ class GameMapRegion(
     override val id: String,
     val center: PixelCoordinate,
     val vertices: List<PixelCoordinate>,
-    val next: String?
+    val next: List<String>
 ) : GameMapObject, GameObject {
     override val layer: Int = 0
     override val type: GameMapObjectType = GameMapObjectType.GameMapRegion
