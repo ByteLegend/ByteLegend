@@ -77,7 +77,7 @@ jobs:
         with:
           name: artifacts
           path: |
-            server/app/build/tmp/test/**/*.flv
+            server/app/build/tmp/**/*.flv
             server/app/build/reports/tests
   contributor-check:
     runs-on: 'ubuntu-latest'
