@@ -74,49 +74,52 @@ enum class Locale(
     // If so, we don't select the language by Accept-Language header automatically, users need to do that manually.
     val byMachine: Boolean,
     val languageScript: LanguageScript?,
-    val countryRegion: CountryRegion?
+    val countryRegion: CountryRegion?,
+    // used to calculate rough character width
+    // so that we can have better data visualization
+    val roughCharacterWidthCoefficient: Double = 1.0
 ) {
     // A special locale for filter
     ALL("All", Language.ALL, true, null, null),
     EN("English", Language.EN, false, null, null) {
         override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.lowercase().startsWith("en")
     },
-    ZH_HANS("简体中文", Language.ZH, false, LanguageScript.HANS, CountryRegion.CN) {
+    ZH_HANS("简体中文", Language.ZH, false, LanguageScript.HANS, CountryRegion.CN, 3.0) {
         override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.lowercase() == "zh-cn" || acceptLanguageHeader.lowercase() == "zh"
     },
-    ZH_HANT("繁體中文", Language.ZH, true, LanguageScript.HANT, CountryRegion.TW) {
+    ZH_HANT("繁體中文", Language.ZH, true, LanguageScript.HANT, CountryRegion.TW, 3.0) {
         override fun accept(acceptLanguageHeader: String): Boolean = acceptLanguageHeader.lowercase() == "zh-tw"
     },
 
     // Spanish
-    ES("Español", Language.ES, true, null, null),
+    ES("Español", Language.ES, true, null, null, 1.5),
 
     // Arabic
-    AR("العربية", Language.AR, true, null, null),
+    AR("العربية", Language.AR, true, null, null, 2.0),
 
     // Portuguese
-    PT("Português", Language.PT, true, null, null),
+    PT("Português", Language.PT, true, null, null, 1.5),
 
     // Indonesian
-    ID("Bahasa Indonesia", Language.ID, true, null, null),
+    ID("Bahasa Indonesia", Language.ID, true, null, null, 1.5),
 
     // French
-    FR("Français", Language.FR, true, null, null),
+    FR("Français", Language.FR, true, null, null, 1.5),
 
     // Japanese
-    JA("日本語", Language.JA, true, null, null),
+    JA("日本語", Language.JA, true, null, null, 4.0),
 
     // Russian
-    RU("Русский", Language.RU, true, null, null),
+    RU("Русский", Language.RU, true, null, null, 1.5),
 
     // Germany
-    DE("Deutsch", Language.DE, true, null, null),
+    DE("Deutsch", Language.DE, true, null, null, 2.0),
 
     // Korean
-    KO("한국어", Language.KO, true, null, null),
+    KO("한국어", Language.KO, true, null, null, 3.0),
 
     // Italian
-    IT("Italiano", Language.IT, true, null, null),
+    IT("Italiano", Language.IT, true, null, null, 1.5),
 
     ;
 

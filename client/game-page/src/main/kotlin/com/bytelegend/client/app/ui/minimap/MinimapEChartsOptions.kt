@@ -2,6 +2,7 @@
 
 package com.bytelegend.client.app.ui.minimap
 
+import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameObjectRole
@@ -204,7 +205,7 @@ val roadmapGraphSeries: dynamic = JSON.parse(
   },
   "labelLayout": {
     "moveOverlap": "shiftY",
-    "width": 100
+    "fontSize": 12
   }
 }
 """.trimIndent()
@@ -231,6 +232,20 @@ val richStarAndHollowStar: dynamic = JSON.parse(
 """
 )
 
+fun GameRuntime.calculateRoughTextWidth(text: String): Int {
+    var asciiCharNum = 0
+    var localeCharNum = 0
+    text.forEach {
+        if (it.code in 0..128) {
+            asciiCharNum++
+        } else {
+            localeCharNum++
+        }
+    }
+    return (asciiCharNum * 5 + localeCharNum * locale.roughCharacterWidthCoefficient * 5).toInt()
+}
+
+private const val MAX_LABEL_WIDTH = 100
 fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
     val mapWidth = map.pixelSize.width
     val mapHeight = map.pixelSize.height
@@ -251,6 +266,8 @@ fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
                 $starsRichText
                 $title
             """.trimIndent()
+        val roughLabelWidthPx = gameRuntime.calculateRoughTextWidth(title)
+        val labelWidth = if (roughLabelWidthPx > MAX_LABEL_WIDTH) MAX_LABEL_WIDTH else roughLabelWidthPx
         val labelOptions: dynamic = jsObject {
             show = true
             position = "insideBottom"
@@ -262,20 +279,21 @@ fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
             borderWidth = 2
             borderRadius = 5
             padding = 5
-            fontSize = 12
             shadowBlur = 3
             shadowColor = "#888"
             shadowOffsetX = 0
             shadowOffsetY = 3
             color = "black"
+            width = labelWidth
             overflow = "break"
             rich = richStarAndHollowStar
         }
 
-        val symbolSize = nativeJsArrayOf(120, 50)
+        val symbolSize = nativeJsArrayOf(MAX_LABEL_WIDTH, 50)
         nodes.push(jsObject {
             id = mission.id
-            x = coordinate.x
+            // To avoid the label out of left border
+            x = if (coordinate.x < 120) 120 else coordinate.x
             y = coordinate.y
             value = mission.id
             category = 0

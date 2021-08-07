@@ -61,7 +61,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
 
     // If player is not adjacent to the mission, disable the input box and submit button
     private fun isDisabled(): Boolean {
-        if (props.missionId == "install-ide") {
+        if (props.missionId == "install-java-ide") {
             return true
         }
         val heroInScene = activeScene.objects.getByIdOrNull<Character>(HERO_ID) ?: return true
