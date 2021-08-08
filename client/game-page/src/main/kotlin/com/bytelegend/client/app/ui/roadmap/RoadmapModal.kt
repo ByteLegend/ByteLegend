@@ -56,7 +56,7 @@ interface RoadmapModalState : RState {
 }
 
 const val DONT_SHOW_ROADMAP_BANNER = "DontShowRoadmapBanner"
-const val DEFAULT_DOWNLOAD_ROADMAP_IMAGE_SIZE = 1600
+const val DEFAULT_DOWNLOAD_ROADMAP_IMAGE_SIZE = 2000
 
 class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalState>(props) {
     private val echartsContainerElementId = "echarts-container-${uuid()}"
