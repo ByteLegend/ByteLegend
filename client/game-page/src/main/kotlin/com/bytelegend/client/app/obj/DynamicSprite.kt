@@ -10,6 +10,7 @@ import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
+import com.bytelegend.client.utils.JSArrayBackedList
 import kotlinx.browser.window
 import org.w3c.dom.CanvasRenderingContext2D
 
@@ -27,6 +28,12 @@ fun createMissionSprite(
         scene.objects.getById(dynamicSpriteId)
     )
     "Gate" -> GateSprite(
+        "$dynamicSpriteId-${globalCounter++}",
+        scene,
+        gridCoordinate,
+        scene.objects.getById(dynamicSpriteId)
+    )
+    "MissionTower" -> MissionTowerSprite(
         "$dynamicSpriteId-${globalCounter++}",
         scene,
         gridCoordinate,
@@ -67,6 +74,25 @@ class GateSprite(
     gridCoordinate: GridCoordinate,
     gateSprite: GameMapDynamicSprite
 ) : DynamicSprite(id, gameScene, gridCoordinate, gateSprite)
+
+fun GameMapDynamicSprite.animationWithFixedInterval(ms: Int): FramePlayingAnimation {
+    val f = JSArrayBackedList<AnimationFrame>()
+    repeat(frames[0][0].size) {
+        f.add(AnimationFrame(it, ms))
+    }
+    return FramePlayingAnimation(f)
+}
+
+class MissionTowerSprite(
+    id: String,
+    gameScene: GameScene,
+    gridCoordinate: GridCoordinate,
+    towerSprite: GameMapDynamicSprite
+) : DynamicSprite(id, gameScene, gridCoordinate, towerSprite) {
+    init {
+        animation = towerSprite.animationWithFixedInterval(500)
+    }
+}
 
 /**
  * A DynamicSprite is added to the map and controlled by game script,

@@ -154,7 +154,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                     game.i("AnswerCorrect"),
                     "success",
                     true,
-                    true
+                    5000
                 )
             )
         }

@@ -64,21 +64,18 @@ class BannerUIComponent : GameUIComponent<GameProps, GameBannersState>() {
                                 banners = banners.apply { remove(banner) }
                             }
                         }
-                        attrs.style = kotlinext.js.js {
-                            // override .alert margin-bottom
-                            marginBottom = "0"
-                        }
+                        attrs.className = "top-banner"
                         unsafeSpan(banner.contentHtml)
                     }
 
-                    if (banner.autoHide) {
+                    if (banner.autoDismissMs != 0) {
                         window.setTimeout(
                             {
                                 setState {
                                     banners = banners.apply { remove(banner) }
                                 }
                             },
-                            5000
+                            banner.autoDismissMs
                         )
                     }
                 }

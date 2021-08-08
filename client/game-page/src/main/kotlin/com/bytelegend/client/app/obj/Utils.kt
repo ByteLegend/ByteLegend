@@ -14,6 +14,15 @@ fun isFirefox(): Boolean {
     return window.navigator.userAgent.lowercase().indexOf("firefox") > -1
 }
 
+fun downloadURI(dataUrl: String, fileName: String) {
+    val link = document.createElement("a").asDynamic()
+    link.href = dataUrl
+    link.download = fileName
+    document.body?.appendChild(link)
+    link.click()
+    document.body?.removeChild(link)
+}
+
 fun uuid(): String {
     // https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
     return js(

@@ -269,6 +269,17 @@ body {
     z-index: 999;
 }
 
+.show-mission-titles-switch {
+    position: absolute;
+    right: 60px;
+    top: 18px;
+    z-index: 999;
+}
+
+.download-my-roadmap-btn {
+    margin-left: 10px;
+}
+
 .inline-icon {
     margin-left: 5px;
     margin-right: 5px;
@@ -604,4 +615,15 @@ p.speech-bubble::after {
 
 .block-display {
     display: block;
+}
+
+.roadmap-modal-prompt {
+    padding: 0.25rem 1rem 0.25rem 1rem;
+    margin-bottom: 0;
+    margin-left: 5px;
+    display: inline-block;
+}
+
+.top-banner {
+    margin-bottom: 0;
 }

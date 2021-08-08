@@ -99,16 +99,6 @@ fun main() {
         child(GamePage::class) {
         }
     }
-
-//    window.setTimeout({
-//        game.modalController.show {
-//            child(EChartsRoadmap::class) {
-//                attrs.theme = "light"
-//                attrs.renderer = "svg"
-//                attrs.gameScene = game.activeScene
-//            }
-//        }
-//    }, 5000)
 }
 
 interface GamePageState : RState {

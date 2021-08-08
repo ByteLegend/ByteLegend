@@ -198,7 +198,7 @@ class DefaultPlayerChallengeContainer(
                 game.i("GetItem", "Coffee"),
                 "success",
                 true,
-                true
+                5000
             )
         )
         playAudio("popup")

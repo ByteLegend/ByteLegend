@@ -2,11 +2,14 @@
 
 package com.bytelegend.client.app.ui.roadmap
 
-import com.bytelegend.app.client.api.Timestamp
+import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
+import com.bytelegend.app.client.ui.bootstrap.BootstrapAlertLink
+import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.client.app.obj.downloadURI
 import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
@@ -14,9 +17,12 @@ import com.bytelegend.client.app.ui.absoluteDiv
 import com.bytelegend.client.app.ui.minimap.getMinimapMapFeatures
 import com.bytelegend.client.app.ui.minimap.getRoadmapEChartsOptions
 import com.bytelegend.client.app.ui.mission.ModalCloseButton
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinext.js.jsObject
 import kotlinx.browser.document
+import kotlinx.browser.localStorage
 import kotlinx.browser.window
+import kotlinx.html.classes
 import kotlinx.html.id
 import kotlinx.html.js.onMouseDownFunction
 import kotlinx.html.js.onMouseMoveFunction
@@ -29,6 +35,7 @@ import react.RBuilder
 import react.RState
 import react.dom.div
 import react.dom.jsStyle
+import react.dom.span
 import react.setState
 
 private const val MAX_ZOOM = 5.0
@@ -43,9 +50,13 @@ interface RoadmapModalState : RState {
     var mapLeftTop: PixelCoordinate
     var modalSize: PixelSize
     var cursor: String
+    var showPromptBanner: Boolean
     var lastMouseDownCoordinateOnModal: PixelCoordinate?
     var lastMouseDownCoordinateOnMap: PixelCoordinate?
 }
+
+const val DONT_SHOW_ROADMAP_BANNER = "DontShowRoadmapBanner"
+const val DEFAULT_DOWNLOAD_ROADMAP_IMAGE_SIZE = 1600
 
 class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalState>(props) {
     private val echartsContainerElementId = "echarts-container-${uuid()}"
@@ -53,7 +64,6 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
     // https://echarts.apache.org/en/api.html#echarts.init
     private var echarts: dynamic = undefined
     private var options: dynamic = undefined
-    private var lastOptionsUpdateTime = Timestamp.now()
 
     private val minZoom: Double
         get() = 1.0 * state.modalSize.width / activeScene.map.pixelSize.width
@@ -69,6 +79,7 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
         // TODO change this if map is not square. Currently all map is square
         modalSize = determineRoadmapSize().let { PixelSize(it, it) }
         zoom = 1.0 * modalSize.width / props.game.activeScene.map.pixelSize.width
+        showPromptBanner = localStorage.getItem(DONT_SHOW_ROADMAP_BANNER) == null
     }
 
     override fun RBuilder.render() {
@@ -80,8 +91,57 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
             }
         }
 
+        div {
+            attrs.classes = jsObjectBackedSetOf("show-mission-titles-switch")
+        }
+
         BootstrapModalHeader {
-            +i("LearningRoadmap")
+            span {
+                +i("LearningRoadmap")
+                BootstrapButton {
+                    attrs.className = "download-my-roadmap-btn"
+                    attrs.variant = "outline-primary"
+                    attrs.size = "sm"
+                    +i("DownloadMyRoadmap")
+                    attrs.onClick = {
+                        if (echarts != undefined) {
+                            val oldZoom = state.zoom
+                            setState(jsObject<RoadmapModalState> { zoom = 1.0 * DEFAULT_DOWNLOAD_ROADMAP_IMAGE_SIZE / mapPixelSize.width }) {
+                                downloadURI(echarts.getDataURL(), "my-roadmap.svg")
+                                setState { zoom = oldZoom }
+                            }
+                        }
+                    }
+                }
+                if (state.showPromptBanner) {
+                    BootstrapAlert {
+                        attrs.variant = "info"
+                        attrs.dismissible = false
+                        attrs.onClose = {
+                            setState {
+                                showPromptBanner = false
+                            }
+                        }
+                        attrs.className = "roadmap-modal-prompt"
+                        +game.i("TryScrollAndDrag")
+                        BootstrapAlertLink {
+                            attrs.href = "#"
+                            attrs.onClick = {
+                                setState {
+                                    showPromptBanner = false
+                                }
+                                localStorage.setItem(DONT_SHOW_ROADMAP_BANNER, "1")
+                            }
+                            +game.i("DontShowThisAgain")
+                        }
+                    }
+                    window.setTimeout({
+                        setState {
+                            showPromptBanner = false
+                        }
+                    }, 5000)
+                }
+            }
         }
 
         BootstrapModalBody {

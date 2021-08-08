@@ -283,7 +283,10 @@ data class Banner(
      */
     val variant: String,
     val dismissible: Boolean = true,
-    val autoHide: Boolean = false
+    /**
+     * After how many milliseconds will this banner be dismissed automatically
+     */
+    val autoDismissMs: Int = 0
 )
 
 interface BannerController {

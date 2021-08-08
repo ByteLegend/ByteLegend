@@ -159,11 +159,8 @@ fun GameScene.getRoadmapMapSeries() {
   "top": 0,
   "bottom": 0,
   "label": {
-    "show": false,
-    "fontSize": 20,
-    "color": "red",
-    "textShadowBlur": 2,
-    "textShadowColor": "black"
+    "show": true,
+    "fontSize": 20
   },
   "nameProperty" : "id",
   "data": []
@@ -246,6 +243,46 @@ fun GameRuntime.calculateRoughTextWidth(text: String): Int {
 }
 
 private const val MAX_LABEL_WIDTH = 100
+private val TITLE_ON_SYMBOL_SIZE = nativeJsArrayOf(MAX_LABEL_WIDTH, 50)
+private const val TITLE_OFF_SYMBOL_SIZE = 12
+
+fun GameMission.labelOptions(zoom: Double): dynamic {
+    val totalStars = gameMapMission.totalStar
+    val missionStars = gameScene.playerChallenges.missionStar(id)
+    val starsRichText = if (totalStars >= 5) {
+        "$missionStars/$totalStars{Star|}"
+    } else {
+        "{Star|}".repeat(missionStars) + "{HollowStar|}".repeat(totalStars - missionStars)
+    }
+    val title = htmlToText(gameScene.gameRuntime.i(gameMapMission.title))
+    val labelFormatter = if (totalStars == 0) title else """
+                $starsRichText
+                $title
+            """.trimIndent()
+    val roughLabelWidthPx = gameScene.gameRuntime.calculateRoughTextWidth(title)
+    val labelWidth = if (roughLabelWidthPx > MAX_LABEL_WIDTH) MAX_LABEL_WIDTH else roughLabelWidthPx
+    return jsObject {
+        show = true
+        position = "insideBottom"
+        distance = 0
+        align = "center"
+        formatter = labelFormatter
+        backgroundColor = "#eee"
+        borderColor = "#555"
+        borderWidth = 2
+        borderRadius = 5
+        padding = 5
+        shadowBlur = 3
+        shadowColor = "#888"
+        shadowOffsetX = 0
+        shadowOffsetY = 3
+        color = "black"
+        width = labelWidth
+        overflow = "break"
+        rich = richStarAndHollowStar
+    }
+}
+
 fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
     val mapWidth = map.pixelSize.width
     val mapHeight = map.pixelSize.height
@@ -254,40 +291,7 @@ fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
     val edges: dynamic = js("[]")
     objects.getByRole<GameMission>(GameObjectRole.Mission).forEach { mission ->
         val coordinate = mission.gridCoordinate * map.tileSize
-        val title = htmlToText(gameRuntime.i(mission.gameMapMission.title))
-        val totalStars = mission.gameMapMission.totalStar
-        val missionStars = playerChallenges.missionStar(mission.id)
-        val starsRichText = if (totalStars >= 5) {
-            "$missionStars/$totalStars{Star|}"
-        } else {
-            "{Star|}".repeat(missionStars) + "{HollowStar|}".repeat(totalStars - missionStars)
-        }
-        val labelFormatter = if (totalStars == 0) title else """
-                $starsRichText
-                $title
-            """.trimIndent()
-        val roughLabelWidthPx = gameRuntime.calculateRoughTextWidth(title)
-        val labelWidth = if (roughLabelWidthPx > MAX_LABEL_WIDTH) MAX_LABEL_WIDTH else roughLabelWidthPx
-        val labelOptions: dynamic = jsObject {
-            show = true
-            position = "insideBottom"
-            distance = 0
-            align = "center"
-            formatter = labelFormatter
-            backgroundColor = "#eee"
-            borderColor = "#555"
-            borderWidth = 2
-            borderRadius = 5
-            padding = 5
-            shadowBlur = 3
-            shadowColor = "#888"
-            shadowOffsetX = 0
-            shadowOffsetY = 3
-            color = "black"
-            width = labelWidth
-            overflow = "break"
-            rich = richStarAndHollowStar
-        }
+        val labelOptions: dynamic = mission.labelOptions(zoom)
 
         val symbolSize = nativeJsArrayOf(MAX_LABEL_WIDTH, 50)
         nodes.push(jsObject {
