@@ -19,6 +19,17 @@ interface GridCoordinateAware {
 interface GameObject {
     val id: String
     val layer: Int
+
+    /**
+     * This is a label-like mechanism to avoid extremely slow type checking in Kotlin JS.
+     * Simple test shows that Kotlin `is` check is 10x slower than `roles.contains`.
+     *
+     * For example, for a class `Sub: Base(), MyInterface {}`, instead of using `if(obj is MyInterface)`
+     * you can say `if(obj.roles.contains("MyInterface")`.
+     *
+     * https://youtrack.jetbrains.com/issue/KT-24784
+     * https://youtrack.jetbrains.com/issue/KT-42743
+     */
     val roles: Set<String>
 
     /**
@@ -52,6 +63,7 @@ enum class GameObjectRole {
     Character,
     NPC,
     MapEntrance,
+    HasFloatingTitle,
     CoordinateAware,
     Clickable,
     Mission,

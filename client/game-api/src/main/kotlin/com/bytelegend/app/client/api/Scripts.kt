@@ -7,13 +7,15 @@ import com.bytelegend.app.shared.PixelCoordinate
 class SpeechBuilder {
     /**
      * The person who speaks.
+     * For NPC/hero: the game object id
      */
-    var objectId: String? = null
+    var speakerId: String? = null
 
     /**
-     * The coordinate of speaker. Either `objectId` or `objectCoordinate` needs to be configured.
+     * The coordinate of the speaker.
+     * For non-NPC/Hero player
      */
-    var objectCoordinate: PixelCoordinate? = null
+    var speakerCoordinate: PixelCoordinate? = null
 
     /**
      * The content HTML id.
@@ -49,7 +51,7 @@ interface ScriptsBuilder {
         dismissMs: Int = 0
     ) {
         speech {
-            this.objectId = objectId
+            this.speakerId = objectId
             this.contentHtmlId = contentHtmlId
             this.args = args
             this.arrow = arrow

@@ -33,6 +33,11 @@ class MapEntranceBuilder {
      * can be used to fetch a GameMapPoint from destination map.
      */
     var backEntrancePointId: String? = null
+
+    /**
+     * Show road sign for this entrance
+     */
+    var roadSign: Boolean = true
 }
 
 class NpcBuilder {

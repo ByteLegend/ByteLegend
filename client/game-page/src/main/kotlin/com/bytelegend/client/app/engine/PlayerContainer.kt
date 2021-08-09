@@ -141,7 +141,7 @@ class PlayerContainer(
 fun GameScene.showSpeechBubble(player: BasePlayer, playerSpeechEventData: PlayerSpeechEventData) {
     unsafeCast<DefaultGameScene>().scripts("playerSpeech-${player.id}", true) {
         speech {
-            objectCoordinate = GridCoordinate(player.x, player.y) * map.tileSize
+            speakerCoordinate = GridCoordinate(player.x, player.y) * map.tileSize
             contentHtmlId = playerSpeechEventData.sentenceId
             dismissMs = 3000
         }

@@ -66,6 +66,30 @@
                  "width":0,
                  "x":173.609574057393,
                  "y":245.425299189294
+                }, 
+                {
+                 "height":0,
+                 "id":2,
+                 "name":"JavaIsland-JavaIslandDebuggerDungeon-destination",
+                 "point":true,
+                 "rotation":0,
+                 "type":"GameMapPoint",
+                 "visible":true,
+                 "width":0,
+                 "x":173.939003989191,
+                 "y":108.382447561446
+                }, 
+                {
+                 "height":0,
+                 "id":3,
+                 "name":"JavaIslandDebuggerDungeon-JavaIsland-entrance-point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"GameMapPoint",
+                 "visible":true,
+                 "width":0,
+                 "x":175.586153648179,
+                 "y":73.4628747908892
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -74,7 +98,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":2,
+ "nextobjectid":4,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.6.0",

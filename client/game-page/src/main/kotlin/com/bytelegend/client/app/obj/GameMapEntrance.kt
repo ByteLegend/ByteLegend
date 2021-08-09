@@ -16,16 +16,21 @@ import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class MapEntrance(
+class GameMapEntrance(
     override val id: String,
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
-    private val destMapId: String,
+    val destMapId: String,
     private val backEntrancePointId: String,
+    private val roadSign: Boolean,
     private val webSocketClient: WebSocketClient
 ) : GameObject, GameSceneAware, CoordinateAware {
     override val layer: Int = INVISIBLE_OBJECT_LAYER
-    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.MapEntrance, GameObjectRole.CoordinateAware)
+    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.MapEntrance, GameObjectRole.CoordinateAware).apply {
+        if (roadSign) {
+            add(GameObjectRole.HasFloatingTitle.toString())
+        }
+    }
     override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
 
     @Suppress("UnsafeCastFromDynamic")

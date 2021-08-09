@@ -128,6 +128,12 @@ abstract class CharacterSprite(
     }
 
     override fun moveTo(destination: GridCoordinate, callback: UnitFunction?) {
+        if (gridCoordinate == destination) {
+            logger.debug("$id already at $destination, no need to move")
+            callback?.invoke()
+            return
+        }
+
         val path = searchPath(destination)
         if (path.isNotEmpty()) {
             logger.debug("$id starts moving along $path to $destination")

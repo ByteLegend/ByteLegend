@@ -2,15 +2,17 @@ package com.bytelegend.client.app.ui.script
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.objects.CoordinateAware
+import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.client.app.engine.GAME_CLOCK_10HZ_EVENT
 import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
 import com.bytelegend.client.app.engine.GAME_SCRIPT_NEXT
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.script.MAIN_CHANNEL
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.unsafeSpan
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
@@ -31,7 +33,8 @@ data class Widget<P : GameProps>(
 val SPEECH_BUBBLE_OFFSET_X = 36
 
 interface SpeechBubbleWidgetProps : GameProps {
-    var speakerCoordinate: PixelCoordinate
+    var speakerId: String?
+    var speakerCoordinate: PixelCoordinate?
     var contentHtml: String
     var arrow: Boolean
 }
@@ -60,12 +63,13 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
     }
 
     override fun RBuilder.render() {
+        val speakerCoordinate = props.speakerCoordinate ?: activeScene.objects.getById<GameObject>(props.speakerId!!).unsafeCast<CoordinateAware>().pixelCoordinate
         // bubble's parent is game container, which is absolute-positioned.
-        val bubbleLeft = props.speakerCoordinate.x - canvasCoordinateInMap.x +
+        val bubbleLeft = speakerCoordinate.x - canvasCoordinateInMap.x +
             canvasCoordinateInGameContainer.x -
             SPEECH_BUBBLE_OFFSET_X
         val bubbleBottom = gameContainerHeight -
-            (props.speakerCoordinate.y - canvasCoordinateInMap.y + canvasCoordinateInGameContainer.y)
+            (speakerCoordinate.y - canvasCoordinateInMap.y + canvasCoordinateInGameContainer.y)
         p {
             attrs.classes = jsObjectBackedSetOf("speech-bubble")
             val z = Layer.ScriptWidget.zIndex()

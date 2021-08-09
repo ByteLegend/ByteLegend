@@ -28,8 +28,8 @@ import com.bytelegend.app.shared.objects.defaultMapEntranceId
 import com.bytelegend.app.shared.objects.defaultMapEntrancePointId
 import com.bytelegend.client.app.obj.DynamicSprite
 import com.bytelegend.client.app.obj.GameCurveSprite
+import com.bytelegend.client.app.obj.GameMapEntrance
 import com.bytelegend.client.app.obj.GameTextSprite
-import com.bytelegend.client.app.obj.MapEntrance
 import com.bytelegend.client.app.obj.NPC
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.MAIN_CHANNEL
@@ -84,6 +84,10 @@ class DefaultGameScene(
         scripts(MAIN_CHANNEL, true, block)
     }
 
+//    override fun scriptsLater(block: ScriptsBuilder.() -> Unit) {
+//        scripts(MAIN_CHANNEL, false, block)
+//    }
+
     fun scripts(channel: String, runImmediately: Boolean, block: ScriptsBuilder.() -> Unit) {
         getDirectorOfChannel(channel).scripts(runImmediately, block)
     }
@@ -126,12 +130,13 @@ class DefaultGameScene(
         val coordinate = objects.getPointById(entrancePointId)
         val backEntrancePointId = builder.backEntrancePointId ?: defaultMapEntranceDestinationId(entranceId)
 
-        val mapEntrance = MapEntrance(
+        val mapEntrance = GameMapEntrance(
             entranceId,
             this,
             coordinate,
             destMapId,
             backEntrancePointId,
+            builder.roadSign,
             gameRuntime.unsafeCast<Game>().webSocketClient
         )
 

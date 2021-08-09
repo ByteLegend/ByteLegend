@@ -29,6 +29,7 @@ class GameMission(
     override val roles: Set<String> =
         jsObjectBackedSetOf(
             GameObjectRole.Mission.toString(),
+            GameObjectRole.HasFloatingTitle.toString(),
             GameObjectRole.Sprite.toString(),
             GameObjectRole.CoordinateAware.toString(),
             GameObjectRole.Clickable.toString(),

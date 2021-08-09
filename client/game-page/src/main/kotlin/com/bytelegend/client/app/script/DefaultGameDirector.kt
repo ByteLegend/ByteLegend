@@ -9,7 +9,6 @@ import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.misc.playAudio
-import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.DefaultGameScene
@@ -18,7 +17,6 @@ import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
-import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.engine.calculateCoordinateInGameContainer
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.CharacterSprite
@@ -28,7 +26,6 @@ import com.bytelegend.client.app.ui.COORDINATE_BORDER_FLICKER
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
-import com.bytelegend.client.app.ui.mission.BEGINNER_GUIDE_FINISHED_STATE
 import com.bytelegend.client.app.ui.mission.HIGHTLIGHT_MISSION_EVENT
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
@@ -124,14 +121,6 @@ class DefaultGameDirector(
     fun onMouseClickOnCanvas(event: GameMouseEvent) {
         if (isRunning && isRespondToClick) {
             next()
-            if (!game.heroPlayer.isAnonymous && !game.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE)) {
-                // A very tricky thing. When the player opens the game at the first time
-                // we want them to click once then trigger mouse event twice:
-                // 1. Cancel the current speech bubble
-                // 2. Move to NPC and start talking
-                // So here if we detect all scripts have been finished. Re-trigger the mouse event
-                eventBus.emit(MOUSE_CLICK_EVENT, event)
-            }
         }
     }
 
@@ -186,17 +175,17 @@ class DefaultGameDirector(
         val builder = SpeechBuilder()
         builder.action()
 
-        val speakerCoordinate = if (builder.objectCoordinate != null) {
-            builder.objectCoordinate!!
-        } else {
-            gameScene.objects.getById<CharacterSprite>(builder.objectId!!).pixelCoordinate
+        if (builder.speakerId == null && builder.speakerCoordinate == null) {
+            throw IllegalArgumentException("Either speakerId or speakerCoordinate need to be set for speech!")
         }
+
         scripts.add(
             DisplayWidgetScript(
                 SpeechBubbleWidget::class,
                 {
                     attrs.game = gameScene.gameRuntime.asDynamic()
-                    attrs.speakerCoordinate = speakerCoordinate
+                    attrs.speakerId = builder.speakerId
+                    attrs.speakerCoordinate = builder.speakerCoordinate
                     attrs.contentHtml = gameScene.gameRuntime.i(builder.contentHtmlId!!, *builder.args)
                     attrs.arrow = builder.arrow
                 },
@@ -305,7 +294,6 @@ class DefaultGameDirector(
         override fun start() {
             character.moveTo(destMapCoordinate) {
                 callback()
-                character.direction = Direction.DOWN
                 next()
             }
         }

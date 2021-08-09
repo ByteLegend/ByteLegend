@@ -54,6 +54,30 @@
                  "width":0,
                  "x":177.562733238965,
                  "y":243.778149530305
+                }, 
+                {
+                 "height":0,
+                 "id":2,
+                 "name":"JavaIslandCommentDungeon-JavaIsland-entrance-point",
+                 "point":true,
+                 "rotation":0,
+                 "type":"GameMapPoint",
+                 "visible":true,
+                 "width":0,
+                 "x":174.927293784584,
+                 "y":461.860764380389
+                }, 
+                {
+                 "height":0,
+                 "id":3,
+                 "name":"JavaIsland-JavaIslandCommentDungeon-destination",
+                 "point":true,
+                 "rotation":0,
+                 "type":"GameMapPoint",
+                 "visible":true,
+                 "width":0,
+                 "x":175.586153648179,
+                 "y":424.635182087247
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -62,7 +86,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":2,
+ "nextobjectid":4,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.6.0",

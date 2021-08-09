@@ -25,7 +25,7 @@ import react.dom.div
 import react.dom.jsStyle
 import react.setState
 
-interface MissionTitleProps : RProps {
+interface FloatingTitleProps : RProps {
     // coordinate in game container
     var left: Int
     var bottom: Int
@@ -35,17 +35,19 @@ interface MissionTitleProps : RProps {
     var title: String
     var tileCoordinate: GridCoordinate
     var eventBus: EventBus
+}
 
+interface MissionTitleProps : FloatingTitleProps {
     var totalStar: Int
     var currentStar: Int
     var mission: GameMission
 }
 
-interface MissionTitleState : RState {
+interface FloatingTitleState : RState {
     var hovered: Boolean
 }
 
-class MissionTitle : RComponent<MissionTitleProps, MissionTitleState>() {
+abstract class FloatingTitle<R : FloatingTitleProps> : RComponent<R, FloatingTitleState>() {
     private val mouseMoveListener: MouseEventListener = {
         if (it.mapCoordinate == props.tileCoordinate) {
             setState { hovered = true }
@@ -58,31 +60,28 @@ class MissionTitle : RComponent<MissionTitleProps, MissionTitleState>() {
             hovered = false
         }
     }
-    private val onMissionRepaintListener: EventListener<ChallengeUpdateEventData> = this::onMissionRepaint
-
-    private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
-        // Refresh upon mission update event
-        if (eventData.newValue.missionId == props.mission.id) {
-            setState {}
-        }
-    }
-
-    override fun MissionTitleState.init() {
-        hovered = false
-    }
 
     private fun getOffsetY() = if (state.hovered) 0 else props.offsetY
 
-    override fun RBuilder.render() {
+    abstract fun onClick()
+
+    override fun FloatingTitleState.init() {
+        hovered = false
+    }
+
+    protected fun RBuilder.renderTitle(
+        backgroundColor: String,
+        block: RBuilder.() -> Unit
+    ) {
         absoluteDiv(
             left = props.left,
             bottom = props.bottom + getOffsetY(),
-            zIndex = Layer.MissionTitle.zIndex() + if (state.hovered) 1 else 0,
+            zIndex = Layer.FloatingTitle.zIndex() + if (state.hovered) 1 else 0,
             classes = jsObjectBackedSetOf("mission-title")
         ) {
             unsafeSpan(props.title)
             attrs.onClickFunction = {
-                props.mission.onClick()
+                this@FloatingTitle.onClick()
             }
             attrs.onMouseOutFunction = {
                 setState { hovered = false }
@@ -93,19 +92,24 @@ class MissionTitle : RComponent<MissionTitleProps, MissionTitleState>() {
             if (state.hovered) {
                 attrs.jsStyle {
                     boxShadow = "0 0 20px white"
+                    this.backgroundColor = backgroundColor
+                }
+            } else {
+                attrs.jsStyle {
+                    this.backgroundColor = backgroundColor
                 }
             }
             absoluteDiv(
-                zIndex = Layer.MissionTitle.zIndex(),
+                zIndex = Layer.FloatingTitle.zIndex(),
                 classes = jsObjectBackedSetOf("mission-title-bottom-border", "mission-title-bottom-border-left")
             )
             absoluteDiv(
-                zIndex = Layer.MissionTitle.zIndex(),
+                zIndex = Layer.FloatingTitle.zIndex(),
                 classes = jsObjectBackedSetOf("mission-title-bottom-border", "mission-title-bottom-border-right")
             )
 
             absoluteDiv(
-                zIndex = Layer.MissionTitle.zIndex() + 2,
+                zIndex = Layer.FloatingTitle.zIndex() + 2,
                 classes = jsObjectBackedSetOf("mission-title-triangle-container")
             ) {
                 absoluteDiv(
@@ -117,8 +121,47 @@ class MissionTitle : RComponent<MissionTitleProps, MissionTitleState>() {
                 )
             }
 
+            block()
+        }
+    }
+
+    override fun shouldComponentUpdate(nextProps: R, nextState: FloatingTitleState): Boolean {
+        return props.left != nextProps.left ||
+            props.bottom != nextProps.bottom ||
+            props.title != nextProps.title ||
+            props.offsetY != nextProps.offsetY ||
+            state.hovered != nextState.hovered
+    }
+
+    override fun componentDidMount() {
+        props.eventBus.on(MOUSE_MOVE_EVENT, mouseMoveListener)
+        props.eventBus.on(MOUSE_OUT_OF_MAP_EVENT, mouseOutOfMapListener)
+    }
+
+    override fun componentWillUnmount() {
+        props.eventBus.remove(MOUSE_MOVE_EVENT, mouseMoveListener)
+        props.eventBus.remove(MOUSE_OUT_OF_MAP_EVENT, mouseOutOfMapListener)
+    }
+}
+
+class MissionTitle : FloatingTitle<MissionTitleProps>() {
+    private val onMissionRepaintListener: EventListener<ChallengeUpdateEventData> = this::onMissionRepaint
+
+    private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
+        // Refresh upon mission update event
+        if (eventData.newValue.missionId == props.mission.id) {
+            setState {}
+        }
+    }
+
+    override fun onClick() {
+        props.mission.onClick()
+    }
+
+    override fun RBuilder.render() {
+        renderTitle("rgba(0,0,0,0.7)") {
             absoluteDiv(
-                zIndex = Layer.MissionTitle.zIndex() + 3,
+                zIndex = Layer.FloatingTitle.zIndex() + 3,
                 classes = jsObjectBackedSetOf("title-star-answer-box")
             ) {
                 div {
@@ -136,23 +179,13 @@ class MissionTitle : RComponent<MissionTitleProps, MissionTitleState>() {
         }
     }
 
-    override fun shouldComponentUpdate(nextProps: MissionTitleProps, nextState: MissionTitleState): Boolean {
-        return props.left != nextProps.left ||
-            props.bottom != nextProps.bottom ||
-            props.title != nextProps.title ||
-            props.offsetY != nextProps.offsetY ||
-            state.hovered != nextState.hovered
-    }
-
     override fun componentDidMount() {
-        props.eventBus.on(MOUSE_MOVE_EVENT, mouseMoveListener)
-        props.eventBus.on(MOUSE_OUT_OF_MAP_EVENT, mouseOutOfMapListener)
+        super.componentDidMount()
         props.eventBus.on(MISSION_REPAINT_EVENT, onMissionRepaintListener)
     }
 
     override fun componentWillUnmount() {
-        props.eventBus.remove(MOUSE_MOVE_EVENT, mouseMoveListener)
-        props.eventBus.remove(MOUSE_OUT_OF_MAP_EVENT, mouseOutOfMapListener)
+        super.componentWillUnmount()
         props.eventBus.remove(MISSION_REPAINT_EVENT, onMissionRepaintListener)
     }
 }

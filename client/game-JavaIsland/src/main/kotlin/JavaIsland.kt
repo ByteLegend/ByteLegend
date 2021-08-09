@@ -5,11 +5,12 @@ import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.shared.COFFEE
-import com.bytelegend.app.shared.HumanReadableCoordinate
+import com.bytelegend.app.shared.Direction
+import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.JAVA_ISLAND
+import com.bytelegend.app.shared.JAVA_ISLAND_COMMENT_DUNGEON
+import com.bytelegend.app.shared.JAVA_ISLAND_DEBUGGER_DUNGEON
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
-import com.bytelegend.app.shared.objects.CoordinateAware
-import com.bytelegend.app.shared.objects.GameObject
 import kotlinx.browser.window
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
@@ -25,6 +26,14 @@ fun main() {
         objects {
             mapEntrance {
                 destMapId = JAVA_ISLAND_NEWBIE_VILLAGE_PUB
+            }
+
+            mapEntrance {
+                destMapId = JAVA_ISLAND_COMMENT_DUNGEON
+            }
+
+            mapEntrance {
+                destMapId = JAVA_ISLAND_DEBUGGER_DUNGEON
             }
 
             pubGuard()
@@ -52,6 +61,12 @@ fun GameScene.pubGuard() = objects {
                     helpers.getCharacter(guardId).gridCoordinate = guardStartPoint
                     scripts {
                         speech(guardId, "DoYouPreferToBeMediocre")
+                        characterMove(HERO_ID, guardStartPoint + GridCoordinate(0, 1)) {
+                            helpers.getCharacter(HERO_ID).direction = Direction.UP
+                        }
+                        talkAboutFirstStar(guardId, objects)
+                        startBeginnerGuide()
+                        putState(BEGINNER_GUIDE_FINISHED_STATE)
                     }
                 }
                 playerChallenges.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
@@ -91,15 +106,8 @@ fun GameScene.pubGuard() = objects {
                     }
                     else -> {
                         scripts {
-                            speech(guardId, "StarCondition", arrayOf("1", "0"))
-                            speech(HERO_ID, "WhereToFindStar")
-                            speech(
-                                guardId, "IDontKnowTakeALookAtStarBytelegend",
-                                arrayOf(
-                                    HumanReadableCoordinate(objects.getById<GameObject>(STAR_BYTELEGEND_MISSION_ID).unsafeCast<CoordinateAware>().gridCoordinate).toString()
-                                ),
-                                arrow = false
-                            )
+                            talkAboutFirstStar(guardId, objects)
+                            startBeginnerGuide()
                         }
                     }
                 }
@@ -141,7 +149,9 @@ fun GameScene.newbieVillageOldMan() = objects {
                         putState(NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE)
                         // TODO atomic operation
                         removeItem(COFFEE, oldManStartPoint)
-                        characterMove(oldManId, oldManDestination)
+                        characterMove(oldManId, oldManDestination) {
+                            helpers.getCharacter(oldManId).direction = Direction.DOWN
+                        }
                     }
                 }
                 else -> {
@@ -177,7 +187,9 @@ fun GameScene.newbieVillageHead() = objects {
                     scripts {
                         speech(villageHeadId, "OutsideWorldIsDangerousButIHaveToLetYouGo")
                         speech(villageHeadId, "GoodLuckPursueHolyJavaCoffee", arrow = false)
-                        characterMove(villageHeadId, destPoint)
+                        characterMove(villageHeadId, destPoint) {
+                            helpers.getCharacter(villageHeadId).direction = Direction.DOWN
+                        }
                     }
                 } else {
                     val noticeboardPoint = objects.getPointById(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID).toHumanReadableCoordinate().toString()

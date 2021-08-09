@@ -5,7 +5,7 @@ enum class Layer {
     CursorWidget,
     PlayerNames,
     UserMouseInteraction,
-    MissionTitle,
+    FloatingTitle,
     MissionTitlePullRequestAnswerButton,
     ScrollButtons,
     HeroControlButton,
