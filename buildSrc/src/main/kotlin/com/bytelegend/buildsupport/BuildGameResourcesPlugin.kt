@@ -304,7 +304,7 @@ internal fun Project.registerExecTask(
     workingDir = rootProject.rootDir
     mainClass.set(mainClassName)
     args(*args)
-    jvmArgs("-Denvironment=${project.getEnvironment()}")
+    jvmArgs("-Denvironment=${project.getEnvironment()}", "-Dapple.awt.UIElement=true")
 
     outputs.cacheIf { true }
     inputs.files(sourceSet("main").runtimeClasspath).withNormalizer(ClasspathNormalizer::class.java)
