@@ -1,7 +1,6 @@
 package com.bytelegend.app.client.api
 
 import com.bytelegend.app.client.api.dsl.ObjectsBuilder
-import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.GridSize
@@ -273,7 +272,7 @@ interface GameSceneContainer : GameContainerSizeAware {
 
 interface ModalController {
     val visible: Boolean
-    fun showModal(contentId: String, titleId: String? = null, onClose: UnitFunction = {})
+    fun showModal(contentId: String, titleId: String? = null)
 }
 
 data class Banner(

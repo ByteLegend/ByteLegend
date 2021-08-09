@@ -8,6 +8,7 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.api.PullRequestLogContainer
 import com.bytelegend.app.client.api.ScriptsBuilder
+import com.bytelegend.app.client.api.dsl.DynamicSpriteBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
 import com.bytelegend.app.client.api.dsl.NpcBuilder
@@ -25,11 +26,11 @@ import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.app.shared.objects.defaultMapEntranceDestinationId
 import com.bytelegend.app.shared.objects.defaultMapEntranceId
 import com.bytelegend.app.shared.objects.defaultMapEntrancePointId
+import com.bytelegend.client.app.obj.DynamicSprite
 import com.bytelegend.client.app.obj.GameCurveSprite
 import com.bytelegend.client.app.obj.GameTextSprite
 import com.bytelegend.client.app.obj.MapEntrance
 import com.bytelegend.client.app.obj.NPC
-import com.bytelegend.client.app.obj.createMissionSprite
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.MAIN_CHANNEL
 import com.bytelegend.client.app.ui.GameProps
@@ -110,12 +111,7 @@ class DefaultGameScene(
             }
         }
         missions.forEach { mission ->
-            val sprite = createMissionSprite(this, mission.gridCoordinate, mission.sprite)
-            GameMission(
-                this,
-                mission,
-                sprite
-            ).init()
+            GameMission(this, mission)
         }
     }
 
@@ -165,9 +161,23 @@ class DefaultGameScene(
             onInitFunction = builder.onInit,
             onTouchFunction = builder.onTouch,
             onClickFunction = builder.onClick
-        ).apply {
-            init()
-        }
+        ).init()
+    }
+
+    override fun dynamicSprite(action: DynamicSpriteBuilder.() -> Unit) {
+        val builder = DynamicSpriteBuilder()
+        builder.action()
+
+        val obj = DynamicSprite(
+            builder.id ?: throw IllegalArgumentException("No id specified for dynamicSprite!"),
+            this,
+            builder.gridCoordinate ?: throw IllegalArgumentException("No gridCoordinate specified for ${builder.id}"),
+            objects.getById(builder.sprite ?: throw IllegalArgumentException("No sprite specified for ${builder.id}")),
+            onInitFunction = builder.onInit,
+            onTouchFunction = builder.onTouch,
+            onClickFunction = builder.onClick
+        )
+        objects.add(obj)
     }
 
     private fun gameMapText(gameMapText: GameMapText) {

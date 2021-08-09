@@ -22,11 +22,6 @@ class NPC(
     PixelCoordinate(-1, -1),
     MapTilesetAnimationSet(gameScene, dynamicSprite)
 ) {
-    override fun init() {
-        super.init()
-        onInitFunction()
-    }
-
     override val roles: Set<String> = jsObjectBackedSetOf(
         GameObjectRole.Character,
         GameObjectRole.Sprite,
@@ -35,13 +30,17 @@ class NPC(
         GameObjectRole.Clickable,
     )
 
-    override fun onTouch(character: GameObject) {
-        super.onTouch(character)
-        onTouchFunction(character)
+    override fun init() {
+        super.init()
+        onInitFunction()
     }
 
-    override fun onClick(): Boolean {
-        super.onClick()
+    override fun onTouch(obj: GameObject) {
+        super.onTouch(obj)
+        onTouchFunction(obj)
+    }
+
+    override fun onClick() {
         // if the player is current moving and not at the border of the tile, not trigger
         // the click event on game object because the object handler may change moving state
         // of the player.
@@ -49,7 +48,6 @@ class NPC(
         if (hero == null || atTileBorder(gameScene.map.tileSize, hero.pixelCoordinate)) {
             onClickFunction()
         }
-        return true
     }
 
     override fun enterTile(gridCoordinate: GridCoordinate) {

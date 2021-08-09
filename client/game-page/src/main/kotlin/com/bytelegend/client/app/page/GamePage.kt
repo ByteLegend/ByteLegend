@@ -1,4 +1,4 @@
-@file:Suppress("DeferredResultUnused")
+@file:Suppress("DeferredResultUnused", "UnsafeCastFromDynamic")
 
 package com.bytelegend.client.app.page
 
@@ -154,10 +154,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
             game.sceneContainer.loadScene(GAME_INIT_DATA.player.map) { _, newScene ->
                 animationSetDeferred.await()
 
-                val obj = HeroCharacter(newScene, GAME_INIT_DATA.player)
-                game._hero = obj
-                obj.init()
-                newScene.objects.add(obj)
+                game._hero = HeroCharacter(newScene, GAME_INIT_DATA.player).apply { init() }
                 game.start()
             }
         }

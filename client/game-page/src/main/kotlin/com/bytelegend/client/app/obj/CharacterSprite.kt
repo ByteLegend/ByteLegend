@@ -28,7 +28,7 @@ const val CHARACTER_ANIMATION_FPS = 2
 
 @Suppress("UNUSED_PARAMETER")
 abstract class CharacterSprite(
-    override val gameScene: GameScene,
+    final override val gameScene: GameScene,
     private var _pixelCoordinate: PixelCoordinate,
     private val animationSet: AnimationSet
 ) : Sprite, GameSceneAware, Character {
@@ -40,7 +40,9 @@ abstract class CharacterSprite(
 
     private val clockEventListener: EventListener<Nothing> = this::onAnimation
 
-    override fun init() {
+    // Can't use init { } because
+    // `gameScene.objects.add()` invokes `gameObject.roles`, which is not available at construction time
+    open fun init() {
         gameScene.objects.add(this)
         gameScene.gameRuntime.eventBus.on(GAME_CLOCK_50HZ_EVENT, clockEventListener)
     }
@@ -51,7 +53,7 @@ abstract class CharacterSprite(
         return getSpriteBlockOnCanvas(gameScene).outOfCanvas(gameScene)
     }
 
-    override fun close() {
+    fun close() {
         gameScene.objects.remove<GameObject>(id)
         gameScene.gameRuntime.eventBus.remove(GAME_CLOCK_50HZ_EVENT, clockEventListener)
     }

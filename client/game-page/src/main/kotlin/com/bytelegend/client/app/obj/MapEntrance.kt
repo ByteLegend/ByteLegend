@@ -29,8 +29,8 @@ class MapEntrance(
     override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
 
     @Suppress("UnsafeCastFromDynamic")
-    override fun onTouch(character: GameObject) {
-        if (gameRuntime.hero != null && gameRuntime.hero!!.id == character.id) {
+    override fun onTouch(obj: GameObject) {
+        if (gameRuntime.hero != null && gameRuntime.hero!!.id == obj.id) {
             val heroId = gameRuntime.hero!!.id
             GlobalScope.launch {
                 webSocketClient.leaveScene(gameScene.map.id, destMapId)
@@ -39,7 +39,7 @@ class MapEntrance(
             gameRuntime.sceneContainer.loadScene(destMapId) { oldScene, newScene ->
                 val oldHero = oldScene!!.objects.getById<HeroCharacter>(heroId)
 
-                val newHero = HeroCharacter(newScene, oldHero.player.asDynamic())
+                val newHero = HeroCharacter(newScene, oldHero.player.asDynamic()).apply { init() }
                 newHero.direction = oldHero.direction
                 val newMapEntrance = newScene.objects.getPointById(backEntrancePointId)
                 newHero.pixelCoordinate = newMapEntrance * newScene.map.tileSize
@@ -49,14 +49,13 @@ class MapEntrance(
 
                 oldHero.close()
                 gameRuntime.unsafeCast<Game>()._hero = newHero
-                newHero.init()
 
                 GlobalScope.launch {
                     webSocketClient.enterScene(oldScene.map.id, newScene.map.id)
                 }
             }
         } else {
-            gameRuntime.activeScene.objects.getById<GameObject>(character.id).close()
+            gameRuntime.activeScene.objects.getById<CharacterSprite>(obj.id).close()
         }
     }
 }

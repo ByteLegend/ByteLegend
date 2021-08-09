@@ -16,25 +16,22 @@ interface GridCoordinateAware {
     val gridCoordinate: GridCoordinate
 }
 
-interface GameObject : Lifecycle {
+interface GameObject {
     val id: String
     val layer: Int
     val roles: Set<String>
 
     /**
      * Respond to the click event.
-     *
-     * Returns true if this object responds to the click, i.e. something happens,
-     * otherwise return false
      */
-    fun onClick(): Boolean = false
+    fun onClick() {}
 
     /**
      * Invoked when "touched" by another object.
      * For example, a player enter another scene by "touching" the entrance object,
      * or picking up gold by "touching" it.
      */
-    fun onTouch(character: GameObject) {
+    fun onTouch(obj: GameObject) {
     }
 }
 
@@ -59,16 +56,4 @@ enum class GameObjectRole {
     Clickable,
     Mission,
     UnableToBeSetAsDestination;
-
-    companion object {
-        fun fromIndex(index: Int): GameObjectRole = values()[index - 1]
-    }
-}
-
-interface Lifecycle {
-    fun init() {
-    }
-
-    fun close() {
-    }
 }

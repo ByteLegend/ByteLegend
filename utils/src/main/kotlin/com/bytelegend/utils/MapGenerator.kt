@@ -108,7 +108,9 @@ class MapGenerator(
     private var used: Boolean = false
 
     // Player layer is 0, layers above are positive, layers below are negative
-    private val playerLayerIndex: Int = tiledMap.layers.indexOfFirst { it.name == "Player" }.apply { require(this != -1) }
+    private val playerLayerIndex: Int = tiledMap.layers.indexOfFirst { it.name == "Player" }.apply {
+        require(this != -1) { "You must have a layer named `Player`" }
+    }
     private val visibleFlattenedLayers: List<TiledMap.Layer> = tiledMap.layers.flatMap { layer ->
         when {
             layer.name == "Player" -> emptyList()
@@ -237,7 +239,7 @@ class MapGenerator(
     }
 
     private fun populateBlockersMap() {
-        val blockerLayer = tiledMap.layers.first { it.name == "Blockers" }
+        val blockerLayer = tiledMap.layers.firstOrNull { it.name == "Blockers" } ?: return
         blockerLayer.data.withIndex().filter { it.value != 0L }.forEach {
             val x = it.index % tiledMap.width
             val y = it.index / tiledMap.width

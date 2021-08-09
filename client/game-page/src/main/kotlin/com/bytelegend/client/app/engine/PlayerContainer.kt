@@ -122,8 +122,7 @@ class PlayerContainer(
                         )
                     }
                 } else {
-                    val character = PlayerSprite(gameScene, it)
-                    character.init()
+                    val character = PlayerSprite(gameScene, it).apply { init() }
                     idToSprite[it.id] = character
                     if (!character.outOfCanvas()) {
                         ret.add(character)

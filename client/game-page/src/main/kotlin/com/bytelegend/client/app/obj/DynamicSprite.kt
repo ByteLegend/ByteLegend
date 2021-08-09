@@ -5,12 +5,17 @@ import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Static
+import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
+import com.bytelegend.app.shared.objects.GameObject
+import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.atTileBorder
 import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
 import org.w3c.dom.CanvasRenderingContext2D
 
@@ -19,13 +24,16 @@ var globalCounter = 0
 fun createMissionSprite(
     scene: GameScene,
     gridCoordinate: GridCoordinate,
-    dynamicSpriteId: String
+    dynamicSpriteId: String,
+    onInitFunction: UnitFunction,
+    onClickFunction: UnitFunction
 ): DynamicSprite = when (dynamicSpriteId) {
     "Book" -> BookSprite(
         "$dynamicSpriteId-${globalCounter++}",
         scene,
         gridCoordinate,
-        scene.objects.getById(dynamicSpriteId)
+        scene.objects.getById(dynamicSpriteId),
+        onClickFunction
     )
     "Gate" -> GateSprite(
         "$dynamicSpriteId-${globalCounter++}",
@@ -37,13 +45,15 @@ fun createMissionSprite(
         "$dynamicSpriteId-${globalCounter++}",
         scene,
         gridCoordinate,
-        scene.objects.getById(dynamicSpriteId)
+        scene.objects.getById(dynamicSpriteId),
     )
     else -> DynamicSprite(
         "$dynamicSpriteId-${globalCounter++}",
         scene,
         gridCoordinate,
-        scene.objects.getById(dynamicSpriteId)
+        scene.objects.getById(dynamicSpriteId),
+        onInitFunction,
+        onClickFunction
     )
 }
 
@@ -51,20 +61,16 @@ class BookSprite(
     id: String,
     gameScene: GameScene,
     gridCoordinate: GridCoordinate,
-    bookSprite: GameMapDynamicSprite
+    bookSprite: GameMapDynamicSprite,
+    private val onClickFunction: UnitFunction
 ) : DynamicSprite(id, gameScene, gridCoordinate, bookSprite) {
-    override fun onClick(): Boolean {
+    override fun onClick() {
         animation = FramePlayingAnimation(listOf(AnimationFrame(1, 500)), false)
-        return true
+        window.setTimeout({ onClickFunction() }, 500)
     }
 
     override fun onMissionModalClosed() {
-        window.setTimeout(
-            {
-                animation = Static
-            },
-            500
-        )
+        window.setTimeout({ animation = Static }, 500)
     }
 }
 
@@ -102,7 +108,10 @@ open class DynamicSprite(
     override val id: String,
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
-    val dynamicSprite: GameMapDynamicSprite
+    val dynamicSprite: GameMapDynamicSprite,
+    private val onInitFunction: UnitFunction = {},
+    private val onClickFunction: UnitFunction = {},
+    private val onTouchFunction: (GameObject) -> Unit = {},
 ) : CoordinateAware, AbstractStaticLocationSprite(
     gridCoordinate,
     gridCoordinate * gameScene.map.tileSize,
@@ -111,8 +120,33 @@ open class DynamicSprite(
         gameScene.map.tileSize.height * dynamicSprite.height
     )
 ) {
+    override val roles: Set<String> = jsObjectBackedSetOf(
+        GameObjectRole.Sprite,
+        GameObjectRole.CoordinateAware,
+        GameObjectRole.Clickable,
+        GameObjectRole.UnableToBeSetAsDestination.toString()
+    )
     protected var animation: Animation = Static
     override val layer: Int = dynamicSprite.layer
+
+    init {
+        onInitFunction()
+    }
+
+    override fun onTouch(obj: GameObject) {
+        onTouchFunction(obj)
+    }
+
+    override fun onClick() {
+        // if the player is current moving and not at the border of the tile, not trigger
+        // the click event on game object because the object handler may change moving state
+        // of the player.
+        val hero = gameScene.gameRuntime.hero
+        if (hero == null || atTileBorder(gameScene.map.tileSize, hero.pixelCoordinate)) {
+            onClickFunction()
+        }
+    }
+
     override fun draw(canvas: CanvasRenderingContext2D) {
         val coordinateInCanvas = pixelCoordinate - gameScene.canvasState.getCanvasCoordinateInMap()
 

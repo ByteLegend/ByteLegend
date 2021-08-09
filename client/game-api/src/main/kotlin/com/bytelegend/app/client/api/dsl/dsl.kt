@@ -1,9 +1,12 @@
 package com.bytelegend.app.client.api.dsl
 
+import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 
 typealias UnitFunction = () -> Unit
 typealias SuspendUnitFunction = suspend () -> Unit
+
+val EMPTY_FUNCTION: UnitFunction = {}
 
 class MapEntranceBuilder {
     /**
@@ -34,10 +37,24 @@ class MapEntranceBuilder {
 
 class NpcBuilder {
     var id: String? = null
+
     /**
      * The dynamic sprite id, see GameMapDynamicSprite
      */
     var sprite: String? = null
+    var onInit: UnitFunction = {}
+    var onTouch: (GameObject) -> Unit = {}
+    var onClick: UnitFunction = {}
+}
+
+class DynamicSpriteBuilder {
+    var id: String? = null
+
+    /**
+     * The dynamic sprite id, see GameMapDynamicSprite
+     */
+    var sprite: String? = null
+    var gridCoordinate: GridCoordinate? = null
     var onInit: UnitFunction = {}
     var onTouch: (GameObject) -> Unit = {}
     var onClick: UnitFunction = {}
@@ -97,4 +114,5 @@ interface ObjectsBuilder {
      */
     fun noticeboard(action: NoticeboardBuilder.() -> Unit)
     fun npc(action: NpcBuilder.() -> Unit)
+    fun dynamicSprite(action: DynamicSpriteBuilder.() -> Unit)
 }
