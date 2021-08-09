@@ -3,7 +3,6 @@ package com.bytelegend.utils
 import com.bytelegend.app.shared.entities.mission.MissionSpec
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import java.io.File
-import java.lang.IllegalStateException
 
 /**
  * Read data under `game-data/` directory.
@@ -20,7 +19,10 @@ class MissionDataReader(
 
 class MapData(ymlDir: File) {
     private val duplicateIdChecker: HashSet<String> = HashSet()
-    val missionSpecs: Map<String, MissionSpec> = ymlDir.listFiles().filter {
+    val missionSpecs: Map<String, MissionSpec> = ymlDir.let {
+        require(it.listFiles() != null) { "$it has no files!" }
+        it.listFiles()
+    }.filter {
         it.name.endsWith(".yml")
     }.map {
         try {
