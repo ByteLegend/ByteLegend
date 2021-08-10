@@ -77,7 +77,7 @@ abstract class FloatingTitle<R : FloatingTitleProps> : RComponent<R, FloatingTit
             left = props.left,
             bottom = props.bottom + getOffsetY(),
             zIndex = Layer.FloatingTitle.zIndex() + if (state.hovered) 1 else 0,
-            classes = jsObjectBackedSetOf("mission-title")
+            classes = jsObjectBackedSetOf("floating-title")
         ) {
             unsafeSpan(props.title)
             attrs.onClickFunction = {
@@ -101,24 +101,28 @@ abstract class FloatingTitle<R : FloatingTitleProps> : RComponent<R, FloatingTit
             }
             absoluteDiv(
                 zIndex = Layer.FloatingTitle.zIndex(),
-                classes = jsObjectBackedSetOf("mission-title-bottom-border", "mission-title-bottom-border-left")
+                classes = jsObjectBackedSetOf("floating-title-bottom-border", "floating-title-bottom-border-left")
             )
             absoluteDiv(
                 zIndex = Layer.FloatingTitle.zIndex(),
-                classes = jsObjectBackedSetOf("mission-title-bottom-border", "mission-title-bottom-border-right")
+                classes = jsObjectBackedSetOf("floating-title-bottom-border", "floating-title-bottom-border-right")
             )
 
             absoluteDiv(
                 zIndex = Layer.FloatingTitle.zIndex() + 2,
-                classes = jsObjectBackedSetOf("mission-title-triangle-container")
+                classes = jsObjectBackedSetOf("floating-title-triangle-container")
             ) {
                 absoluteDiv(
                     left = 0,
                     top = 0,
                     width = 0,
                     height = 0,
-                    classes = jsObjectBackedSetOf("mission-title-triangle")
-                )
+                    classes = jsObjectBackedSetOf("floating-title-triangle")
+                ) {
+                    attrs.jsStyle {
+                        borderBottom = "8px solid $backgroundColor"
+                    }
+                }
             }
 
             block()

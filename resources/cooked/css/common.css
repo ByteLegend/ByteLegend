@@ -162,7 +162,7 @@ body {
     color: white;
 }
 
-.mission-title {
+.floating-title {
     text-align: center;
     max-width: 200px;
     user-select: none;
@@ -188,7 +188,7 @@ body {
     width: 100%;
 }
 
-.mission-title-triangle-container {
+.floating-title-triangle-container {
     left: 50%;
     bottom: -16px;
     width: 16px;
@@ -196,24 +196,23 @@ body {
     transform: translate(-50%, 0%);
 }
 
-.mission-title-triangle {
+.floating-title-triangle {
     transform: rotate(180deg);
     border: 8px solid transparent;
-    border-bottom: 8px solid rgba(0, 0, 0, 0.7);
 }
 
-.mission-title-bottom-border {
+.floating-title-bottom-border {
     height: 1px;
     width: calc(50% - 9px);
     bottom: 0;
     border-bottom: 1px solid white;
 }
 
-.mission-title-bottom-border-left {
+.floating-title-bottom-border-left {
     left: 1px
 }
 
-.mission-title-bottom-border-right {
+.floating-title-bottom-border-right {
     right: 1px
 }
 
@@ -265,13 +264,6 @@ body {
     width: 20px;
     height: 20px;
     cursor: pointer;
-    z-index: 999;
-}
-
-.show-mission-titles-switch {
-    position: absolute;
-    right: 60px;
-    top: 18px;
     z-index: 999;
 }
 
