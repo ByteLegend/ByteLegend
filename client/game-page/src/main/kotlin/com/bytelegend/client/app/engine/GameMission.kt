@@ -23,7 +23,7 @@ class GameMission(
 ) : CoordinateAware, Sprite {
     override val id: String = gameMapMission.id
     override val gridCoordinate: GridCoordinate = gameMapMission.gridCoordinate
-    private val sprite = createMissionSprite(gameScene, gridCoordinate, gameMapMission.sprite, {}, this::onClick)
+    private val sprite = createMissionSprite(gameScene, gridCoordinate, gameMapMission.sprite, {}, this::openMissionModal)
     override val layer: Int = sprite.layer
     override val pixelCoordinate: PixelCoordinate = gameMapMission.gridCoordinate * gameScene.map.tileSize
     override val roles: Set<String> =
@@ -55,6 +55,10 @@ class GameMission(
     }
 
     override fun onClick() {
+        sprite.onClick()
+    }
+
+    private fun openMissionModal() {
         val defaultGameScene = gameScene.unsafeCast<DefaultGameScene>()
         defaultGameScene.missions.refresh(id)
 

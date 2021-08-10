@@ -49,9 +49,9 @@ class TutorialContent : RComponent<TutorialContentProps, TutorialContentState>()
                 attrs.width = "95%"
                 attrs.height = "95%"
                 attrs["border"] = "0"
-                attrs["frameborder"] = "no"
+                attrs["frameBorder"] = "no"
                 attrs["framespacing"] = "0"
-                attrs["allowfullscreen"] = "true"
+                attrs["allowFullScreen"] = true
             }
         }
     }

@@ -91,10 +91,6 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
             }
         }
 
-        div {
-            attrs.classes = jsObjectBackedSetOf("show-mission-titles-switch")
-        }
-
         BootstrapModalHeader {
             span {
                 +i("LearningRoadmap")
