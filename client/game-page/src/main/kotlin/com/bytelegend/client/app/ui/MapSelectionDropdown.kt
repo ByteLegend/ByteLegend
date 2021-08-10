@@ -8,6 +8,9 @@ import kotlinx.browser.document
 import react.RBuilder
 import react.RElementBuilder
 import react.RState
+import react.dom.img
+import react.dom.jsStyle
+import react.dom.map
 
 interface MapSelectionDropdownProps : GameProps
 
@@ -42,10 +45,22 @@ class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, RState>(
             } else {
                 unsafeSpan(i(mapId))
             }
+            heroIcon(mapId)
             // disable map selection when game script is running
             attrs.onClick = {
                 if (!game.activeScene.unsafeCast<DefaultGameScene>().mainChannelDirector.isRunning) {
                     game.sceneContainer.loadScene(mapId)
+                }
+            }
+        }
+    }
+
+    private fun RElementBuilder<*>.heroIcon(mapId: String) {
+        if (game._hero?.gameScene?.map?.id == mapId) {
+            img(src = HERO_ICON) {
+                attrs.jsStyle {
+                    width = "16px"
+                    height = "16px"
                 }
             }
         }

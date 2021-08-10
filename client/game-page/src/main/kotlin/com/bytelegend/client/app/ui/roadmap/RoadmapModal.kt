@@ -17,12 +17,10 @@ import com.bytelegend.client.app.ui.absoluteDiv
 import com.bytelegend.client.app.ui.minimap.getMinimapMapFeatures
 import com.bytelegend.client.app.ui.minimap.getRoadmapEChartsOptions
 import com.bytelegend.client.app.ui.mission.ModalCloseButton
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinext.js.jsObject
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
-import kotlinx.html.classes
 import kotlinx.html.id
 import kotlinx.html.js.onMouseDownFunction
 import kotlinx.html.js.onMouseMoveFunction

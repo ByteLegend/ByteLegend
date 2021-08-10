@@ -15,9 +15,9 @@ enum class Layer {
     UserAvatarWidget,
     LocaleSelectionDropdown,
     IcpServerLocationWidget,
+    HeroIndicator,
     Menu,
     MapTitle,
-    HeroIndicator,
     BannerToast,
     FadeInFadeOut;
 
