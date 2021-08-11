@@ -8,10 +8,10 @@ import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.GridCoordinateAware
-import com.bytelegend.client.utils.JSArrayBackedList
-import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.app.obj.BackgroundSpriteLayer
 import com.bytelegend.client.app.obj.toSprite
+import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.client.utils.JSObjectBackedMap
 
 class DefaultGameObjectContainer(
     private val gameScene: GameScene
@@ -54,7 +54,10 @@ class DefaultGameObjectContainer(
     }
 
     override fun add(gameObject: GameObject) {
-        objectsById[gameObject.id] = gameObject
+        val oldValue = objectsById.put(gameObject.id, gameObject)
+        if (oldValue != null) {
+            console.warn("Overwriting object: ${gameObject.id}")
+        }
         gameObject.roles.forEach {
             if (it == GameObjectRole.CoordinateAware.toString()) {
                 putIntoCoordinate(gameObject, gameObject.unsafeCast<CoordinateAware>().gridCoordinate)
