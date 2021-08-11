@@ -84,10 +84,6 @@ class DefaultGameScene(
         scripts(MAIN_CHANNEL, true, block)
     }
 
-//    override fun scriptsLater(block: ScriptsBuilder.() -> Unit) {
-//        scripts(MAIN_CHANNEL, false, block)
-//    }
-
     fun scripts(channel: String, runImmediately: Boolean, block: ScriptsBuilder.() -> Unit) {
         getDirectorOfChannel(channel).scripts(runImmediately, block)
     }
@@ -123,7 +119,7 @@ class DefaultGameScene(
         val builder = MapEntranceBuilder()
         builder.action()
 
-        val destMapId = builder.destMapId!!
+        val destMapId = builder.destMapId ?: throw IllegalArgumentException("Dest map id not set!")
         val entranceId = builder.id ?: defaultMapEntranceId(map.id, destMapId)
         val entrancePointId = builder.coordinatePointId ?: defaultMapEntrancePointId(entranceId)
 
