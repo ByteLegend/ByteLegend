@@ -1,12 +1,4 @@
 { "columns":12,
- "editorsettings":
-    {
-     "export":
-        {
-         "format":"",
-         "target":"."
-        }
-    },
  "image":"..\/tilesets\/storefront-animation.png",
  "imageheight":256,
  "imagewidth":384,
@@ -14,9 +6,21 @@
  "name":"storefront-animation",
  "spacing":0,
  "tilecount":96,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.7.1",
  "tileheight":32,
  "tiles":[
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":67
+                }, 
+                {
+                 "duration":500,
+                 "tileid":68
+                }],
+         "id":66
+        }, 
         {
          "animation":[
                 {
@@ -67,5 +71,5 @@
         }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.4
+ "version":"1.6"
 }

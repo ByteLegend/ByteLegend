@@ -3,6 +3,7 @@ package com.bytelegend.client.app.engine
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.client.api.Timestamp
+import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.GameObjectRole
@@ -83,8 +84,10 @@ class MainMapCanvasRenderer(
     }
 
     fun onAnimation() {
+        // All layers below players are pre-rendered
         drawPrerenderedBackgroundLayer()
-        drawNonPrerenderableTiles()
+        // All layers above players are rendered in every drawing
+        drawSpritesAndTilesAbovePlayer()
     }
 
     private fun drawPrerenderedBackgroundLayer() {
@@ -129,7 +132,7 @@ class MainMapCanvasRenderer(
     }
 
     // TODO only rerendering dirty rectangles
-    private fun drawNonPrerenderableTiles() {
+    private fun drawSpritesAndTilesAbovePlayer() {
         val gameScene = game.activeScene.unsafeCast<DefaultGameScene>()
         val canvasPixelSize = gameScene.canvasState.getCanvasPixelSize()
         val canvasGridWidth = gameScene.canvasState.getCanvasGridSize().width
@@ -152,12 +155,9 @@ class MainMapCanvasRenderer(
                 val realY = canvasGridInMapY + y
 
                 if (realX < mapGridWidth && realY < mapGridHeight) {
-                    val layers = background[realY][realX]
-                    if (anyNonPrerenderable(layers)) {
-                        layers.forEach { spriteLayer ->
-                            indexes.add(spriteLayer.layer)
-                            layerToSprites.getOrPut(spriteLayer.layer.toString()) { JSArrayBackedList() }.add(spriteLayer)
-                        }
+                    layersAbovePlayerLayer(background[realY][realX]).forEach { spriteLayer ->
+                        indexes.add(spriteLayer.layer)
+                        layerToSprites.getOrPut(spriteLayer.layer.toString()) { JSArrayBackedList() }.add(spriteLayer)
                     }
                 }
             }
@@ -188,13 +188,15 @@ class MainMapCanvasRenderer(
          }
      */
     @Suppress("ReplaceManualRangeWithIndicesCalls")
-    private fun anyNonPrerenderable(layers: List<BackgroundSpriteLayer>): Boolean {
+    private fun layersAbovePlayerLayer(layers: List<BackgroundSpriteLayer>): List<BackgroundSpriteLayer> {
+        val ret = JSArrayBackedList<BackgroundSpriteLayer>()
+
         for (i in 0 until layers.size) {
-            if (!layers[i].supportPrerender()) {
-                return true
+            if (layers[i].layer > PLAYER_LAYER) {
+                ret.add(layers[i])
             }
         }
-        return false
+        return ret
     }
 
     @Suppress("UNUSED_PARAMETER")

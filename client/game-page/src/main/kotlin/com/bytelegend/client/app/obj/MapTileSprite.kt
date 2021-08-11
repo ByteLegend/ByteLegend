@@ -3,7 +3,6 @@ package com.bytelegend.client.app.obj
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.RawAnimationLayer
 import com.bytelegend.app.shared.RawGameMapTileLayer
@@ -11,8 +10,8 @@ import com.bytelegend.app.shared.RawStaticImageLayer
 import com.bytelegend.app.shared.RawTileAnimationFrame
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.page.game
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLImageElement
 
@@ -28,13 +27,6 @@ fun RawGameMapTileLayer.toSprite(
     }
 
 interface BackgroundSpriteLayer : Sprite {
-    /**
-     * Upon the following cases, we must fall back to realtime rendering:
-     * - If an animation tile contain more than 2 frames.
-     * - If a layer is above player.
-     */
-    fun supportPrerender(): Boolean
-
     fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D)
 }
 
@@ -51,8 +43,6 @@ class StaticImageBlockSprite(
     private val tileWidth = gameScene.map.tileSize.width
     private val tileHeight = gameScene.map.tileSize.width
     private val canvasState = gameScene.canvasState
-
-    override fun supportPrerender() = imageLayer.layer < PLAYER_LAYER
 
     override fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D) {
         draw(canvas, pixelCoordinate.x, pixelCoordinate.y)
@@ -99,8 +89,6 @@ class AnimationSprite(
     private val canvasState = gameScene.canvasState
     private val frames = animationLayer.frames.toTypedArray()
     private val duration = animationLayer.frames[0].duration
-
-    override fun supportPrerender() = animationLayer.layer < PLAYER_LAYER
 
     override fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D) {
         drawFrame(frameIndex, canvas, pixelCoordinate.x, pixelCoordinate.y)
