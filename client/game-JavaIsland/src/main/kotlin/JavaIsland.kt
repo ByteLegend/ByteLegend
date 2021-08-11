@@ -11,6 +11,8 @@ import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_COMMENT_DUNGEON
 import com.bytelegend.app.shared.JAVA_ISLAND_DEBUGGER_DUNGEON
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
+import com.bytelegend.app.shared.JAVA_ISLAND_MAVEN_DUNGEON
+import com.bytelegend.app.shared.JAVA_ISLAND_SPRING_DUNGEON
 import kotlinx.browser.window
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
@@ -34,6 +36,14 @@ fun main() {
 
             mapEntrance {
                 destMapId = JAVA_ISLAND_DEBUGGER_DUNGEON
+            }
+
+            mapEntrance {
+                destMapId = JAVA_ISLAND_MAVEN_DUNGEON
+            }
+
+            mapEntrance {
+                destMapId = JAVA_ISLAND_SPRING_DUNGEON
             }
 
             pubGuard()

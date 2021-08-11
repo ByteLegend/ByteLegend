@@ -33,3 +33,15 @@ dependencies {
     testImplementation(libs("junit-jupiter-engine"))
     testImplementation(libs("junit-jupiter-params"))
 }
+
+tasks.register<JavaExec>("createNewMap") {
+    classpath = project.sourceSets["main"].runtimeClasspath
+    workingDir = rootProject.rootDir
+    mainClass.set("com.bytelegend.utils.CreateNewMapKt")
+    jvmArgs(
+        "-DmapId=${System.getProperty("mapId") ?: throw IllegalArgumentException("No mapId!")}",
+        "-DmapGridWidth=${System.getProperty("mapGridWidth") ?: throw IllegalArgumentException("No mapGridWidth!")}",
+        "-DmapGridHeight=${System.getProperty("mapGridHeight") ?: throw IllegalArgumentException("No mapGridHeight!")}",
+        "-Dapple.awt.UIElement=true"
+    )
+}
