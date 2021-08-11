@@ -71,11 +71,22 @@ class I18nResource(
                         localizedTextsInJson[textId]?.getTextOrNull(locale) != null -> localeToText[locale.toString()] = localizedTextsInJson[textId]?.getTextOrNull(locale)!!
                     // en is same, just use the translated text in json
                     enIsSame && localizedTextsInJson[textId]?.getTextOrNull(locale) != null -> localeToText[locale.toString()] = localizedTextsInJson[textId]?.getTextOrNull(locale)!!
-                    locale == Locale.ZH_HANT -> localeToText[locale.toString()] = DEFAULT_TRANSLATOR.translate(
-                        i18nTexts.format,
-                        i18nTexts.getTextOrNull(Locale.ZH_HANS)!!,
-                        Locale.ZH_HANS, Locale.ZH_HANT
-                    )
+                    locale == Locale.ZH_HANT -> {
+                        if (i18nTexts.getTextOrNull(Locale.ZH_HANS) == null) {
+                            localeToText[locale.toString()] = DEFAULT_TRANSLATOR.translate(
+                                i18nTexts.format,
+                                i18nTexts.getTextOrNull(Locale.EN)!!,
+                                Locale.EN, Locale.ZH_HANT
+                            )
+                        } else {
+                            localeToText[locale.toString()] = DEFAULT_TRANSLATOR.translate(
+                                i18nTexts.format,
+                                i18nTexts.getTextOrNull(Locale.ZH_HANS) ?: throw IllegalArgumentException("You must provide either EN or ZH_HANS for text $textId"),
+                                Locale.ZH_HANS, Locale.ZH_HANT
+                            )
+                        }
+                    }
+
                     else -> localeToText[locale.toString()] = DEFAULT_TRANSLATOR.translate(
                         i18nTexts.format,
                         i18nTexts.getTextOrNull(Locale.EN)!!,
