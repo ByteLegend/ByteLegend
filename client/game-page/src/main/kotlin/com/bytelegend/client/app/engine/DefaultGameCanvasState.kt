@@ -108,10 +108,9 @@ class DefaultGameCanvasState(
     }
 
     private fun getDefaultMapCenterPoint(): GridCoordinate {
-        val centerPoint = gameMap.objects.firstOrNull {
+        return gameMap.objects.firstOrNull {
             it.id == "${gameMap.id}InitCenterPoint"
-        } ?: throw IllegalStateException("You must have a point named ${gameMap.id}InitCenterPoint in map $id")
-        return centerPoint.unsafeCast<GameMapPoint>().gridCoordinate
+        }?.unsafeCast<GameMapPoint>()?.gridCoordinate ?: GridCoordinate(gameMap.size.width / 2, gameMap.size.height / 2)
     }
 
     private fun calculateCanvasCoordinateInMap(initMapCenterPoint: GridCoordinate?): PixelCoordinate {
