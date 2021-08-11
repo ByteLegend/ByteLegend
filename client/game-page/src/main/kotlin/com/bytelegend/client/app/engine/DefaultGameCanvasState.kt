@@ -135,7 +135,9 @@ class DefaultGameCanvasState(
     override fun getCanvasGridSize() = canvasGridSize
     override fun moveTo(coordinate: PixelCoordinate) {
         stopScrolling()
+        val oldCanvasCoordinateInMap = canvasCoordinateInMap
         canvasCoordinateInMap = adjustCanvasCoordinateIfNecessary(gameMap.pixelSize, tileSize, coordinate, canvasPixelSize)
+        logCanvasCoordinateInMapIfNecessary(oldCanvasCoordinateInMap)
     }
 
     private fun calculateCanvasGridSize(gameContainerSize: PixelSize): GridSize {
@@ -240,6 +242,10 @@ class DefaultGameCanvasState(
             }
         }
 
+        logCanvasCoordinateInMapIfNecessary(oldCanvasCoordinateInMap)
+    }
+
+    private fun logCanvasCoordinateInMapIfNecessary(oldCanvasCoordinateInMap: PixelCoordinate) {
         if (logger.debugEnabled &&
             canvasCoordinateInMap != oldCanvasCoordinateInMap &&
             atTileBorder(gameMap.tileSize, canvasCoordinateInMap)

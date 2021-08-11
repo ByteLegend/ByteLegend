@@ -75,6 +75,11 @@ class DefaultGameSceneContainer(
     }
 
     private suspend fun switchScene(oldScene: GameScene?, newScene: GameScene, switch: Boolean, action: suspend (GameScene?, GameScene) -> Unit) {
+        if (logger.debugEnabled) {
+            logger.debug("Switch scene from ${oldScene?.map?.id} to ${newScene.map.id} finished.")
+            // Don't remove this log because it's used in browser test to locate the canvas
+            logger.debug("canvasCoordinateInMap: ${newScene.canvasState.getCanvasCoordinateInMap().x},${newScene.canvasState.getCanvasCoordinateInMap().y}")
+        }
         action(oldScene, newScene)
         if (switch && _activeScene == oldScene) {
             // the current active scene may be changed during loading
