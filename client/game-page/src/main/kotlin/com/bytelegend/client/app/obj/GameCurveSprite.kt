@@ -14,7 +14,10 @@ class GameCurveSprite(
 ) : Sprite {
     override val id: String = "${obj.id}-sprite"
     override val layer: Int = obj.layer
-    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite.toString())
+    override val roles: Set<String> = jsObjectBackedSetOf(
+        GameObjectRole.Sprite.toString(),
+        GameObjectRole.MapCurve.toString()
+    )
     val points: List<PixelCoordinate> = obj.points
 
     override fun outOfCanvas() = obj.points.all { it.outOfCanvas(gameScene) }
