@@ -55,7 +55,7 @@ class TiledObjectReader(
 ) {
     private val tileSize = tiledMap.getTileSize()
     val regions: List<GameMapRegion> by lazy {
-        tiledMap.readRegions()
+        readRegions()
     }
     val missions: List<GameMapMission> by lazy {
         readMissions()
@@ -114,7 +114,7 @@ class TiledObjectReader(
      * then "XRegionName" is its name,
      * "XRegionCenterPoint" is its center point
      */
-    private fun TiledMap.readRegions(): List<GameMapRegion> {
+    private fun readRegions(): List<GameMapRegion> {
         // Two passes,
         // 1st, generate all instances
         val tiledIdToRegionId = mutableMapOf<String, String>()
@@ -238,13 +238,9 @@ class TiledObjectReader(
         return GameMapCurve(
             curveId,
             layerIndex,
-            this.sortedBy { it.properties.findProperty("order").toDouble() }
+            this.sortedBy { it.properties.findPropertyOrNull("order")?.toDouble() ?: throw IllegalArgumentException("Can't property 'order' in ${curveId}") }
                 .map { PixelCoordinate(it.x.toInt(), it.y.toInt()) }
         )
-    }
-
-    private fun List<TiledMap.Property>.findProperty(name: String): String {
-        return first { it.name == name }.value
     }
 
     private fun List<TiledMap.Property>.findPropertyOrNull(name: String): String? {
