@@ -1020,7 +1020,7 @@ public class TiledMap {
         @JsonProperty("width")
         private Long width;
         @JsonProperty("x")
-        private Long x;
+        private Double x;
         @JsonProperty("y")
         private Long y;
         @JsonProperty("point")
@@ -1056,7 +1056,7 @@ public class TiledMap {
          * @param properties
          * @param height
          */
-        public Object(Long height, Long id, String name, List<TiledMap.Polygon> polygon, List<TiledMap.Property> properties, Long rotation, String type, Boolean visible, Long width, Long x, Long y, Boolean point, Long gid, TiledMap.Text text) {
+        public Object(Long height, Long id, String name, List<TiledMap.Polygon> polygon, List<TiledMap.Property> properties, Long rotation, String type, Boolean visible, Long width, Double x, Long y, Boolean point, Long gid, TiledMap.Text text) {
             super();
             this.height = height;
             this.id = id;
@@ -1165,12 +1165,12 @@ public class TiledMap {
         }
 
         @JsonProperty("x")
-        public Long getX() {
+        public Double getX() {
             return x;
         }
 
         @JsonProperty("x")
-        public void setX(Long x) {
+        public void setX(Double x) {
             this.x = x;
         }
 
