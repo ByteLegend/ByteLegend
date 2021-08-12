@@ -45,3 +45,14 @@ tasks.register<JavaExec>("createNewMap") {
         "-Dapple.awt.UIElement=true"
     )
 }
+
+tasks.register<JavaExec>("createEmptyMissionYamls") {
+    classpath = project.sourceSets["main"].runtimeClasspath
+    workingDir = rootProject.rootDir
+    mainClass.set("com.bytelegend.utils.CreateEmptyMissionYamlsKt")
+    jvmArgs(
+        "-DmapId=${System.getProperty("mapId") ?: throw IllegalArgumentException("No mapId!")}",
+        "-Dapple.awt.UIElement=true"
+    )
+}
+

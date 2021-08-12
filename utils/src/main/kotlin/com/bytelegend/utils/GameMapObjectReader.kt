@@ -58,10 +58,10 @@ class TiledObjectReader(
         tiledMap.readRegions()
     }
     val missions: List<GameMapMission> by lazy {
-        tiledMap.readMissions()
+        readMissions()
     }
     val points: List<GameMapPoint> by lazy {
-        tiledMap.readPoints()
+        readPoints()
     }
 
     /**
@@ -156,12 +156,13 @@ class TiledObjectReader(
 
     private fun TiledMapObject.toPoint() = PixelCoordinate(x.toInt(), y.toInt()) / tileSize
 
-    private fun <T> TiledMap.readObjects(type: TiledObjectType, fn: (TiledMapLayer, TiledMapObject) -> T): List<T> = layers.flatMap { layer ->
+    @Suppress("UNCHECKED_CAST")
+    fun <T> readObjects(type: TiledObjectType, fn: (TiledMapLayer, TiledMapObject) -> T = { _, obj -> obj as T }): List<T> = tiledMap.layers.flatMap { layer ->
         layer.objects.filter { it.type == type.toString() }
             .map { fn(layer, it) }
     }
 
-    private fun TiledMap.readMissions(): List<GameMapMission> {
+    private fun readMissions(): List<GameMapMission> {
         val rawMissionObjects: List<TiledMapObject> = readObjects(TiledObjectType.GameMapMission) { _, obj -> obj }
         val tiledNumberIdToRawMissionObjects: Map<Long, TiledMapObject> = rawMissionObjects.associateBy { it.id }
 
@@ -203,7 +204,7 @@ class TiledObjectReader(
         }
     }
 
-    private fun TiledMap.readPoints(): List<GameMapPoint> = readObjects(TiledObjectType.GameMapPoint) { layer, obj ->
+    private fun readPoints(): List<GameMapPoint> = readObjects(TiledObjectType.GameMapPoint) { layer, obj ->
         GameMapPoint(
             obj.name,
             rawLayerIdToIndexMap.getValue(layer.id.toInt()),
@@ -219,7 +220,7 @@ class TiledObjectReader(
         }
     }
 
-    private fun TiledMap.readTexts(): List<GameMapObject> = readObjects(TiledObjectType.GameMapText) { layer, obj ->
+    private fun readTexts(): List<GameMapObject> = readObjects(TiledObjectType.GameMapText) { layer, obj ->
         obj.toTextObject(rawLayerIdToIndexMap.getValue(layer.id.toInt()))
     }
 
