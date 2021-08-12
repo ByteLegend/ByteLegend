@@ -197,7 +197,7 @@ val roadmapGraphSeries: dynamic = JSON.parse(
   "lineStyle": {
     "type": [10, 3],
     "color": "red",
-    "curveness": 0.3,
+    "curveness": 0.2,
     "width": 2
   },
   "labelLayout": {

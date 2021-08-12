@@ -52,7 +52,7 @@ val minimapGraphSeries: dynamic = JSON.parse(
   "lineStyle": {
     "type": [10, 3],
     "color": "#423019",
-    "curveness": 0.3,
+    "curveness": 0.2,
     "width": 5
   }
 }
