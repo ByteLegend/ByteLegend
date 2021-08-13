@@ -238,7 +238,7 @@ class TiledObjectReader(
         return GameMapCurve(
             curveId,
             layerIndex,
-            this.sortedBy { it.properties.findPropertyOrNull("order")?.toDouble() ?: throw IllegalArgumentException("Can't property 'order' in ${curveId}") }
+            this.sortedBy { it.properties.findPropertyOrNull("order")?.toDouble() ?: throw IllegalArgumentException("Can't property 'order' in $curveId") }
                 .map { PixelCoordinate(it.x.toInt(), it.y.toInt()) }
         )
     }
