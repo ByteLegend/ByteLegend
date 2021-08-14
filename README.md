@@ -43,6 +43,16 @@
 
 请访问[字节传说](https://bytelegend.com)并点击右下角的`致谢`按钮查看本游戏使用的开源项目和游戏资源。
 
+## Contributing
+
+我们感谢您作出的任何贡献：
+
+- 任何文字错误：typo、用词或者翻译不当。
+- 游戏地图错误：有问题的格子图片、错误的标注等。
+- Bugs：前端、后端以及游戏脚本。
+
+详情请阅读[贡献者指南](https://github.com/ByteLegend/ByteLegend/blob/master/docs/zh_hans/CONTRIBUTING.md)。
+
 ## 本地启动
 
 请确保你的`JAVA_HOME`指向JDK 11。

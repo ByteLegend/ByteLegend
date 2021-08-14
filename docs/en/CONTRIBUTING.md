@@ -39,7 +39,7 @@ See [Game Map Contributor Guide](https://github.com/ByteLegend/ByteLegend/blob/m
 
 ## Contribute to Game Code
 
-See [Game Map Contributor Guide](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/game-map-contributor-guide.md)
+See [Game Code Contributor Guide](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/game-code-contributor-guide.md)
 
 ## Build a New Game Map
 
