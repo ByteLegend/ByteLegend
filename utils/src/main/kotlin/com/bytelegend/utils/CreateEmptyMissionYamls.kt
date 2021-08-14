@@ -30,7 +30,7 @@ fun main() {
 title: $missionId-title"""
             )
         }
-        if (!i18nYamlText.contains(missionId)) {
+        if (!i18nYamlText.contains("$missionId-title")) {
             i18nTextToAppend.append(
                 """- id: "$missionId-title"
   data:

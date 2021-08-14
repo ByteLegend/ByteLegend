@@ -95,7 +95,11 @@ class TiledObjectReader(
             require(it.type.isNotBlank()) {
                 "type not set for object with id ${it.id} on map $mapId"
             }
-            TiledObjectType.valueOf(it.type)
+            try {
+                TiledObjectType.valueOf(it.type)
+            } catch (e: Exception) {
+                throw IllegalArgumentException("Illegal type of ${it.name}", e)
+            }
         }
         return this
     }

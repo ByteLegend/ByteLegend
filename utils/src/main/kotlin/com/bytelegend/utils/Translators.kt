@@ -13,6 +13,7 @@ interface Translator {
 object UnauthorizedTranslator : Translator {
     override fun translate(format: LocalizedTextFormat, text: String, src: Locale, dest: Locale): String =
         if (src == Locale.ZH_HANS && dest == Locale.ZH_HANT) {
+            // this can't handle HTML properly
             ZhConverterUtil.toTraditional(text)
         } else {
             text

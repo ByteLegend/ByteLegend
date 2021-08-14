@@ -4,9 +4,10 @@
  "imagewidth":256,
  "margin":0,
  "name":"misc8",
+ "objectalignment":"topleft",
  "spacing":0,
  "tilecount":824,
- "tiledversion":"1.5.0",
+ "tiledversion":"1.7.1",
  "tileheight":32,
  "tiles":[
         {
@@ -20,8 +21,56 @@
                  "tileid":40
                 }],
          "id":130
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":410
+                }, 
+                {
+                 "duration":500,
+                 "tileid":412
+                }],
+         "id":518
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":411
+                }, 
+                {
+                 "duration":500,
+                 "tileid":413
+                }],
+         "id":519
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":418
+                }, 
+                {
+                 "duration":500,
+                 "tileid":420
+                }],
+         "id":526
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":419
+                }, 
+                {
+                 "duration":500,
+                 "tileid":421
+                }],
+         "id":527
         }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.5
+ "version":"1.6"
 }

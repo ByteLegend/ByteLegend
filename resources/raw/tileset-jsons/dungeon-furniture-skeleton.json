@@ -1,0 +1,14 @@
+{ "columns":8,
+ "image":"..\/tilesets\/dungeon-furniture-skeleton.png",
+ "imageheight":11000,
+ "imagewidth":256,
+ "margin":0,
+ "name":"dungeon-furniture-skeleton",
+ "spacing":0,
+ "tilecount":2744,
+ "tiledversion":"1.7.1",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.6"
+}
