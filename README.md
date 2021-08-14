@@ -94,6 +94,16 @@ This game would be impossible without the community and the opensource world, so
 
 To see the software and game materials used in this game, go to the right-bottom corner of [ByteLegend](https://bytelegend.com) and click `Credits` button.
 
+## Contributing
+
+We appreciate your contribution to anything in the game:
+
+- Any bad texts: typo, wording or translation.
+- Game map errors: bad tile image, incorrect marking, etc..
+- Bugs: frontend/backend/game script.
+
+Please read the [contributing guide](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/CONTRIBUTING.md) before you start.
+
 ## Start locally
 
 Please make sure your `JAVA_HOME` configured to JDK 11.
@@ -101,11 +111,12 @@ Please make sure your `JAVA_HOME` configured to JDK 11.
 - `git clone https://github.com/ByteLegend/ByteLegend`
 - `cd ByteLegend`
 - `git submodule update --init -- game-data`
-- Run `./gradlew bootRun`, then access `http://localhost:8080`.
+- Run `./gradlew server-opensource:bootRun`, then access `http://localhost:8080`.
 
 The first run may take minutes because all game resources need to be generated. Subsequent runs should start in seconds.
 
 Please note that `server` git submodule hasn't been opensource yet, as we have complex backend services/credentials there (GitHub webhook, GitHub app, k8s secrets, etc.).
 However, we do provide a opensource version of backend service in `server-opensource` module.
 
-See [here](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/developer-guide.md) for development guidance.
+See [here](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/game-code-developer-guide.md) for more details.
+
