@@ -1,0 +1,41 @@
+{
+  "compressionlevel" : -1,
+  "height" : 10,
+  "infinite" : false,
+  "layers" : [ {
+    "data" : [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+    "height" : 10,
+    "id" : 1,
+    "name" : "Player",
+    "type" : "tilelayer",
+    "visible" : true,
+    "width" : 10,
+    "x" : 0,
+    "y" : 0,
+    "layers" : [ ],
+    "objects" : [ ]
+  }, {
+    "data" : [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+    "height" : 10,
+    "id" : 2,
+    "name" : "Blockers",
+    "type" : "tilelayer",
+    "visible" : true,
+    "width" : 10,
+    "x" : 0,
+    "y" : 0,
+    "layers" : [ ],
+    "objects" : [ ]
+  } ],
+  "nextlayerid" : 1,
+  "nextobjectid" : 1,
+  "orientation" : "orthogonal",
+  "renderorder" : "right-down",
+  "tiledversion" : "1.7.1",
+  "tileheight" : 32,
+  "tilesets" : [ ],
+  "tilewidth" : 32,
+  "type" : "map",
+  "version" : "1.6",
+  "width" : 10
+}
