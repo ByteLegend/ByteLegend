@@ -15,6 +15,7 @@ import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.MOVE_TO
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.PUT_STATE_EVENT
 import com.bytelegend.app.shared.protocol.PublishMessage
 import com.bytelegend.app.shared.protocol.ReplyMessage
 import com.bytelegend.app.shared.protocol.SendMessage
@@ -216,6 +217,7 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
                     emptyList(),
                     emptyMap()
                 )
+                PUT_STATE_EVENT -> ""
                 else -> throw IllegalArgumentException("Unsupported message name: ${message.name}")
             }
             val replyMessage = ReplyMessage(WebSocketMessageType.REPLY, message.replyAddress, if (returnValue == Unit) "" else returnValue)
