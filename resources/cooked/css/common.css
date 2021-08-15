@@ -610,9 +610,16 @@ p.speech-bubble::after {
 
 .roadmap-modal-prompt {
     padding: 0.25rem 1rem 0.25rem 1rem;
-    margin-bottom: 0;
-    margin-left: 5px;
-    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
+    user-select: none;
+    z-index: 3;
+}
+
+.roadmap-modal-prompt-link {
+    text-decoration: underline;
 }
 
 .top-banner {

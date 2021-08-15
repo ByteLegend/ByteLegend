@@ -128,34 +128,6 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
                         }
                     }
                 }
-                if (state.showPromptBanner) {
-                    BootstrapAlert {
-                        attrs.variant = "info"
-                        attrs.dismissible = false
-                        attrs.onClose = {
-                            setState {
-                                showPromptBanner = false
-                            }
-                        }
-                        attrs.className = "roadmap-modal-prompt"
-                        +game.i("TryScrollAndDrag")
-                        BootstrapAlertLink {
-                            attrs.href = "#"
-                            attrs.onClick = {
-                                setState {
-                                    showPromptBanner = false
-                                }
-                                localStorage.setItem(DONT_SHOW_ROADMAP_BANNER, "1")
-                            }
-                            +game.i("DontShowThisAgain")
-                        }
-                    }
-                    window.setTimeout({
-                        setState {
-                            showPromptBanner = false
-                        }
-                    }, 5000)
-                }
             }
         }
 
@@ -197,6 +169,36 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
                 ) {
                     attrs.id = echartsContainerElementId
                 }
+            }
+
+            if (state.showPromptBanner) {
+                BootstrapAlert {
+                    attrs.variant = "info"
+                    attrs.dismissible = false
+                    attrs.onClose = {
+                        setState {
+                            showPromptBanner = false
+                        }
+                    }
+                    attrs.className = "roadmap-modal-prompt"
+                    +game.i("TryScrollAndDrag")
+                    BootstrapAlertLink {
+                        attrs.href = "#"
+                        attrs.className = "roadmap-modal-prompt-link"
+                        attrs.onClick = {
+                            setState {
+                                showPromptBanner = false
+                            }
+                            localStorage.setItem(DONT_SHOW_ROADMAP_BANNER, "1")
+                        }
+                        +game.i("DontShowThisAgain")
+                    }
+                }
+                window.setTimeout({
+                    setState {
+                        showPromptBanner = false
+                    }
+                }, 5000)
             }
         }
     }

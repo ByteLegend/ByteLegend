@@ -8,5 +8,6 @@ val BootstrapAlertLink: RClass<BootstrapAlertLinkProps> = BootstrapAlert.asDynam
 
 external interface BootstrapAlertLinkProps : RProps {
     var href: String
+    var className: String
     var onClick: Any
 }
