@@ -24,9 +24,9 @@
 
 ## 贡献游戏数据
 
-**如果只需要修改游戏中的文本数据，不要clone `ByteLegend`的主要仓库，因为它包含所有资源文件，有好几个G。**
+**如果只需要修改游戏中的文本数据，不要clone字节传说的主仓库`ByteLegend/ByteLegend`，因为它包含所有资源文件，有好几个G。**
 
-如果您在游戏中看到任何文本有错误，您可以clone [游戏数据仓库](https://github.com/ByteLegend/game-data)。
+如果您在游戏中看到任何文本有错误，您可以clone[游戏数据仓库`ByteLegend/game-data`](https://github.com/ByteLegend/game-data)。
 我们特意将所有的文本资源放到了另外的仓库中以提高访问速度。
 
 在文本编辑器中搜索错误的文本，修复并提交一个pull request。

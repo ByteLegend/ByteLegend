@@ -24,9 +24,9 @@ You need to install the software:
 
 ## Contribute to Game Data
 
-**DON'T clone `ByteLegend` main repo if you just want to contribute to game text data - it's several GBs - because it contains a lot of game resources.**
+**DON'T clone `ByteLegend/ByteLegend` main repo if you just want to contribute to game text data - it's several GBs - because it contains a lot of game resources.**
 
-If you see bad texts in the game, you can clone [the game data repo](https://github.com/ByteLegend/game-data).
+If you see bad texts in the game, you can clone [the game data repo `ByteLegend/game-data`](https://github.com/ByteLegend/game-data).
 We intentionally put all text resources in a separate repo so you can clone it must faster.
 
 Search the wrong text with your favorite text editor, fix the issue then create a pull request.
