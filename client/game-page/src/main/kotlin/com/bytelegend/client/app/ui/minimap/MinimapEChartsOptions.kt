@@ -2,8 +2,8 @@
 
 package com.bytelegend.client.app.ui.minimap
 
-import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
+import com.bytelegend.app.client.misc.getOrCreateSpanElement
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.GameMission
@@ -82,7 +82,7 @@ fun GameScene.getMinimapMapFeatures(): dynamic {
     }
 }
 
-val mapAreaColorNumber = 4
+const val mapAreaColorNumber = 4
 val minimapVisualMapBaseOptions: dynamic = JSON.parse(
     """
 {
@@ -181,7 +181,9 @@ fun GameScene.getRoadmapMapSeries() {
     return mapSeries
 }
 
-val roadmapGraphSeries: dynamic = JSON.parse(
+const val ROADMAP_FONT_SIZE = 12
+
+val ROADMAP_GRAPH_SERIES: dynamic = JSON.parse(
     """
 {
   "left": 0,
@@ -202,11 +204,13 @@ val roadmapGraphSeries: dynamic = JSON.parse(
   },
   "labelLayout": {
     "moveOverlap": "shiftY",
-    "fontSize": 12
+    "fontSize": $ROADMAP_FONT_SIZE
   }
 }
 """.trimIndent()
 )
+
+const val STAR_WIDTH = 12
 
 val richStarAndHollowStar: dynamic = JSON.parse(
     """
@@ -219,8 +223,8 @@ val richStarAndHollowStar: dynamic = JSON.parse(
     }
   },
   "HollowStar": {
-    "width": 12,
-    "height": 12,
+    "width": $STAR_WIDTH,
+    "height": $STAR_WIDTH,
     "backgroundColor": {
       "image": "$HOLLOW_STAR_PNG_BASE64"
     }
@@ -229,24 +233,21 @@ val richStarAndHollowStar: dynamic = JSON.parse(
 """
 )
 
-fun GameRuntime.calculateRoughTextWidth(text: String): Int {
-    var asciiCharNum = 0
-    var localeCharNum = 0
-    text.forEach {
-        if (it.code in 0..128) {
-            asciiCharNum++
-        } else {
-            localeCharNum++
-        }
-    }
-    return (asciiCharNum * 5 + localeCharNum * locale.roughCharacterWidthCoefficient * 5).toInt()
+private fun calculateTextWidth(text: String, fontSize: Int): Int {
+    val span = getOrCreateSpanElement("width-calculate")
+    span.style.fontSize = fontSize.toString()
+    span.style.position = "absolute"
+    span.style.whiteSpace = "nowrap"
+    span.style.width = "auto"
+    span.style.height = "auto"
+    span.style.visibility = "hidden"
+    span.innerText = text
+    return span.clientWidth
 }
 
 private const val MAX_LABEL_WIDTH = 100
-private val TITLE_ON_SYMBOL_SIZE = nativeJsArrayOf(MAX_LABEL_WIDTH, 50)
-private const val TITLE_OFF_SYMBOL_SIZE = 12
 
-fun GameMission.labelOptions(zoom: Double): dynamic {
+fun GameMission.labelOptions(showMissionTitles: Boolean): dynamic {
     val totalStars = gameMapMission.totalStar
     val missionStars = gameScene.playerChallenges.missionStar(id)
     val starsRichText = if (totalStars >= 5) {
@@ -255,15 +256,24 @@ fun GameMission.labelOptions(zoom: Double): dynamic {
         "{Star|}".repeat(missionStars) + "{HollowStar|}".repeat(totalStars - missionStars)
     }
     val title = htmlToText(gameScene.gameRuntime.i(gameMapMission.title))
-    val labelFormatter = if (totalStars == 0) title else """
+    val labelFormatter = when {
+        !showMissionTitles -> starsRichText
+        totalStars == 0 -> title
+        else -> """
                 $starsRichText
                 $title
             """.trimIndent()
-    val roughLabelWidthPx = gameScene.gameRuntime.calculateRoughTextWidth(title)
-    val labelWidth = if (roughLabelWidthPx > MAX_LABEL_WIDTH) MAX_LABEL_WIDTH else roughLabelWidthPx
+    }
+    val labelWidth = when {
+        showMissionTitles -> calculateTextWidth(title, ROADMAP_FONT_SIZE).let {
+            if (it > MAX_LABEL_WIDTH) MAX_LABEL_WIDTH else it
+        }
+        totalStars > 5 -> "$missionStars/$totalStars".length * 5 + STAR_WIDTH + 10
+        else -> STAR_WIDTH * totalStars
+    }
     return jsObject {
         show = true
-        position = "insideBottom"
+        position = "top"
         distance = 0
         align = "center"
         formatter = labelFormatter
@@ -271,7 +281,7 @@ fun GameMission.labelOptions(zoom: Double): dynamic {
         borderColor = "#555"
         borderWidth = 2
         borderRadius = 5
-        padding = 5
+        padding = 2
         shadowBlur = 3
         shadowColor = "#888"
         shadowOffsetX = 0
@@ -283,7 +293,21 @@ fun GameMission.labelOptions(zoom: Double): dynamic {
     }
 }
 
-fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
+val ITEM_STYLE: dynamic = JSON.parse(
+    """
+    {
+        "color": "#eee",
+        "borderWidth": 2,
+        "borderColor": "#555",
+        "shadowBlur": 3,
+        "shadowColor": "#888",
+        "shadowOffsetX": 0,
+        "shadowOffsetY": 3
+    }
+""".trimIndent()
+)
+
+fun GameScene.getRoadmapMissionGraphSeries(showMissionTitles: Boolean): dynamic {
     val mapWidth = map.pixelSize.width
     val mapHeight = map.pixelSize.height
 
@@ -291,9 +315,8 @@ fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
     val edges: dynamic = js("[]")
     objects.getByRole<GameMission>(GameObjectRole.Mission).forEach { mission ->
         val coordinate = mission.gridCoordinate * map.tileSize
-        val labelOptions: dynamic = mission.labelOptions(zoom)
+        val labelOptions: dynamic = mission.labelOptions(showMissionTitles)
 
-        val symbolSize = nativeJsArrayOf(MAX_LABEL_WIDTH, 50)
         nodes.push(jsObject {
             id = mission.id
             // To avoid the label out of left border
@@ -301,9 +324,10 @@ fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
             y = coordinate.y
             value = mission.id
             category = 0
-            symbol = "roundRect"
+            symbol = "circle"
             label = labelOptions
-            this.symbolSize = symbolSize
+            itemStyle = ITEM_STYLE
+            this.symbolSize = 10
         })
 
         mission.gameMapMission.next.forEach {
@@ -315,7 +339,7 @@ fun GameScene.getRoadmapMissionGraphSeries(zoom: Double): dynamic {
     }
     addCornerPlaceHoldersToNodes(nodes, mapWidth, mapHeight)
 
-    return assign(roadmapGraphSeries) {
+    return assign(ROADMAP_GRAPH_SERIES) {
         this.nodes = nodes
         this.edges = edges
     }
@@ -371,10 +395,10 @@ fun GameScene.getMinimapEChartsOptions(): dynamic {
     }
 }
 
-fun GameScene.getRoadmapEChartsOptions(zoom: Double): dynamic {
+fun GameScene.getRoadmapEChartsOptions(showMissionTitles: Boolean): dynamic {
     val series = nativeJsArrayOf(
         getRoadmapMapSeries(),
-        getRoadmapMissionGraphSeries(zoom)
+        getRoadmapMissionGraphSeries(showMissionTitles)
     )
     return jsObject {
         this.visualMap = minimapVisualMapBaseOptions

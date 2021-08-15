@@ -5,6 +5,7 @@ package com.bytelegend.app.client.misc
 import kotlinx.browser.document
 import org.w3c.dom.HTMLAudioElement
 import org.w3c.dom.HTMLImageElement
+import org.w3c.dom.HTMLSpanElement
 
 fun getImageElement(imageId: String): HTMLImageElement {
     val elementId = "img-container-$imageId"
@@ -38,6 +39,10 @@ private fun <T> getOrCreateHtmlElement(tagName: String, id: String): T {
             document.body?.appendChild(this)
         }
         ).asDynamic()
+}
+
+fun getOrCreateSpanElement(spanId: String): HTMLSpanElement {
+    return getOrCreateHtmlElement("span", spanId)
 }
 
 fun getOrCreateImageElement(imageId: String): HTMLImageElement {

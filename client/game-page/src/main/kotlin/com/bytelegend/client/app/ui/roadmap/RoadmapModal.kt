@@ -7,6 +7,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapAlertLink
 import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
+import com.bytelegend.app.client.ui.bootstrap.BootstrapSwitchButton
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.app.obj.downloadURI
@@ -17,10 +18,12 @@ import com.bytelegend.client.app.ui.absoluteDiv
 import com.bytelegend.client.app.ui.minimap.getMinimapMapFeatures
 import com.bytelegend.client.app.ui.minimap.getRoadmapEChartsOptions
 import com.bytelegend.client.app.ui.mission.ModalCloseButton
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinext.js.jsObject
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
+import kotlinx.html.classes
 import kotlinx.html.id
 import kotlinx.html.js.onMouseDownFunction
 import kotlinx.html.js.onMouseMoveFunction
@@ -36,8 +39,6 @@ import react.dom.jsStyle
 import react.dom.span
 import react.setState
 
-private const val MAX_ZOOM = 5.0
-
 interface RoadmapModalState : RState {
     // modalSize/mapSize ~ 1
     var zoom: Double
@@ -49,6 +50,7 @@ interface RoadmapModalState : RState {
     var modalSize: PixelSize
     var cursor: String
     var showPromptBanner: Boolean
+    var showMissionTitles: Boolean
     var lastMouseDownCoordinateOnModal: PixelCoordinate?
     var lastMouseDownCoordinateOnMap: PixelCoordinate?
 }
@@ -78,6 +80,7 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
         modalSize = determineRoadmapSize().let { PixelSize(it, it) }
         zoom = 1.0 * modalSize.width / props.game.activeScene.map.pixelSize.width
         showPromptBanner = localStorage.getItem(DONT_SHOW_ROADMAP_BANNER) == null
+        showMissionTitles = false
     }
 
     override fun RBuilder.render() {
@@ -86,6 +89,24 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
         child(ModalCloseButton::class) {
             attrs.onClickFunction = {
                 game.modalController.hide()
+            }
+        }
+
+        div {
+            attrs.classes = jsObjectBackedSetOf("show-mission-titles-switch")
+
+            span {
+                +i("ShowMissionTitles")
+            }
+
+            BootstrapSwitchButton {
+                attrs.size = "xs"
+                attrs.checked = state.showMissionTitles
+                attrs.onChange = {
+                    setState {
+                        showMissionTitles = it
+                    }
+                }
             }
         }
 
@@ -180,7 +201,7 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
         }
     }
 
-    private fun initIfNot() {
+    private fun initIfNot(refresh: Boolean) {
         if (echarts == undefined) {
             document.getElementById(echartsContainerElementId)?.apply {
                 echarts = window.asDynamic().echarts.init(this, "light", jsObject {
@@ -189,18 +210,18 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
                 window.asDynamic().echarts.registerMap("minimap", activeScene.getMinimapMapFeatures())
             }
         }
-        if (options == undefined) {
-            options = activeScene.getRoadmapEChartsOptions(state.zoom)
+        if (options == undefined || refresh) {
+            options = activeScene.getRoadmapEChartsOptions(state.showMissionTitles)
             echarts.setOption(options)
         }
     }
 
     override fun componentDidMount() {
-        initIfNot()
+        initIfNot(false)
     }
 
     override fun componentDidUpdate(prevProps: GameProps, prevState: RoadmapModalState, snapshot: Any) {
-        initIfNot()
+        initIfNot(state.showMissionTitles != prevState.showMissionTitles)
         if (state.zoom != prevState.zoom) {
             echarts.resize(roadmapWidth, roadmapHeight)
         }

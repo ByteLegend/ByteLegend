@@ -57,8 +57,12 @@ fun WebDriver.clearLocalStorage() {
     (this as JavascriptExecutor).executeScript("window.localStorage.clear();")
 }
 
+fun <T> WebDriver.executeJavascript(script: String): T {
+    return (this as JavascriptExecutor).executeScript(script) as T
+}
+
 fun WebDriver.getCanvasImageData(canvasId: String): ByteArray {
-    val base64 = (this as JavascriptExecutor).executeScript("return document.getElementById('$canvasId').toDataURL('image/png').substring(22)") as String
+    val base64: String = executeJavascript("return document.getElementById('$canvasId').toDataURL('image/png').substring(22)")
     return Base64.getDecoder().decode(base64)
 }
 

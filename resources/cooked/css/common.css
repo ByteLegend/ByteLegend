@@ -618,3 +618,10 @@ p.speech-bubble::after {
 .top-banner {
     margin-bottom: 0;
 }
+
+.show-mission-titles-switch {
+    position: absolute;
+    right: 60px;
+    top: 18px;
+    z-index: 999;
+}
