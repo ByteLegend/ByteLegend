@@ -20,14 +20,15 @@ import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.render
 import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
-import com.bytelegend.client.utils.JSObjectBackedMap
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.client.app.obj.PlayerSprite
 import com.bytelegend.client.app.ui.DefaultBannerController
 import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.DefaultToastController
 import com.bytelegend.client.app.ui.ModalControllerInternal
 import com.bytelegend.client.app.web.WebSocketClient
+import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import org.kodein.di.DI
@@ -91,6 +92,7 @@ class Game(
     override val hero: Character?
         get() = _hero
     override val heroPlayer: Player by di.instance()
+    var onlineNumber: Int = gameInitData.onlineCount
 
     val mapHierarchy: List<GameMapDefinition> = gameInitData.maps
     val idToMapDefinition: Map<String, GameMapDefinition> by lazy {
@@ -122,6 +124,9 @@ class Game(
         setClock(GAME_CLOCK_10HZ, GAME_CLOCK_10HZ_EVENT)
         setClock(GAME_CLOCK_50HZ, GAME_CLOCK_50HZ_EVENT)
         eventBus.on(ITEMS_STATES_UPDATE_EVENT, onItemsStatesUpdateEventListener)
+        eventBus.on(ONLINE_COUNTER_UPDATE_EVENT) { number: Int ->
+            onlineNumber = number
+        }
     }
 
     private fun setClock(hz: Int, eventName: String) {

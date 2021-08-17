@@ -361,7 +361,10 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     }
 
     private fun RElementBuilder<MapTitleWidgetsProps>.onlineCounter(parentProps: MapTitleWidgetsProps, block: RElementBuilder<GameProps>.() -> Unit = {}): ReactElement {
-        return gameChild(parentProps, OnlineCounter::class, block)
+        return gameChild(parentProps, OnlineCounter::class) {
+            attrs.initCount = game.onlineNumber
+            block()
+        }
     }
 
     private fun RElementBuilder<MapTitleWidgetsProps>.mapCoordinateTitleWidget(

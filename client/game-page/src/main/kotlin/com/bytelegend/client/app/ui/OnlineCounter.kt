@@ -3,7 +3,6 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.client.utils.jsObjectBackedSetOf
-import com.bytelegend.client.app.page.GAME_INIT_DATA
 import kotlinext.js.jsObject
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -19,18 +18,27 @@ import react.setState
 
 const val ANIMATION_DIV_ID = "counter-animation-div"
 
+interface OnlineCounterProps : GameProps {
+    var initCount: Int
+}
+
 interface OnlineCounterState : RState {
-    var count: String
+    var count: Int
     var offsetY: Int
 }
 
-class OnlineCounter : GameUIComponent<GameProps, OnlineCounterState>() {
+class OnlineCounter(props: OnlineCounterProps) : GameUIComponent<OnlineCounterProps, OnlineCounterState>(props) {
     lateinit var span: HTMLSpanElement
     private val onlineCounterUpdateEventListener: EventListener<Int> = {
         // It's possible the event during the animation is lost, but we think it's fine
-        if (it.toString() != state.count) {
-            animate(it.toString())
+        if (it != state.count) {
+            animate(it)
         }
+    }
+
+    override fun OnlineCounterState.init(props: OnlineCounterProps) {
+        offsetY = 0
+        count = props.initCount
     }
 
     private fun animating() = document.getElementById(ANIMATION_DIV_ID) != null
@@ -38,7 +46,7 @@ class OnlineCounter : GameUIComponent<GameProps, OnlineCounterState>() {
     /**
      * Display animation for the updated value
      */
-    private fun animate(targetValue: String) {
+    private fun animate(targetValue: Int) {
         if (animating() || !gameControl.online) {
             return
         }
@@ -58,7 +66,7 @@ class OnlineCounter : GameUIComponent<GameProps, OnlineCounterState>() {
         val initialSpanOffsetY = -20
         val initialSpanTop = rect.top + initialSpanOffsetY
         val newSpan = document.createElement("span").unsafeCast<HTMLSpanElement>().apply {
-            appendChild(document.createTextNode(targetValue))
+            appendChild(document.createTextNode(targetValue.toString()))
             this.style.position = "absolute"
         }
         newDiv.appendChild(newSpan)
@@ -86,11 +94,6 @@ class OnlineCounter : GameUIComponent<GameProps, OnlineCounterState>() {
         )
     }
 
-    override fun OnlineCounterState.init() {
-        count = GAME_INIT_DATA.onlineCount.toString()
-        offsetY = 0
-    }
-
     @Suppress("UnsafeCastFromDynamic")
     override fun RBuilder.render() {
         span {
@@ -100,7 +103,7 @@ class OnlineCounter : GameUIComponent<GameProps, OnlineCounterState>() {
 
                 +i("OnlineCount")
                 span {
-                    +state.count
+                    +state.count.toString()
                     attrs.jsStyle {
                         position = "relative"
                         top = "${state.offsetY}px"
