@@ -6,8 +6,8 @@ import com.bytelegend.buildsupport.OpenSourceLicense.ISC
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 
-val forestVersion = "0.3.15-SNAPSHOT"
-val vertxVersion = "4.1.0"
+val forestVersion = "0.3.16-SNAPSHOT"
+val vertxVersion = "4.1.2"
 val guavaVersion = "30.1.1-jre"
 val jacksonVersion = "2.12.3"
 val kotlinVersion = "1.5.21"
