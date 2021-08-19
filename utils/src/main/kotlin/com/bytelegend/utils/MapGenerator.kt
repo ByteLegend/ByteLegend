@@ -107,13 +107,8 @@ class MapGenerator(
 
     private var used: Boolean = false
 
-    // Player layer is 0, layers above are positive, layers below are negative
-    private val playerLayerIndex: Int = tiledMap.layers.indexOfFirst { it.name == "Player" }.apply {
-        require(this != -1) { "You must have a layer named `Player`" }
-    }
     private val visibleFlattenedLayers: List<TiledMap.Layer> = tiledMap.layers.flatMap { layer ->
         when {
-            layer.name == "Player" -> emptyList()
             layer.name == "Blockers" -> emptyList()
             layer.name == "DynamicSprites" -> emptyList()
             !layer.visible -> emptyList()
@@ -137,6 +132,11 @@ class MapGenerator(
             }
             else -> listOf(layer)
         }
+    }
+
+    // Player layer is 0, layers above are positive, layers below are negative
+    private val playerLayerIndex: Int = visibleFlattenedLayers.indexOfFirst { it.name == "Player" }.apply {
+        require(this != -1) { "You must have a layer named `Player`" }
     }
     private val rawLayerIdToIndexMap = visibleFlattenedLayers.mapIndexed { i, layer ->
         layer.id.toInt() to i - playerLayerIndex
@@ -508,7 +508,9 @@ class MapGenerator(
             val subArrayWidth = abs(lastTileCoordinate.x - firstTileCoordinate.x + 1)
             val subArrayHeight = abs(lastTileCoordinate.y - firstTileCoordinate.y + 1)
 
-            require(subArrayHeight <= 2 && subArrayWidth <= 2)
+            require(subArrayHeight <= 2 && subArrayWidth <= 2) {
+                "$name width/height: $subArrayWidth/$subArrayHeight"
+            }
 
             val dataSubArray = mutableListOf<List<List<ImageBlock>>>()
             for (y in 0 until subArrayHeight) {

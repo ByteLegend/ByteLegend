@@ -1012,7 +1012,7 @@ public class TiledMap {
         @JsonProperty("properties")
         private List<TiledMap.Property> properties = new ArrayList<TiledMap.Property>();
         @JsonProperty("rotation")
-        private Long rotation;
+        private Double rotation;
         @JsonProperty("type")
         private String type;
         @JsonProperty("visible")
@@ -1020,7 +1020,7 @@ public class TiledMap {
         @JsonProperty("width")
         private Long width;
         @JsonProperty("x")
-        private Long x;
+        private Double x;
         @JsonProperty("y")
         private Double y;
         @JsonProperty("point")
@@ -1056,7 +1056,7 @@ public class TiledMap {
          * @param properties
          * @param height
          */
-        public Object(Double height, Long id, String name, List<TiledMap.Polygon> polygon, List<TiledMap.Property> properties, Long rotation, String type, Boolean visible, Long width, Long x, Double y, Boolean point, Long gid, TiledMap.Text text) {
+        public Object(Double height, Long id, String name, List<TiledMap.Polygon> polygon, List<TiledMap.Property> properties, Double rotation, String type, Boolean visible, Long width, Double x, Double y, Boolean point, Long gid, TiledMap.Text text) {
             super();
             this.height = height;
             this.id = id;
@@ -1125,12 +1125,12 @@ public class TiledMap {
         }
 
         @JsonProperty("rotation")
-        public Long getRotation() {
+        public Double getRotation() {
             return rotation;
         }
 
         @JsonProperty("rotation")
-        public void setRotation(Long rotation) {
+        public void setRotation(Double rotation) {
             this.rotation = rotation;
         }
 
@@ -1165,12 +1165,12 @@ public class TiledMap {
         }
 
         @JsonProperty("x")
-        public Long getX() {
+        public Double getX() {
             return x;
         }
 
         @JsonProperty("x")
-        public void setX(Long x) {
+        public void setX(Double x) {
             this.x = x;
         }
 

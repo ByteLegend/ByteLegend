@@ -66,7 +66,7 @@ class FloatingTitles : GameUIComponent<GameProps, FloatingTitlesState>() {
     private fun RBuilder.renderOne(hasFloatingTitle: GameObject) {
         val gridCoordinate = hasFloatingTitle.unsafeCast<GridCoordinateAware>().gridCoordinate
         val coordinateInGameContainer = calculateCoordinateInCanvas(gridCoordinate).coordinate + canvasCoordinateInGameContainer
-        val left = coordinateInGameContainer.x + 2 // maybe border?
+        val left = coordinateInGameContainer.x // maybe border?
         val bottom = gameContainerHeight - coordinateInGameContainer.y + 8
         val offsetY = if (state.counter % 20 < 10) 0 else -2
 

@@ -50,8 +50,8 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
     when (GameMapObjectType.fromIndex(it.type)) {
         GameMapObjectType.GameMapText -> CompressedGameMapText(
             it.id,
-            it.type,
             it.layer,
+            it.type,
             (it.coordinate as Array<Int>).toList(),
             it.fontSize,
             it.rotation
