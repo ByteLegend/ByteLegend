@@ -1,83 +1,109 @@
 package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.api.EventListener
-import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.PixelBlock
-import com.bytelegend.app.shared.math.outOfCanvas
+import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.GridCoordinateAware
-import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
+import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.obj.GameMapEntrance
 import com.bytelegend.client.app.ui.EntranceRoadSign
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.Layer
+import com.bytelegend.client.app.ui.USER_MOUSE_INTERACTION_LAYER_ID
+import com.bytelegend.client.app.ui.absoluteDiv
+import kotlinx.browser.document
+import kotlinx.html.id
+import kotlinx.html.js.onClickFunction
+import kotlinx.html.js.onMouseMoveFunction
+import kotlinx.html.js.onMouseOutFunction
+import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.events.MouseEvent
 import react.RBuilder
 import react.RState
+import react.dom.attrs
 import react.setState
 
-const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
-
 interface FloatingTitlesState : RState {
-    var counter: Int
-
-    // Only show the special mission id. For beginner guide
-    var highlightedObjectIds: List<String>?
+    // The title object ids to show
+    var objectIds: List<String>?
 }
 
-// Used to calculate whether the widget is inside the canvas, it doesn't have to be accurate.
-const val ESTIMATE_WIDTH = 100
-const val TITLE_HEIGHT = 32
-const val HIGHTLIGHT_MISSION_EVENT = "highlight.mission"
+const val FLOATING_TITLE_FPS = 3
+const val FLOATING_TITLE_ANIMATION_OFFSET_PX = -2
+const val HIGHTLIGHT_TITLES_EVENT = "highlight.titles"
+private const val TITLES_CONTAINER_ELEMENT_ID = "titles-container"
 
 /**
  * Displays floating titles on the map, like road signs for map entrance, or mission titles.
  */
 class FloatingTitles : GameUIComponent<GameProps, FloatingTitlesState>() {
-    private val on50HzClockListener: EventListener<Nothing> = this::on50HzClock
-    private val onHighlightMissionListener: EventListener<List<String>?> = this::onHighlightMissions
+    private val onAnimation: EventListener<Nothing> = this::onAnimation
+    private val onHighlightMissionListener: EventListener<List<String>?> = this::onHighlightTitles
 
-    // counter increment on 50Hz clock
-    override fun FloatingTitlesState.init() {
-        counter = 0
-        highlightedObjectIds = null
-    }
-
-    private fun onHighlightMissions(missionIds: List<String>?) {
-        setState { highlightedObjectIds = missionIds }
-    }
-
-    private fun on50HzClock(n: Nothing) {
-        setState { counter += 1 }
-    }
+    private val divCoordinate: PixelCoordinate
+        get() = canvasCoordinateInGameContainer - canvasCoordinateInMap
 
     override fun RBuilder.render() {
-        if (state.highlightedObjectIds != null) {
-            state.highlightedObjectIds!!.map { activeScene.objects.getById<GameObject>(it) }.forEach { renderOne(it) }
-        } else if (game.heroPlayer.isAnonymous || game.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE)) {
-            // If not finished beginner guide, don't show the titles
-            activeScene.objects.getByRole<GameObject>(GameObjectRole.HasFloatingTitle)
-                .filter { insideCanvas(it) }
-                .forEach { renderOne(it) }
+        absoluteDiv(
+            left = divCoordinate.x,
+            top = divCoordinate.y,
+            width = mapPixelSize.width,
+            height = mapPixelSize.height,
+            zIndex = Layer.FloatingTitle.zIndex()
+        ) {
+            attrs.id = TITLES_CONTAINER_ELEMENT_ID
+            if (state.objectIds == null) {
+                activeScene.objects.getByRole<GameObject>(GameObjectRole.HasFloatingTitle).forEach {
+                    renderOne(it)
+                }
+            } else {
+                state.objectIds!!.forEach {
+                    renderOne(activeScene.objects.getById<GameObject>(it))
+                }
+            }
+
+            attrs {
+                onClickFunction = {
+                    document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("click", it.asDynamic()))
+                }
+                onMouseMoveFunction = {
+                    document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("mousemove", it.asDynamic()))
+                }
+                onMouseOutFunction = {
+                    document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("mouseout", it.asDynamic()))
+                }
+            }
+        }
+    }
+
+    private fun onHighlightTitles(titleIds: List<String>?) {
+        setState { objectIds = titleIds }
+    }
+
+    private fun onAnimation(n: Nothing) {
+        val animationOffset = ((game.elapsedTimeSinceStart * FLOATING_TITLE_FPS / 1000).toInt() % 2) * FLOATING_TITLE_ANIMATION_OFFSET_PX
+
+        document.getElementById(TITLES_CONTAINER_ELEMENT_ID)?.apply {
+            val divStyle = unsafeCast<HTMLDivElement>().style
+            divStyle.top = "${divCoordinate.y + animationOffset}px"
+            divStyle.left = "${divCoordinate.x}px"
         }
     }
 
     private fun RBuilder.renderOne(hasFloatingTitle: GameObject) {
-        val gridCoordinate = hasFloatingTitle.unsafeCast<GridCoordinateAware>().gridCoordinate
-        val coordinateInGameContainer = calculateCoordinateInCanvas(gridCoordinate).coordinate + canvasCoordinateInGameContainer
-        val left = coordinateInGameContainer.x // maybe border?
-        val bottom = gameContainerHeight - coordinateInGameContainer.y + 8
-        val offsetY = if (state.counter % 20 < 10) 0 else -2
-
+        val coordinateInMap = hasFloatingTitle.unsafeCast<GridCoordinateAware>().gridCoordinate * tileSize
+        val left = coordinateInMap.x
+        val bottom = mapPixelSize.height - coordinateInMap.y
         if (hasFloatingTitle.roles.contains(GameObjectRole.MapEntrance.toString())) {
             val entrance = hasFloatingTitle.unsafeCast<GameMapEntrance>()
             child(EntranceRoadSign::class) {
                 attrs.game = game
                 attrs.eventBus = game.eventBus
-                attrs.left = left
+                attrs.left = left + tileSize.width / 2
                 attrs.bottom = bottom
-                attrs.offsetY = offsetY
                 attrs.title = i(entrance.destMapId)
                 attrs.entrance = entrance
             }
@@ -85,9 +111,8 @@ class FloatingTitles : GameUIComponent<GameProps, FloatingTitlesState>() {
             val mission = hasFloatingTitle.unsafeCast<GameMission>()
             child(MissionTitle::class) {
                 attrs.eventBus = game.eventBus
-                attrs.left = left
+                attrs.left = left + mission.spriteWidthPx / 2
                 attrs.bottom = bottom
-                attrs.offsetY = offsetY
                 attrs.title = i(mission.gameMapMission.title)
                 attrs.tileCoordinate = mission.gridCoordinate
                 attrs.totalStar = mission.gameMapMission.totalStar
@@ -97,29 +122,15 @@ class FloatingTitles : GameUIComponent<GameProps, FloatingTitlesState>() {
         }
     }
 
-    private fun insideCanvas(obj: GameObject): Boolean {
-        return !calculateCoordinateInCanvas(obj.unsafeCast<GridCoordinateAware>().gridCoordinate).outOfCanvas(activeScene.canvasState.getCanvasPixelSize())
-    }
-
-    private fun calculateCoordinateInCanvas(point: GridCoordinate): PixelBlock {
-        val tileSize = activeScene.map.tileSize
-        val targetTilePixelCoordinate = point * tileSize
-        val widgetLeftTopCornerXInCanvas = targetTilePixelCoordinate.x + tileSize.width / 2 - canvasCoordinateInMap.x
-        val widgetLeftTopCornerYInCanvas = targetTilePixelCoordinate.y - canvasCoordinateInMap.y
-        return PixelBlock(
-            widgetLeftTopCornerXInCanvas, widgetLeftTopCornerYInCanvas, ESTIMATE_WIDTH, TITLE_HEIGHT
-        )
-    }
-
     override fun componentDidMount() {
         super.componentDidMount()
-        props.game.eventBus.on(GAME_CLOCK_50HZ_EVENT, on50HzClockListener)
-        props.game.eventBus.on(HIGHTLIGHT_MISSION_EVENT, onHighlightMissionListener)
+        props.game.eventBus.on(GAME_ANIMATION_EVENT, onAnimation)
+        props.game.eventBus.on(HIGHTLIGHT_TITLES_EVENT, onHighlightMissionListener)
     }
 
     override fun componentWillUnmount() {
         super.componentWillUnmount()
-        props.game.eventBus.remove(GAME_CLOCK_50HZ_EVENT, on50HzClockListener)
-        props.game.eventBus.remove(HIGHTLIGHT_MISSION_EVENT, onHighlightMissionListener)
+        props.game.eventBus.remove(GAME_ANIMATION_EVENT, onAnimation)
+        props.game.eventBus.remove(HIGHTLIGHT_TITLES_EVENT, onHighlightMissionListener)
     }
 }

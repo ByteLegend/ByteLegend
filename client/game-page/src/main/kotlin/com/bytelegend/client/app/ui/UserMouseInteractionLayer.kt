@@ -59,6 +59,7 @@ import react.dom.attrs
   Note that you don't need to respond to window.onresize event, Game.viewport responds to that event.
  */
 
+const val USER_MOUSE_INTERACTION_LAYER_ID = "user-mouse-interaction-layer"
 class UserMouseInteractionLayer : GameUIComponent<GameProps, RState>() {
     override fun RBuilder.render() {
         absoluteDiv(
@@ -70,7 +71,7 @@ class UserMouseInteractionLayer : GameUIComponent<GameProps, RState>() {
             classes = jsObjectBackedSetOf("user-mouse-interaction-layer")
         ) {
             attrs {
-                id = "user-mouse-interaction-layer"
+                id = USER_MOUSE_INTERACTION_LAYER_ID
                 onClickFunction = {
                     game.eventBus.emit(MOUSE_CLICK_EVENT, toGameMouseEvent(it))
                 }

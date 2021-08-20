@@ -262,7 +262,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
 
     private fun RElementBuilder<GameContainerProps>.mapCanvas(
         parentProps: GameContainerProps,
-        block: RElementBuilder<MapCanvasProps>.() -> Unit = {}
+        block: RElementBuilder<GameProps>.() -> Unit = {}
     ) = gameChild(parentProps, MainMapCanvasLayer::class, block)
 
     private fun RElementBuilder<GameContainerProps>.miniMap(

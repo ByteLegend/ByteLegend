@@ -29,7 +29,7 @@ interface MissionTitleAnswerProps : GameProps {
 
 class MissionTitleAnswers : RComponent<MissionTitleAnswerProps, MissionTitleAnswersState>() {
     private val challengeUpdateEventListener: EventListener<ChallengeUpdateEventData> = {
-        if (it.newValue.challengeId == props.mission.id) {
+        if (it.newValue.missionId == props.mission.id) {
             setState { }
         }
     }

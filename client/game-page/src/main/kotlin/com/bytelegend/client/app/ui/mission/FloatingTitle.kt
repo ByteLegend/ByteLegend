@@ -26,12 +26,12 @@ import react.dom.jsStyle
 import react.setState
 
 interface FloatingTitleProps : RProps {
-    // coordinate in game container
+    // coordinate in parent container
+    // for non-hovering title, it's coordinate in parent div
+    // for hovering title, it's coordinate in game container
     var left: Int
     var bottom: Int
 
-    // for animation
-    var offsetY: Int
     var title: String
     var tileCoordinate: GridCoordinate
     var eventBus: EventBus
@@ -61,8 +61,6 @@ abstract class FloatingTitle<R : FloatingTitleProps> : RComponent<R, FloatingTit
         }
     }
 
-    private fun getOffsetY() = if (state.hovered) 0 else props.offsetY
-
     abstract fun onClick()
 
     override fun FloatingTitleState.init() {
@@ -75,19 +73,22 @@ abstract class FloatingTitle<R : FloatingTitleProps> : RComponent<R, FloatingTit
     ) {
         absoluteDiv(
             left = props.left,
-            bottom = props.bottom + getOffsetY(),
+            bottom = props.bottom,
             zIndex = Layer.FloatingTitle.zIndex() + if (state.hovered) 1 else 0,
             classes = jsObjectBackedSetOf("floating-title")
         ) {
             unsafeSpan(props.title)
             attrs.onClickFunction = {
                 this@FloatingTitle.onClick()
+                it.stopPropagation()
             }
             attrs.onMouseOutFunction = {
                 setState { hovered = false }
+                it.stopPropagation()
             }
             attrs.onMouseMoveFunction = {
                 setState { hovered = true }
+                it.stopPropagation()
             }
             if (state.hovered) {
                 attrs.jsStyle {
@@ -133,7 +134,6 @@ abstract class FloatingTitle<R : FloatingTitleProps> : RComponent<R, FloatingTit
         return props.left != nextProps.left ||
             props.bottom != nextProps.bottom ||
             props.title != nextProps.title ||
-            props.offsetY != nextProps.offsetY ||
             state.hovered != nextState.hovered
     }
 

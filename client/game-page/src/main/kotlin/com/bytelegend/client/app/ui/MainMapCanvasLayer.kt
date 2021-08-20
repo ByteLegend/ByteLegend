@@ -4,7 +4,6 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.misc.getImageElement
-import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener
 import com.bytelegend.client.utils.jsObjectBackedSetOf
@@ -24,7 +23,6 @@ import react.dom.jsStyle
 interface MapCanvasProps : GameProps {
     var id: String
     var classes: Set<String>
-    var pixelBlock: PixelBlock
 }
 
 /*
@@ -125,7 +123,7 @@ fun CanvasRenderingContext2D.drawImage(
     restore()
 }
 
-class MainMapCanvasLayer : GameUIComponent<MapCanvasProps, RState>() {
+class MainMapCanvasLayer : GameUIComponent<GameProps, RState>() {
     private val windowAnimationEventListener: GameAnimationEventListener = {
         game.mainMapCanvasRenderer.onAnimation()
     }
@@ -148,17 +146,17 @@ class MainMapCanvasLayer : GameUIComponent<MapCanvasProps, RState>() {
     }
 
     override fun RBuilder.render() {
-        canvas {
-            canvasAttr("background-canvas-layer", Layer.MapCanvas.zIndex())
-            +"Canvas not supported"
-            ref {
-                if (it != null) {
-                    game.mainMapCanvasRenderer.mapBackgroundLayer = it.getContext("2d")
-                }
-            }
+        absoluteDiv(
+            left = canvasCoordinateInGameContainer.x,
+            top = canvasCoordinateInGameContainer.y,
+            width = canvasPixelSize.width,
+            height = canvasPixelSize.height,
+            zIndex = Layer.MapCanvas.zIndex()
+        ) {
+            attrs.id = "background-canvas-layer"
         }
         canvas {
-            canvasAttr("objects-canvas-layer", Layer.MapCanvas.zIndex() + 1)
+            canvasAttr("objects-canvas-layer", Layer.MapCanvas.zIndex() + 2)
 
             +"Canvas not supported"
             ref {

@@ -26,7 +26,7 @@ import com.bytelegend.client.app.ui.COORDINATE_BORDER_FLICKER
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
-import com.bytelegend.client.app.ui.mission.HIGHTLIGHT_MISSION_EVENT
+import com.bytelegend.client.app.ui.mission.HIGHTLIGHT_TITLES_EVENT
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
 import com.bytelegend.client.app.web.WebSocketClient
@@ -241,13 +241,13 @@ class DefaultGameDirector(
             respondToClick(true)
             arrowGif = showArrowGif(gameScene.canvasState.getUICoordinateInGameContainer(), game.i("ThisIsCoordinate"))
             eventBus.emit(COORDINATE_BORDER_FLICKER, true)
-            eventBus.emit(HIGHTLIGHT_MISSION_EVENT, listOf(STAR_BYTELEGEND_MISSION_ID))
+            eventBus.emit(HIGHTLIGHT_TITLES_EVENT, listOf(STAR_BYTELEGEND_MISSION_ID))
         }
 
         override fun stop() {
             respondToClick(false)
             eventBus.emit(COORDINATE_BORDER_FLICKER, false)
-            eventBus.emit(HIGHTLIGHT_MISSION_EVENT, null)
+            eventBus.emit(HIGHTLIGHT_TITLES_EVENT, null)
             document.body?.removeChild(arrowGif)
         }
     }

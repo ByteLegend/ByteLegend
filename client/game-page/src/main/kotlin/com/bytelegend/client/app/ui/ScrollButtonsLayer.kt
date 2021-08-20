@@ -115,6 +115,32 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
         topRightCorner()
         bottomLeftCorner()
         bottomRightCorner()
+
+        // four bars to hide pre-rendered background canvas
+        absoluteDiv(
+            left = 0, top = 0,
+            width = gameContainerWidth, height = horizontalButtonHeight,
+            classes = jsObjectBackedSetOf("black-background"),
+            zIndex = Layer.MapCanvas.zIndex() + 1
+        )
+        absoluteDiv(
+            left = 0, top = 0,
+            width = verticalButtonWidth, height = gameContainerHeight,
+            classes = jsObjectBackedSetOf("black-background"),
+            zIndex = Layer.MapCanvas.zIndex() + 1
+        )
+        absoluteDiv(
+            left = gameContainerWidth - verticalButtonWidth, top = 0,
+            width = verticalButtonWidth, height = gameContainerHeight,
+            classes = jsObjectBackedSetOf("black-background"),
+            zIndex = Layer.MapCanvas.zIndex() + 1
+        )
+        absoluteDiv(
+            left = 0, top = gameContainerHeight - horizontalButtonHeight,
+            width = gameContainerWidth, height = horizontalButtonHeight,
+            classes = jsObjectBackedSetOf("black-background"),
+            zIndex = Layer.MapCanvas.zIndex() + 1
+        )
     }
 
     private fun RBuilder.bottomLeftCorner() {
@@ -217,7 +243,6 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
             width = width,
             height = height,
             zIndex = Layer.ScrollButtons.zIndex(),
-            opacity = "0",
             classes = jsObjectBackedSetOf(direction.cursorCssClass()),
             block = {
                 attrs {

@@ -2,14 +2,13 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
-import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.obj.BackgroundSpriteLayer
+import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.JSObjectBackedMap
-import com.bytelegend.client.app.obj.BackgroundSpriteLayer
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
@@ -20,14 +19,9 @@ import org.w3c.dom.HTMLCanvasElement
 class MainMapCanvasRenderer(
     private val game: Game
 ) {
-    private val canvasCaches: MutableMap<String, List<HTMLCanvasElement>> = JSObjectBackedMap()
+    private val canvasCache: MutableMap<String, List<HTMLCanvasElement>> = JSObjectBackedMap()
     private val objectContainer: DefaultGameObjectContainer
         get() = game.activeScene.objects.unsafeCast<DefaultGameObjectContainer>()
-
-    /**
-     * The pre-render-able tiles, mostly background.
-     */
-    lateinit var mapBackgroundLayer: CanvasRenderingContext2D
 
     /**
      * The non-pre-render-able tiles, including dynamic sprites (e.g. NPC) and
@@ -35,39 +29,28 @@ class MainMapCanvasRenderer(
      */
     lateinit var mapObjectsLayer: CanvasRenderingContext2D
 
-    /**
-     * We don't need to re-render the whole background if it's not moving.
-     */
-    lateinit var lastBackgroundRenderTime: Timestamp
-    lateinit var lastBackgroundRenderCanvasPixelSize: PixelSize
-    lateinit var lastBackgroundRenderCanvasCoordinateInMap: PixelCoordinate
-
     @Suppress("UnsafeCastFromDynamic")
     fun putSceneBackgroundIntoCanvasCacheIfAbsent(gameScene: GameScene) {
         val mapId = gameScene.map.id
-        if (canvasCaches.containsKey(mapId)) {
+        if (canvasCache.containsKey(mapId)) {
             return
         }
         val mapBackgroundFrames = game.idToMapDefinition.getValue(mapId).frames
 
         val canvasElements: List<HTMLCanvasElement> = List(mapBackgroundFrames) {
-            document.createElement("canvas").apply {
-                this.id = "canvas-cache-$mapId-$it"
+            document.createElement("canvas").unsafeCast<HTMLCanvasElement>().apply {
+                id = "canvas-cache-$mapId-$it"
+                style.visibility = "hidden"
                 document.body?.appendChild(this)
-            }.asDynamic()
+            }
         }
-        canvasCaches[mapId] = canvasElements
-
-        lastBackgroundRenderTime = Timestamp(0)
-        lastBackgroundRenderCanvasCoordinateInMap = PixelCoordinate(0, 0)
-        lastBackgroundRenderCanvasPixelSize = PixelSize(0, 0)
+        canvasCache[mapId] = canvasElements
 
         val background = objectContainer.background
         // draw static tiles to all caches, and animation tiles to corresponding frames
         canvasElements.forEachIndexed { cacheCanvasIndex, canvasElement ->
             canvasElement.width = gameScene.map.pixelSize.width
             canvasElement.height = gameScene.map.pixelSize.height
-            canvasElement.style.display = "none"
             val context: CanvasRenderingContext2D = canvasElement.getContext("2d").asDynamic()
 
             for (y in 0 until gameScene.map.size.height) {
@@ -90,45 +73,38 @@ class MainMapCanvasRenderer(
         drawSpritesAndTilesAbovePlayer()
     }
 
-    private fun drawPrerenderedBackgroundLayer() {
-        val gameScene = game.activeScene
-        val mapId = gameScene.map.id
-        val currentFrameIndex = ((game.elapsedTimeSinceStart / 500) % (game.idToMapDefinition.getValue(mapId).frames)).toInt()
-        val canvasElement = canvasCaches.getValue(mapId)[currentFrameIndex]
-
-        val canvasPixelSize = gameScene.canvasState.getCanvasPixelSize()
-        val canvasCoordinateInMap = gameScene.canvasState.getCanvasCoordinateInMap()
-
-        if (backgroundRefreshRequired(canvasCoordinateInMap, canvasPixelSize)) {
-            lastBackgroundRenderTime = Timestamp.now()
-            lastBackgroundRenderCanvasCoordinateInMap = canvasCoordinateInMap
-            lastBackgroundRenderCanvasPixelSize = canvasPixelSize
-        } else {
-            return
-        }
-
-        mapBackgroundLayer.clearRect(0.0, 0.0, canvasPixelSize.width.toDouble(), canvasPixelSize.height.toDouble())
-        mapBackgroundLayer.drawImage(
-            canvasElement,
-            canvasCoordinateInMap.x.toDouble(),
-            canvasCoordinateInMap.y.toDouble(),
-            canvasPixelSize.width.toDouble(),
-            canvasPixelSize.height.toDouble(),
-            0.0,
-            0.0,
-            canvasPixelSize.width.toDouble(),
-            canvasPixelSize.height.toDouble()
-        )
+    private fun HTMLCanvasElement.show(coordinate: PixelCoordinate) {
+        style.visibility = "visible"
+        style.position = "absolute"
+        style.left = "${-coordinate.x}px"
+        style.top = "${-coordinate.y}px"
+        style.zIndex = Layer.MapCanvas.zIndex().toString()
     }
 
-    private fun backgroundRefreshRequired(
-        currentCanvasCoordinateInMap: PixelCoordinate,
-        currentCanvasPixelSize: PixelSize
-    ): Boolean {
-        val frameNum = game.idToMapDefinition.getValue(game.activeScene.map.id).frames
-        return Timestamp.now() - lastBackgroundRenderTime > 1000 / frameNum ||
-            lastBackgroundRenderCanvasCoordinateInMap != currentCanvasCoordinateInMap ||
-            lastBackgroundRenderCanvasPixelSize != currentCanvasPixelSize
+    private fun HTMLCanvasElement.hide() {
+        style.visibility = "hidden"
+    }
+
+    fun hideMap(mapId: String) {
+        canvasCache[mapId]?.forEach {
+            it.hide()
+        }
+    }
+
+    private fun drawPrerenderedBackgroundLayer() {
+        val gameScene = game.activeScene
+        val activeMapId = gameScene.map.id
+        val currentFrameIndex = ((game.elapsedTimeSinceStart / 500) % (game.idToMapDefinition.getValue(activeMapId).frames)).toInt()
+
+        val canvasCoordinate = gameScene.canvasState.getCanvasCoordinateInMap() - gameScene.canvasState.getCanvasCoordinateInGameContainer()
+
+        canvasCache[activeMapId]?.forEachIndexed { index: Int, canvas: HTMLCanvasElement ->
+            if (index == currentFrameIndex) {
+                canvas.show(canvasCoordinate)
+            } else {
+                canvas.hide()
+            }
+        }
     }
 
     // TODO only rerendering dirty rectangles

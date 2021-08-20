@@ -13,10 +13,10 @@ import com.bytelegend.client.app.engine.resource.GameMapResource
 import com.bytelegend.client.app.engine.resource.I18nTextResource
 import com.bytelegend.client.app.engine.resource.ImageResource
 import com.bytelegend.client.app.engine.resource.TextAjaxResource
-import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.script.effect.fadeInEffect
 import com.bytelegend.client.app.web.GameSceneInitResource
+import com.bytelegend.client.utils.JSObjectBackedMap
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
@@ -62,6 +62,9 @@ class DefaultGameSceneContainer(
         GlobalScope.launch {
             // during loading, activeScene may already changed, so we save the reference
             val oldScene = _activeScene
+            if (oldScene != null) {
+                game.mainMapCanvasRenderer.hideMap(oldScene.map.id)
+            }
             val scene = scenes[mapId]
             if (scene == null) {
                 createThenSwitchScene(oldScene, mapId, switchAfterLoad, onFinish)

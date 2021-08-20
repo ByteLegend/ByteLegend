@@ -35,6 +35,7 @@ class GameMission(
             GameObjectRole.Clickable.toString(),
             GameObjectRole.UnableToBeSetAsDestination.toString()
         )
+    val spriteWidthPx = sprite.dynamicSprite.width * gameScene.map.tileSize.width
 
     override fun draw(canvas: CanvasRenderingContext2D) = sprite.draw(canvas)
     override fun outOfCanvas(): Boolean = sprite.outOfCanvas()
