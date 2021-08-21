@@ -16,9 +16,11 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.html.classes
+import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onLoadFunction
 import kotlinx.html.js.onMouseMoveFunction
 import kotlinx.html.js.onMouseOutFunction
+import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 import react.RBuilder
 import react.RComponent
@@ -128,6 +130,18 @@ class JavaIslandNewbieVillageNoticeboard :
         }
     }
 
+    private fun findTileByMouseCoordinate(event: Event): AvatarTile? {
+        val event = event.asDynamic().nativeEvent as MouseEvent
+        val hoveredTileX = event.offsetX.toInt() / AVATAR_TILE_SIZE
+        val hoveredTileY = event.offsetY.toInt() / AVATAR_TILE_SIZE
+        for (tile in state.avatarTiles!!) {
+            if (tile.x == hoveredTileX && tile.y == hoveredTileY) {
+                return tile
+            }
+        }
+        return null
+    }
+
     private fun RBuilder.avatarImg() {
         img {
             attrs.classes = jsObjectBackedSetOf("noticeboard-avatars-img")
@@ -141,19 +155,17 @@ class JavaIslandNewbieVillageNoticeboard :
                 }
             }
             if (imgAndJsonLoaded()) {
-                attrs.onMouseMoveFunction = {
-                    val event = it.asDynamic().nativeEvent as MouseEvent
-                    val hoveredTileX = event.offsetX.toInt() / AVATAR_TILE_SIZE
-                    val hoveredTileY = event.offsetY.toInt() / AVATAR_TILE_SIZE
-                    var hoveredTile: AvatarTile? = undefined
-                    for (tile in state.avatarTiles!!) {
-                        if (tile.x == hoveredTileX && tile.y == hoveredTileY) {
-                            hoveredTile = tile
-                            break
-                        }
+                attrs.onClickFunction = {
+                    findTileByMouseCoordinate(it)?.apply {
+                        window.open("https://github.com/$username", "_blank")
                     }
+                }
+                attrs.onMouseMoveFunction = {
+                    val hoveredTile: AvatarTile? = findTileByMouseCoordinate(it)
 
-                    setState { this.hoveredTile = hoveredTile }
+                    if (state.hoveredTile?.x != hoveredTile?.x || state.hoveredTile?.x != hoveredTile?.y) {
+                        setState { this.hoveredTile = hoveredTile }
+                    }
                 }
                 attrs.onMouseOutFunction = {
                     setState { hoveredTile = undefined }

@@ -14,6 +14,7 @@ import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.USER_MOUSE_INTERACTION_LAYER_ID
 import com.bytelegend.client.app.ui.absoluteDiv
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.document
 import kotlinx.html.id
 import kotlinx.html.js.onClickFunction
@@ -52,7 +53,8 @@ class FloatingTitles : GameUIComponent<GameProps, FloatingTitlesState>() {
             top = divCoordinate.y,
             width = mapPixelSize.width,
             height = mapPixelSize.height,
-            zIndex = Layer.FloatingTitle.zIndex()
+            zIndex = Layer.FloatingTitle.zIndex(),
+            classes = jsObjectBackedSetOf("user-mouse-interaction-layer")
         ) {
             attrs.id = TITLES_CONTAINER_ELEMENT_ID
             if (state.objectIds == null) {

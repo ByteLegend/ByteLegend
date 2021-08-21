@@ -235,18 +235,7 @@ body {
 }
 
 .mission-modal .modal-dialog {
-    max-width: 100%;
-    min-width: 800px;
-    width: calc(100% - 192px);
-    height: calc(100% - 192px);
-}
-
-.mission-modal .modal-content {
-    height: 100%;
-}
-
-.mission-modal-body {
-    overflow-y: hidden;
+    max-width: calc(100% - 192px);
 }
 
 .canvas-border {
