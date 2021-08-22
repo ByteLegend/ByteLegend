@@ -44,7 +44,7 @@ plugins {
     tiledMap.height = mapGridHeight
     tiledMap.infinite = false
     tiledMap.layers = emptyList()
-    tiledMap.nextlayerid = 1
+    tiledMap.nextlayerid = 2
     tiledMap.nextobjectid = 1
     tiledMap.orientation = "orthogonal"
     tiledMap.renderorder = "right-down"

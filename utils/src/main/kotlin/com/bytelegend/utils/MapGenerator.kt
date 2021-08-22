@@ -132,6 +132,13 @@ class MapGenerator(
             }
             else -> listOf(layer)
         }
+    }.apply {
+        // Check dumplicate layer id
+        groupBy { it.id }.forEach { (layerId: Long, layers: List<TiledMap.Layer>) ->
+            if (layers.size > 1) {
+                throw IllegalStateException("Multiple layers with same id: $layerId ${layers.joinToString(",") { it.name }}")
+            }
+        }
     }
 
     // Player layer is 0, layers above are positive, layers below are negative

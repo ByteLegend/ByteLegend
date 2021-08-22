@@ -11,6 +11,7 @@ import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.github.utils.generated.TiledMap
 import java.awt.Point
 import java.awt.Polygon
+import java.lang.IllegalStateException
 import com.bytelegend.github.utils.generated.TiledMap.Layer as TiledMapLayer
 import com.bytelegend.github.utils.generated.TiledMap.Object as TiledMapObject
 
@@ -200,7 +201,7 @@ class TiledObjectReader(
                 idToMissionSpecs.getValue(it.name).challenges.sumOf { it.star },
                 idToMissionSpecs.getValue(it.name).challenges.map { it.id },
                 mapId,
-                tileIdToSpriteIdMap.getValue(it.gid),
+                tileIdToSpriteIdMap.get(it.gid) ?: throw IllegalStateException("Sprite for mission ${it.name} is missing, did you forget to add `dynamicSprites`?"),
                 it.toPoint(),
                 nextIds.map { nextId -> tiledNumberIdToRawMissionObjects.getValue(nextId.toLong()).name },
                 regionId
