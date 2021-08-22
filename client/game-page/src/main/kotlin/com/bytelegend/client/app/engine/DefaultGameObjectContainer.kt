@@ -94,11 +94,13 @@ fun MutableMap<String, IdGameObjectContainer>.putGameObject(key: Any, gameObject
 
 @Suppress("UnsafeCastFromDynamic")
 fun <T : GameObject> MutableMap<String, IdGameObjectContainer>.getGameObject(key: Any): List<T> {
-    return JSArrayBackedList(getOrPut(key.toString()) { IdGameObjectContainer() }.values).asDynamic()
+    val containerDelegate: dynamic = getOrPut(key.toString()) { IdGameObjectContainer() }.delegate
+    val valueArray: dynamic = js("Object.values(containerDelegate)")
+    return JSArrayBackedList(delegate = valueArray)
 }
 
 fun MutableMap<String, IdGameObjectContainer>.removeGameObject(key: Any, id: String) {
     getOrPut(key.toString()) { IdGameObjectContainer() }.remove(id)
 }
 
-class IdGameObjectContainer : MutableMap<String, GameObject> by JSObjectBackedMap()
+typealias IdGameObjectContainer = JSObjectBackedMap<GameObject>

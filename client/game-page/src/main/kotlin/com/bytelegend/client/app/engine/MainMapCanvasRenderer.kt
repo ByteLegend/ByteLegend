@@ -131,24 +131,32 @@ class MainMapCanvasRenderer(
                 val realY = canvasGridInMapY + y
 
                 if (realX < mapGridWidth && realY < mapGridHeight) {
-                    layersAbovePlayerLayer(background[realY][realX]).forEach { spriteLayer ->
-                        indexes.add(spriteLayer.layer)
-                        layerToSprites.getOrPut(spriteLayer.layer.toString()) { JSArrayBackedList() }.add(spriteLayer)
+                    val layers = background[realY][realX]
+
+                    for (i in 0 until layers.size) {
+                        if (layers[i].layer > PLAYER_LAYER) {
+                            val spriteLayer = layers[i]
+                            indexes.add(spriteLayer.layer)
+                            layerToSprites.getOrPut(spriteLayer.layer.toString()) { JSArrayBackedList() }.add(spriteLayer)
+                        }
                     }
                 }
             }
         }
-        objectContainer.getByRole<Sprite>(GameObjectRole.Sprite)
-            .forEach {
-                if (!it.outOfCanvas()) {
-                    indexes.add(it.layer)
-                    layerToSprites.getOrPut(it.layer.toString()) { JSArrayBackedList() }.add(it)
-                }
+        val sprites = objectContainer.getByRole<Sprite>(GameObjectRole.Sprite)
+        for (i in 0 until sprites.size) {
+            val sprite = sprites[i]
+            if (!sprite.outOfCanvas()) {
+                indexes.add(sprite.layer)
+                layerToSprites.getOrPut(sprite.layer.toString()) { JSArrayBackedList() }.add(sprite)
             }
+        }
 
-        gameScene.players.getDrawableCharacters().forEach {
-            indexes.add(it.layer)
-            layerToSprites.getOrPut(it.layer.toString()) { JSArrayBackedList() }.add(it)
+        val players = gameScene.players.getDrawableCharacters()
+        for (i in 0 until players.size) {
+            val player = players[i]
+            indexes.add(player.layer)
+            layerToSprites.getOrPut(player.layer.toString()) { JSArrayBackedList() }.add(player)
         }
 
         drawByLayerOrder(indexes, layerToSprites, mapObjectsLayer)
