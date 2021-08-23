@@ -48,7 +48,7 @@ abstract class AbstractBouncingTitle<R : BouncingTitleProps> : RComponent<R, Bou
         val backgroundColor = props.color
         absoluteDiv(
             left = props.pixelCoordinate.x,
-            bottom = props.gameScene.map.pixelSize.height - props.pixelCoordinate.y,
+            bottom = props.gameScene.map.pixelSize.height - props.pixelCoordinate.y + 4, // extra 4px to avoid misclicking
             zIndex = Layer.BouncingTitle.zIndex() + if (state.hovered) 1 else 0,
             classes = jsObjectBackedSetOf("bouncing-title")
         ) {
