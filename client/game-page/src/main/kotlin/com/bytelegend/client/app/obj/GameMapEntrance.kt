@@ -10,25 +10,28 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.Game
+import com.bytelegend.client.app.ui.mission.BouncingTitle
 import com.bytelegend.client.app.web.WebSocketClient
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import react.RBuilder
 
 class GameMapEntrance(
     override val id: String,
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
-    val destMapId: String,
+    private val destMapId: String,
     private val backEntrancePointId: String,
-    private val roadSign: Boolean,
+    private val bouncingTitle: Boolean,
     private val webSocketClient: WebSocketClient
-) : GameObject, GameSceneAware, CoordinateAware {
+) : GameObject, GameSceneAware, CoordinateAware, HasBouncingTitle {
     override val layer: Int = INVISIBLE_OBJECT_LAYER
     override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.MapEntrance, GameObjectRole.CoordinateAware).apply {
-        if (roadSign) {
-            add(GameObjectRole.HasFloatingTitle.toString())
+        if (bouncingTitle) {
+            add(GameObjectRole.HasBouncingTitle.toString())
         }
     }
     override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
@@ -61,6 +64,20 @@ class GameMapEntrance(
             }
         } else {
             gameRuntime.activeScene.objects.getById<CharacterSprite>(obj.id).close()
+        }
+    }
+
+    override fun renderBouncingTitle(builder: RBuilder) {
+        builder.child(BouncingTitle::class) {
+            attrs.title = gameScene.gameRuntime.i(destMapId)
+            attrs.pixelCoordinate = pixelCoordinate + PixelCoordinate(gameScene.map.tileSize.width / 2, 0)
+            attrs.gameScene = gameScene
+            attrs.color = "rgba(36,102,233,0.8)"
+            attrs.onClickFunction = {
+                if (!gameScene.unsafeCast<DefaultGameScene>().mainChannelDirector.isRunning) {
+                    gameScene.gameRuntime.sceneContainer.loadScene(destMapId)
+                }
+            }
         }
     }
 }

@@ -4,11 +4,8 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
-import com.bytelegend.client.app.engine.GameMission
-import com.bytelegend.client.app.obj.GameMapEntrance
-import com.bytelegend.client.app.ui.EntranceRoadSign
+import com.bytelegend.client.app.obj.HasBouncingTitle
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
@@ -27,7 +24,7 @@ import react.RState
 import react.dom.attrs
 import react.setState
 
-interface FloatingTitlesState : RState {
+interface BouncingTitlesState : RState {
     // The title object ids to show
     var objectIds: List<String>?
 }
@@ -38,9 +35,9 @@ const val HIGHTLIGHT_TITLES_EVENT = "highlight.titles"
 private const val TITLES_CONTAINER_ELEMENT_ID = "titles-container"
 
 /**
- * Displays floating titles on the map, like road signs for map entrance, or mission titles.
+ * Displays bouncing titles on the map, like road signs for map entrance, or mission titles.
  */
-class FloatingTitles : GameUIComponent<GameProps, FloatingTitlesState>() {
+class BouncingTitles : GameUIComponent<GameProps, BouncingTitlesState>() {
     private val onAnimation: EventListener<Nothing> = this::onAnimation
     private val onHighlightMissionListener: EventListener<List<String>?> = this::onHighlightTitles
 
@@ -53,17 +50,17 @@ class FloatingTitles : GameUIComponent<GameProps, FloatingTitlesState>() {
             top = divCoordinate.y,
             width = mapPixelSize.width,
             height = mapPixelSize.height,
-            zIndex = Layer.FloatingTitle.zIndex(),
+            zIndex = Layer.BouncingTitle.zIndex(),
             classes = jsObjectBackedSetOf("user-mouse-interaction-layer")
         ) {
             attrs.id = TITLES_CONTAINER_ELEMENT_ID
             if (state.objectIds == null) {
-                activeScene.objects.getByRole<GameObject>(GameObjectRole.HasFloatingTitle).forEach {
+                activeScene.objects.getByRole<GameObject>(GameObjectRole.HasBouncingTitle).forEach {
                     renderOne(it)
                 }
             } else {
                 state.objectIds!!.forEach {
-                    renderOne(activeScene.objects.getById<GameObject>(it))
+                    renderOne(activeScene.objects.getById(it))
                 }
             }
 
@@ -95,33 +92,8 @@ class FloatingTitles : GameUIComponent<GameProps, FloatingTitlesState>() {
         }
     }
 
-    private fun RBuilder.renderOne(hasFloatingTitle: GameObject) {
-        val coordinateInMap = hasFloatingTitle.unsafeCast<GridCoordinateAware>().gridCoordinate * tileSize
-        val left = coordinateInMap.x
-        val bottom = mapPixelSize.height - coordinateInMap.y
-        if (hasFloatingTitle.roles.contains(GameObjectRole.MapEntrance.toString())) {
-            val entrance = hasFloatingTitle.unsafeCast<GameMapEntrance>()
-            child(EntranceRoadSign::class) {
-                attrs.game = game
-                attrs.eventBus = game.eventBus
-                attrs.left = left + tileSize.width / 2
-                attrs.bottom = bottom
-                attrs.title = i(entrance.destMapId)
-                attrs.entrance = entrance
-            }
-        } else {
-            val mission = hasFloatingTitle.unsafeCast<GameMission>()
-            child(MissionTitle::class) {
-                attrs.eventBus = game.eventBus
-                attrs.left = left + mission.spriteWidthPx / 2
-                attrs.bottom = bottom
-                attrs.title = i(mission.gameMapMission.title)
-                attrs.tileCoordinate = mission.gridCoordinate
-                attrs.totalStar = mission.gameMapMission.totalStar
-                attrs.currentStar = activeScene.playerChallenges.missionStar(mission.id)
-                attrs.mission = mission
-            }
-        }
+    private fun RBuilder.renderOne(hasBouncingTitle: GameObject) {
+        hasBouncingTitle.unsafeCast<HasBouncingTitle>().renderBouncingTitle(this)
     }
 
     override fun componentDidMount() {

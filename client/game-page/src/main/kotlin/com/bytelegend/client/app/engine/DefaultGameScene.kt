@@ -8,6 +8,7 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.api.PullRequestLogContainer
 import com.bytelegend.app.client.api.ScriptsBuilder
+import com.bytelegend.app.client.api.dsl.BouncingTitleBuilder
 import com.bytelegend.app.client.api.dsl.DynamicSpriteBuilder
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
@@ -26,11 +27,14 @@ import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.app.shared.objects.defaultMapEntranceDestinationId
 import com.bytelegend.app.shared.objects.defaultMapEntranceId
 import com.bytelegend.app.shared.objects.defaultMapEntrancePointId
+import com.bytelegend.client.app.obj.BouncingTitleObject
 import com.bytelegend.client.app.obj.DynamicSprite
+import com.bytelegend.client.app.obj.EmptyClickablePoint
 import com.bytelegend.client.app.obj.GameCurveSprite
 import com.bytelegend.client.app.obj.GameMapEntrance
 import com.bytelegend.client.app.obj.GameTextSprite
 import com.bytelegend.client.app.obj.NPC
+import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.MAIN_CHANNEL
 import com.bytelegend.client.app.ui.GameProps
@@ -132,11 +136,28 @@ class DefaultGameScene(
             coordinate,
             destMapId,
             backEntrancePointId,
-            builder.roadSign,
+            builder.bouncingTitle,
             gameRuntime.unsafeCast<Game>().webSocketClient
         )
 
         objects.add(mapEntrance)
+    }
+
+    override fun bouncingTitle(action: BouncingTitleBuilder.() -> Unit) {
+        val builder = BouncingTitleBuilder()
+        builder.action()
+        val textId = builder.textId ?: throw IllegalArgumentException("Text id not set!")
+        val coordinate = builder.pixelCoordinate ?: throw IllegalArgumentException("Coordinate not set for bouncing title!")
+        objects.add(
+            BouncingTitleObject(
+                "bouncing-title-${uuid()}",
+                textId,
+                builder.color,
+                coordinate,
+                builder.onClickFunction,
+                this
+            )
+        )
     }
 
     override fun noticeboard(action: NoticeboardBuilder.() -> Unit) {
@@ -169,16 +190,33 @@ class DefaultGameScene(
         val builder = DynamicSpriteBuilder()
         builder.action()
 
-        val obj = DynamicSprite(
-            builder.id ?: throw IllegalArgumentException("No id specified for dynamicSprite!"),
-            this,
-            builder.gridCoordinate ?: throw IllegalArgumentException("No gridCoordinate specified for ${builder.id}"),
-            objects.getById(builder.sprite ?: throw IllegalArgumentException("No sprite specified for ${builder.id}")),
-            onInitFunction = builder.onInit,
-            onTouchFunction = builder.onTouch,
-            onClickFunction = builder.onClick
-        )
-        objects.add(obj)
+        val id = builder.id ?: throw IllegalArgumentException("No id specified for dynamicSprite!")
+        val gridCoordinate = builder.gridCoordinate ?: throw IllegalArgumentException("No gridCoordinate specified for ${builder.id}")
+
+        if (builder.sprite == null) {
+            objects.add(
+                EmptyClickablePoint(
+                    id,
+                    this,
+                    gridCoordinate,
+                    onInitFunction = builder.onInit,
+                    onTouchFunction = builder.onTouch,
+                    onClickFunction = builder.onClick
+                )
+            )
+        } else {
+            objects.add(
+                DynamicSprite(
+                    id,
+                    this,
+                    gridCoordinate,
+                    objects.getById(builder.sprite!!),
+                    onInitFunction = builder.onInit,
+                    onTouchFunction = builder.onTouch,
+                    onClickFunction = builder.onClick
+                )
+            )
+        }
     }
 
     private fun gameMapText(gameMapText: GameMapText) {

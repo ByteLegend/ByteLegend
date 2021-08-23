@@ -162,7 +162,7 @@ body {
     color: white;
 }
 
-.floating-title {
+.bouncing-title {
     text-align: center;
     max-width: 200px;
     user-select: none;
@@ -188,7 +188,7 @@ body {
     width: 100%;
 }
 
-.floating-title-triangle-container {
+.bouncing-title-triangle-container {
     left: 50%;
     bottom: -16px;
     width: 16px;
@@ -196,23 +196,23 @@ body {
     transform: translate(-50%, 0%);
 }
 
-.floating-title-triangle {
+.bouncing-title-triangle {
     transform: rotate(180deg);
     border: 8px solid transparent;
 }
 
-.floating-title-bottom-border {
+.bouncing-title-bottom-border {
     height: 1px;
     width: calc(50% - 9px);
     bottom: 0;
     border-bottom: 1px solid white;
 }
 
-.floating-title-bottom-border-left {
+.bouncing-title-bottom-border-left {
     left: 1px
 }
 
-.floating-title-bottom-border-right {
+.bouncing-title-bottom-border-right {
     right: 1px
 }
 

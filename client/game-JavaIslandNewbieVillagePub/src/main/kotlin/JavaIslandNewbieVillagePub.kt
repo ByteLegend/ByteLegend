@@ -20,7 +20,7 @@ fun main() {
         objects {
             mapEntrance {
                 destMapId = JAVA_ISLAND
-                roadSign = false
+                bouncingTitle = false
             }
 
             pubEngineer()

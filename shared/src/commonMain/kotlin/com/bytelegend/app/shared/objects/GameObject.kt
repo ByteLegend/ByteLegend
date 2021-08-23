@@ -63,7 +63,7 @@ enum class GameObjectRole {
     Character,
     NPC,
     MapEntrance,
-    HasFloatingTitle,
+    HasBouncingTitle,
     CoordinateAware,
     Clickable,
     Mission,

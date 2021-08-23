@@ -1,8 +1,9 @@
 package com.bytelegend.app.shared.objects
 
-import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.PLAYER_LAYER
+import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.map
 import kotlinx.serialization.Serializable
 
@@ -20,8 +21,7 @@ class GameMapDynamicSprite(
     // 3 dimension:
     // first/second dimension: the y/x of tiles because a sprite can cross multiple tiles.
     // third dimension: the frame coordinate of tile in tileset
-    val width = frames[0].size
-    val height = frames.size
+    val size: GridSize = GridSize(frames[0].size, frames.size)
 
     override fun compress() = CompressedGameMapDynamicObject(
         id,

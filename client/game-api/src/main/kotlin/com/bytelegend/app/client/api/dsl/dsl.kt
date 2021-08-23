@@ -1,12 +1,20 @@
 package com.bytelegend.app.client.api.dsl
 
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 
 typealias UnitFunction = () -> Unit
 typealias SuspendUnitFunction = suspend () -> Unit
 
 val EMPTY_FUNCTION: UnitFunction = {}
+
+class BouncingTitleBuilder {
+    var pixelCoordinate: PixelCoordinate? = null
+    var textId: String? = null
+    var color: String = "black"
+    var onClickFunction: UnitFunction? = null
+}
 
 class MapEntranceBuilder {
     /**
@@ -35,9 +43,9 @@ class MapEntranceBuilder {
     var backEntrancePointId: String? = null
 
     /**
-     * Show road sign for this entrance
+     * Show a road-sign-like bouncing title for this entrance
      */
-    var roadSign: Boolean = true
+    var bouncingTitle: Boolean = true
 }
 
 class NpcBuilder {
@@ -56,7 +64,8 @@ class DynamicSpriteBuilder {
     var id: String? = null
 
     /**
-     * The dynamic sprite id, see GameMapDynamicSprite
+     * The dynamic sprite id, see GameMapDynamicSprite.
+     * If null, it will be an "empty" point but clickable.
      */
     var sprite: String? = null
     var gridCoordinate: GridCoordinate? = null
@@ -94,6 +103,7 @@ class NoticeboardBuilder {
 
 interface ObjectsBuilder {
     fun mapEntrance(action: MapEntranceBuilder.() -> Unit)
+    fun bouncingTitle(action: BouncingTitleBuilder.() -> Unit)
 
     /*
     This shouldn't be in API module, but we have to workaround the following issue:

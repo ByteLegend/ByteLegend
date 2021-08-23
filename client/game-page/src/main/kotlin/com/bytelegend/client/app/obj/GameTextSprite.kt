@@ -2,18 +2,21 @@ package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
+import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.page.game
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
 import kotlin.math.PI
 
 class GameTextSprite(
     override val gameScene: GameScene,
     private val obj: GameMapText
-) : Sprite {
-    override val id: String = "${obj.id}-sprite"
+) : Sprite, CoordinateAware {
+    override val id: String = obj.id
     override val layer: Int = obj.layer
     override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite)
 
@@ -34,4 +37,7 @@ class GameTextSprite(
         canvas.fillText(game.i(obj.id), 0.0, 0.0)
         canvas.restore()
     }
+
+    override val pixelCoordinate: PixelCoordinate = obj.coordinate
+    override val gridCoordinate: GridCoordinate = obj.coordinate / gameScene.map.tileSize
 }

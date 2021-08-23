@@ -1,13 +1,13 @@
 { "columns":20,
  "image":"..\/tilesets\/sea_animation_32x32.png",
- "imageheight":640,
+ "imageheight":672,
  "imagewidth":640,
  "margin":0,
  "name":"sea_animation_32x32",
  "objectalignment":"topleft",
  "spacing":0,
- "tilecount":400,
- "tiledversion":"1.7.1",
+ "tilecount":420,
+ "tiledversion":"1.7.2",
  "tileheight":32,
  "tiles":[
         {
@@ -553,6 +553,54 @@
                  "tileid":302
                 }],
          "id":342
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":340
+                }, 
+                {
+                 "duration":500,
+                 "tileid":380
+                }],
+         "id":382
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":341
+                }, 
+                {
+                 "duration":500,
+                 "tileid":381
+                }],
+         "id":383
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":360
+                }, 
+                {
+                 "duration":500,
+                 "tileid":400
+                }],
+         "id":402
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":361
+                }, 
+                {
+                 "duration":500,
+                 "tileid":401
+                }],
+         "id":403
         }],
  "tilewidth":32,
  "type":"tileset",

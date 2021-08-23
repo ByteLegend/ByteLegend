@@ -8,6 +8,7 @@ import com.bytelegend.app.client.api.Static
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
+import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
@@ -100,13 +101,42 @@ class MissionTowerSprite(
     }
 }
 
+class EmptyClickablePoint(
+    override val id: String,
+    private val gameScene: GameScene,
+    override val gridCoordinate: GridCoordinate,
+    private val onInitFunction: UnitFunction = {},
+    private val onClickFunction: UnitFunction = {},
+    private val onTouchFunction: (GameObject) -> Unit = {},
+) : GameObject, CoordinateAware {
+    override val layer: Int = 0
+    override val roles: Set<String> = jsObjectBackedSetOf(
+        GameObjectRole.CoordinateAware,
+        GameObjectRole.Clickable,
+        GameObjectRole.UnableToBeSetAsDestination.toString()
+    )
+    override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
+
+    init {
+        onInitFunction()
+    }
+
+    override fun onTouch(obj: GameObject) {
+        onTouchFunction(obj)
+    }
+
+    override fun onClick() {
+        onClickFunction()
+    }
+}
+
 /**
  * A DynamicSprite is added to the map and controlled by game script,
  * which is much more flexible.
  */
 open class DynamicSprite(
     override val id: String,
-    override val gameScene: GameScene,
+    final override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
     val dynamicSprite: GameMapDynamicSprite,
     private val onInitFunction: UnitFunction = {},
@@ -116,8 +146,8 @@ open class DynamicSprite(
     gridCoordinate,
     gridCoordinate * gameScene.map.tileSize,
     PixelSize(
-        gameScene.map.tileSize.width * dynamicSprite.width,
-        gameScene.map.tileSize.height * dynamicSprite.height
+        gameScene.map.tileSize.width * dynamicSprite.size.width,
+        gameScene.map.tileSize.height * dynamicSprite.size.height
     )
 ) {
     override val roles: Set<String> = jsObjectBackedSetOf(
@@ -128,6 +158,7 @@ open class DynamicSprite(
     )
     protected var animation: Animation = Static
     override val layer: Int = dynamicSprite.layer
+    val pixelSize: PixelSize = dynamicSprite.size * gameScene.map.tileSize
 
     init {
         onInitFunction()
@@ -150,8 +181,8 @@ open class DynamicSprite(
     override fun draw(canvas: CanvasRenderingContext2D) {
         val coordinateInCanvas = pixelCoordinate - gameScene.canvasState.getCanvasCoordinateInMap()
 
-        for (y in 0 until dynamicSprite.height) {
-            for (x in 0 until dynamicSprite.width) {
+        for (y in 0 until dynamicSprite.size.height) {
+            for (x in 0 until dynamicSprite.size.width) {
                 val frame = dynamicSprite.frames[y][x][animation.getNextFrameIndex()]
                 canvas.drawImage(
                     gameScene.tileset.htmlElement,

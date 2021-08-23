@@ -61,7 +61,7 @@ import com.bytelegend.client.app.ui.item.ItemWidgetProps
 import com.bytelegend.client.app.ui.item.ItemsWidget
 import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
-import com.bytelegend.client.app.ui.mission.FloatingTitles
+import com.bytelegend.client.app.ui.mission.BouncingTitles
 import com.bytelegend.client.utils.toGameInitData
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -336,7 +336,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {
-        return gameChild(parentProps, FloatingTitles::class, block)
+        return gameChild(parentProps, BouncingTitles::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.spriteNameWidget(

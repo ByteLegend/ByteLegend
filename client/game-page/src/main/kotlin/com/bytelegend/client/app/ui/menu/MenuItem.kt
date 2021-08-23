@@ -1,17 +1,18 @@
 package com.bytelegend.client.app.ui.menu
 
+import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
 import com.bytelegend.client.app.ui.unsafeSpan
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
 import kotlinx.html.classes
 import kotlinx.html.js.onBlurFunction
@@ -41,6 +42,8 @@ interface MenuItemProps : GameProps {
 interface MenuItemState : RState {
     var hover: Boolean
 }
+
+private const val SHOW_AD_MODAL_EVENT = "show.ad.modal"
 
 class MenuItem : GameUIComponent<MenuItemProps, MenuItemState>() {
     private val iconSize = 64
@@ -101,6 +104,7 @@ const val MENU_HEIGHT = 64
 const val MENU_WIDTH = 400
 
 class Menu : GameUIComponent<MenuProps, RState>() {
+    private val onShowAdModalEventListener: EventListener<Nothing> = this::onShowAdModalEvent
     private val items: List<MenuItemData> = listOf(
         // 1. menu-github: link to github.com/ByteLegend/ByteLegend
         // 2. menu-notification: open notification box
@@ -173,6 +177,24 @@ class Menu : GameUIComponent<MenuProps, RState>() {
         }
     }
 
+    private fun onShowAdModalEvent(n: Nothing) {
+        game.modalController.show {
+            BootstrapModalHeader {
+                attrs.closeButton = true
+                BootstrapModalTitle {
+                    +i("YourAdHere")
+                }
+            }
+
+            BootstrapModalBody {
+                h5 { +i("ContactUsTitle") }
+                p {
+                    unsafeSpan(i("ContactUsParagraph"))
+                }
+            }
+        }
+    }
+
     private fun onClickContactAboutMenu() {
         game.modalController.show {
             BootstrapModalHeader {
@@ -205,5 +227,15 @@ class Menu : GameUIComponent<MenuProps, RState>() {
                 }
             }
         }
+    }
+
+    override fun componentDidMount() {
+        super.componentDidMount()
+        props.game.eventBus.on(SHOW_AD_MODAL_EVENT, onShowAdModalEventListener)
+    }
+
+    override fun componentWillUnmount() {
+        super.componentWillUnmount()
+        props.game.eventBus.remove(SHOW_AD_MODAL_EVENT, onShowAdModalEventListener)
     }
 }

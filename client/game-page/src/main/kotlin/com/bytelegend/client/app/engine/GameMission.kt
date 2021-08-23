@@ -8,11 +8,14 @@ import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.obj.HasBouncingTitle
 import com.bytelegend.client.app.obj.createMissionSprite
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.mission.MissionModal
+import com.bytelegend.client.app.ui.mission.MissionTitle
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
+import react.RBuilder
 
 /**
  * Represent a mission object in the game
@@ -20,7 +23,7 @@ import org.w3c.dom.CanvasRenderingContext2D
 class GameMission(
     override val gameScene: GameScene,
     val gameMapMission: GameMapMission
-) : CoordinateAware, Sprite {
+) : CoordinateAware, Sprite, HasBouncingTitle {
     override val id: String = gameMapMission.id
     override val gridCoordinate: GridCoordinate = gameMapMission.gridCoordinate
     private val sprite = createMissionSprite(gameScene, gridCoordinate, gameMapMission.sprite, {}, this::openMissionModal)
@@ -29,13 +32,12 @@ class GameMission(
     override val roles: Set<String> =
         jsObjectBackedSetOf(
             GameObjectRole.Mission.toString(),
-            GameObjectRole.HasFloatingTitle.toString(),
+            GameObjectRole.HasBouncingTitle.toString(),
             GameObjectRole.Sprite.toString(),
             GameObjectRole.CoordinateAware.toString(),
             GameObjectRole.Clickable.toString(),
             GameObjectRole.UnableToBeSetAsDestination.toString()
         )
-    val spriteWidthPx = sprite.dynamicSprite.width * gameScene.map.tileSize.width
 
     override fun draw(canvas: CanvasRenderingContext2D) = sprite.draw(canvas)
     override fun outOfCanvas(): Boolean = sprite.outOfCanvas()
@@ -71,6 +73,21 @@ class GameMission(
                 attrs.onClose = {
                     sprite.onMissionModalClosed()
                 }
+            }
+        }
+    }
+
+    override fun renderBouncingTitle(builder: RBuilder) {
+        builder.child(MissionTitle::class) {
+            attrs.color = "rgba(0,0,0,0.7)"
+            attrs.gameScene = gameScene
+            attrs.pixelCoordinate = pixelCoordinate + PixelCoordinate(sprite.pixelSize.width / 2, 0)
+            attrs.title = game.i(gameMapMission.title)
+            attrs.totalStar = gameMapMission.totalStar
+            attrs.currentStar = gameScene.playerChallenges.missionStar(id)
+            attrs.mission = this@GameMission
+            attrs.onClickFunction = {
+                this@GameMission.onClick()
             }
         }
     }

@@ -4,6 +4,7 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.ScriptsBuilder
+import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
@@ -24,6 +25,7 @@ const val STAR_BYTELEGEND_CHALLENGE_ID = "star-bytelegend-challenge"
 
 val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
 
+private const val SHOW_AD_MODAL = "show.ad.modal"
 fun main() {
     gameRuntime.sceneContainer.getSceneById(JAVA_ISLAND).apply {
         objects {
@@ -51,12 +53,36 @@ fun main() {
                 destMapId = JAVA_ISLAND_CONCURRENCY_DUNGEON
             }
 
+            billboard()
             pubGuard()
             newbieVillageOldMan()
             newbieVillageHead()
             newbieVillageSailor()
             newbieVillageBridgeSoldier()
             invitationBox()
+        }
+    }
+}
+
+fun GameScene.billboard() = objects {
+    val billboard = objects.getPointById("JavaIslandNewbieVillageBillboard")
+    val showAdModal: UnitFunction = {
+        gameRuntime.eventBus.emit(SHOW_AD_MODAL, null)
+    }
+    bouncingTitle {
+        pixelCoordinate = (billboard + GridCoordinate(1, 0)) * this@billboard.map.tileSize
+        textId = "YourAdHere"
+        color = "rgba(23,162,184,0.8)"
+        onClickFunction = showAdModal
+    }
+
+    for (x in 0 until 2) {
+        for (y in 0 until 2) {
+            dynamicSprite {
+                id = "billboard-$x-$y"
+                gridCoordinate = billboard + GridCoordinate(x, y)
+                onClick = showAdModal
+            }
         }
     }
 }
