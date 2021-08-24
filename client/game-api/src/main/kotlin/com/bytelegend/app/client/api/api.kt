@@ -218,7 +218,6 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
 
     fun objects(block: ObjectsBuilder.() -> Unit)
     fun scripts(block: ScriptsBuilder.() -> Unit)
-//    fun scriptsLater(block: ScriptsBuilder.() -> Unit)
 }
 
 interface PlayerChallengeContainer {

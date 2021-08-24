@@ -5,14 +5,28 @@ package com.bytelegend.client.app.ui.minimap
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.misc.getOrCreateSpanElement
 import com.bytelegend.app.shared.objects.GameMapRegion
+import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.client.app.engine.GameMission
 import com.bytelegend.client.app.obj.htmlToText
 import com.bytelegend.client.app.ui.minimapGraphSeries
 import com.bytelegend.client.app.ui.mission.HOLLOW_STAR_PNG_BASE64
 import com.bytelegend.client.app.ui.mission.STAR_PNG_BASE64
+import com.bytelegend.client.utils.JSArrayBackedList
 import kotlinext.js.assign
 import kotlinext.js.jsObject
+
+private const val JAVA_LOGO_IMAGE =
+    "image://data:image/png;base64,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"
+private val REALWORLD_PROJECTS: List<String> = JSArrayBackedList<String>().apply {
+    add("java-todo-webapp")
+    add("java-blog-platform")
+    add("java-distributed-crawler")
+    add("java-e-commerce-website")
+}
+
+private const val JAVA_CASTLE_REGION_CENTER = "SeniorJavaCastleDoor-left"
 
 // https://echarts.apache.org/examples/en/index.html#chart-type-map
 fun GameScene.getMinimapMapFeatures(): dynamic {
@@ -247,15 +261,22 @@ private fun calculateTextWidth(text: String, fontSize: Int): Int {
 
 private const val MAX_LABEL_WIDTH = 100
 
-fun GameMission.labelOptions(showMissionTitles: Boolean): dynamic {
-    val totalStars = gameMapMission.totalStar
-    val missionStars = gameScene.playerChallenges.missionStar(id)
+private fun labelOptions(
+    showMissionTitles: Boolean,
+    totalStars: Int,
+    missionStars: Int,
+    titleHtml: String
+): dynamic {
+//    val totalStars = gameMapMission.totalStar
+//    val missionStars = gameScene.playerChallenges.missionStar(id)
     val starsRichText = if (totalStars >= 5) {
         "$missionStars/$totalStars{Star|}"
     } else {
         "{Star|}".repeat(missionStars) + "{HollowStar|}".repeat(totalStars - missionStars)
     }
-    val title = htmlToText(gameScene.gameRuntime.i(gameMapMission.title))
+    val title = htmlToText(titleHtml)
+//        gameScene.gameRuntime.i(gameMapMission.title)
+//    )
     val labelFormatter = when {
         !showMissionTitles -> starsRichText
         totalStars == 0 -> title
@@ -308,14 +329,16 @@ val ITEM_STYLE: dynamic = JSON.parse(
 )
 
 fun GameScene.getRoadmapMissionGraphSeries(showMissionTitles: Boolean): dynamic {
-    val mapWidth = map.pixelSize.width
-    val mapHeight = map.pixelSize.height
-
     val nodes: dynamic = js("[]")
     val edges: dynamic = js("[]")
     objects.getByRole<GameMission>(GameObjectRole.Mission).forEach { mission ->
         val coordinate = mission.gridCoordinate * map.tileSize
-        val labelOptions: dynamic = mission.labelOptions(showMissionTitles)
+        val labelOptions: dynamic = labelOptions(
+            showMissionTitles,
+            mission.gameMapMission.totalStar,
+            playerChallenges.missionStar(mission.id),
+            gameRuntime.i(mission.gameMapMission.title)
+        )
 
         nodes.push(jsObject {
             id = mission.id
@@ -337,7 +360,9 @@ fun GameScene.getRoadmapMissionGraphSeries(showMissionTitles: Boolean): dynamic 
             })
         }
     }
-    addCornerPlaceHoldersToNodes(nodes, mapWidth, mapHeight)
+    addCornerPlaceHoldersToNodes(nodes, map.pixelSize.width, map.pixelSize.height)
+    addJavaCastleToNodes(nodes, map.tileSize.width, map.tileSize.height, 80)
+    addRealworldProjectsToNodes(showMissionTitles, nodes)
 
     return assign(ROADMAP_GRAPH_SERIES) {
         this.nodes = nodes
@@ -345,7 +370,44 @@ fun GameScene.getRoadmapMissionGraphSeries(showMissionTitles: Boolean): dynamic 
     }
 }
 
-fun addCornerPlaceHoldersToNodes(nodes: dynamic, mapWidth: Int, mapHeight: Int) {
+private fun GameScene.addRealworldProjectsToNodes(showMissionTitles: Boolean, nodes: dynamic) {
+    REALWORLD_PROJECTS.forEach {
+        val obj = objects.getByIdOrNull<GameObject>(JAVA_CASTLE_REGION_CENTER) ?: return
+        val coordinate = obj.unsafeCast<GridCoordinateAware>().gridCoordinate * map.tileSize
+        val labelOptions = labelOptions(
+            showMissionTitles,
+            0,
+            0,
+            gameRuntime.i(it)
+        )
+
+        nodes.push(jsObject {
+            id = it
+            // To avoid the label out of left border
+            x = coordinate.x
+            y = coordinate.y
+            value = it
+            category = 0
+            symbol = "diamond"
+            label = labelOptions
+            itemStyle = ITEM_STYLE
+            this.symbolSize = 20
+        })
+    }
+}
+
+private fun GameScene.addJavaCastleToNodes(nodes: dynamic, tileWidth: Int, tileHeight: Int, logoSize: Int) {
+    val obj = objects.getByIdOrNull<GameObject>(JAVA_CASTLE_REGION_CENTER) ?: return
+    val gridCoordinate = obj.unsafeCast<GridCoordinateAware>().gridCoordinate
+    nodes.push(jsObject {
+        x = gridCoordinate.x * tileWidth
+        y = gridCoordinate.y * tileHeight
+        symbol = JAVA_LOGO_IMAGE
+        symbolSize = logoSize
+    })
+}
+
+private fun addCornerPlaceHoldersToNodes(nodes: dynamic, mapWidth: Int, mapHeight: Int) {
     nodes.push(JSON.parse("""{"id": "placeholder1", "x": 0, "y": 0, "symbolSize": 0 }"""))
     nodes.push(JSON.parse("""{"id": "placeholder2", "x": ${mapWidth - 1}, "y": 0, "symbolSize": 0 }"""))
     nodes.push(JSON.parse("""{"id": "placeholder3", "x": 0, "y": ${mapHeight - 1}, "symbolSize": 0 }"""))
@@ -378,6 +440,7 @@ fun GameScene.getMinimapRegionConnectionGraphSeries() {
     }
 
     addCornerPlaceHoldersToNodes(nodes, mapWidth, mapHeight)
+    addJavaCastleToNodes(nodes, map.tileSize.width, map.tileSize.height, 20)
     return assign(minimapGraphSeries) {
         this.nodes = nodes
         this.edges = edges

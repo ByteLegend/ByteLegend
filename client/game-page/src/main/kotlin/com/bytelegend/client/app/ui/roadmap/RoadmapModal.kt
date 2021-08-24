@@ -10,6 +10,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSwitchButton
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.downloadURI
 import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.ui.GameProps
@@ -214,6 +215,9 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
         }
         if (options == undefined || refresh) {
             options = activeScene.getRoadmapEChartsOptions(state.showMissionTitles)
+            if (logger.debugEnabled) {
+                logger.debug("Set echarts options for minimap: ${JSON.stringify(options)}")
+            }
             echarts.setOption(options)
         }
     }
