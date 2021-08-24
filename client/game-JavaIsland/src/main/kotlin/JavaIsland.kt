@@ -4,7 +4,6 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.ScriptsBuilder
-import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
@@ -16,6 +15,7 @@ import com.bytelegend.app.shared.JAVA_ISLAND_MAVEN_DUNGEON
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
 import com.bytelegend.app.shared.JAVA_ISLAND_SPRING_DUNGEON
+import com.bytelegend.app.shared.PixelCoordinate
 import kotlinx.browser.window
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
@@ -70,6 +70,7 @@ fun main() {
 
             pubGuard()
             newbieVillageOldMan()
+            newbieVillageNoticeboard()
             newbieVillageHead()
             newbieVillageSailor()
             newbieVillageBridgeSoldier()
@@ -89,17 +90,36 @@ fun main() {
     }
 }
 
+fun GameScene.newbieVillageNoticeboard() = objects {
+    val corner = objects.getPointById("NewbieVillageJobNoticeboard")
+    val javaCastlePoint = objects.getPointById("SeniorJavaCastleNoticeboard")
+    bouncingTitle {
+        pixelCoordinate = corner * this@newbieVillageNoticeboard.map.tileSize + PixelCoordinate(16, 0)
+        text = gameRuntime.i("SeekForHighPayingJob")
+        color = "white"
+        backgroundColor = "rgba(23,162,184,0.8)"
+        onClickFunction = {
+            gameRuntime.modalController.showModal(
+                gameRuntime.i("NewbieVillageJobNoticeboardContent", javaCastlePoint.toHumanReadableCoordinate().toString()),
+                gameRuntime.i("WelcomeToJavaIsland")
+            )
+        }
+        tileCoordinates.add(corner)
+    }
+}
+
 fun GameScene.castleDoor() = objects {
     val castleDoorPoint = objects.getPointById("JavaIsland-SeniorJavaCastle-entrance-left") - GridCoordinate(0, 1)
+
     dynamicSprite {
-        id = "castle-door"
+        id = "JavaSeniorCastleDoor-sprite"
         sprite = "CastleDoor"
         gridCoordinate = castleDoorPoint
     }
 
     bouncingTitle {
         pixelCoordinate = (castleDoorPoint + GridCoordinate(1, 0)) * this@castleDoor.map.tileSize
-        textId = "JavaIslandSeniorJavaCastle"
+        text = gameRuntime.i("JavaIslandSeniorJavaCastle")
         color = "white"
         backgroundColor = "rgba(36,102,233,0.8)"
     }
@@ -108,9 +128,11 @@ fun GameScene.castleDoor() = objects {
 fun GameScene.castleNoticeboard() = objects {
     bouncingTitle {
         pixelCoordinate = (objects.getPointById("SeniorJavaCastleNoticeboard")) * this@castleNoticeboard.map.tileSize
-        textId = "JavaIslandSeniorJavaCastle"
-        color = "white"
+        text = gameRuntime.i("JavaIslandSeniorJavaCastle")
         backgroundColor = "rgba(36,102,233,0.8)"
+        onClickFunction = {
+            gameRuntime.modalController.showModal("", "")
+        }
     }
 }
 
@@ -118,7 +140,7 @@ fun GameScene.missionCastle(pointId: String, color: String, backgroundColor: Str
     val gridCoordinate = objects.getPointById(pointId)
     bouncingTitle {
         pixelCoordinate = (gridCoordinate + GridCoordinate(1, 0)) * this@missionCastle.map.tileSize
-        textId = pointId
+        text = gameRuntime.i(pointId)
         this.color = color
         this.backgroundColor = backgroundColor
     }
@@ -126,22 +148,16 @@ fun GameScene.missionCastle(pointId: String, color: String, backgroundColor: Str
 
 fun GameScene.billboard() = objects {
     val billboard = objects.getPointById("JavaIslandNewbieVillageBillboard")
-    val showAdModal: UnitFunction = {
-        gameRuntime.eventBus.emit(SHOW_AD_MODAL, null)
-    }
     bouncingTitle {
         pixelCoordinate = (billboard + GridCoordinate(1, 0)) * this@billboard.map.tileSize
-        textId = "YourAdHere"
+        text = gameRuntime.i("YourAdHere")
         backgroundColor = "rgba(23,162,184,0.8)"
-        onClickFunction = showAdModal
-    }
-
-    for (x in 0 until 2) {
-        for (y in 0 until 2) {
-            dynamicSprite {
-                id = "billboard-$x-$y"
-                gridCoordinate = billboard + GridCoordinate(x, y)
-                onClick = showAdModal
+        onClickFunction = {
+            gameRuntime.eventBus.emit(SHOW_AD_MODAL, null)
+        }
+        for (x in 0 until 2) {
+            for (y in 0 until 2) {
+                tileCoordinates.add(billboard + GridCoordinate(x, y))
             }
         }
     }

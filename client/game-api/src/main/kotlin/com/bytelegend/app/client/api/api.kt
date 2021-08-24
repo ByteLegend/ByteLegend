@@ -273,7 +273,7 @@ interface GameSceneContainer : GameContainerSizeAware {
 
 interface ModalController {
     val visible: Boolean
-    fun showModal(contentId: String, titleId: String? = null)
+    fun showModal(content: String, title: String? = null)
 }
 
 data class Banner(

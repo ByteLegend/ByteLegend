@@ -11,9 +11,14 @@ val EMPTY_FUNCTION: UnitFunction = {}
 
 class BouncingTitleBuilder {
     var pixelCoordinate: PixelCoordinate? = null
-    var textId: String? = null
+    var text: String? = null
     var backgroundColor: String = "rgba(0,0,0,0.8)"
     var color: String = "white"
+
+    /**
+     * If specified, the onclick function will also be applied to the tiles.
+     */
+    var tileCoordinates: MutableList<GridCoordinate> = mutableListOf()
     var onClickFunction: UnitFunction? = null
 }
 

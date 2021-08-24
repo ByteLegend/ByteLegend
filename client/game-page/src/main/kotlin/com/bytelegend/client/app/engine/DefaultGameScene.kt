@@ -10,6 +10,7 @@ import com.bytelegend.app.client.api.PullRequestLogContainer
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.dsl.BouncingTitleBuilder
 import com.bytelegend.app.client.api.dsl.DynamicSpriteBuilder
+import com.bytelegend.app.client.api.dsl.EMPTY_FUNCTION
 import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
 import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
 import com.bytelegend.app.client.api.dsl.NpcBuilder
@@ -146,12 +147,13 @@ class DefaultGameScene(
     override fun bouncingTitle(action: BouncingTitleBuilder.() -> Unit) {
         val builder = BouncingTitleBuilder()
         builder.action()
-        val textId = builder.textId ?: throw IllegalArgumentException("Text id not set!")
+        val text = builder.text ?: throw IllegalArgumentException("Text id not set!")
         val coordinate = builder.pixelCoordinate ?: throw IllegalArgumentException("Coordinate not set for bouncing title!")
+        val id = "bouncing-title-${uuid()}"
         objects.add(
             BouncingTitleObject(
-                "bouncing-title-${uuid()}",
-                textId,
+                id,
+                text,
                 builder.color,
                 builder.backgroundColor,
                 coordinate,
@@ -159,6 +161,14 @@ class DefaultGameScene(
                 this
             )
         )
+
+        builder.tileCoordinates.forEachIndexed { index, gridCoordinate ->
+            dynamicSprite {
+                this.id = "$id-$index"
+                this.gridCoordinate = gridCoordinate
+                this.onClick = builder.onClickFunction ?: EMPTY_FUNCTION
+            }
+        }
     }
 
     override fun noticeboard(action: NoticeboardBuilder.() -> Unit) {

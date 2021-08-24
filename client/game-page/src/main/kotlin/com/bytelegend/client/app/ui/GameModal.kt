@@ -16,7 +16,6 @@ import org.kodein.di.instance
 import react.RBuilder
 import react.RElementBuilder
 import react.RState
-import react.dom.p
 
 interface ModalControllerInternal : ModalController {
     fun hide()
@@ -40,21 +39,19 @@ class DefaultModalController(
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)
     }
 
-    override fun showModal(contentId: String, titleId: String?) {
+    override fun showModal(content: String, title: String?) {
         show {
-            if (titleId != null) {
+            if (title != null) {
                 BootstrapModalHeader {
                     attrs.closeButton = true
                     BootstrapModalTitle {
-                        unsafeSpan(gameRuntime.i(titleId))
+                        unsafeSpan(title)
                     }
                 }
             }
 
             BootstrapModalBody {
-                p {
-                    unsafeSpan(gameRuntime.i(contentId))
-                }
+                unsafeDiv(content)
             }
         }
     }

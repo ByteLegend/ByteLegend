@@ -11,7 +11,7 @@ import react.RBuilder
 
 class BouncingTitleObject(
     override val id: String,
-    private val titleTextId: String,
+    private val titleText: String,
     private val color: String,
     private val backgroundColor: String,
     private val pixelCoordinate: PixelCoordinate,
@@ -24,7 +24,7 @@ class BouncingTitleObject(
         builder.child(BouncingTitle::class) {
             attrs.pixelCoordinate = pixelCoordinate
             attrs.onClickFunction = onClickFunction
-            attrs.title = gameScene.gameRuntime.i(titleTextId)
+            attrs.title = titleText
             attrs.gameScene = gameScene
             attrs.backgroundColor = backgroundColor
             attrs.color = color
