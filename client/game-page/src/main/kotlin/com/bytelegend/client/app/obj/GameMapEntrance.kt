@@ -72,7 +72,8 @@ class GameMapEntrance(
             attrs.title = gameScene.gameRuntime.i(destMapId)
             attrs.pixelCoordinate = pixelCoordinate + PixelCoordinate(gameScene.map.tileSize.width / 2, 0)
             attrs.gameScene = gameScene
-            attrs.color = "rgba(36,102,233,0.8)"
+            attrs.color = "white"
+            attrs.backgroundColor = "rgba(36,102,233,0.8)"
             attrs.onClickFunction = {
                 if (!gameScene.unsafeCast<DefaultGameScene>().mainChannelDirector.isRunning) {
                     gameScene.gameRuntime.sceneContainer.loadScene(destMapId)

@@ -6,9 +6,57 @@
  "name":"vehicle-animation",
  "spacing":0,
  "tilecount":96,
- "tiledversion":"1.4.2",
+ "tiledversion":"1.7.2",
  "tileheight":32,
  "tiles":[
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":0
+                }, 
+                {
+                 "duration":500,
+                 "tileid":1
+                }],
+         "id":0
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":12
+                }, 
+                {
+                 "duration":500,
+                 "tileid":13
+                }],
+         "id":12
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":24
+                }, 
+                {
+                 "duration":500,
+                 "tileid":25
+                }],
+         "id":24
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":36
+                }, 
+                {
+                 "duration":500,
+                 "tileid":37
+                }],
+         "id":36
+        }, 
         {
          "animation":[
                 {
@@ -23,5 +71,5 @@
         }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.4
+ "version":"1.6"
 }

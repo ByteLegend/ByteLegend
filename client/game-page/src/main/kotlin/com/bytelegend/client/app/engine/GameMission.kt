@@ -79,7 +79,8 @@ class GameMission(
 
     override fun renderBouncingTitle(builder: RBuilder) {
         builder.child(MissionTitle::class) {
-            attrs.color = "rgba(0,0,0,0.7)"
+            attrs.backgroundColor = "rgba(0,0,0,0.7)"
+            attrs.color = "white"
             attrs.gameScene = gameScene
             attrs.pixelCoordinate = pixelCoordinate + PixelCoordinate(sprite.pixelSize.width / 2, 0)
             attrs.title = game.i(gameMapMission.title)

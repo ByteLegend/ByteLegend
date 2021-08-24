@@ -153,6 +153,7 @@ class DefaultGameScene(
                 "bouncing-title-${uuid()}",
                 textId,
                 builder.color,
+                builder.backgroundColor,
                 coordinate,
                 builder.onClickFunction,
                 this

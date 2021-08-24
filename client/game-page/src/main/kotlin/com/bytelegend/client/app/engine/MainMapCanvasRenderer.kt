@@ -96,7 +96,7 @@ class MainMapCanvasRenderer(
         val activeMapId = gameScene.map.id
         val currentFrameIndex = ((game.elapsedTimeSinceStart / 500) % (game.idToMapDefinition.getValue(activeMapId).frames)).toInt()
 
-        val canvasCoordinate = gameScene.canvasState.getCanvasCoordinateInMap() - gameScene.canvasState.getCanvasCoordinateInGameContainer()
+        val canvasCoordinate = gameScene.canvasState.getCanvasCoordinateInMap() - gameScene.canvasState.getCanvasCoordinateInGameContainer() - /* canvas border */ PixelCoordinate(2, 2)
 
         canvasCache[activeMapId]?.forEachIndexed { index: Int, canvas: HTMLCanvasElement ->
             if (index == currentFrameIndex) {

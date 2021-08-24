@@ -12,7 +12,8 @@ val EMPTY_FUNCTION: UnitFunction = {}
 class BouncingTitleBuilder {
     var pixelCoordinate: PixelCoordinate? = null
     var textId: String? = null
-    var color: String = "black"
+    var backgroundColor: String = "rgba(0,0,0,0.8)"
+    var color: String = "white"
     var onClickFunction: UnitFunction? = null
 }
 

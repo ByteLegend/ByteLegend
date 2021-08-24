@@ -21,6 +21,7 @@ import react.setState
 
 interface BouncingTitleProps : RProps {
     var title: String
+    var backgroundColor: String
     var color: String
     var gameScene: GameScene
     var onClickFunction: UnitFunction?
@@ -45,7 +46,9 @@ abstract class AbstractBouncingTitle<R : BouncingTitleProps> : RComponent<R, Bou
     protected fun RBuilder.renderTitle(
         block: RBuilder.() -> Unit
     ) {
-        val backgroundColor = props.color
+        val backgroundColor = props.backgroundColor
+        val color = props.color
+        val borderStyle = "1px solid $color"
         absoluteDiv(
             left = props.pixelCoordinate.x,
             bottom = props.gameScene.map.pixelSize.height - props.pixelCoordinate.y + 4, // extra 4px to avoid misclicking
@@ -67,24 +70,49 @@ abstract class AbstractBouncingTitle<R : BouncingTitleProps> : RComponent<R, Bou
                 setState { hovered = true }
                 it.stopPropagation()
             }
+
+            attrs.jsStyle {
+                this.color = color
+                this.backgroundColor = backgroundColor
+                borderLeft = borderStyle
+                borderRight = borderStyle
+                borderTop = borderStyle
+            }
+
             if (state.hovered) {
                 attrs.jsStyle {
                     boxShadow = "0 0 20px white"
+                    this.color = color
                     this.backgroundColor = backgroundColor
+                    borderLeft = borderStyle
+                    borderRight = borderStyle
+                    borderTop = borderStyle
                 }
             } else {
                 attrs.jsStyle {
+                    this.color = color
                     this.backgroundColor = backgroundColor
+                    borderLeft = borderStyle
+                    borderRight = borderStyle
+                    borderTop = borderStyle
                 }
             }
             absoluteDiv(
                 zIndex = Layer.BouncingTitle.zIndex(),
                 classes = jsObjectBackedSetOf("bouncing-title-bottom-border", "bouncing-title-bottom-border-left")
-            )
+            ) {
+                attrs.jsStyle {
+                    borderBottom = borderStyle
+                }
+            }
             absoluteDiv(
                 zIndex = Layer.BouncingTitle.zIndex(),
                 classes = jsObjectBackedSetOf("bouncing-title-bottom-border", "bouncing-title-bottom-border-right")
-            )
+            ) {
+                attrs.jsStyle {
+                    borderBottom = borderStyle
+                }
+            }
 
             absoluteDiv(
                 zIndex = Layer.BouncingTitle.zIndex() + 2,

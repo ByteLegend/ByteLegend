@@ -1,0 +1,14 @@
+{ "columns":6,
+ "image":"..\/tilesets\/oasis-body.png",
+ "imageheight":256,
+ "imagewidth":192,
+ "margin":0,
+ "name":"oasis-body",
+ "spacing":0,
+ "tilecount":48,
+ "tiledversion":"1.7.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.6"
+}

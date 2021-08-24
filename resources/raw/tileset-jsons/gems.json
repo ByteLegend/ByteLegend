@@ -1,0 +1,14 @@
+{ "columns":19,
+ "image":"..\/tilesets\/gems.png",
+ "imageheight":288,
+ "imagewidth":624,
+ "margin":0,
+ "name":"gems",
+ "spacing":0,
+ "tilecount":171,
+ "tiledversion":"1.7.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.6"
+}

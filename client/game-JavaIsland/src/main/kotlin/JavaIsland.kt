@@ -14,6 +14,7 @@ import com.bytelegend.app.shared.JAVA_ISLAND_CONCURRENCY_DUNGEON
 import com.bytelegend.app.shared.JAVA_ISLAND_DEBUGGER_DUNGEON
 import com.bytelegend.app.shared.JAVA_ISLAND_MAVEN_DUNGEON
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
+import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
 import com.bytelegend.app.shared.JAVA_ISLAND_SPRING_DUNGEON
 import kotlinx.browser.window
 
@@ -53,14 +54,73 @@ fun main() {
                 destMapId = JAVA_ISLAND_CONCURRENCY_DUNGEON
             }
 
-            billboard()
+            mapEntrance {
+                id = "JavaIsland-SeniorJavaCastle-entrance-left"
+                destMapId = JAVA_ISLAND_SENIOR_JAVA_CASTLE
+                coordinatePointId = "SeniorJavaCastleDoor-left"
+                bouncingTitle = false
+            }
+
+            mapEntrance {
+                id = "JavaIsland-SeniorJavaCastle-entrance-right"
+                destMapId = JAVA_ISLAND_SENIOR_JAVA_CASTLE
+                coordinatePointId = "SeniorJavaCastleDoor-right"
+                bouncingTitle = false
+            }
+
             pubGuard()
             newbieVillageOldMan()
             newbieVillageHead()
             newbieVillageSailor()
             newbieVillageBridgeSoldier()
             invitationBox()
+
+            billboard()
+            // #28a745
+            missionCastle("java-todo-webapp", "white", "rgba(40,167,69,0.8)")
+            missionCastle("java-blog-platform", "#856404", "yellow")
+            // #007bff
+            missionCastle("java-distributed-crawler", "white", "rgba(0,123,255,0.8)")
+            // #dc3545
+            missionCastle("java-e-commerce-website", "white", "rgba(220,53,69,0.8)")
+            castleDoor()
+//            castleNoticeboard()
         }
+    }
+}
+
+fun GameScene.castleDoor() = objects {
+    val castleDoorPoint = objects.getPointById("JavaIsland-SeniorJavaCastle-entrance-left") - GridCoordinate(0, 1)
+    dynamicSprite {
+        id = "castle-door"
+        sprite = "CastleDoor"
+        gridCoordinate = castleDoorPoint
+    }
+
+    bouncingTitle {
+        pixelCoordinate = (castleDoorPoint + GridCoordinate(1, 0)) * this@castleDoor.map.tileSize
+        textId = "JavaIslandSeniorJavaCastle"
+        color = "white"
+        backgroundColor = "rgba(36,102,233,0.8)"
+    }
+}
+
+fun GameScene.castleNoticeboard() = objects {
+    bouncingTitle {
+        pixelCoordinate = (objects.getPointById("SeniorJavaCastleNoticeboard")) * this@castleNoticeboard.map.tileSize
+        textId = "JavaIslandSeniorJavaCastle"
+        color = "white"
+        backgroundColor = "rgba(36,102,233,0.8)"
+    }
+}
+
+fun GameScene.missionCastle(pointId: String, color: String, backgroundColor: String) = objects {
+    val gridCoordinate = objects.getPointById(pointId)
+    bouncingTitle {
+        pixelCoordinate = (gridCoordinate + GridCoordinate(1, 0)) * this@missionCastle.map.tileSize
+        textId = pointId
+        this.color = color
+        this.backgroundColor = backgroundColor
     }
 }
 
@@ -72,7 +132,7 @@ fun GameScene.billboard() = objects {
     bouncingTitle {
         pixelCoordinate = (billboard + GridCoordinate(1, 0)) * this@billboard.map.tileSize
         textId = "YourAdHere"
-        color = "rgba(23,162,184,0.8)"
+        backgroundColor = "rgba(23,162,184,0.8)"
         onClickFunction = showAdModal
     }
 
@@ -234,7 +294,7 @@ fun GameScene.newbieVillageHead() = objects {
                     }
                 } else {
                     val noticeboardPoint = objects.getPointById(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID).toHumanReadableCoordinate().toString()
-                    val javaCastlePoint = objects.getPointById("JavaCastleDoor").toHumanReadableCoordinate().toString()
+                    val javaCastlePoint = objects.getPointById("JavaIsland-SeniorJavaCastle-entrance-left").toHumanReadableCoordinate().toString()
 
                     scripts {
                         speech(villageHeadId, "OutsideWorldIsDangerous")
