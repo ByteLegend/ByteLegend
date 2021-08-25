@@ -85,7 +85,7 @@ fun main() {
             // #dc3545
             missionCastle("java-e-commerce-website", "white", "rgba(220,53,69,0.8)")
             castleDoor()
-//            castleNoticeboard()
+            castleNoticeboard()
         }
     }
 }
@@ -126,13 +126,19 @@ fun GameScene.castleDoor() = objects {
 }
 
 fun GameScene.castleNoticeboard() = objects {
+    val noticeboard = objects.getPointById("SeniorJavaCastleNoticeboard")
     bouncingTitle {
-        pixelCoordinate = (objects.getPointById("SeniorJavaCastleNoticeboard")) * this@castleNoticeboard.map.tileSize
-        text = gameRuntime.i("JavaIslandSeniorJavaCastle")
-        backgroundColor = "rgba(36,102,233,0.8)"
+        pixelCoordinate = noticeboard * this@castleNoticeboard.map.tileSize + PixelCoordinate(16, -16)
+        text = gameRuntime.i("ThePathToSeniorJava")
+        backgroundColor = "rgba(23,162,184,0.8)"
         onClickFunction = {
-            gameRuntime.modalController.showModal("", "")
+            gameRuntime.modalController.showModal(
+                gameRuntime.i("ThePathToSeniorJavaContent"),
+                text
+            )
         }
+
+        tileCoordinates.add(noticeboard)
     }
 }
 

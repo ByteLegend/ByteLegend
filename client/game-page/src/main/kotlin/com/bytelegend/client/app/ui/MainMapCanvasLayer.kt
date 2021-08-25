@@ -139,8 +139,8 @@ class MainMapCanvasLayer : GameUIComponent<GameProps, RState>() {
             jsStyle {
                 zIndex = canvasZIndex
                 position = "absolute"
-                top = "${canvasCoordinateInGameContainer.y}px"
                 left = "${canvasCoordinateInGameContainer.x}px"
+                top = "${canvasCoordinateInGameContainer.y}px"
             }
         }
     }

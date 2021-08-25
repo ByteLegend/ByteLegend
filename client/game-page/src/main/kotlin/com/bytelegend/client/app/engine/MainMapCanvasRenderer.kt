@@ -58,8 +58,11 @@ class MainMapCanvasRenderer(
                     val layers = background[y][x]
                     // Draw all tiles, no matter whether they support pre-rendering or not
                     // to avoid black crack on tile border
-                    layers.forEach {
-                        it.prerenderFrame(cacheCanvasIndex, context)
+                    for (i in 0 until layers.size) {
+                        val layer = layers[i]
+                        if (layer.layer < 0) {
+                            layer.prerenderFrame(cacheCanvasIndex, context)
+                        }
                     }
                 }
             }
