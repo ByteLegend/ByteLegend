@@ -23,7 +23,9 @@ import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
 
+// Emitted when first resource starts loading.
 const val SCENE_LOADING_START_EVENT = "scene.loading.start"
+// Emitted when last resource loading finishes.
 const val SCENE_LOADING_END_EVENT = "scene.loading.end"
 
 fun mapJsonResourceId(mapId: String) = "$mapId-map"
@@ -52,13 +54,15 @@ class DefaultGameSceneContainer(
         get() = _activeScene
 
     override var gameContainerSize: PixelSize = containerSize
-        get() = field
         set(value) {
             field = value
             scenes.values.forEach { it.gameContainerSize = value }
         }
 
     override fun loadScene(mapId: String, switchAfterLoad: Boolean, onFinish: suspend (GameScene?, GameScene) -> Unit) {
+        if (_activeScene?.unsafeCast<DefaultGameScene>()?.mainChannelDirector?.isRunning == true) {
+            return
+        }
         GlobalScope.launch {
             // during loading, activeScene may already changed, so we save the reference
             val oldScene = _activeScene

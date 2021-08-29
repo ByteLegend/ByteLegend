@@ -10,7 +10,6 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.ui.mission.BouncingTitle
 import com.bytelegend.client.app.web.WebSocketClient
@@ -75,9 +74,7 @@ class GameMapEntrance(
             attrs.color = "white"
             attrs.backgroundColor = "rgba(36,102,233,0.8)"
             attrs.onClickFunction = {
-                if (!gameScene.unsafeCast<DefaultGameScene>().mainChannelDirector.isRunning) {
-                    gameScene.gameRuntime.sceneContainer.loadScene(destMapId)
-                }
+                gameScene.gameRuntime.sceneContainer.loadScene(destMapId)
             }
         }
     }

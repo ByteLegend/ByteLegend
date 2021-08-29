@@ -8,7 +8,6 @@ import com.bytelegend.app.shared.Direction.RIGHT
 import com.bytelegend.app.shared.Direction.UP
 import com.bytelegend.app.shared.math.imageBlockOnCanvas
 import com.bytelegend.app.shared.math.outOfCanvas
-import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_10HZ_EVENT
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.js.onClickFunction
@@ -251,9 +250,7 @@ class HeroIndicatorWidget : GameUIComponent<GameProps, HeroIndicatorWidgetState>
                 if (heroScene.isActive) {
                     game.activeScene.canvasState.moveTo(game.hero!!.pixelCoordinate.offset(-canvasPixelSize.width / 2, -canvasPixelSize.height / 2))
                 } else {
-                    if (!game.activeScene.unsafeCast<DefaultGameScene>().mainChannelDirector.isRunning) {
-                        game.sceneContainer.loadScene(heroScene.map.id)
-                    }
+                    game.sceneContainer.loadScene(heroScene.map.id)
                 }
             }
         }
