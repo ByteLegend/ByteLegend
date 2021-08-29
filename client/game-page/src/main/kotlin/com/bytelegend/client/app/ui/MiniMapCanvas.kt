@@ -4,16 +4,12 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.api.Timestamp
-import com.bytelegend.app.client.misc.getImageElement
 import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.Ratio
 import com.bytelegend.app.shared.objects.GameMapRegion
-import com.bytelegend.app.shared.objects.GameObjectRole.MapRegion
-import com.bytelegend.client.app.obj.quadraticCurveTo
-import com.bytelegend.client.app.obj.setShadow
 import com.bytelegend.client.app.page.HERO_AVATAR_IMG_ID
 import com.bytelegend.client.app.ui.roadmap.RoadmapModal
 import kotlinx.browser.localStorage
@@ -24,7 +20,6 @@ import kotlinx.html.js.onMouseDownFunction
 import kotlinx.html.js.onMouseMoveFunction
 import kotlinx.html.js.onMouseOutFunction
 import kotlinx.html.js.onMouseUpFunction
-import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 import react.RBuilder
@@ -169,7 +164,7 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                     attrs.left = 16
                     attrs.theme = "light"
                     attrs.renderer = "svg"
-                    attrs.gameScene = game.activeScene
+                    attrs.game = game
                 }
             }
 
@@ -188,7 +183,6 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                         if (!isMaximized()) {
                             display = "none"
                         }
-//                        backgroundImage = "url('${game.resolve("/map/${activeScene.map.id}/roadmap.svg")}')"
                         backgroundSize = "100% 100%"
                         cursor = state.cursor
                         zIndex = miniMapZIndex + 3
@@ -312,10 +306,11 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
 
     private fun GridCoordinate.toMiniMapPixelCoordinate() = this * gameMap.tileSize * mapRatio
 
-    private fun getRegions(): List<GameMapRegion> = activeScene.objects.getByRole(MapRegion)
-
     private fun drawHeroAvatarOnMinimap() {
-        if (game.hero == null || resourceLoader.getLoadedResourceOrNull<ImageResourceData>(HERO_AVATAR_IMG_ID) == null) {
+        if (game.hero == null ||
+            game._hero?.gameScene?.isActive != true ||
+            resourceLoader.getLoadedResourceOrNull<ImageResourceData>(HERO_AVATAR_IMG_ID) == null
+        ) {
             return
         }
 
@@ -339,40 +334,6 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
             MINIMAP_AVATAR_SIZE, MINIMAP_AVATAR_SIZE
         )
         canvas.restore()
-    }
-
-    private fun drawPoint(coordinateOnMiniMap: PixelCoordinate, fillColor: String, shadowColor: String?) {
-        canvas.fillStyle = fillColor
-        if (shadowColor != null) {
-            canvas.setShadow(shadowColor, 0, 0, 5)
-        }
-        canvas.beginPath()
-        canvas.arc(
-            coordinateOnMiniMap.x.toDouble(), coordinateOnMiniMap.y.toDouble(),
-            3.0, 0.0, PI * 2, false
-        )
-        canvas.fill()
-    }
-
-    fun CanvasRenderingContext2D.drawRegion(curvePoints: List<PixelCoordinate>) {
-        require(curvePoints.size > 2)
-        save()
-
-        beginPath()
-        moveTo(curvePoints[0].x.toDouble(), curvePoints[1].y.toDouble())
-
-        for (i in 2 until curvePoints.size - 2) {
-            val xc = (curvePoints[i].x + curvePoints[i + 1].x) / 2
-            val yc = (curvePoints[i].y + curvePoints[i + 1].y) / 2
-            quadraticCurveTo(curvePoints[i].x, curvePoints[i].y, xc, yc)
-        }
-        quadraticCurveTo(
-            curvePoints[curvePoints.size - 2].x, curvePoints[curvePoints.size - 2].y,
-            curvePoints[curvePoints.size - 1].x, curvePoints[curvePoints.size - 1].y
-        )
-        clip()
-        drawImage(getImageElement("texture"), 0.0, 0.0, miniMapWidth.toDouble(), miniMapHeight.toDouble())
-        restore()
     }
 
     private fun drawViewportRect() {

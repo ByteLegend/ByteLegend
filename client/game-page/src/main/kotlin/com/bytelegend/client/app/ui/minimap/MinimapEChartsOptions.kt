@@ -267,16 +267,12 @@ private fun labelOptions(
     missionStars: Int,
     titleHtml: String
 ): dynamic {
-//    val totalStars = gameMapMission.totalStar
-//    val missionStars = gameScene.playerChallenges.missionStar(id)
     val starsRichText = if (totalStars >= 5) {
         "$missionStars/$totalStars{Star|}"
     } else {
         "{Star|}".repeat(missionStars) + "{HollowStar|}".repeat(totalStars - missionStars)
     }
     val title = htmlToText(titleHtml)
-//        gameScene.gameRuntime.i(gameMapMission.title)
-//    )
     val labelFormatter = when {
         !showMissionTitles -> starsRichText
         totalStars == 0 -> title
@@ -372,7 +368,7 @@ fun GameScene.getRoadmapMissionGraphSeries(showMissionTitles: Boolean): dynamic 
 
 private fun GameScene.addRealworldProjectsToNodes(showMissionTitles: Boolean, nodes: dynamic) {
     REALWORLD_PROJECTS.forEach {
-        val obj = objects.getByIdOrNull<GameObject>(JAVA_CASTLE_REGION_CENTER) ?: return
+        val obj = objects.getByIdOrNull<GameObject>(it) ?: return
         val coordinate = obj.unsafeCast<GridCoordinateAware>().gridCoordinate * map.tileSize
         val labelOptions = labelOptions(
             showMissionTitles,

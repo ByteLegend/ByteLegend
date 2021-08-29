@@ -2,7 +2,6 @@
 
 package com.bytelegend.client.app.ui
 
-import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.uuid
@@ -15,12 +14,10 @@ import kotlinx.browser.window
 import kotlinx.html.id
 import org.w3c.dom.events.MouseEvent
 import react.RBuilder
-import react.RComponent
-import react.RProps
 import react.RState
 import react.setState
 
-interface EChartsMinimapProps : RProps {
+interface EChartsMinimapProps : GameProps {
     var zIndex: Int
     var width: Int
     var height: Int
@@ -32,8 +29,6 @@ interface EChartsMinimapProps : RProps {
 
     // svg/canvas
     var renderer: String
-
-    var gameScene: GameScene
 }
 
 val minimapGraphSeries: dynamic = JSON.parse(
@@ -64,12 +59,14 @@ interface EChartsRoadmapState : RState {
     var hoveredPosition: PixelCoordinate?
 }
 
-class EChartsMinimap : RComponent<EChartsMinimapProps, EChartsRoadmapState>() {
+class EChartsMinimap : GameUIComponent<EChartsMinimapProps, EChartsRoadmapState>() {
     private val echartsContainerElementId = "echarts-container-${uuid()}"
 
+    private var mapId: String = ""
+
     // https://echarts.apache.org/en/api.html#echarts.init
-    var echarts: dynamic = undefined
-    var options: dynamic = undefined
+    private var echarts: dynamic = undefined
+    private var options: dynamic = undefined
 
     override fun RBuilder.render() {
         absoluteDiv(left = props.left, top = props.top, width = props.width, height = props.height) {
@@ -83,7 +80,7 @@ class EChartsMinimap : RComponent<EChartsMinimapProps, EChartsRoadmapState>() {
                     bottom = props.height - state.hoveredPosition!!.y + 20,
                     classes = jsObjectBackedSetOf("minimap-area-label")
                 ) {
-                    +props.gameScene.gameRuntime.i(state.hoveredRegionName!!)
+                    +game.i(state.hoveredRegionName!!)
                 }
             } else {
                 absoluteDiv(
@@ -91,24 +88,9 @@ class EChartsMinimap : RComponent<EChartsMinimapProps, EChartsRoadmapState>() {
                     top = state.hoveredPosition!!.y + 20,
                     classes = jsObjectBackedSetOf("minimap-area-label")
                 ) {
-                    +props.gameScene.gameRuntime.i(state.hoveredRegionName!!)
+                    +game.i(state.hoveredRegionName!!)
                 }
             }
-        }
-    }
-
-    private fun initIfNot() {
-        if (echarts == undefined) {
-            document.getElementById(echartsContainerElementId)?.apply {
-                echarts = window.asDynamic().echarts.init(this, props.theme, jsObject {
-                    renderer = props.renderer
-                })
-                val features = props.gameScene.getMinimapMapFeatures()
-                window.asDynamic().echarts.registerMap("minimap", features)
-            }
-        }
-        if (options == undefined) {
-            options = props.gameScene.getMinimapEChartsOptions()
         }
     }
 
@@ -130,24 +112,59 @@ class EChartsMinimap : RComponent<EChartsMinimapProps, EChartsRoadmapState>() {
         }
     }
 
-    override fun componentDidMount() {
-        initIfNot()
+    override fun componentDidUpdate(prevProps: EChartsMinimapProps, prevState: EChartsRoadmapState, snapshot: Any) {
+        refreshEcharts()
+    }
+
+    private fun refreshEcharts() {
+        if (echarts != undefined && mapId == activeScene.map.id) {
+            return
+        }
+
+        unmountEcharts()
+
+        document.getElementById(echartsContainerElementId)?.apply {
+            echarts = window.asDynamic().echarts.init(this, props.theme, jsObject {
+                renderer = props.renderer
+            })
+            val features = activeScene.getMinimapMapFeatures()
+            window.asDynamic().echarts.registerMap("minimap", features)
+        }
+
+        options = activeScene.getMinimapEChartsOptions()
         if (logger.debugEnabled) {
             logger.debug("Set echarts options for minimap: ${JSON.stringify(options)}")
         }
         echarts.setOption(options)
         echarts.on("mouseout", "series.map", this::onMouseout)
         echarts.on("mousemove", "series.map", this::onMousemove)
-        props.gameScene.gameRuntime.eventBus.on(MINIMAP_MOUSE_MOVE_EVENT, this::onMouseMoveOnMinimap)
+        mapId = activeScene.map.id
+    }
+
+    private fun unmountEcharts() {
+        if (echarts != undefined) {
+            echarts.off("mousemove", this::onMousemove)
+            echarts.off("mouseout", this::onMousemove)
+            echarts = undefined
+            options = undefined
+            mapId = ""
+        }
+    }
+
+    override fun componentDidMount() {
+        super.componentDidMount()
+        refreshEcharts()
+        game.eventBus.on(MINIMAP_MOUSE_MOVE_EVENT, this::onMouseMoveOnMinimap)
     }
 
     override fun componentWillUnmount() {
-        props.gameScene.gameRuntime.eventBus.remove(MINIMAP_MOUSE_MOVE_EVENT, this::onMouseMoveOnMinimap)
-        echarts.off("mousemove", this::onMousemove)
-        echarts.off("mouseout", this::onMousemove)
+        super.componentWillUnmount()
+        unmountEcharts()
     }
 
     override fun shouldComponentUpdate(nextProps: EChartsMinimapProps, nextState: EChartsRoadmapState): Boolean {
-        return state.hoveredPosition != nextState.hoveredPosition || state.hoveredRegionName != nextState.hoveredRegionName
+        return state.hoveredPosition != nextState.hoveredPosition ||
+            state.hoveredRegionName != nextState.hoveredRegionName ||
+            mapId != nextProps.game.activeScene.map.id
     }
 }
