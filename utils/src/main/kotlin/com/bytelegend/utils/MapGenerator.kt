@@ -107,7 +107,14 @@ class MapGenerator(
 
     private var used: Boolean = false
 
-    private val visibleFlattenedLayers: List<TiledMap.Layer> = tiledMap.layers.flatMap { layer ->
+    private val visibleFlattenedLayers: List<TiledMap.Layer> = tiledMap.layers.apply {
+        // Check dumplicate layer id
+        groupBy { it.id }.forEach { (layerId: Long, layers: List<TiledMap.Layer>) ->
+            if (layers.size > 1) {
+                throw IllegalStateException("Multiple layers with same id: $layerId ${layers.joinToString(",") { it.name }}")
+            }
+        }
+    }.flatMap { layer ->
         when {
             layer.name == "Blockers" -> emptyList()
             layer.name == "DynamicSprites" -> emptyList()
@@ -132,13 +139,6 @@ class MapGenerator(
             }
             else -> listOf(layer)
         }
-    }.apply {
-        // Check dumplicate layer id
-        groupBy { it.id }.forEach { (layerId: Long, layers: List<TiledMap.Layer>) ->
-            if (layers.size > 1) {
-                throw IllegalStateException("Multiple layers with same id: $layerId ${layers.joinToString(",") { it.name }}")
-            }
-        }
     }
 
     // Player layer is 0, layers above are positive, layers below are negative
@@ -160,7 +160,7 @@ class MapGenerator(
         for (y in 0 until tiledMap.height) {
             for (x in 0 until tiledMap.width) {
                 val tileLayersAtCoordinate = visibleFlattenedLayers
-                    .filter { it.type == "tilelayer" }
+                    .filter { it.type == "tilelayer" && it.name != "Player" }
                     .flatMap { layer ->
                         val i = (y * tiledMap.width + x).toInt()
                         val tileIndex = layer.data[i].toInt()
