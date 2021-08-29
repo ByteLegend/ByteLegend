@@ -4,6 +4,7 @@
  "imagewidth":512,
  "margin":0,
  "name":"RoyalAddOn",
+ "objectalignment":"topleft",
  "spacing":0,
  "tilecount":640,
  "tiledversion":"1.7.2",

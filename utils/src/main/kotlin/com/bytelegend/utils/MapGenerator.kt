@@ -60,6 +60,10 @@ val uglyObjectMapper = ObjectMapper().apply {
 }
 
 val prettyObjectMapper = uglyObjectMapper.writerWithDefaultPrettyPrinter()
+private const val TILE_LAYER_TYPE = "tilelayer"
+private const val PLAYER_LAYER_NAME = "Player"
+private const val BLOCKERS_LAYER_NAME = "Blockers"
+private const val DYNAMIC_SPRITES_GROUP_NAME = "DynamicSprites"
 
 class MapGenerator(
     private val mapId: String,
@@ -116,10 +120,10 @@ class MapGenerator(
         }
     }.flatMap { layer ->
         when {
-            layer.name == "Blockers" -> emptyList()
-            layer.name == "DynamicSprites" -> emptyList()
+            layer.name == BLOCKERS_LAYER_NAME -> emptyList()
+            layer.name == DYNAMIC_SPRITES_GROUP_NAME -> emptyList()
             !layer.visible -> emptyList()
-            layer.type == "tilelayer" -> listOf(layer)
+            layer.type == TILE_LAYER_TYPE -> listOf(layer)
             layer.type == "group" -> layer.layers.filter { it.visible }.map {
                 TiledMap.Layer(
                     it.data,
@@ -142,7 +146,7 @@ class MapGenerator(
     }
 
     // Player layer is 0, layers above are positive, layers below are negative
-    private val playerLayerIndex: Int = visibleFlattenedLayers.indexOfFirst { it.name == "Player" }.apply {
+    private val playerLayerIndex: Int = visibleFlattenedLayers.indexOfFirst { it.name == PLAYER_LAYER_NAME }.apply {
         require(this != -1) { "You must have a layer named `Player`" }
     }
     private val rawLayerIdToIndexMap = visibleFlattenedLayers.mapIndexed { i, layer ->
@@ -160,7 +164,7 @@ class MapGenerator(
         for (y in 0 until tiledMap.height) {
             for (x in 0 until tiledMap.width) {
                 val tileLayersAtCoordinate = visibleFlattenedLayers
-                    .filter { it.type == "tilelayer" && it.name != "Player" }
+                    .filter { it.type == TILE_LAYER_TYPE && it.name != PLAYER_LAYER_NAME }
                     .flatMap { layer ->
                         val i = (y * tiledMap.width + x).toInt()
                         val tileIndex = layer.data[i].toInt()
@@ -246,7 +250,7 @@ class MapGenerator(
     }
 
     private fun populateBlockersMap() {
-        val blockerLayer = tiledMap.layers.firstOrNull { it.name == "Blockers" } ?: return
+        val blockerLayer = tiledMap.layers.firstOrNull { it.name == BLOCKERS_LAYER_NAME } ?: return
         blockerLayer.data.withIndex().filter { it.value != 0L }.forEach {
             val x = it.index % tiledMap.width
             val y = it.index / tiledMap.width
