@@ -7,9 +7,22 @@
  "objectalignment":"topleft",
  "spacing":0,
  "tilecount":1064,
- "tiledversion":"1.5.0",
+ "tiledversion":"1.7.2",
  "tileheight":32,
+ "tiles":[
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":862
+                }, 
+                {
+                 "duration":500,
+                 "tileid":870
+                }],
+         "id":862
+        }],
  "tilewidth":32,
  "type":"tileset",
- "version":1.5
+ "version":"1.6"
 }

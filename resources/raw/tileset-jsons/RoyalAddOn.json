@@ -1,0 +1,14 @@
+{ "columns":16,
+ "image":"..\/tilesets\/RoyalAddOn.png",
+ "imageheight":1280,
+ "imagewidth":512,
+ "margin":0,
+ "name":"RoyalAddOn",
+ "spacing":0,
+ "tilecount":640,
+ "tiledversion":"1.7.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.6"
+}

@@ -166,5 +166,12 @@
     "artist": "Antü Plasma Suite",
     "licence": "CC BY-SA 3.0",
     "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0"
+  },
+  {
+    "name": "MV Royal AddOn",
+    "url": "https://rpgmaker-mv.de/forum/thread/426-mv-royal-ressourcen-addon/",
+    "artist": "PandaMaru & TheRealFusion",
+    "licence": "Free",
+    "licenceUrl": "#"
   }
 ]

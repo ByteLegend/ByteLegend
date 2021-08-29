@@ -257,7 +257,7 @@
          "name":"Blockers",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":16,
          "x":0,
          "y":0
@@ -266,7 +266,7 @@
  "nextobjectid":12,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.7.1",
+ "tiledversion":"1.7.2",
  "tileheight":32,
  "tilesets":[
         {
@@ -310,15 +310,15 @@
          "source":"..\/..\/tileset-jsons\/sea_animation_32x32.json"
         }, 
         {
-         "firstgid":6233,
+         "firstgid":6253,
          "source":"..\/..\/tileset-jsons\/JavaIslandNewbieVillagePubBartender.json"
         }, 
         {
-         "firstgid":6245,
+         "firstgid":6265,
          "source":"..\/..\/tileset-jsons\/JavaIslandNewbieVillagePubTestEngineer.json"
         }, 
         {
-         "firstgid":6257,
+         "firstgid":6277,
          "source":"..\/..\/tileset-jsons\/JavaIslandNewbieVillagePubGirl.json"
         }],
  "tilewidth":32,

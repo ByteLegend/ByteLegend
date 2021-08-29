@@ -119,9 +119,12 @@ fun GameScene.castleDoor() = objects {
 
     bouncingTitle {
         pixelCoordinate = (castleDoorPoint + GridCoordinate(1, 0)) * this@castleDoor.map.tileSize
-        text = gameRuntime.i("JavaIslandSeniorJavaCastle")
+        text = gameRuntime.i(JAVA_ISLAND_SENIOR_JAVA_CASTLE)
         color = "white"
         backgroundColor = "rgba(36,102,233,0.8)"
+        onClickFunction = {
+            gameRuntime.sceneContainer.loadScene(JAVA_ISLAND_SENIOR_JAVA_CASTLE)
+        }
     }
 }
 

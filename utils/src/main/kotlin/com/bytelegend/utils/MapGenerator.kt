@@ -113,7 +113,7 @@ class MapGenerator(
             layer.name == "DynamicSprites" -> emptyList()
             !layer.visible -> emptyList()
             layer.type == "tilelayer" -> listOf(layer)
-            layer.type == "group" -> layer.layers.map {
+            layer.type == "group" -> layer.layers.filter { it.visible }.map {
                 TiledMap.Layer(
                     it.data,
                     it.height,
