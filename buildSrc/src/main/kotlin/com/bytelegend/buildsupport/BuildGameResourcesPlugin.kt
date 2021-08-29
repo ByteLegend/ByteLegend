@@ -138,6 +138,15 @@ class BuildGameResourcesPlugin : Plugin<Project> {
                 from(project(":client:game-$it").file("build/distribution-${variant.mode.name.toLowerCase()}/game-$it.js"))
             }
             into(outputRRBD.resolve("js"))
+            if (variant == Variant.Production) {
+                doLast {
+                    outputRRBD.resolve("js").listFiles()?.forEach {
+                        require(it.length() < 2 * 1024 * 1024) {
+                            "${it.absolutePath} is larger than 2MiB!"
+                        }
+                    }
+                }
+            }
         }
 
         val compressPngTask = if (variant == Variant.Release) {
