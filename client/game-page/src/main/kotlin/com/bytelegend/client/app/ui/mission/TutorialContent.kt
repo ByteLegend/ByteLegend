@@ -58,7 +58,7 @@ class TutorialContent : RComponent<TutorialContentProps, TutorialContentState>()
 
     private fun RBuilder.youtubePlayer() {
         ReactPlayer {
-            attrs.`class` = "tutorial-video-player"
+            attrs.className = "tutorial-video-player"
             attrs.url = props.tutorial.href
             attrs.controls = true
             attrs.width = "90%"
