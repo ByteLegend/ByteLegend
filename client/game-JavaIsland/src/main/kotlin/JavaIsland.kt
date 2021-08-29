@@ -96,7 +96,6 @@ fun GameScene.newbieVillageNoticeboard() = objects {
     bouncingTitle {
         pixelCoordinate = corner * this@newbieVillageNoticeboard.map.tileSize + PixelCoordinate(16, 0)
         text = gameRuntime.i("SeekForHighPayingJob")
-        color = "white"
         backgroundColor = "rgba(23,162,184,0.8)"
         onClickFunction = {
             gameRuntime.modalController.showModal(
@@ -120,7 +119,6 @@ fun GameScene.castleDoor() = objects {
     bouncingTitle {
         pixelCoordinate = (castleDoorPoint + GridCoordinate(1, 0)) * this@castleDoor.map.tileSize
         text = gameRuntime.i(JAVA_ISLAND_SENIOR_JAVA_CASTLE)
-        color = "white"
         backgroundColor = "rgba(36,102,233,0.8)"
         onClickFunction = {
             gameRuntime.sceneContainer.loadScene(JAVA_ISLAND_SENIOR_JAVA_CASTLE)

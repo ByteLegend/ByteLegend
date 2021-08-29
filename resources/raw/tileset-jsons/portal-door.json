@@ -56,6 +56,26 @@
                  "tileid":84
                 }],
          "id":48
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
+                 "tileid":57
+                }, 
+                {
+                 "duration":500,
+                 "tileid":69
+                }, 
+                {
+                 "duration":500,
+                 "tileid":81
+                }, 
+                {
+                 "duration":500,
+                 "tileid":93
+                }],
+         "id":57
         }],
  "tilewidth":32,
  "type":"tileset",
