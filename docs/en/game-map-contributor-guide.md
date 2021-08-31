@@ -11,11 +11,7 @@ We have been doing our best to make the map editing "What You See Is What You Ge
 what we get in the game. The layers are stacked in the same order as in the game.
 
 To make changes, edit the tile layers in `Tiled`, save, then restart the local development server. 
-Changes will be picked up and rebuilt automatically. Note that you may need to clear browser cache to force reload the updated js/css/images by:
-
-(Steps to clear chrome cache, for other browsers please consult the documentation accordingly):
-- Open DevTools window by selecting `More Tools` - `Developer Tools` in Chrome menu.
-- Right-click the refresh button and select `Empty Cache and Hard Reload`.
+Changes will be picked up and rebuilt automatically. 
 
 ## Game Map Conventions
 
