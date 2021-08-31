@@ -132,7 +132,7 @@ fun GameScene.pubGirl() = objects {
                 }
             } else {
                 scripts {
-                    val point = HumanReadableCoordinate(objects.getById<GameObject>(COFFEE_MACHINE_MISSION).unsafeCast<CoordinateAware>().gridCoordinate).toString()
+                    val point = HumanReadableCoordinate(objects.getById<GameObject>("install-java").unsafeCast<CoordinateAware>().gridCoordinate).toString()
                     speech(girlId, "SeeTheCoffeeMachine", args = arrayOf(point), arrow = false)
                 }
             }
