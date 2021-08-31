@@ -316,7 +316,7 @@ fun GameScene.newbieVillageHead() = objects {
                         }
                     }
                 } else {
-                    val noticeboardPoint = objects.getPointById(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID).toHumanReadableCoordinate().toString()
+                    val noticeboardPoint = objects.getPointById("remember-brave-people").toHumanReadableCoordinate().toString()
                     val javaCastlePoint = objects.getPointById("JavaIsland-SeniorJavaCastle-entrance-left").toHumanReadableCoordinate().toString()
 
                     scripts {
