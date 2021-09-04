@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -48,8 +48,8 @@ import react.dom.jsStyle
 import react.dom.p
 import react.setState
 
-fun bravePeopleJsonUrl(timestamp: Long) = "https://bytelegend-brave-people.oss-cn-hongkong.aliyuncs.com/brave-people-all.json?timestamp=$timestamp"
-fun bravePeopleImgUrl(timestamp: Long) = "https://bytelegend-brave-people.oss-cn-hongkong.aliyuncs.com/brave-people.png?timestamp=$timestamp"
+fun bravePeopleJsonUrl(timestamp: Long) = "/proxy/brave-people-all.json?timestamp=$timestamp"
+fun bravePeopleImgUrl(timestamp: Long) = "/proxy/brave-people.png?timestamp=$timestamp"
 
 // Don't change these values. They are defined elsewhere:
 // https://github.com/ByteLegendQuest/remember-brave-people/blob/master/src/main/java/com/bytelegend/game/Constants.java#L26
@@ -80,7 +80,7 @@ class JavaIslandNewbieVillageNoticeboard :
 
     private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
         // Refresh upon mission finished event
-        if (eventData.change.accomplished && eventData.newValue.challengeId == "remember-brave-people") {
+        if (eventData.change.accomplished && eventData.newValue.missionId == "remember-brave-people") {
             setState {
                 init()
             }
@@ -88,6 +88,7 @@ class JavaIslandNewbieVillageNoticeboard :
     }
 
     override fun JavaIslandNewbieVillageNoticeboardState.init() {
+        loading = false
         avatarTiles = undefined
         imageDisplay = "none"
         timestamp = currentTimeMillis()
@@ -129,9 +130,10 @@ class JavaIslandNewbieVillageNoticeboard :
                                         throw Exception("Got response status code $status")
                                     }
                                 }.text().await()
-                            setState {
-                                avatarTiles = JSON.parse(json)
-                            }
+                            setState({
+                                it.avatarTiles = JSON.parse(json)
+                                it
+                            }, { loading = false })
                         }
                         loading = true
                     }
