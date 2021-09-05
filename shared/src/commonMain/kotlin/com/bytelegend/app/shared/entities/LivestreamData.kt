@@ -13,29 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bytelegend.client.app.ui
 
-enum class Layer {
-    MapCanvas,
-    CursorWidget,
-    PlayerNames,
-    UserMouseInteraction,
-    BouncingTitle,
-    MissionTitlePullRequestAnswerButton,
-    ScrollButtons,
-    HeroControlButton,
-    MiniMapCanvas,
-    ScriptWidget,
-    LivestreamIndicator,
-    RightSideBar,
-    UserAvatarWidget,
-    LocaleSelectionDropdown,
-    IcpServerLocationWidget,
-    HeroIndicator,
-    Menu,
-    MapTitle,
-    BannerToast,
-    FadeInFadeOut;
+package com.bytelegend.app.shared.entities
 
-    fun zIndex() = 10 * ordinal
-}
+data class LivestreamData(
+    val id: String,
+    val title: String,
+    val url: String,
+    val startEpochMs: Long,
+    val endEpochMs: Long
+)

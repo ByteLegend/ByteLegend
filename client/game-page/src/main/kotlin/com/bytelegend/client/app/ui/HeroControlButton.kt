@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.protocol.PlayerSpeechEventData
 import com.bytelegend.app.shared.protocol.sentences
-import com.bytelegend.client.app.engine.GAME_CLOCK_50HZ_EVENT
+import com.bytelegend.client.app.engine.GAME_CLOCK_20MS_EVENT
 import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
@@ -70,14 +70,14 @@ class HeroControlButton : GameUIComponent<GameProps, HeroControlButtonState>() {
         super.componentDidMount()
         props.game.eventBus.on(MOUSE_MOVE_EVENT, mouseMoveListener)
         props.game.eventBus.on(MOUSE_CLICK_EVENT, mouseClickListener)
-        props.game.eventBus.on(GAME_CLOCK_50HZ_EVENT, on50HzClockListener)
+        props.game.eventBus.on(GAME_CLOCK_20MS_EVENT, on50HzClockListener)
     }
 
     override fun componentWillUnmount() {
         super.componentWillUnmount()
         props.game.eventBus.remove(MOUSE_MOVE_EVENT, mouseMoveListener)
         props.game.eventBus.remove(MOUSE_CLICK_EVENT, mouseClickListener)
-        props.game.eventBus.remove(GAME_CLOCK_50HZ_EVENT, on50HzClockListener)
+        props.game.eventBus.remove(GAME_CLOCK_20MS_EVENT, on50HzClockListener)
     }
 
     override fun RBuilder.render() {

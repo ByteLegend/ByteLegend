@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,7 +18,7 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.HumanReadableCoordinate
-import com.bytelegend.client.app.engine.GAME_CLOCK_10HZ_EVENT
+import com.bytelegend.client.app.engine.GAME_CLOCK_100MS_EVENT
 import com.bytelegend.client.app.engine.MAP_SCROLL_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
@@ -83,7 +83,7 @@ class MapCoordinateTitleWidget : GameUIComponent<GameProps, MapCoordinateWidgetS
         props.game.eventBus.on(MOUSE_MOVE_EVENT, mouseMoveListener)
         props.game.eventBus.on(MAP_SCROLL_EVENT, scrollEventListener)
         props.game.eventBus.on(MOUSE_OUT_OF_MAP_EVENT, mouseOutOfMapListener)
-        props.game.eventBus.on(GAME_CLOCK_10HZ_EVENT, on10HzListener)
+        props.game.eventBus.on(GAME_CLOCK_100MS_EVENT, on10HzListener)
         props.game.eventBus.on(COORDINATE_BORDER_FLICKER, onBorderFlickerEventListener)
     }
 
@@ -91,7 +91,7 @@ class MapCoordinateTitleWidget : GameUIComponent<GameProps, MapCoordinateWidgetS
         props.game.eventBus.remove(MOUSE_MOVE_EVENT, mouseMoveListener)
         props.game.eventBus.remove(MAP_SCROLL_EVENT, scrollEventListener)
         props.game.eventBus.remove(MOUSE_OUT_OF_MAP_EVENT, mouseOutOfMapListener)
-        props.game.eventBus.remove(GAME_CLOCK_10HZ_EVENT, on10HzListener)
+        props.game.eventBus.remove(GAME_CLOCK_100MS_EVENT, on10HzListener)
         props.game.eventBus.remove(COORDINATE_BORDER_FLICKER, onBorderFlickerEventListener)
     }
 

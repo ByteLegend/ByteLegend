@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,7 +23,7 @@ import com.bytelegend.app.shared.Direction.RIGHT
 import com.bytelegend.app.shared.Direction.UP
 import com.bytelegend.app.shared.math.imageBlockOnCanvas
 import com.bytelegend.app.shared.math.outOfCanvas
-import com.bytelegend.client.app.engine.GAME_CLOCK_10HZ_EVENT
+import com.bytelegend.client.app.engine.GAME_CLOCK_100MS_EVENT
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
@@ -63,12 +63,12 @@ class HeroIndicatorWidget : GameUIComponent<GameProps, HeroIndicatorWidgetState>
     }
 
     override fun componentDidMount() {
-        game.eventBus.on(GAME_CLOCK_10HZ_EVENT, eventListener)
+        game.eventBus.on(GAME_CLOCK_100MS_EVENT, eventListener)
         super.componentDidMount()
     }
 
     override fun componentWillUnmount() {
-        game.eventBus.remove(GAME_CLOCK_10HZ_EVENT, eventListener)
+        game.eventBus.remove(GAME_CLOCK_100MS_EVENT, eventListener)
         super.componentWillUnmount()
     }
 

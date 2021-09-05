@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package com.bytelegend.client.app.engine
 import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.GameContainerSizeAware
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
@@ -27,7 +28,11 @@ import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.WindowBasedEventBus
 import com.bytelegend.app.shared.GameInitData
+import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.GameMapDefinition
+import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.GridSize
+import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.enums.ServerLocation
@@ -53,9 +58,10 @@ import org.kodein.di.eagerSingleton
 import org.kodein.di.instance
 import org.kodein.di.singleton
 
-const val GAME_CLOCK_1HZ = 1 // Hertz
-const val GAME_CLOCK_10HZ = 10 // Hertz
-const val GAME_CLOCK_50HZ = 50 // Hertz
+private const val GAME_CLOCK_60S = 60000
+private const val GAME_CLOCK_1S = 1000
+private const val GAME_CLOCK_100MS = 100
+private const val GAME_CLOCK_20MS = 20
 
 fun init(gameInitData: GameInitData): Game {
     val di = DI {
@@ -135,21 +141,22 @@ class Game(
     fun start() {
         gameControl.start()
         animate()
-        setClock(GAME_CLOCK_1HZ, GAME_CLOCK_1HZ_EVENT)
-        setClock(GAME_CLOCK_10HZ, GAME_CLOCK_10HZ_EVENT)
-        setClock(GAME_CLOCK_50HZ, GAME_CLOCK_50HZ_EVENT)
+        setClock(GAME_CLOCK_60S, GAME_CLOCK_60S_EVENT)
+        setClock(GAME_CLOCK_1S, GAME_CLOCK_1S_EVENT)
+        setClock(GAME_CLOCK_100MS, GAME_CLOCK_100MS_EVENT)
+        setClock(GAME_CLOCK_20MS, GAME_CLOCK_20MS_EVENT)
         eventBus.on(ITEMS_STATES_UPDATE_EVENT, onItemsStatesUpdateEventListener)
         eventBus.on(ONLINE_COUNTER_UPDATE_EVENT) { number: Int ->
             onlineNumber = number
         }
     }
 
-    private fun setClock(hz: Int, eventName: String) {
+    private fun setClock(ms: Int, eventName: String) {
         window.setInterval(
             {
                 eventBus.emit(eventName, null)
             },
-            1000 / hz
+            ms
         )
     }
 
@@ -201,3 +208,32 @@ private fun GameMapDefinition.putIntMap(map: MutableMap<String, GameMapDefinitio
         it.putIntMap(map)
     }
 }
+
+val Game.gameContainerWidth: Int
+    get() = gameContainerSize.width
+val Game.gameCanvasState: GameCanvasState
+    get() = activeScene.canvasState
+val Game.gameContainerHeight: Int
+    get() = gameContainerSize.height
+val Game.tileSize: PixelSize
+    get() = activeScene.map.tileSize
+val Game.canvasCoordinateInMap: PixelCoordinate
+    get() = activeScene.canvasState.getCanvasCoordinateInMap()
+val Game.canvasGridCoordinateInMap: GridCoordinate
+    get() = activeScene.canvasState.getCanvasGridCoordinateInMap()
+val Game.uiContainerCoordinateInGameContainer: PixelCoordinate
+    get() = activeScene.canvasState.getUICoordinateInGameContainer()
+val Game.uiContainerSize: PixelSize
+    get() = activeScene.canvasState.getUIContainerSize()
+val Game.canvasCoordinateInGameContainer: PixelCoordinate
+    get() = activeScene.canvasState.getCanvasCoordinateInGameContainer()
+val Game.canvasGridSize: GridSize
+    get() = activeScene.canvasState.getCanvasGridSize()
+val Game.canvasPixelSize: PixelSize
+    get() = activeScene.canvasState.getCanvasPixelSize()
+val Game.mapGridSize: GridSize
+    get() = activeScene.map.size
+val Game.mapPixelSize: PixelSize
+    get() = activeScene.map.pixelSize
+val Game.gameMap: GameMap
+    get() = activeScene.map

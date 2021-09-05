@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -290,23 +290,24 @@ interface ModalController {
     fun showModal(content: String, title: String? = null)
 }
 
-data class Banner(
+interface ToastController {
+    fun addToast(headerHtml: String, bodyHtml: String, autoHideMs: Int = 0)
+}
+
+class Banner(
     val contentHtml: String,
     /**
      * success/warning, etc.
      */
     val variant: String,
-    val dismissible: Boolean = true,
     /**
-     * After how many milliseconds will this banner be dismissed automatically
+     * After how many seconds will this banner be closed automatically.
+     * There will be an indicator counting down to zero.
+     * 0 means no auto closing.
      */
-    val autoDismissMs: Int = 0
+    val autoCloseSeconds: Int = 0,
 )
 
 interface BannerController {
     fun showBanner(banner: Banner)
-}
-
-interface ToastController {
-    fun addToast(headerHtml: String, bodyHtml: String, autoHideMs: Int = 0)
 }

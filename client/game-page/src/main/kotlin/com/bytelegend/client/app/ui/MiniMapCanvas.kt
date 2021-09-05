@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -210,10 +210,9 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
 
             BootstrapButton {
                 attrs.size = "sm"
+                attrs.className = "round-button"
                 attrs.style = kotlinext.js.js {
                     zIndex = miniMapZIndex + 4
-                    borderRadius = "50% 50%"
-                    position = "absolute"
                     // 0.0 -> 32
                     // 1.0 -> miniMapWidth
                     left = "${32 + ((miniMapWidth - 32) * collapseProgress).toInt()}px"
@@ -221,7 +220,6 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                     // 0.0 -> miniMapHeight - 32
                     //  (miniMapHeight - 32) * (1-state.collapseProgress)
                     top = "0px"
-                    boxShadow = "0 0 0 0.1rem rgba(255,255,255,.5)"
                 }
                 attrs.title = game.i("Maximize")
                 attrs.onClick = {
@@ -238,16 +236,14 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
             if (!mapCoveredByCanvas) {
                 BootstrapButton {
                     attrs.size = "sm"
+                    attrs.className = "round-button"
                     attrs.style = kotlinext.js.js {
                         zIndex = miniMapZIndex + 4
-                        borderRadius = "50% 50%"
-                        position = "absolute"
                         left = "0"
                         top = "0px"
                         // 1.0 -> ↓ -> 0deg
                         // 0.0 -> ↑ -> -180deg
                         transform = "rotate(${(-180 * (1 - collapseProgress)).toInt()}deg)"
-                        boxShadow = "0 0 0 0.1rem rgba(255,255,255,.5)"
                     }
                     attrs.onClick = {
                         if (isMaximized()) {

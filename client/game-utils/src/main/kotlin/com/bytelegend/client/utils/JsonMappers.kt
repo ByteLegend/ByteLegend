@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,6 +22,7 @@ import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.entities.ChallengeTabData
 import com.bytelegend.app.shared.entities.DiscussionsTabData
+import com.bytelegend.app.shared.entities.LivestreamData
 import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.MissionTabData
 import com.bytelegend.app.shared.entities.MissionTabType.Discussions
@@ -275,3 +276,13 @@ fun toLocalizedText(jsonObject: dynamic) = LocalizedText(
     toTypedMap(jsonObject.data) { it },
     LocalizedTextFormat.valueOf(jsonObject.format)
 )
+
+fun toLivestreams(jsonObject: dynamic) = toTypedList(jsonObject) {
+    LivestreamData(
+        it.id,
+        it.title,
+        it.url,
+        it.startEpochMs,
+        it.endEpochMs
+    )
+}

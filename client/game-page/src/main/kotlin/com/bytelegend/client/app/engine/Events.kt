@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,9 +33,10 @@ const val GAME_ANIMATION_EVENT = "game.animation"
  * - Animation events **might** be stopped when browser tab becomes inactive.
  * - The clock event is emitted with a stabler frequency.
  */
-const val GAME_CLOCK_10HZ_EVENT = "game.clock.10hz"
-const val GAME_CLOCK_50HZ_EVENT = "game.clock.50hz"
-const val GAME_CLOCK_1HZ_EVENT = "game.clock.1hz"
+const val GAME_CLOCK_100MS_EVENT = "game.clock.100ms"
+const val GAME_CLOCK_20MS_EVENT = "game.clock.20ms"
+const val GAME_CLOCK_1S_EVENT = "game.clock.1s"
+const val GAME_CLOCK_60S_EVENT = "game.clock.60s"
 
 // Most of the UI elements depends on properties of GameCanvasState
 // Update all UI elements after resizing, or other "update all UI elements" operations.

@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,6 +46,7 @@ import com.bytelegend.client.app.ui.GameScriptWidgetDisplayLayerProps
 import com.bytelegend.client.app.ui.HeroControlButton
 import com.bytelegend.client.app.ui.HeroIndicatorWidget
 import com.bytelegend.client.app.ui.ICPServerLocationWidget
+import com.bytelegend.client.app.ui.LivestreamIndicators
 import com.bytelegend.client.app.ui.LocaleSelectionDropdown
 import com.bytelegend.client.app.ui.LocaleSelectionDropdownProps
 import com.bytelegend.client.app.ui.MainMapCanvasLayer
@@ -218,7 +219,8 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                         reputationCountWidget(attrs)
                         itemWidget(attrs)
                     }
-                    floatingTitleWidgets(attrs)
+                    livestreamIndicators(attrs)
+                    bouncingTitleWidgets(attrs)
                     tileCursorWidget(attrs)
                     heroControlButton(attrs)
                     spriteNameWidget(attrs)
@@ -347,7 +349,14 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         return gameChild(parentProps, HeroControlButton::class, block)
     }
 
-    private fun RElementBuilder<GameContainerProps>.floatingTitleWidgets(
+    private fun RElementBuilder<GameContainerProps>.livestreamIndicators(
+        parentProps: GameContainerProps,
+        block: RElementBuilder<GameProps>.() -> Unit = {}
+    ): ReactElement {
+        return gameChild(parentProps, LivestreamIndicators::class, block)
+    }
+
+    private fun RElementBuilder<GameContainerProps>.bouncingTitleWidgets(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
     ): ReactElement {
