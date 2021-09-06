@@ -81,12 +81,11 @@ import com.bytelegend.client.app.ui.mission.BouncingTitles
 import com.bytelegend.client.utils.toGameInitData
 import kotlinx.browser.document
 import kotlinx.browser.window
+import react.Props
 import react.RBuilder
 import react.RComponent
 import react.RElementBuilder
-import react.RProps
-import react.RState
-import react.ReactElement
+import react.State
 import react.dom.RDOMBuilder
 import react.dom.div
 import react.dom.render
@@ -117,11 +116,11 @@ fun main() {
     }
 }
 
-interface GamePageState : RState {
+interface GamePageState : State {
     var sceneLoading: Boolean
 }
 
-interface GamePageProps : RProps
+interface GamePageProps : Props
 
 class GamePage : RComponent<GamePageProps, GamePageState>() {
     override fun GamePageState.init() {
@@ -291,8 +290,8 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         direction: Direction,
         parentProps: GameContainerProps,
         block: RElementBuilder<MapTitleWidgetsProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, MapTitleWidgets::class) {
+    ) {
+        gameChild(parentProps, MapTitleWidgets::class) {
             attrs.direction = direction
             block()
         }
@@ -301,7 +300,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     private fun RElementBuilder<GameContainerProps>.rightSideBarWidgets(
         parentProps: GameContainerProps,
         block: RElementBuilder<RightSideBarProps>.() -> Unit = {}
-    ): ReactElement {
+    ) {
         return gameChild(parentProps, RightSideBar::class) {
             block()
         }
@@ -310,82 +309,82 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     private fun RElementBuilder<RightSideBarProps>.starCountWidget(
         parentProps: RightSideBarProps,
         block: RElementBuilder<StarCountWidgetProps>.() -> Unit = {}
-    ): ReactElement {
+    ) {
         return gameChild(parentProps, StarCountWidget::class, block)
     }
 
     private fun RElementBuilder<RightSideBarProps>.coinCountWidget(
         parentProps: RightSideBarProps,
         block: RElementBuilder<CoinCountWidgetProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, CoinCountWidget::class, block)
+    ) {
+        gameChild(parentProps, CoinCountWidget::class, block)
     }
 
     private fun RElementBuilder<RightSideBarProps>.reputationCountWidget(
         parentProps: RightSideBarProps,
         block: RElementBuilder<ReputationCountWidgetProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, ReputationCountWidget::class, block)
+    ) {
+        gameChild(parentProps, ReputationCountWidget::class, block)
     }
 
     private fun RElementBuilder<RightSideBarProps>.itemWidget(
         parentProps: RightSideBarProps,
         block: RElementBuilder<ItemWidgetProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, ItemsWidget::class, block)
+    ) {
+         gameChild(parentProps, ItemsWidget::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.tileCursorWidget(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, TileCursorWidget::class, block)
+    ) {
+        gameChild(parentProps, TileCursorWidget::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.heroControlButton(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, HeroControlButton::class, block)
+    ) {
+         gameChild(parentProps, HeroControlButton::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.livestreamIndicators(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, LivestreamIndicators::class, block)
+    ) {
+         gameChild(parentProps, LivestreamIndicators::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.bouncingTitleWidgets(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, BouncingTitles::class, block)
+    ) {
+         gameChild(parentProps, BouncingTitles::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.spriteNameWidget(
         parentProps: GameContainerProps,
         block: RElementBuilder<PlayerNamesProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, PlayerNames::class, block)
+    ) {
+         gameChild(parentProps, PlayerNames::class, block)
     }
 
     private fun RElementBuilder<MapTitleWidgetsProps>.mapNameWidget(
         parentProps: MapTitleWidgetsProps,
         block: RElementBuilder<MapSelectionDropdownProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, MapSelectionDropdown::class, block)
+    ) {
+         gameChild(parentProps, MapSelectionDropdown::class, block)
     }
 
     private fun RElementBuilder<MapTitleWidgetsProps>.fpsCounter(
         parentProps: MapTitleWidgetsProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, FpsCounter::class, block)
+    ) {
+        gameChild(parentProps, FpsCounter::class, block)
     }
 
-    private fun RElementBuilder<MapTitleWidgetsProps>.onlineCounter(parentProps: MapTitleWidgetsProps, block: RElementBuilder<GameProps>.() -> Unit = {}): ReactElement {
-        return gameChild(parentProps, OnlineCounter::class) {
+    private fun RElementBuilder<MapTitleWidgetsProps>.onlineCounter(parentProps: MapTitleWidgetsProps, block: RElementBuilder<GameProps>.() -> Unit = {}) {
+        gameChild(parentProps, OnlineCounter::class) {
             attrs.initCount = game.onlineNumber
             block()
         }
@@ -394,70 +393,70 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
     private fun RElementBuilder<MapTitleWidgetsProps>.mapCoordinateTitleWidget(
         parentProps: MapTitleWidgetsProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, MapCoordinateTitleWidget::class, block)
+    ) {
+        gameChild(parentProps, MapCoordinateTitleWidget::class, block)
     }
 
     private fun RElementBuilder<MapTitleWidgetsProps>.audioSwitch(
         parentProps: MapTitleWidgetsProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, AudioSwitchWidget::class, block)
+    ) {
+        gameChild(parentProps, AudioSwitchWidget::class, block)
     }
 
     private fun RElementBuilder<MapTitleWidgetsProps>.localeSelectionDropdown(
         parentProps: MapTitleWidgetsProps,
         block: RElementBuilder<LocaleSelectionDropdownProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, LocaleSelectionDropdown::class, block)
+    ) {
+        gameChild(parentProps, LocaleSelectionDropdown::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.menu(
         parentProps: GameContainerProps,
         block: RElementBuilder<MenuProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, Menu::class, block)
+    ) {
+        gameChild(parentProps, Menu::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.heroIndicator(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, HeroIndicatorWidget::class, block)
+    ) {
+        gameChild(parentProps, HeroIndicatorWidget::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.modalController(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, GameModal::class, block)
+    ) {
+        gameChild(parentProps, GameModal::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.bannerController(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, BannerUIComponent::class, block)
+    ) {
+        gameChild(parentProps, BannerUIComponent::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.toastController(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, ToastUIComponent::class, block)
+    ) {
+        gameChild(parentProps, ToastUIComponent::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.userAvatarWidget(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, UserAvatarWidget::class, block)
+    ) {
+        gameChild(parentProps, UserAvatarWidget::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.icpServerLocationWidget(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
-    ): ReactElement {
-        return gameChild(parentProps, ICPServerLocationWidget::class, block)
+    ) {
+        gameChild(parentProps, ICPServerLocationWidget::class, block)
     }
 }

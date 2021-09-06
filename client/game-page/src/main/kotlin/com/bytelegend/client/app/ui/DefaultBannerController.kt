@@ -25,7 +25,7 @@ import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
 import react.RBuilder
-import react.RState
+import react.State
 import react.dom.b
 import react.dom.div
 import react.dom.jsStyle
@@ -44,7 +44,7 @@ class DefaultBannerController(
     }
 }
 
-interface GameBannersState : RState {
+interface GameBannersState : State {
     var banners: MutableList<Banner>
 
     /**
@@ -149,6 +149,6 @@ class BannerUIComponent : GameUIComponent<GameProps, GameBannersState>() {
     override fun componentWillUnmount() {
         super.componentWillUnmount()
         props.game.eventBus.remove(BANNER_UPDATE_EVENT, bannerUpdateEventListener)
-        props.game.eventBus.remove(BANNER_UPDATE_EVENT, checkRestSecondEverySecond)
+        props.game.eventBus.remove(GAME_CLOCK_1S_EVENT, checkRestSecondEverySecond)
     }
 }

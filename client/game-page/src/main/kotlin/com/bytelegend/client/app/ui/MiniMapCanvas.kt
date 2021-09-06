@@ -38,14 +38,14 @@ import kotlinx.html.js.onMouseUpFunction
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 import react.RBuilder
-import react.RState
+import react.State
 import react.dom.attrs
 import react.dom.jsStyle
 import react.setState
 import kotlin.math.PI
 import kotlin.math.max
 
-interface MiniMapState : RState {
+interface MiniMapState : State {
     var cursor: String
 
     // 0 -> fully minimized

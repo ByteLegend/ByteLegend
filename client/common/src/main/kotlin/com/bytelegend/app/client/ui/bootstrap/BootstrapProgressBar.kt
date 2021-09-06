@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,14 +18,14 @@
 
 package com.bytelegend.app.client.ui.bootstrap
 
-import react.RClass
-import react.RProps
+import react.ElementType
+import react.Props
 
 @JsName("default")
-external val BootstrapProgressBar: RClass<BootstrapProgressBarProps>
+external val BootstrapProgressBar: ElementType<BootstrapProgressBarProps>
 
 // https://react-bootstrap.github.io/components/progress/
-external interface BootstrapProgressBarProps : RProps {
+external interface BootstrapProgressBarProps : Props {
     var now: Int
     var animated: Boolean
     var variant: String

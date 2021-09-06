@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 import kotlinx.html.classes
 import org.w3c.dom.HTMLTextAreaElement
 import react.RBuilder
-import react.RState
+import react.State
 import react.dom.br
 import react.dom.div
 import react.dom.h4
@@ -63,7 +63,7 @@ interface QuestionChallengeTabProps : GameProps {
     var challengeSpec: ChallengeSpec
 }
 
-interface QuestionChallengeTabState : RState {
+interface QuestionChallengeTabState : State {
     var loading: Boolean
 }
 

@@ -30,7 +30,7 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.unsafeSpan
 import react.RBuilder
 import react.RComponent
-import react.RState
+import react.State
 import react.dom.p
 import react.setState
 
@@ -38,7 +38,7 @@ interface PullRequestLogModalProps : GameProps {
     var answer: PullRequestAnswer
 }
 
-interface PullRequestLogModalState : RState {
+interface PullRequestLogModalState : State {
     var activeTabIndex: Int
 }
 

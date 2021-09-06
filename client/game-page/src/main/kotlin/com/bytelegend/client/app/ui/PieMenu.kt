@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,8 +26,8 @@ import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.RComponent
-import react.RProps
-import react.RState
+import react.Props
+import react.State
 import react.dom.div
 import react.dom.jsStyle
 import react.dom.span
@@ -48,14 +48,14 @@ private const val ANIMATION_INTERVAL = 50
 const val WHITE_CLOSE_ICON =
     "data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cpath d='M512.008 422.3L915.699 18.61a63.437 63.437 0 1 1 89.707 89.707l-403.69 403.691 403.69 403.691a63.437 63.437 0 0 1-89.707 89.707l-403.691-403.69-403.691 403.69A63.437 63.437 0 0 1 18.61 915.7L422.3 512.008 18.61 108.317a63.437 63.437 0 1 1 89.707-89.707L512.008 422.3z' fill='%23fff'/%3E%3C/svg%3E"
 
-interface PieMenuProps : RProps {
+interface PieMenuProps : Props {
     var centerPoint: PixelCoordinate
     var items: List<PieMenuItem>
     var zIndex: Int
     var onClose: UnitFunction
 }
 
-interface PieMenuState : RState {
+interface PieMenuState : State {
     // 0.0-1.0
     var ratio: Double
     var timerId: Int
@@ -67,7 +67,7 @@ class PieMenuItem(
     val onClick: UnitFunction
 )
 
-interface PieMenuCloseButtonProps : RProps {
+interface PieMenuCloseButtonProps : Props {
     //    var centerPoint: PixelCoordinate
     var zIndex: Int
 
@@ -110,7 +110,7 @@ class PieMenuCloseButton : RComponent<PieMenuCloseButtonProps, PieMenuButtonStat
     }
 }
 
-interface PieMenuButtonProps : RProps {
+interface PieMenuButtonProps : Props {
     // pixel size to the origin
     var radius: Int
 
@@ -121,7 +121,7 @@ interface PieMenuButtonProps : RProps {
     var item: PieMenuItem
 }
 
-interface PieMenuButtonState : RState {
+interface PieMenuButtonState : State {
     var hovered: Boolean
 }
 

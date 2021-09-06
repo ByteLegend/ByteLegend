@@ -24,12 +24,12 @@ import com.bytelegend.client.app.obj.CharacterSprite
 import com.bytelegend.client.app.obj.getSpriteBlockOnCanvas
 import react.RBuilder
 import react.RComponent
-import react.RProps
-import react.RState
+import react.Props
+import react.State
 import react.setState
 
 interface PlayerNamesProps : GameProps
-interface PlayerNamesState : RState
+interface PlayerNamesState : State
 
 class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
     private val on50HzClockListener: EventListener<Nothing> = {
@@ -73,7 +73,7 @@ class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
     }
 }
 
-interface PlayerNameSpanProps : RProps {
+interface PlayerNameSpanProps : Props {
     // coordinate in game container
     var x: Int
     var y: Int
@@ -81,7 +81,7 @@ interface PlayerNameSpanProps : RProps {
     var isHero: Boolean
 }
 
-class PlayerNameSpan : RComponent<PlayerNameSpanProps, RState>() {
+class PlayerNameSpan : RComponent<PlayerNameSpanProps, State>() {
     override fun RBuilder.render() {
         absoluteDiv(
             left = props.x,
@@ -96,7 +96,7 @@ class PlayerNameSpan : RComponent<PlayerNameSpanProps, RState>() {
         }
     }
 
-    override fun shouldComponentUpdate(nextProps: PlayerNameSpanProps, nextState: RState): Boolean {
+    override fun shouldComponentUpdate(nextProps: PlayerNameSpanProps, nextState: State): Boolean {
         return props.x != nextProps.x || props.y != nextProps.y || props.name != nextProps.name
     }
 }

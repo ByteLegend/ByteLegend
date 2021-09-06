@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,14 +29,14 @@ import kotlinext.js.jsObject
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.RComponent
-import react.RState
+import react.State
 import react.createElement
 import react.dom.div
 import react.dom.jsStyle
-import react.rClass
+import react.react
 import react.setState
 
-interface MissionTitleAnswersState : RState
+interface MissionTitleAnswersState : State
 
 interface MissionTitleAnswerProps : GameProps {
     var mission: GameMission
@@ -81,7 +81,7 @@ class MissionTitleAnswers : RComponent<MissionTitleAnswerProps, MissionTitleAnsw
                 attrs.drop = "right"
                 attrs.variant = "light"
                 attrs.size = "sm"
-                attrs.title = createElement(MissionTitlePullRequestAnswerButton::class.rClass, jsObject<MissionTitlePullRequestAnswerButtonButtonProps> {
+                attrs.title = createElement(MissionTitlePullRequestAnswerButton::class.react, jsObject {
                     this.game = props.game
                     pullRequestAnswer = pullRequestAnswers[0]
                 })

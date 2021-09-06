@@ -32,7 +32,7 @@ import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.RHandler
-import react.RState
+import react.State
 import react.dom.jsStyle
 import react.dom.p
 import react.dom.span
@@ -54,7 +54,7 @@ interface SpeechBubbleWidgetProps : GameProps {
     var arrow: Boolean
 }
 
-interface SpeechBubbleWidgetState : RState {
+interface SpeechBubbleWidgetState : State {
     var arrowUp: Boolean
 }
 

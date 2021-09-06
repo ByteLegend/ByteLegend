@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ val forestVersion = "0.3.16-SNAPSHOT"
 val vertxVersion = "4.1.2"
 val guavaVersion = "30.1.1-jre"
 val jacksonVersion = "2.12.3"
-val kotlinVersion = "1.5.21"
+val kotlinVersion = "1.5.30"
 val kotlinxVersion = "1.5.0"
 val junitVersion = "5.7.0"
 val junit4Version = "4.13"
@@ -56,7 +56,7 @@ val dynamodbCrossRegionReplicationVersion = "1.2.1.19"
 val caffeineVersion = "2.8.8"
 val testContainersVersion = "1.16.0"
 val kodeinVersion = "7.6.0"
-val kotlinReactVersion = "17.0.2-pre.217-kotlin-1.5.21"
+val kotlinReactVersion = "17.0.2-pre.241-kotlin-1.5.30"
 val reactVersion = "17.0.2"
 val reactBootstrapVersion = "1.6.1"
 val materialUIVersion = "4.11.2"

@@ -41,14 +41,14 @@ import kotlinx.html.currentTimeMillis
 import org.w3c.fetch.Response
 import react.RBuilder
 import react.RComponent
-import react.RState
+import react.State
 import react.dom.a
 import react.dom.div
 import react.setState
 
 private const val LIVESTREAM_DATA_URL = "/proxy/livestream-data.json"
 
-interface LivestreamIndicatorsState : RState {
+interface LivestreamIndicatorsState : State {
     var livestreams: List<LivestreamData>
 }
 
@@ -79,7 +79,6 @@ class LivestreamIndicators : RComponent<GameProps, LivestreamIndicatorsState>() 
         }
 
         state.livestreams.forEach {
-            console.log(it.id, it.isPast(), it.isLive(), it.secondsToStart())
             if (it.isPast()) {
                 notifiedLivestreamsInLocalStorage.remove(it.id)
             } else if (it.isLive() && !notifiedLivestreamsInLocalStorage.contains(it.id)) {
@@ -120,7 +119,6 @@ class LivestreamIndicators : RComponent<GameProps, LivestreamIndicatorsState>() 
                     it.livestreams = livestreamData
                     it
                 }, {
-                    console.log("Init!")
                     sendBannerIfNecessary()
                 })
             } catch (e: Exception) {

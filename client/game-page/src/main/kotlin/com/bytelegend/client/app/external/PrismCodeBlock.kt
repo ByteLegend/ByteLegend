@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,15 +20,15 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.html.id
 import org.w3c.dom.Element
+import react.Props
 import react.RBuilder
 import react.RComponent
 import react.RElementBuilder
-import react.RProps
-import react.RState
+import react.State
 import react.dom.div
 import kotlin.math.min
 
-interface CodeBlockProps : RProps {
+interface CodeBlockProps : Props {
     var language: String
     var pluginClassName: String
     var lines: List<String>
@@ -41,7 +41,7 @@ fun RBuilder.codeBlock(block: RElementBuilder<CodeBlockProps>.() -> Unit = {}) {
     }
 }
 
-class PrismCodeBlock : RComponent<CodeBlockProps, RState>() {
+class PrismCodeBlock : RComponent<CodeBlockProps, State>() {
     private val codeContainerElementId = "code-container-${uuid()}"
     private val preElementId = "pre-${uuid()}"
 
@@ -81,7 +81,7 @@ class PrismCodeBlock : RComponent<CodeBlockProps, RState>() {
         }
     }
 
-    override fun componentDidUpdate(prevProps: CodeBlockProps, prevState: RState, snapshot: Any) {
+    override fun componentDidUpdate(prevProps: CodeBlockProps, prevState: State, snapshot: Any) {
         val firstDirtyLineNumber: Int = determineFirstDirtyLineNumber(props.lines, prevProps.lines)
 
         // remove <code id = "xxxx-line-i"> and append new <code>
@@ -116,7 +116,7 @@ class PrismCodeBlock : RComponent<CodeBlockProps, RState>() {
         }
     }
 
-    override fun shouldComponentUpdate(nextProps: CodeBlockProps, nextState: RState): Boolean {
+    override fun shouldComponentUpdate(nextProps: CodeBlockProps, nextState: State): Boolean {
         // TODO this can only handle appending case, but not modifying case
         if (nextProps.lines === props.lines) {
             return nextProps.lines.size != displayedLineNumber

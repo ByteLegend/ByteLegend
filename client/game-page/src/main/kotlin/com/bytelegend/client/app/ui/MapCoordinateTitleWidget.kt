@@ -27,14 +27,14 @@ import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
 import kotlinx.html.id
 import react.RBuilder
-import react.RState
+import react.State
 import react.dom.jsStyle
 import react.dom.span
 import react.setState
 
 const val COORDINATE_BORDER_FLICKER = "coordinate.border.flicker.end"
 
-interface MapCoordinateWidgetState : RState {
+interface MapCoordinateWidgetState : State {
     var humanReadableCoordinate: HumanReadableCoordinate?
     var flickering: Boolean
 }

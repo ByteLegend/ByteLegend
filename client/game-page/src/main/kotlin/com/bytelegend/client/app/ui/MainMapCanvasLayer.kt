@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,9 @@ import kotlinx.html.id
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import react.RBuilder
-import react.RState
+import react.RefObject
+import react.State
+import react.createRef
 import react.dom.RDOMBuilder
 import react.dom.attrs
 import react.dom.canvas
@@ -69,8 +71,11 @@ Basically, it draws part of the game map and responds to various game events:
 
  */
 
-abstract class AbstractMapCanvas<S : RState> : GameUIComponent<MapCanvasProps, S>() {
-    lateinit var canvas: CanvasRenderingContext2D
+abstract class AbstractMapCanvas<S : State> : GameUIComponent<MapCanvasProps, S>() {
+    private val canvasRef: RefObject<HTMLCanvasElement> = createRef()
+    protected val canvas: CanvasRenderingContext2D by lazy {
+        canvasRef.current!!.getContext("2d").unsafeCast<CanvasRenderingContext2D>()
+    }
     private val windowAnimationEventListener: GameAnimationEventListener = { onPaint(it) }
 
     protected abstract fun onPaint(lastAnimationTime: Timestamp)
@@ -80,11 +85,7 @@ abstract class AbstractMapCanvas<S : RState> : GameUIComponent<MapCanvasProps, S
             canvasConfig()
 
             +"Canvas not supported"
-            ref {
-                if (it != null) {
-                    canvas = (it as HTMLCanvasElement).getContext("2d") as CanvasRenderingContext2D
-                }
-            }
+            ref = canvasRef
         }
     }
 
@@ -138,7 +139,8 @@ fun CanvasRenderingContext2D.drawImage(
     restore()
 }
 
-class MainMapCanvasLayer : GameUIComponent<GameProps, RState>() {
+class MainMapCanvasLayer : GameUIComponent<GameProps, State>() {
+    private val objectCanvasRef: RefObject<HTMLCanvasElement> = createRef()
     private val windowAnimationEventListener: GameAnimationEventListener = {
         game.mainMapCanvasRenderer.onAnimation()
     }
@@ -174,11 +176,8 @@ class MainMapCanvasLayer : GameUIComponent<GameProps, RState>() {
             canvasAttr("objects-canvas-layer", Layer.MapCanvas.zIndex() + 2)
 
             +"Canvas not supported"
-            ref {
-                if (it != null) {
-                    game.mainMapCanvasRenderer.mapObjectsLayer = it.getContext("2d")
-                }
-            }
+            ref = objectCanvasRef
+            game.mainMapCanvasRenderer.mapObjectsLayerRef = objectCanvasRef
         }
     }
 

@@ -39,7 +39,7 @@ import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 import react.RBuilder
 import react.RComponent
-import react.RState
+import react.State
 import react.dom.b
 import react.dom.div
 import react.dom.h2
@@ -66,7 +66,7 @@ data class AvatarTile(
     val changedAt: String
 )
 
-interface JavaIslandNewbieVillageNoticeboardState : RState {
+interface JavaIslandNewbieVillageNoticeboardState : State {
     var hoveredTile: AvatarTile?
     var avatarTiles: Array<AvatarTile>?
     var imageDisplay: String

@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,21 +34,21 @@ import com.bytelegend.client.app.engine.toGridCoordinate
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import org.w3c.dom.events.Event
+import react.PropsWithChildren
 import react.RBuilder
 import react.RComponent
-import react.RProps
-import react.RState
+import react.State
 import react.dom.RDOMBuilder
 import react.setState
 
-interface GameProps : RProps {
+interface GameProps : PropsWithChildren {
     var game: Game
 }
 
 /**
  * A special component which responds to game.ui.update event and update itself correspondingly.
  */
-abstract class GameUIComponent<P : GameProps, S : RState> : RComponent<P, S> {
+abstract class GameUIComponent<P : GameProps, S : State> : RComponent<P, S> {
     constructor() : super()
 
     constructor(props: P) : super(props)

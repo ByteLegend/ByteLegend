@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,7 +30,7 @@ import org.kodein.di.DI
 import org.kodein.di.instance
 import react.RBuilder
 import react.RElementBuilder
-import react.RState
+import react.State
 
 interface ModalControllerInternal : ModalController {
     fun hide()
@@ -78,7 +78,7 @@ class DefaultModalController(
     }
 }
 
-class GameModal : GameUIComponent<GameProps, RState>() {
+class GameModal : GameUIComponent<GameProps, State>() {
     override fun RBuilder.render() {
         if (game.modalController.visible) {
             BootstrapModal {

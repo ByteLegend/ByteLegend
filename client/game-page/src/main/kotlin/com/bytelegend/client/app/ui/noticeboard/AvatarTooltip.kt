@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,8 @@ import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
 import react.RBuilder
 import react.RComponent
-import react.RProps
-import react.RState
+import react.Props
+import react.State
 import react.dom.div
 import react.dom.img
 import react.dom.jsStyle
@@ -34,12 +34,12 @@ const val TOOLTIP_OFFSET_Y = -72
 const val TRIANGLE_OFFSET_X = 92
 const val TRIANGLE_OFFSET_Y = 64
 
-interface AvatarCardProps : RProps {
+interface AvatarCardProps : Props {
     var joinedAtI18n: String
     var tile: AvatarTile
 }
 
-class AvatarTooltip : RComponent<AvatarCardProps, RState>() {
+class AvatarTooltip : RComponent<AvatarCardProps, State>() {
     override fun UNSAFE_componentWillReceiveProps(nextProps: AvatarCardProps) {
         setState { }
     }

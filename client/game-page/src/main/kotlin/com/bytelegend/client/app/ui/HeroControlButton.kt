@@ -32,12 +32,12 @@ import kotlinx.html.classes
 import kotlinx.html.id
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
-import react.RState
+import react.State
 import react.dom.div
 import react.dom.jsStyle
 import react.setState
 
-interface HeroControlButtonState : RState {
+interface HeroControlButtonState : State {
     var showPointer: Boolean
     var showPieMenu: Boolean
     var showSpeakMenu: Boolean

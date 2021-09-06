@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,7 +26,9 @@ import kotlinx.html.id
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLSpanElement
 import react.RBuilder
-import react.RState
+import react.RefObject
+import react.State
+import react.createRef
 import react.dom.jsStyle
 import react.dom.span
 import react.setState
@@ -37,13 +39,16 @@ interface OnlineCounterProps : GameProps {
     var initCount: Int
 }
 
-interface OnlineCounterState : RState {
+interface OnlineCounterState : State {
     var count: Int
     var offsetY: Int
 }
 
 class OnlineCounter(props: OnlineCounterProps) : GameUIComponent<OnlineCounterProps, OnlineCounterState>(props) {
-    lateinit var span: HTMLSpanElement
+    private val spanRef: RefObject<HTMLSpanElement> = createRef()
+    private val span: HTMLSpanElement by lazy {
+        spanRef.current!!
+    }
     private val onlineCounterUpdateEventListener: EventListener<Int> = {
         // It's possible the event during the animation is lost, but we think it's fine
         if (it != state.count) {
@@ -123,11 +128,7 @@ class OnlineCounter(props: OnlineCounterProps) : GameUIComponent<OnlineCounterPr
                         position = "relative"
                         top = "${state.offsetY}px"
                     }
-                    ref {
-                        if (it != null) {
-                            span = (it as HTMLSpanElement)
-                        }
-                    }
+                    ref = spanRef
                 }
             } else {
                 attrs.id = "online-counter-offline"

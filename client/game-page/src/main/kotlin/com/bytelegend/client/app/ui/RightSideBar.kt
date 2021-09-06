@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroup
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import react.RBuilder
-import react.RState
+import react.State
 
 interface RightSideBarProps : GameProps
 
@@ -35,7 +35,7 @@ fun GameCanvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer(
         PixelCoordinate(gameContainerSize.width - it.x - 80, it.y)
     }
 
-class RightSideBar : GameUIComponent<RightSideBarProps, RState>() {
+class RightSideBar : GameUIComponent<RightSideBarProps, State>() {
     override fun RBuilder.render() {
         if (game.heroPlayer.isAnonymous) {
             return
@@ -47,7 +47,7 @@ class RightSideBar : GameUIComponent<RightSideBarProps, RState>() {
             classes = jsObjectBackedSetOf("right-sidebar")
         ) {
             BootstrapListGroup {
-                children()
+                props.children()
             }
         }
     }

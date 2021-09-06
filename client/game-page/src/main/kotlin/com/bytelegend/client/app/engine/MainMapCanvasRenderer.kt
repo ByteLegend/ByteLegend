@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,6 +27,7 @@ import com.bytelegend.client.utils.JSObjectBackedMap
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
+import react.RefObject
 
 /**
  * This class is carefully tuned, don't surprise on the weird usage and don't change it without profiling.
@@ -42,7 +43,9 @@ class MainMapCanvasRenderer(
      * The non-pre-render-able tiles, including dynamic sprites (e.g. NPC) and
      * the tile layer above pal
      */
-    lateinit var mapObjectsLayer: CanvasRenderingContext2D
+    lateinit var mapObjectsLayerRef: RefObject<HTMLCanvasElement>
+    private val mapObjectsLayer: CanvasRenderingContext2D
+        get() = mapObjectsLayerRef.current!!.getContext("2d").unsafeCast<CanvasRenderingContext2D>()
 
     @Suppress("UnsafeCastFromDynamic")
     fun putSceneBackgroundIntoCanvasCacheIfAbsent(gameScene: GameScene) {
