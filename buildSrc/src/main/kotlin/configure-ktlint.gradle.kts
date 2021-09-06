@@ -44,6 +44,6 @@ tasks.register<JavaExec>("ktlintFormat") {
     group = "formatting"
     description = "Fix Kotlin code style deviations"
     classpath = configurations["ktlint"]
-    main = "com.pinterest.ktlint.Main"
+    mainClass.set("com.pinterest.ktlint.Main")
     args("-F", "src/**/*.kt")
 }
