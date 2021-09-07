@@ -67,7 +67,7 @@
 请注意`server` git submodule目前尚未开源，因为其中包含复杂的后端配置和敏感信息（GitHub webhook, GitHub app, k8s secrets等）。
 不过，我们在`server-opensource`中提供了一个开源版本的后端服务实现。
 
-点击[这里](https://github.com/ByteLegend/ByteLegend/blob/master/docs/zh_hans/developer-guide.md) 查看开发者文档。
+点击[这里](https://github.com/ByteLegend/ByteLegend/blob/master/docs/zh_hans/game-code-contributor-guide.md) 查看开发者文档。
 
 </details>
 
@@ -128,5 +128,5 @@ The first run may take minutes because all game resources need to be generated. 
 Please note that `server` git submodule hasn't been opensource yet, as we have complex backend services/credentials there (GitHub webhook, GitHub app, k8s secrets, etc.).
 However, we do provide a opensource version of backend service in `server-opensource` module.
 
-See [here](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/game-code-developer-guide.md) for more details.
+See [here](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/game-code-contributor-guide.md) for more details.
 
