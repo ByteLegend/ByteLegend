@@ -4,6 +4,7 @@
 
 - Game data contributor: 
   - You see a typo or bad translation in a text, like mission description, UI prompt, etc.
+  - You see a tutorial better than any existing ones, and you want to share it with the whole world (and earn coins)!
 - Game map contributor: 
   - You see a flaw in the game map, like a bad tile image, or incorrectly marked tile (e.g. you can walk into a sea tile).  
 - Game code contributor: 
@@ -32,6 +33,10 @@ We intentionally put all text resources in a separate repo so you can clone it m
 Search the wrong text with your favorite text editor, fix the issue then create a pull request.
 
 You can also follow the guidance [here](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/i18n.md#help-us-via-github-web-ui) to fix the issue via GitHub web UI.
+
+## Contribute Better Tutorials
+
+TBD
 
 ## Contribute to Game Map
 

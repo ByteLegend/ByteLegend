@@ -676,3 +676,8 @@ p.speech-bubble::after {
 .closed-in-span {
     float: right;
 }
+
+.mission-modal-tutorial-add-button {
+    width: 100%;
+    margin-top: 10px;
+}
