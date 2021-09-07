@@ -20,6 +20,7 @@ package com.bytelegend.client.app.ui.noticeboard
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
+import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.engine.MISSION_REPAINT_EVENT
@@ -46,6 +47,7 @@ import react.dom.h2
 import react.dom.img
 import react.dom.jsStyle
 import react.dom.p
+import react.dom.span
 import react.setState
 
 fun bravePeopleJsonUrl(timestamp: Long) = "/proxy/brave-people-all.json?timestamp=$timestamp"
@@ -68,6 +70,7 @@ data class AvatarTile(
 
 interface JavaIslandNewbieVillageNoticeboardState : State {
     var hoveredTile: AvatarTile?
+    var hoveredTileCoordinate: GridCoordinate?
     var avatarTiles: Array<AvatarTile>?
     var imageDisplay: String
     var timestamp: Long
@@ -144,19 +147,41 @@ class JavaIslandNewbieVillageNoticeboard :
                     avatarTooltip()
                 }
             }
+            span {
+                attrs.jsStyle {
+                    margin = "0 auto"
+                    display = "table"
+                }
+                if (state.hoveredTileCoordinate != null) {
+                    +"(${state.hoveredTileCoordinate!!.x}, ${state.hoveredTileCoordinate!!.y})"
+                } else {
+                    attrs.jsStyle {
+                        color = "transparent"
+                    }
+                    +"Yay! You found an easter egg!"
+                }
+            }
         }
     }
 
     private fun findTileByMouseCoordinate(event: Event): AvatarTile? {
-        val event = event.asDynamic().nativeEvent as MouseEvent
-        val hoveredTileX = event.offsetX.toInt() / AVATAR_TILE_SIZE
-        val hoveredTileY = event.offsetY.toInt() / AVATAR_TILE_SIZE
+        val e = event.asDynamic().nativeEvent as MouseEvent
+        val hoveredTileX = e.offsetX.toInt() / AVATAR_TILE_SIZE
+        val hoveredTileY = e.offsetY.toInt() / AVATAR_TILE_SIZE
         for (tile in state.avatarTiles!!) {
             if (tile.x == hoveredTileX && tile.y == hoveredTileY) {
                 return tile
             }
         }
         return null
+    }
+
+    private fun toCoordinate(event: Event): GridCoordinate {
+        val e = event.asDynamic().nativeEvent as MouseEvent
+        return GridCoordinate(
+            e.offsetX.toInt() / AVATAR_TILE_SIZE,
+            e.offsetY.toInt() / AVATAR_TILE_SIZE
+        )
     }
 
     private fun RBuilder.avatarImg() {
@@ -178,14 +203,25 @@ class JavaIslandNewbieVillageNoticeboard :
                     }
                 }
                 attrs.onMouseMoveFunction = {
+                    val coordinate: GridCoordinate = toCoordinate(it)
                     val hoveredTile: AvatarTile? = findTileByMouseCoordinate(it)
 
-                    if (state.hoveredTile?.x != hoveredTile?.x || state.hoveredTile?.x != hoveredTile?.y) {
-                        setState { this.hoveredTile = hoveredTile }
+                    val updateCoordinate = (state.hoveredTileCoordinate != coordinate)
+                    val updateTile = (state.hoveredTile?.x != hoveredTile?.x || state.hoveredTile?.y != hoveredTile?.y)
+                    setState {
+                        if (updateTile) {
+                            this.hoveredTile = hoveredTile
+                        }
+                        if (updateCoordinate) {
+                            this.hoveredTileCoordinate = coordinate
+                        }
                     }
                 }
                 attrs.onMouseOutFunction = {
-                    setState { hoveredTile = undefined }
+                    setState {
+                        hoveredTile = null
+                        hoveredTileCoordinate = null
+                    }
                 }
             }
         }
