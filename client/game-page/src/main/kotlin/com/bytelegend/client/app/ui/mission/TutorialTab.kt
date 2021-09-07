@@ -20,6 +20,7 @@ package com.bytelegend.client.app.ui.mission
 import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroup
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
+import com.bytelegend.app.client.ui.bootstrap.BootstrapOverlayTrigger
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPagination
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationEllipsis
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationFirst
@@ -29,9 +30,11 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationNext
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationPrev
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.client.ui.bootstrap.BootstrapTabContainer
+import com.bytelegend.app.client.ui.bootstrap.BootstrapTooltip
 import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.MultiSelect
@@ -39,14 +42,17 @@ import com.bytelegend.client.app.ui.Option
 import com.bytelegend.client.app.web.getMissionTutorial
 import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinext.js.jsObject
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.html.classes
+import react.PropsWithChildren
 import react.RBuilder
 import react.State
 import react.dom.div
 import react.dom.span
+import react.functionComponent
 import react.setState
 
 interface TutorialTabProps : GameProps {
@@ -67,23 +73,19 @@ interface TutorialTabState : State {
     var loadingTutorialContent: Boolean
 }
 
-// private val tooltipFunctionalComponent = fc<PropsWithChildren> { it ->
-//    console.log(it)
-//    console.log(JSON.stringify(it))
-//    BootstrapTooltip {
-//        attrs.id = "contribute-tutorials-tooltip"
-//        attrs.className = it.asDynamic().className
-//        attrs.arrowProps = it.asDynamic().arrowProps
-//        attrs.placement = it.asDynamic().placement
-//        attrs.popper = it.asDynamic().popper
-//        attrs.show = it.asDynamic().show
-//        attrs.ref = it.asDynamic().ref
-//        attrs.style = it.asDynamic().style
-//
-//        it.children()
-//        +game.i("ContributeBetterTutorialsTooltip")
-//    }
-// }
+private val tooltipFunctionalComponent = functionComponent<PropsWithChildren> { props ->
+    BootstrapTooltip {
+        attrs.id = "contribute-tutorials-tooltip"
+        attrs.className = props.asDynamic().className
+        attrs.style = props.asDynamic().style
+        attrs.arrowProps = props.asDynamic().arrowProps
+        attrs.placement = props.asDynamic().placement
+        attrs.popper = props.asDynamic().popper
+        attrs.show = props.asDynamic().show
+        attrs.ref = props.asDynamic().ref
+        +game.i("ContributeBetterTutorialsTooltip")
+    }
+}
 
 class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, TutorialTabState>(props) {
     override fun TutorialTabState.init(props: TutorialTabProps) {
@@ -200,13 +202,13 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                                 }
                             }
 
-//                            BootstrapOverlayTrigger {
-//                                attrs.placement = "top"
-//                                attrs.delay = jsObject<dynamic> {
-//                                    show = 250
-//                                    hide = 400000
-//                                }
-//                                attrs.overlay = tooltipFunctionalComponent
+                            BootstrapOverlayTrigger {
+                                attrs.placement = "top"
+                                attrs.delay = jsObject<dynamic> {
+                                    show = 250
+                                    hide = 400
+                                }
+                                attrs.overlay = tooltipFunctionalComponent
                                 BootstrapButton {
                                     attrs.className = "mission-modal-tutorial-add-button"
                                     +"+ ${game.i("ContributeBetterTutorials")}"
@@ -218,7 +220,7 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                                         window.open(url, "_blank")
                                     }
                                 }
-//                            }
+                            }
                         }
 
                         div {
