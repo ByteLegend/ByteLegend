@@ -8,6 +8,7 @@ on:
       - '**/*.md'
       - 'docs/**'
       - versions.json
+      - livestream-data.json
   pull_request:
     branches-ignore:
       - release
@@ -15,6 +16,7 @@ on:
       - '**/*.md'
       - 'docs/**'
       - versions.json
+      - livestream-data.json
 jobs:
   member-check:
     runs-on: 'ubuntu-latest'

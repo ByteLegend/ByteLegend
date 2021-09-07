@@ -26,6 +26,12 @@ external val BootstrapOverlayTrigger: ElementType<BootstrapOverlayTriggerProps>
 
 external interface BootstrapOverlayTriggerProps : PropsWithChildren {
     var placement: String
+    var className: String
+    var defaultShow: Boolean
     var delay: Any
+    var flip: Boolean
     var overlay: Any
+    var show: Boolean
+    var target: Any
+    var trigger: String
 }
