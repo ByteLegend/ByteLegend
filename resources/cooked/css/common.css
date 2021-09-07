@@ -396,6 +396,7 @@ body {
     width: 70%;
     overflow-y: auto;
     position: relative;
+    min-height: 600px;
 }
 
 .tutorial-video-player {
@@ -674,4 +675,9 @@ p.speech-bubble::after {
 
 .closed-in-span {
     float: right;
+}
+
+.mission-modal-tutorial-add-button {
+    width: 100%;
+    margin-top: 10px;
 }

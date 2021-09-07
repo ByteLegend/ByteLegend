@@ -39,6 +39,7 @@ import com.bytelegend.client.app.ui.Option
 import com.bytelegend.client.app.web.getMissionTutorial
 import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.html.classes
@@ -65,6 +66,24 @@ interface TutorialTabState : State {
     var loadingTutorials: Boolean
     var loadingTutorialContent: Boolean
 }
+
+// private val tooltipFunctionalComponent = fc<PropsWithChildren> { it ->
+//    console.log(it)
+//    console.log(JSON.stringify(it))
+//    BootstrapTooltip {
+//        attrs.id = "contribute-tutorials-tooltip"
+//        attrs.className = it.asDynamic().className
+//        attrs.arrowProps = it.asDynamic().arrowProps
+//        attrs.placement = it.asDynamic().placement
+//        attrs.popper = it.asDynamic().popper
+//        attrs.show = it.asDynamic().show
+//        attrs.ref = it.asDynamic().ref
+//        attrs.style = it.asDynamic().style
+//
+//        it.children()
+//        +game.i("ContributeBetterTutorialsTooltip")
+//    }
+// }
 
 class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, TutorialTabState>(props) {
     override fun TutorialTabState.init(props: TutorialTabProps) {
@@ -180,6 +199,26 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                                     }
                                 }
                             }
+
+//                            BootstrapOverlayTrigger {
+//                                attrs.placement = "top"
+//                                attrs.delay = jsObject<dynamic> {
+//                                    show = 250
+//                                    hide = 400000
+//                                }
+//                                attrs.overlay = tooltipFunctionalComponent
+                                BootstrapButton {
+                                    attrs.className = "mission-modal-tutorial-add-button"
+                                    +"+ ${game.i("ContributeBetterTutorials")}"
+                                    attrs.onClick = {
+                                        val url = if (game.locale == Locale.ZH_HANS)
+                                            "https://github.com/ByteLegend/ByteLegend/blob/master/docs/zh_hans/CONTRIBUTING.md#%E8%B4%A1%E7%8C%AE%E6%9B%B4%E5%A5%BD%E7%9A%84%E6%95%99%E7%A8%8B"
+                                        else
+                                            "https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/CONTRIBUTING.md#contribute-better-tutorials"
+                                        window.open(url, "_blank")
+                                    }
+                                }
+//                            }
                         }
 
                         div {
@@ -217,7 +256,7 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                     }
                     div {
                         attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-content-right")
-                        if (!state.loadingTutorials) {
+                        if (!state.loadingTutorials && state.tutorials.items.isNotEmpty()) {
                             child(TutorialContent::class) {
                                 attrs.game = game
                                 attrs.tutorial = state.tutorials.items[state.activeTutorialIndex]
