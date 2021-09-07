@@ -396,6 +396,7 @@ body {
     width: 70%;
     overflow-y: auto;
     position: relative;
+    min-height: 600px;
 }
 
 .tutorial-video-player {
