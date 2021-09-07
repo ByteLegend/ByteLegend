@@ -51,6 +51,7 @@ import react.PropsWithChildren
 import react.RBuilder
 import react.State
 import react.dom.div
+import react.dom.onClick
 import react.dom.span
 import react.functionComponent
 import react.setState
@@ -202,16 +203,26 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                                 }
                             }
 
-                            BootstrapOverlayTrigger {
-                                attrs.placement = "top"
-                                attrs.delay = jsObject<dynamic> {
-                                    show = 250
-                                    hide = 400
+                            div {
+                                attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-add-div")
+                                BootstrapOverlayTrigger {
+                                    attrs.placement = "top"
+                                    attrs.delay = jsObject<dynamic> {
+                                        show = 250
+                                        hide = 400
+                                    }
+                                    attrs.overlay = tooltipFunctionalComponent
+                                    BootstrapButton {
+                                        attrs.className = "mission-modal-tutorial-add-button"
+                                        +"+ ${game.i("ContributeBetterTutorials")}"
+                                        attrs.onClick = {
+                                            window.open(buildMissionYamlEditGitHubUrl(), "_blank")
+                                        }
+                                    }
                                 }
-                                attrs.overlay = tooltipFunctionalComponent
-                                BootstrapButton {
-                                    attrs.className = "mission-modal-tutorial-add-button"
-                                    +"+ ${game.i("ContributeBetterTutorials")}"
+
+                                div {
+                                    attrs.classes = jsObjectBackedSetOf("mission-modal-tutorial-add-help-icon")
                                     attrs.onClick = {
                                         val url = if (game.locale == Locale.ZH_HANS)
                                             "https://github.com/ByteLegend/ByteLegend/blob/master/docs/zh_hans/CONTRIBUTING.md#%E8%B4%A1%E7%8C%AE%E6%9B%B4%E5%A5%BD%E7%9A%84%E6%95%99%E7%A8%8B"
@@ -268,6 +279,10 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                 }
             }
         }
+    }
+
+    private fun buildMissionYamlEditGitHubUrl(): String {
+        return "https://github.com/ByteLegend/game-data/edit/master/${game.activeScene.map.id}/missions/${props.missionId}.yml"
     }
 
     private fun refresh(pageNumber: Int) {

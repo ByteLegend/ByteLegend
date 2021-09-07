@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JsModule("react-bootstrap/ButtonGroup")
+@file:JsModule("react-bootstrap/ButtonToolbar")
 @file:JsNonModule
 
 package com.bytelegend.app.client.ui.bootstrap
@@ -22,8 +22,10 @@ import react.ElementType
 import react.Props
 
 @JsName("default")
-external val BootstrapButtonGroup: ElementType<BootstrapButtonGroupProps>
+external val BootstrapButtonToolbar: ElementType<BootstrapButtonButtonToolbarProps>
 
-external interface BootstrapButtonGroupProps : Props {
+external interface BootstrapButtonButtonToolbarProps : Props {
+    var role: String
     var className: String
+    var bsPrefix: String
 }
