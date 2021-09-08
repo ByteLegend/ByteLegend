@@ -16,6 +16,7 @@
 package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.shared.entities.mission.Tutorial
+import com.bytelegend.client.app.external.ReactMarkdown
 import com.bytelegend.client.app.external.ReactPlayer
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.utils.jsObjectBackedSetOf
@@ -39,7 +40,15 @@ class TutorialContent : RComponent<TutorialContentProps, TutorialContentState>()
         when (props.tutorial.type) {
             "video/youtube" -> youtubePlayer()
             "video/bilibili" -> bilibiliPlayer()
+            "text/markdown" -> markdown()
             else -> unsupportedType()
+        }
+    }
+
+    private fun RBuilder.markdown() {
+        ReactMarkdown {
+//            console.log(props.tutorial.content)
+            +props.tutorial.content
         }
     }
 
