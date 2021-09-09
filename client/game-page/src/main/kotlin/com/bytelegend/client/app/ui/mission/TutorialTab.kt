@@ -274,6 +274,8 @@ class TutorialTab(props: TutorialTabProps) : GameUIComponent<TutorialTabProps, T
                                 attrs.game = game
                                 attrs.tutorial = state.tutorials.items[state.activeTutorialIndex]
                             }
+                        } else {
+                            +game.i("ThereIsNoTutorialCurrently")
                         }
                     }
                 }

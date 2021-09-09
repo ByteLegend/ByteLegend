@@ -234,7 +234,8 @@ fun toTutorial(jsonObject: dynamic): Tutorial {
         jsonObject.title,
         jsonObject.type,
         jsonObject.href,
-        toTypedList(jsonObject.languages) { Locale.of(it) }
+        toTypedList(jsonObject.languages) { Locale.of(it) },
+        jsonObject.content,
     )
 }
 

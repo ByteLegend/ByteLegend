@@ -31,5 +31,6 @@ dependencies {
     implementation(npm("react-select", libVersions("react-select")))
     implementation(npm("react-textarea-autosize", libVersions("react-textarea-autosize")))
     implementation(npm("canvas-confetti", libVersions("canvas-confetti")))
+    implementation(npm("react-markdown", "7.0.1"))
     testImplementation(kotlin("test-js"))
 }
