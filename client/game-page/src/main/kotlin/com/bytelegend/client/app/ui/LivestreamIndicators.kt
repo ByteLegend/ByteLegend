@@ -46,7 +46,7 @@ import react.dom.a
 import react.dom.div
 import react.setState
 
-private const val LIVESTREAM_DATA_URL = "/proxy/livestream-data.json"
+private const val LIVESTREAM_DATA_URL = "/ghraw/ByteLegend/ByteLegend/master/livestream-data.json"
 
 interface LivestreamIndicatorsState : State {
     var livestreams: List<LivestreamData>
@@ -131,12 +131,14 @@ class LivestreamIndicators : RComponent<GameProps, LivestreamIndicatorsState>() 
         livestreams = JSArrayBackedList()
     }
 
+    @Suppress("UNUSED_VARIABLE")
     private fun LivestreamData.isPast(): Boolean {
         val now = currentTimeMillis()
         val end = endEpochMs
         return js("now>=end")
     }
 
+    @Suppress("UNUSED_VARIABLE")
     private fun LivestreamData.secondsToStart(): Int {
         val now = currentTimeMillis()
         val start = startEpochMs

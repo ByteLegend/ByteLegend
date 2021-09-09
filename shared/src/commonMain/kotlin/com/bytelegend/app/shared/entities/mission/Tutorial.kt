@@ -26,8 +26,7 @@ data class Tutorial constructor(
     val title: String,
     val type: String,
     val href: String,
-    val languages: List<Locale>,
-    val content: String = ""
+    val languages: List<Locale>
 ) {
     @JsonCreator
     constructor(
@@ -36,7 +35,6 @@ data class Tutorial constructor(
         type: String,
         href: String,
         language: Locale?,
-        languages: List<Locale>?,
-        content: String = ""
-    ) : this(id, title, type, href, languages ?: listOf(language!!), content)
+        languages: List<Locale>?
+    ) : this(id, title, type, href, languages ?: listOf(language!!))
 }

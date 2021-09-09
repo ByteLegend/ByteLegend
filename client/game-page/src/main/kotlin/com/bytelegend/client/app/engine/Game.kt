@@ -57,6 +57,7 @@ import org.kodein.di.bind
 import org.kodein.di.eagerSingleton
 import org.kodein.di.instance
 import org.kodein.di.singleton
+import org.w3c.fetch.RequestInit
 
 private const val GAME_CLOCK_60S = 60000
 private const val GAME_CLOCK_1S = 1000
@@ -124,7 +125,6 @@ class Game(
         DefaultModalController(di)
     }
 
-    val serverLocation: ServerLocation by di.instance()
     val startTime: Timestamp = Timestamp.now()
     var lastAnimationFrameTime: Timestamp = startTime
 
@@ -138,6 +138,8 @@ class Game(
 
     private val onItemsStatesUpdateEventListener: EventListener<ItemsStatesUpdateEventData> = this::onItemsStatesUpdateEvent
 
+    var gfw: Boolean = true
+
     fun start() {
         gameControl.start()
         animate()
@@ -149,6 +151,18 @@ class Game(
         eventBus.on(ONLINE_COUNTER_UPDATE_EVENT) { number: Int ->
             onlineNumber = number
         }
+
+        checkGfw()
+    }
+
+    private fun checkGfw() {
+        window.fetch("https://raw.githubusercontent.com/ByteLegend/ByteLegend/master/README.md", RequestInit(method = "HEAD")).then({
+            gfw = false
+            logger.debug("We're free! :-)")
+        }, {
+            gfw = true
+            logger.debug("We're gfwed! :-(")
+        })
     }
 
     private fun setClock(ms: Int, eventName: String) {
