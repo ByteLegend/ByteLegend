@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JsModule("react-markdown")
-@file:JsNonModule
 
-package com.bytelegend.client.app.external
+package com.bytelegend.app.client.misc
 
-import react.ElementType
-import react.PropsWithChildren
+private val GITHUB_BLOB_URL_PATTERN = "https://github.com/([\\w_]+)/([\\w_]+)/blob/([\\w_.]+)/(.*)".toRegex()
 
-@JsName("default")
-external val ReactMarkdown: ElementType<ReactMarkdownProps>
-
-// https://www.npmjs.com/package/react-markdown
-external interface ReactMarkdownProps : PropsWithChildren {
-    var className: String
-    var skipHtml: Boolean
-    var sourcePos: Boolean
-    var rawSourcePos: Boolean
-    var transformImageUri: Any
+// https://github.com/gradle/gradle/blob/master/README.md -> https://raw.githubusercontent.com/gradle/gradle/master/README.md
+fun githubUrlToRawGithubUserContentUrl(url: String): String {
+    if (url.startsWith("https://github.com")) {
+        val result = GITHUB_BLOB_URL_PATTERN.matchEntire(url) ?: return url
+        return "https://raw.githubusercontent.com/${result.groupValues[1]}/${result.groupValues[2]}/${result.groupValues[3]}/${result.groupValues[4]}"
+    } else {
+        return url
+    }
 }

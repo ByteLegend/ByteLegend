@@ -15,25 +15,37 @@
  */
 package com.bytelegend.client.app.ui.mission
 
+import com.bytelegend.app.client.misc.githubUrlToRawGithubUserContentUrl
+import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.client.app.external.ReactMarkdown
 import com.bytelegend.client.app.external.ReactPlayer
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.web.checkStatusCode
 import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinx.browser.window
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.await
+import kotlinx.coroutines.launch
 import kotlinx.html.classes
 import react.RBuilder
 import react.RComponent
 import react.State
 import react.dom.iframe
+import react.setState
 
 interface TutorialContentProps : GameProps {
     var tutorial: Tutorial
 }
 
-interface TutorialContentState : State
+interface TutorialContentState : State {
+    var ghMarkdown: String?
+}
 
 class TutorialContent : RComponent<TutorialContentProps, TutorialContentState>() {
+    private var loading = false
     override fun TutorialContentState.init() {
+        ghMarkdown = null
     }
 
     override fun RBuilder.render() {
@@ -45,10 +57,46 @@ class TutorialContent : RComponent<TutorialContentProps, TutorialContentState>()
         }
     }
 
+    /**
+     * GitHub doesn't support iframe, so we have to use raw.githubusercontent.com
+     *
+     */
+    private fun rebuildUrl(url: String): String {
+        val replaceToRawGithubUserContent = githubUrlToRawGithubUserContentUrl(url)
+
+        return if (props.game.gfw) {
+            replaceToRawGithubUserContent.replace("https://raw.githubusercontent.com/", "/ghraw/")
+        } else {
+            replaceToRawGithubUserContent
+        }
+    }
+
     private fun RBuilder.markdown() {
-        ReactMarkdown {
-//            console.log(props.tutorial.content)
-            +props.tutorial.content
+        if (state.ghMarkdown == null) {
+            BootstrapSpinner {
+                attrs.animation = "border"
+            }
+            if (!loading) {
+                GlobalScope.launch {
+                    loading = true
+                    val content = window.fetch(rebuildUrl(props.tutorial.href))
+                        .await()
+                        .checkStatusCode()
+                        .text()
+                        .await()
+                    loading = false
+                    setState {
+                        ghMarkdown = content
+                    }
+                }
+            }
+        } else {
+            ReactMarkdown {
+                +state.ghMarkdown!!
+                attrs.transformImageUri = { src: String, alt: Any, title: Any ->
+                    rebuildUrl(src)
+                }
+            }
         }
     }
 
@@ -87,6 +135,15 @@ class TutorialContent : RComponent<TutorialContentProps, TutorialContentState>()
             attrs.controls = true
             attrs.width = "90%"
             attrs.height = "90%"
+        }
+    }
+
+    override fun UNSAFE_componentWillReceiveProps(nextProps: TutorialContentProps) {
+        if (nextProps.tutorial.id != props.tutorial.id) {
+            loading = false
+            setState {
+                ghMarkdown = null
+            }
         }
     }
 }

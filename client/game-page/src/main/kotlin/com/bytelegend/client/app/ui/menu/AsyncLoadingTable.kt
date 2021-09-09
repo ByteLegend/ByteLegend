@@ -46,7 +46,7 @@ interface AsyncLoadingTableState : State {
 
 abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : RComponent<GameProps, S>() {
     abstract val url: String
-    var loading = false
+    private var loading = false
     override fun RBuilder.render() {
         textBeforeTable()
 

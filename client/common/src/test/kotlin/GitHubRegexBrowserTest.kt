@@ -13,22 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JsModule("react-markdown")
-@file:JsNonModule
 
-package com.bytelegend.client.app.external
+import com.bytelegend.app.client.misc.githubUrlToRawGithubUserContentUrl
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-import react.ElementType
-import react.PropsWithChildren
 
-@JsName("default")
-external val ReactMarkdown: ElementType<ReactMarkdownProps>
-
-// https://www.npmjs.com/package/react-markdown
-external interface ReactMarkdownProps : PropsWithChildren {
-    var className: String
-    var skipHtml: Boolean
-    var sourcePos: Boolean
-    var rawSourcePos: Boolean
-    var transformImageUri: Any
+class GitHubRegexBrowserTest {
+    @Test
+    fun test() {
+        assertEquals("https://raw.githubusercontent.com/gradle/gradle/master/README.md", githubUrlToRawGithubUserContentUrl("https://github.com/gradle/gradle/blob/master/README.md"))
+        assertEquals("https://raw.githubusercontent.com/gradle/gradle/6.7.1/README.md", githubUrlToRawGithubUserContentUrl("https://github.com/gradle/gradle/blob/6.7.1/README.md"))
+    }
 }

@@ -49,14 +49,14 @@ import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.i18n.LocalizedTextFormat
+import com.bytelegend.app.shared.protocol.CHALLENGE_UPDATE_EVENT_PREFIX
+import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
 import com.bytelegend.app.shared.protocol.KICK_OFF_EVENT
 import com.bytelegend.app.shared.protocol.KickOffEventData
 import com.bytelegend.app.shared.protocol.LOG_STREAM_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.LogStreamEventData
-import com.bytelegend.app.shared.protocol.CHALLENGE_UPDATE_EVENT_PREFIX
-import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PLAYER_SPEECH_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.PlayerSpeechEventData
@@ -234,8 +234,7 @@ fun toTutorial(jsonObject: dynamic): Tutorial {
         jsonObject.title,
         jsonObject.type,
         jsonObject.href,
-        toTypedList(jsonObject.languages) { Locale.of(it) },
-        jsonObject.content,
+        toTypedList(jsonObject.languages) { Locale.of(it) }
     )
 }
 
