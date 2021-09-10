@@ -1,0 +1,14 @@
+{ "columns":12,
+ "image":"..\/tilesets\/blood-letter-number.png",
+ "imageheight":256,
+ "imagewidth":384,
+ "margin":0,
+ "name":"blood-letter-number",
+ "spacing":0,
+ "tilecount":96,
+ "tiledversion":"1.7.2",
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset",
+ "version":"1.6"
+}
