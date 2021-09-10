@@ -18,7 +18,6 @@ import com.bytelegend.app.client.misc.githubUrlToRawGithubUserContentUrl
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-
 class GitHubRegexBrowserTest {
     @Test
     fun test() {
