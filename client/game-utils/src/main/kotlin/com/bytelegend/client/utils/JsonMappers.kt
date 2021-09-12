@@ -50,7 +50,9 @@ import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.i18n.LocalizedTextFormat
 import com.bytelegend.app.shared.protocol.CHALLENGE_UPDATE_EVENT_PREFIX
+import com.bytelegend.app.shared.protocol.COIN_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
+import com.bytelegend.app.shared.protocol.CoinUpdateEventData
 import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
 import com.bytelegend.app.shared.protocol.KICK_OFF_EVENT
@@ -60,6 +62,8 @@ import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PLAYER_SPEECH_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.PlayerSpeechEventData
+import com.bytelegend.app.shared.protocol.REPUTATION_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.ReputationUpdateEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
 
@@ -71,6 +75,8 @@ fun parseServerEvent(eventMessage: dynamic): Any {
         event.startsWith("protocol.player") -> toBasePlayer(eventMessage.payload)
         event == ONLINE_COUNTER_UPDATE_EVENT -> eventMessage.payload
         event == STAR_UPDATE_EVENT -> toStarUpdateEventData(eventMessage.payload)
+        event == COIN_UPDATE_EVENT -> toCoinUpdateEventData(eventMessage.payload)
+        event == REPUTATION_UPDATE_EVENT -> toReputationUpdateEventData(eventMessage.payload)
         event == ITEMS_STATES_UPDATE_EVENT -> toItemsStatesUpdateEventData(eventMessage.payload)
         event == KICK_OFF_EVENT -> toKickOffEventData(eventMessage.payload)
         event.startsWith(LOG_STREAM_EVENT_PREFIX) -> toLogStreamEventData(eventMessage.payload)
@@ -120,6 +126,22 @@ fun toOnFinishStatesChange(jsonObject: dynamic) = OnFinishStatesChange(
     JSArrayBackedList(delegate = jsonObject.remove)
 )
 
+fun toCoinUpdateEventData(jsonObject: dynamic) = CoinUpdateEventData(
+    jsonObject.playerId,
+    jsonObject.change,
+    jsonObject.newValue,
+    jsonObject.reasonId,
+    jsonObject.reasonArgs
+)
+
+fun toReputationUpdateEventData(jsonObject: dynamic) = ReputationUpdateEventData(
+    jsonObject.playerId,
+    jsonObject.change,
+    jsonObject.newValue,
+    jsonObject.reasonId,
+    jsonObject.reasonArgs
+)
+
 fun toStarUpdateEventData(jsonObject: dynamic) = StarUpdateEventData(
     jsonObject.playerId,
     jsonObject.map,
@@ -133,6 +155,8 @@ fun toChallengeUpdateEventData(jsonObject: dynamic) = ChallengeUpdateEventData(
     toPlayerChallenge(jsonObject.newValue)
 )
 
+fun <T> arrayToList(jsonArray: dynamic) = JSArrayBackedList<T>(delegate = jsonArray)
+
 fun toPlayer(jsonObject: dynamic) = Player().apply {
     configureBasePlayer(jsonObject)
     star = jsonObject.star
@@ -140,7 +164,7 @@ fun toPlayer(jsonObject: dynamic) = Player().apply {
     reputation = jsonObject.reputation
     locale = jsonObject.locale
     avatarUrl = jsonObject.avatarUrl
-    items = JSArrayBackedList(delegate = jsonObject.items)
+    items = arrayToList(jsonObject.items)
     states = JSObjectBackedMap(jsonObject.states)
 }
 

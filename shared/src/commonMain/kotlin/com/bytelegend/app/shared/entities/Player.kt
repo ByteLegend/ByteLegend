@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,12 +22,23 @@ import com.bytelegend.app.shared.annotations.ReadOnly
 val ANONYMOUS_DUMMY_MAP = "ANONYMOUS_DUMMY_MAP"
 
 open class Player : BasePlayer() {
+    /**
+     * Star marks the progress of player challenge. Players get stars
+     * by accomplishing challenges.
+     */
     @get: ReadOnly
     var star: Int = 0
 
+    /**
+     * The basic currency in the game. Can be obtained via many ways.
+     */
     @get: ReadOnly
     var coin: Int = 0
 
+    /**
+     * Reputation, can only be obtained by helping others or the community.
+     * For example, helping others solve problems or contributing to the code.
+     */
     @get: ReadOnly
     var reputation: Int = 0
 

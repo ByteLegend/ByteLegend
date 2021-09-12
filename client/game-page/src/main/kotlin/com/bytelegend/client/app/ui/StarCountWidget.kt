@@ -15,6 +15,7 @@
  */
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.app.shared.protocol.NumberChange
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import kotlinx.html.classes
@@ -39,7 +40,8 @@ class StarCountWidget : AbstractIncrementAnimatableWidget<StarCountWidgetProps, 
         renderIcon()
     }
 
-    override fun onIncrementNewValue(event: NumberIncrementEvent) {
-        game.heroPlayer.star = event.newValue
+    override fun onNumberChange(numberChange: NumberChange) {
+        game.heroPlayer.star = numberChange.newValue
+        animateAndSetState(numberChange)
     }
 }
