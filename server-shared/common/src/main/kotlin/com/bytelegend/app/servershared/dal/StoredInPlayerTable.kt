@@ -36,6 +36,7 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 const val PLAYER_SORT_KEY = "P"
 const val PLAYER_CHALLENGE_SORT_KEY = "PC"
 const val HEAD_SHA_SORT_KEY = "H"
+const val PLAYER_COIN_CHANGE_HISTORY_KEY = "CoinChangeHistory"
 
 interface StoredInPlayerTable {
     val pk: String
@@ -55,4 +56,14 @@ interface StoredInPlayerTable {
         get() = Key.builder().partitionValue(pk)
             .sortValue(sk)
             .build()
+}
+
+abstract class AbstractStoredInPlayerTableBuilder {
+    protected var pk: String = ""
+    fun pk(value: String) = apply { pk = value }
+    protected var sk: String = ""
+    fun sk(value: String) = apply { sk = value }
+
+    protected var version: Int? = null
+    fun version(value: Int?) = apply { version = value }
 }

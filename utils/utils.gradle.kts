@@ -16,7 +16,7 @@
 import com.bytelegend.buildsupport.OpenSourceLibrary
 
 plugins {
-    kotlin("jvm")
+    id("configure-kotlin")
     id("configure-ktlint")
     id("json2Java")
     id("buildGameResources")
@@ -24,6 +24,10 @@ plugins {
 
 val libs: (String) -> String by rootProject.ext
 val oss: List<OpenSourceLibrary> by rootProject.ext
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = "11"
+}
 
 dependencies {
     implementation(project(":shared"))

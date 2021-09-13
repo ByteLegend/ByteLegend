@@ -15,9 +15,14 @@
  */
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.app.client.misc.playAudio
+import com.bytelegend.app.shared.protocol.COIN_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.CoinUpdateEventData
+import com.bytelegend.app.shared.protocol.NumberChange
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import kotlinx.html.classes
+import kotlinx.html.id
 import react.State
 import react.dom.RDOMBuilder
 import react.dom.span
@@ -25,20 +30,29 @@ import react.dom.span
 interface CoinCountWidgetProps : GameProps
 interface CoinCountWidgetState : State
 
-const val COIN_INCREMENT_EVENT = "coin.increment"
-
 class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, CoinCountWidgetState>("coin-icon") {
-    override val eventName: String = COIN_INCREMENT_EVENT
+    override val eventName: String = COIN_UPDATE_EVENT
 
     override fun RDOMBuilder<DIV>.renderDiv() {
         span {
+            attrs.id = "coin-count"
             attrs.classes = jsObjectBackedSetOf("map-title-text")
             +game.heroPlayer.coin.toString()
         }
         renderIcon()
     }
 
-    override fun onIncrementNewValue(event: NumberIncrementEvent) {
-        game.heroPlayer.coin = event.newValue
+    override fun onNumberChange(numberChange: NumberChange) {
+        val coinChange = numberChange.unsafeCast<CoinUpdateEventData>()
+        if (numberChange.change > 0) {
+            playAudio("coin")
+        }
+        game.toastController.addToast(
+            "${if (numberChange.change > 0) "+" else ""}${numberChange.change} <div class='$iconClassName inline-icon'></div>",
+            game.i(coinChange.reasonId, *coinChange.reasonArgs),
+            5000
+        )
+        game.heroPlayer.coin = numberChange.newValue
+        animateAndSetState(numberChange)
     }
 }

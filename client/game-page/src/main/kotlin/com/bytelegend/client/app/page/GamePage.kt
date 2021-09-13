@@ -141,6 +141,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
             )
         )
         game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg")), false)
+        game.resourceLoader.loadAsync(AudioResource("coin", game.resolve("/audio/coin.mp3")), false)
         game.resourceLoader.loadAsync(AudioResource("starfly", game.resolve("/audio/starfly.mp3")), false)
         game.resourceLoader.loadAsync(AudioResource("popup", game.resolve("/audio/popup.mp3")), false)
         game.resourceLoader.loadAsync(AudioResource("tada", game.resolve("/audio/tada.mp3")), false)
@@ -331,7 +332,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         parentProps: RightSideBarProps,
         block: RElementBuilder<ItemWidgetProps>.() -> Unit = {}
     ) {
-         gameChild(parentProps, ItemsWidget::class, block)
+        gameChild(parentProps, ItemsWidget::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.tileCursorWidget(
@@ -345,35 +346,35 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
     ) {
-         gameChild(parentProps, HeroControlButton::class, block)
+        gameChild(parentProps, HeroControlButton::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.livestreamIndicators(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
     ) {
-         gameChild(parentProps, LivestreamIndicators::class, block)
+        gameChild(parentProps, LivestreamIndicators::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.bouncingTitleWidgets(
         parentProps: GameContainerProps,
         block: RElementBuilder<GameProps>.() -> Unit = {}
     ) {
-         gameChild(parentProps, BouncingTitles::class, block)
+        gameChild(parentProps, BouncingTitles::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.spriteNameWidget(
         parentProps: GameContainerProps,
         block: RElementBuilder<PlayerNamesProps>.() -> Unit = {}
     ) {
-         gameChild(parentProps, PlayerNames::class, block)
+        gameChild(parentProps, PlayerNames::class, block)
     }
 
     private fun RElementBuilder<MapTitleWidgetsProps>.mapNameWidget(
         parentProps: MapTitleWidgetsProps,
         block: RElementBuilder<MapSelectionDropdownProps>.() -> Unit = {}
     ) {
-         gameChild(parentProps, MapSelectionDropdown::class, block)
+        gameChild(parentProps, MapSelectionDropdown::class, block)
     }
 
     private fun RElementBuilder<MapTitleWidgetsProps>.fpsCounter(

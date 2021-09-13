@@ -44,7 +44,6 @@ import com.bytelegend.client.app.script.STAR_BYTELEGEND_MISSION_ID
 import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.script.effect.showConfetti
 import com.bytelegend.client.app.script.effect.starFlyEffect
-import com.bytelegend.client.app.ui.NumberIncrementEvent
 import com.bytelegend.client.app.ui.STAR_INCREMENT_EVENT
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
 import com.bytelegend.client.app.ui.menu.determineMenuCoordinateInGameContainer
@@ -108,19 +107,25 @@ class DefaultPlayerChallengeContainer(
 
     private fun putChallenge(challenge: PlayerChallenge) {
         val challengeId = challenge.challengeId
-        val oldMission = playerChallenges[challengeId]
-        if (oldMission == null) {
+        val oldChallenge = playerChallenges[challengeId]
+        if (oldChallenge == null) {
             playerChallenges[challengeId] = challenge
             challengeIdToPullRequestAnswers[challengeId] = challenge.answers.toPullRequestAnswers()
         } else {
             // When the answer events from server are misordered, it might be:
             // [answer1, answer2, answer3] comes first and [answer1, answer2] comes later
             // In this case, we need to make sure no answers missing
-            val set = oldMission.answers.toMutableSet().apply { addAll(challenge.answers) }
-            challenge.answers.clear()
-            challenge.answers.addAll(JSArrayBackedList(set))
-            playerChallenges[challengeId] = challenge
-            challengeIdToPullRequestAnswers[challengeId] = challenge.answers.toPullRequestAnswers()
+            val set = oldChallenge.answers.toMutableSet().apply { addAll(challenge.answers) }
+            val newChallenge = PlayerChallenge(
+                oldChallenge.playerId,
+                oldChallenge.map,
+                oldChallenge.missionId,
+                oldChallenge.challengeId,
+                JSArrayBackedList(set)
+            )
+
+            playerChallenges[challengeId] = newChallenge
+            challengeIdToPullRequestAnswers[challengeId] = newChallenge.answers.toPullRequestAnswers()
         }
     }
 
@@ -242,7 +247,7 @@ class DefaultPlayerChallengeContainer(
             endCoordinateInGameContainer,
             3
         )
-        game.eventBus.emit(STAR_INCREMENT_EVENT, NumberIncrementEvent(eventData.change, eventData.newValue))
+        game.eventBus.emit(STAR_INCREMENT_EVENT, eventData)
     }
 
     private fun starIncrement(eventData: StarUpdateEventData) {

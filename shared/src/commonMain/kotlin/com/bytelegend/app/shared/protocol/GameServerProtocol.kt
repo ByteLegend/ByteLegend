@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,6 +43,8 @@ const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
 
 /***************** Point-to-point events from server to client-side EventBus ***********************/
 const val STAR_UPDATE_EVENT = "protocol.star.update"
+const val COIN_UPDATE_EVENT = "protocol.coin.update"
+const val REPUTATION_UPDATE_EVENT = "protocol.reputation.update"
 const val ITEMS_STATES_UPDATE_EVENT = "protocol.items.states.update"
 fun challengeUpdateEvent(mapId: String) = "protocol.challenge.update.$mapId"
 val CHALLENGE_UPDATE_EVENT_PREFIX = challengeUpdateEvent("")

@@ -19,6 +19,7 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
+import com.bytelegend.app.shared.protocol.NumberChange
 import com.bytelegend.client.app.script.effect.numberIncrementEffect
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.document
@@ -36,21 +37,16 @@ import react.dom.RDOMBuilder
 import react.dom.div
 import react.setState
 
-data class NumberIncrementEvent(
-    val inc: Int,
-    val newValue: Int
-)
-
 /**
  * A special widget which can show a "+X" animation when updated.
  */
 abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
-    private val iconClassName: String
+    val iconClassName: String
 ) : GameUIComponent<P, S>() {
     abstract val eventName: String
     private var div: RefObject<HTMLDivElement> = createRef()
 
-    private val incrementEventListener: EventListener<NumberIncrementEvent> = this::onIncrement
+    private val numberChangeEventListener: EventListener<NumberChange> = ::onNumberChange
 
     override fun RBuilder.render() {
         BootstrapListGroupItem {
@@ -62,16 +58,18 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
     }
 
     abstract fun RDOMBuilder<DIV>.renderDiv()
-    abstract fun onIncrementNewValue(event: NumberIncrementEvent)
+
+    protected abstract fun onNumberChange(numberChange: NumberChange)
+
     protected fun RBuilder.renderIcon() {
         div {
             attrs.classes = jsObjectBackedSetOf(iconClassName, "inline-icon")
         }
     }
 
-    private fun getIncrementAnimationDiv(event: NumberIncrementEvent): Node {
+    private fun getIncrementAnimationDiv(numberChange: NumberChange): Node {
         val div = document.createElement("div")
-        div.appendChild(document.createTextNode("+${event.inc}"))
+        div.appendChild(document.createTextNode("+${numberChange.change}"))
         div.appendChild(
             document.createElement("div").unsafeCast<HTMLDivElement>().apply {
                 className = "$iconClassName inline-icon"
@@ -80,27 +78,26 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
         return div
     }
 
-    private fun onIncrement(event: NumberIncrementEvent) {
+    protected fun animateAndSetState(numberChange: NumberChange) {
         GlobalScope.launch {
             numberIncrementEffect(
-                getIncrementAnimationDiv(event),
+                getIncrementAnimationDiv(numberChange),
                 div.current!!.getBoundingClientRect().x.toInt(),
                 div.current!!.getBoundingClientRect().y.toInt(),
                 div.current!!.getBoundingClientRect().width.toInt(),
                 div.current!!.getBoundingClientRect().height.toInt(),
             )
         }
-        onIncrementNewValue(event)
         setState { }
     }
 
     override fun componentDidMount() {
         super.componentDidMount()
-        props.game.eventBus.on(eventName, incrementEventListener)
+        props.game.eventBus.on(eventName, numberChangeEventListener)
     }
 
     override fun componentWillUnmount() {
         super.componentWillUnmount()
-        props.game.eventBus.remove(eventName, incrementEventListener)
+        props.game.eventBus.remove(eventName, numberChangeEventListener)
     }
 }
