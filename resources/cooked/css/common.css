@@ -700,3 +700,7 @@ p.speech-bubble::after {
 .mission-modal-tutorial-content-right  img {
     max-width: 100%;
 }
+
+.mission-modal-question-challenge-readme img {
+    max-width: 80%;
+}

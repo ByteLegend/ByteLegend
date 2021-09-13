@@ -15,25 +15,27 @@
  */
 package com.bytelegend.client.app.ui.mission
 
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.GameProps
-import com.bytelegend.client.app.ui.unsafeSpan
+import com.bytelegend.client.app.ui.unsafeDiv
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
 import react.RBuilder
 import react.RComponent
 import react.State
 import react.dom.div
-import react.dom.img
 
-class StarChallengeTab : RComponent<GameProps, State>() {
+interface StarChallengeTabProps : GameProps {
+    var contentHtml: String
+}
+
+class StarChallengeTab : RComponent<StarChallengeTabProps, State>() {
     override fun RBuilder.render() {
         div {
             attrs.classes = jsObjectBackedSetOf("mission-tab-content")
-            unsafeSpan(game.i("StarByteLegendChallengeText"))
-
-            img {
-                attrs.src = game.resolve("/gif/star-bytelegend.gif")
+            if (props.game.gfw) {
+                unsafeDiv(props.contentHtml.replace("https://raw.githubusercontent.com/", "/ghraw/"))
+            } else {
+                unsafeDiv(props.contentHtml)
             }
         }
     }
