@@ -15,10 +15,8 @@
  */
 package com.bytelegend.client.app.ui
 
-import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.DIV
-import kotlinx.html.IMG
 import kotlinx.html.classes
 import react.Component
 import react.RBuilder
@@ -29,7 +27,6 @@ import react.dom.attrs
 import react.dom.div
 import react.dom.h3
 import react.dom.h4
-import react.dom.img
 import react.dom.jsStyle
 import react.dom.span
 import kotlin.reflect.KClass
@@ -40,17 +37,17 @@ inline fun <T : Any> jsObject(builder1: T.() -> Unit, builder2: T.() -> Unit): T
 fun js(builder1: dynamic.() -> Unit, builder2: dynamic.() -> Unit): dynamic = jsObject(builder1, builder2)
 
 fun RBuilder.icon(
-    srcData: String,
-    size: PixelSize = PixelSize(24, 24),
-    config: RDOMBuilder<IMG>.() -> Unit = {}
+    size: Int = 16,
+    classes: MutableSet<String>,
+    config: RDOMBuilder<DIV>.() -> Unit = {}
 ) {
-    img {
+    div {
         attrs.jsStyle {
-            width = "${size.width}px"
-            height = "${size.height}px"
-            display = "inline-block"
+            width = "${size}px"
+            height = "${size}px"
         }
-        attrs.src = srcData
+        classes.add("inline-icon")
+        attrs.classes = classes
         config()
     }
 }

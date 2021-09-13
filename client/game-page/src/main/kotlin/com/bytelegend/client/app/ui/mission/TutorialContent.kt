@@ -93,7 +93,7 @@ class TutorialContent : RComponent<TutorialContentProps, TutorialContentState>()
         } else {
             ReactMarkdown {
                 +state.ghMarkdown!!
-                attrs.transformImageUri = { src: String, alt: Any, title: Any ->
+                attrs.transformImageUri = { src: String, _: Any, _: Any ->
                     rebuildUrl(src)
                 }
             }

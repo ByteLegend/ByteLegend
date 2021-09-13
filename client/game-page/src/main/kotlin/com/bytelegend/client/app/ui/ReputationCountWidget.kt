@@ -44,7 +44,7 @@ class ReputationCountWidget : AbstractIncrementAnimatableWidget<ReputationCountW
     override fun onNumberChange(numberChange: NumberChange) {
         val coinChange = numberChange.unsafeCast<ReputationUpdateEventData>()
         game.toastController.addToast(
-            "${if (numberChange.change > 0) "+" else ""}${numberChange.change} <div class='$iconClassName inline-icon'></div>",
+            "${if (numberChange.change > 0) "+" else ""}${numberChange.change} <div class='$iconClassName inline-icon-16'></div>",
             game.i(coinChange.reasonId, *coinChange.reasonArgs),
             5000
         )

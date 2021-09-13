@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:Suppress("UnsafeCastFromDynamic")
+@file:Suppress("UnsafeCastFromDynamic", "UNUSED_PARAMETER")
 
 package com.bytelegend.client.app.ui.mission
 

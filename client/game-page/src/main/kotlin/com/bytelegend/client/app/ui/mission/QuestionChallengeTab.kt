@@ -86,7 +86,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                 attrs.variant = "warning"
                 unsafeSpan("${game.i("YouAreNotLoggedIn")}.${game.i("ClickHereToLogin")}")
             }
-        } else {
+        } else if (isDisabled()) {
             BootstrapAlert {
                 attrs.show = true
                 attrs.variant = "warning"
@@ -197,9 +197,9 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                             BootstrapCol {
                                 attrs.md = "auto"
                                 if (missionAnswer.accomplished) {
-                                    div { attrs.classes = jsObjectBackedSetOf("mission-success-tick-icon", "inline-icon") }
+                                    div { attrs.classes = jsObjectBackedSetOf("mission-success-tick-icon", "inline-icon-16") }
                                 } else {
-                                    div { attrs.classes = jsObjectBackedSetOf("mission-fail-cross-icon", "inline-icon") }
+                                    div { attrs.classes = jsObjectBackedSetOf("mission-fail-cross-icon", "inline-icon-16") }
                                 }
                             }
                             BootstrapCol {

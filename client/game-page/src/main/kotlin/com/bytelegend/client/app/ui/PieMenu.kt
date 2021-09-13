@@ -24,9 +24,9 @@ import kotlinext.js.assign
 import kotlinx.browser.window
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
+import react.Props
 import react.RBuilder
 import react.RComponent
-import react.Props
 import react.State
 import react.dom.div
 import react.dom.jsStyle
@@ -45,8 +45,6 @@ private const val MENU_CLOSE_BUTTON_PX = 32
 // how long it takes for the animation to finish
 private const val ANIMATION_DURATION_MS = 300
 private const val ANIMATION_INTERVAL = 50
-const val WHITE_CLOSE_ICON =
-    "data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cpath d='M512.008 422.3L915.699 18.61a63.437 63.437 0 1 1 89.707 89.707l-403.69 403.691 403.69 403.691a63.437 63.437 0 0 1-89.707 89.707l-403.691-403.69-403.691 403.69A63.437 63.437 0 0 1 18.61 915.7L422.3 512.008 18.61 108.317a63.437 63.437 0 1 1 89.707-89.707L512.008 422.3z' fill='%23fff'/%3E%3C/svg%3E"
 
 interface PieMenuProps : Props {
     var centerPoint: PixelCoordinate
@@ -84,18 +82,12 @@ class PieMenuCloseButton : RComponent<PieMenuCloseButtonProps, PieMenuButtonStat
     override fun RBuilder.render() {
         val size = if (state.hovered) MENU_CLOSE_BUTTON_PX * 1.5 else MENU_CLOSE_BUTTON_PX
         div {
+            attrs.classes = jsObjectBackedSetOf("pie-menu-white-close-button")
             attrs.jsStyle {
-                position = "absolute"
                 zIndex = props.zIndex.toString()
                 width = "${size}px"
                 height = "${size}px"
-                backgroundImage = "url(\"${WHITE_CLOSE_ICON}\")"
-                backgroundSize = "100% 100%"
-                left = "0"
-                top = "0"
-                borderRadius = "50%"
                 transform = "translate(-50%, -50%) rotate(${props.angle}deg)"
-                cursor = "pointer"
             }
             attrs.onMouseEnterFunction = {
                 setState { hovered = true }

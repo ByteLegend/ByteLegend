@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -221,7 +221,7 @@ suspend fun itemPopupEffect(
         style.zIndex = (Layer.ScriptWidget.zIndex() + 1).toString()
         style.backgroundColor = "transparent"
         style.position = "absolute"
-        className = "$item inline-icon"
+        className = "$item inline-icon-16"
     }
 
     itemFlyTo(
@@ -315,7 +315,7 @@ suspend fun starFlyEffect(
 
         appendChild(
             document.createElement("div").apply {
-                className = "star-icon inline-icon"
+                className = "star-icon inline-icon-16"
             }
         )
     }

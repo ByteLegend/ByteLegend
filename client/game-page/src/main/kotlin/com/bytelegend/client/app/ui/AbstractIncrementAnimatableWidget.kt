@@ -63,7 +63,7 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
 
     protected fun RBuilder.renderIcon() {
         div {
-            attrs.classes = jsObjectBackedSetOf(iconClassName, "inline-icon")
+            attrs.classes = jsObjectBackedSetOf(iconClassName, "inline-icon-16")
         }
     }
 
@@ -72,7 +72,7 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
         div.appendChild(document.createTextNode("+${numberChange.change}"))
         div.appendChild(
             document.createElement("div").unsafeCast<HTMLDivElement>().apply {
-                className = "$iconClassName inline-icon"
+                className = "$iconClassName inline-icon-16"
             }
         )
         return div

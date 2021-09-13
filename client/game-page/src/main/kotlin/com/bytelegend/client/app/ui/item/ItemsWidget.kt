@@ -41,7 +41,7 @@ class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
 
     private fun RBuilder.renderOne(item: String) {
         div {
-            attrs.classes = jsObjectBackedSetOf("inline-icon", item)
+            attrs.classes = jsObjectBackedSetOf("inline-icon-16", item)
         }
     }
 
