@@ -35,7 +35,7 @@
 
 ## 贡献更好的教程
 
-TBD
+请看[游戏教程贡献者指南](https://github.com/ByteLegend/ByteLegend/blob/master/docs/zh_hans/game-tutorials-contributor-guide.md)。
 
 ## 贡献游戏地图
 
