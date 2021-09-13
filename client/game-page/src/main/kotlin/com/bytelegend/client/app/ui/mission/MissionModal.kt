@@ -135,6 +135,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
 
     private fun RBuilder.renderStarChallenge(tab: ChallengeTabData) {
         child(StarChallengeTab::class) {
+            attrs.contentHtml = game.i(tab.data.readme)
             attrs.game = game
         }
     }

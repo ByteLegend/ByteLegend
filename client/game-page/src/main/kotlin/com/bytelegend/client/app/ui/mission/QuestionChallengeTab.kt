@@ -53,7 +53,6 @@ import react.State
 import react.dom.br
 import react.dom.div
 import react.dom.h4
-import react.dom.p
 import react.dom.pre
 import react.dom.span
 import react.setState
@@ -86,12 +85,6 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                 attrs.show = true
                 attrs.variant = "warning"
                 unsafeSpan("${game.i("YouAreNotLoggedIn")}.${game.i("ClickHereToLogin")}")
-            }
-        } else if (props.missionId == "install-java-ide") {
-            BootstrapAlert {
-                attrs.show = true
-                attrs.variant = "danger"
-                +game.i("ThisIsNotFinishedYet")
             }
         } else {
             BootstrapAlert {
@@ -151,8 +144,9 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         h4 {
             +i("Problem")
         }
-        p {
-            unsafeSpan(i(props.challengeSpec.readme))
+        div {
+            attrs.classes = jsObjectBackedSetOf("mission-modal-question-challenge-readme")
+            unsafeDiv(i(props.challengeSpec.readme))
         }
     }
 
