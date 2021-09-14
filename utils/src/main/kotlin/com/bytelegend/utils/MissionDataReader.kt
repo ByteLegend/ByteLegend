@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,6 +34,8 @@ class MissionDataReader(
 
 class MapData(ymlDir: File) {
     private val duplicateIdChecker: HashSet<String> = HashSet()
+
+    @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     val missionSpecs: Map<String, MissionSpec> = ymlDir.let {
         require(it.listFiles() != null) { "$it has no files!" }
         it.listFiles()
@@ -44,6 +46,9 @@ class MapData(ymlDir: File) {
             val missionSpec = YAML_PARSER.readValue(it, MissionSpec::class.java)
             require(missionSpec.id == it.nameWithoutExtension) {
                 "${missionSpec.id} must be put into a file named '${missionSpec.id}.yml'!"
+            }
+            require(missionSpec.onFinish.coin >= 0) {
+                "${missionSpec.id} must have positive coin change!"
             }
             missionSpec
         } catch (e: Throwable) {

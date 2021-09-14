@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -202,6 +202,21 @@ class MapGenerator(
     }
 
     private fun generateMissionsJson() {
+        // validate the mission points on map.
+        // it's required that all of them should be 0, because game scripts will put blockers on these points.
+        tiledObjectReader.missions.forEach { missioin ->
+            require(dynamicSpriteReader.dynamicSprites.containsKey(missioin.sprite)) { "Mission ${missioin.id}'s spriate ${missioin.sprite} not found!" }
+            val ds: GameMapDynamicSprite = dynamicSpriteReader.dynamicSprites.getValue(missioin.sprite)
+            for (y in 0 until ds.size.height) {
+                for (x in 0 until ds.size.width) {
+                    val coordinate = missioin.gridCoordinate + GridCoordinate(x, y)
+                    val blocker = blockers[coordinate] ?: NON_BLOCKER
+                    require(blocker == NON_BLOCKER) {
+                        "We require all mission points to be non-blocker because game script will put blockers on the points: $coordinate"
+                    }
+                }
+            }
+        }
         outputMissionsJson.writeText(uglyObjectMapper.writeValueAsString(tiledObjectReader.readAndMergeMissionSpecs()))
     }
 
@@ -223,7 +238,7 @@ class MapGenerator(
             GridSize(tiledMap.width.toInt(), tiledMap.height.toInt()),
             tiledMap.getTileSize(),
             destTiles as List<List<RawGameMapTile>>,
-            tiledObjectReader.readRawObjects() + dynamicSpriteReader.getDynamicSprites()
+            tiledObjectReader.readRawObjects() + dynamicSpriteReader.dynamicSprites.values
         )
         val compressedMap = rawMap.compress()
         require(compressedMap.decompress().compress() == compressedMap)
@@ -515,9 +530,9 @@ class MapGenerator(
             return calculateCoordinate(srcImageBlocksToDestBlockMapping.getValue(listOf(this)))
         }
 
-        fun getDynamicSprites(): List<GameMapDynamicSprite> {
-            return dynamicSpriteBlocks.entries.map {
-                GameMapDynamicSprite(
+        val dynamicSprites: Map<String, GameMapDynamicSprite> by lazy {
+            dynamicSpriteBlocks.entries.associate {
+                it.key to GameMapDynamicSprite(
                     it.key,
                     it.value.frames.map { it.map { it.toTilesetCoordinate() } }
                 )

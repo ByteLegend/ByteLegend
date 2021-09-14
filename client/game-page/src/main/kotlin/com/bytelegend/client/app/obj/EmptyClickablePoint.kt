@@ -13,31 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.Sprite
+import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.app.shared.objects.GameMapCurve
+import com.bytelegend.app.shared.objects.CoordinateAware
+import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.utils.jsObjectBackedSetOf
-import org.w3c.dom.CanvasRenderingContext2D
 
-class GameCurveSprite(
-    override val gameScene: GameScene,
-    private val obj: GameMapCurve
-) : Sprite {
-    override val id: String = "${obj.id}-sprite"
-    override val layer: Int = obj.layer
+class EmptyClickablePoint(
+    override val id: String,
+    private val gameScene: GameScene,
+    override val gridCoordinate: GridCoordinate,
+    private val onInitFunction: UnitFunction = {},
+    private val onClickFunction: UnitFunction = {},
+    private val onTouchFunction: (GameObject) -> Unit = {},
+) : GameObject, CoordinateAware {
+    override val layer: Int = 0
     override val roles: Set<String> = jsObjectBackedSetOf(
-        GameObjectRole.Sprite.toString(),
-        GameObjectRole.MapCurve.toString()
+        GameObjectRole.CoordinateAware,
+        GameObjectRole.Clickable,
+        GameObjectRole.UnableToBeSetAsDestination.toString()
     )
-    val points: List<PixelCoordinate> = obj.points
+    override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
 
-    override fun outOfCanvas() = obj.points.all { it.outOfCanvas(gameScene) }
+    init {
+        onInitFunction()
+    }
 
-    override fun draw(canvas: CanvasRenderingContext2D) {
-        canvas.drawCurve(this, gameScene)
+    override fun onTouch(obj: GameObject) {
+        onTouchFunction(obj)
+    }
+
+    override fun onClick() {
+        onClickFunction()
     }
 }

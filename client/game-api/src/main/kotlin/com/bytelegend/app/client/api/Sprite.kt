@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,10 @@
  */
 package com.bytelegend.app.client.api
 
+import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.objects.CoordinateAware
+import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import org.w3c.dom.CanvasRenderingContext2D
 
@@ -32,4 +36,15 @@ interface Sprite : GameObject {
     fun outOfCanvas(): Boolean = true
 
     fun draw(canvas: CanvasRenderingContext2D)
+}
+
+interface DynamicSprite : CoordinateAware, Sprite {
+    val mapDynamicSprite: GameMapDynamicSprite
+
+    var animation: Animation
+    var onClickFunction: UnitFunction?
+    var onCloseFunction: UnitFunction?
+
+    val pixelSize: PixelSize
+        get() = mapDynamicSprite.size * gameScene.map.tileSize
 }

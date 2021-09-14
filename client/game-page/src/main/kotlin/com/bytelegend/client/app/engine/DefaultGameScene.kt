@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ import com.bytelegend.app.shared.objects.defaultMapEntranceDestinationId
 import com.bytelegend.app.shared.objects.defaultMapEntranceId
 import com.bytelegend.app.shared.objects.defaultMapEntrancePointId
 import com.bytelegend.client.app.obj.BouncingTitleObject
-import com.bytelegend.client.app.obj.DynamicSprite
+import com.bytelegend.client.app.obj.DefaultDynamicSprite
 import com.bytelegend.client.app.obj.EmptyClickablePoint
 import com.bytelegend.client.app.obj.GameCurveSprite
 import com.bytelegend.client.app.obj.GameMapEntrance
@@ -125,13 +125,13 @@ class DefaultGameScene(
                 GameMapObjectType.GameMapDynamicSprite -> objects.add(it.unsafeCast<GameMapDynamicSprite>())
                 GameMapObjectType.GameMapMission -> {
                     missions.add(it.unsafeCast<GameMapMission>())
-                    // it may reference dynamic sprite so we need a second pass
+                    // it may reference a dynamic sprite, so we need a second pass
                 }
                 else -> throw IllegalStateException("Unsupported type: ${it.type}")
             }
         }
         missions.forEach { mission ->
-            GameMission(this, mission)
+            GameMission(this, mission, objects.getById(mission.sprite))
         }
     }
 
@@ -225,22 +225,19 @@ class DefaultGameScene(
                     id,
                     this,
                     gridCoordinate,
-                    onInitFunction = builder.onInit,
-                    onTouchFunction = builder.onTouch,
                     onClickFunction = builder.onClick
                 )
             )
         } else {
             objects.add(
-                DynamicSprite(
+                DefaultDynamicSprite(
                     id,
                     this,
                     gridCoordinate,
-                    objects.getById(builder.sprite!!),
-                    onInitFunction = builder.onInit,
-                    onTouchFunction = builder.onTouch,
+                    objects.getById(builder.sprite!!)
+                ).apply {
                     onClickFunction = builder.onClick
-                )
+                }
             )
         }
     }

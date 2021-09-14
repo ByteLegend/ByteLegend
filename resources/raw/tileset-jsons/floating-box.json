@@ -4,6 +4,7 @@
  "imagewidth":96,
  "margin":0,
  "name":"floating-box",
+ "objectalignment":"topleft",
  "spacing":0,
  "tilecount":12,
  "tiledversion":"1.7.2",

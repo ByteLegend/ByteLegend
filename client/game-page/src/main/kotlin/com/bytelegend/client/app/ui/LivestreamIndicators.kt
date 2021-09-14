@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:Suppress("EXPERIMENTAL_API_USAGE")
+@file:Suppress("EXPERIMENTAL_API_USAGE", "UNUSED_VARIABLE")
 
 package com.bytelegend.client.app.ui
 

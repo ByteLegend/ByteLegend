@@ -1,24 +1,32 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.bytelegend.app.client.api.AnimationFrame
+import com.bytelegend.app.client.api.DynamicSprite
+import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.ScriptsBuilder
+import com.bytelegend.app.client.api.StaticFrame
+import com.bytelegend.app.client.api.animationWithFixedInterval
+import com.bytelegend.app.client.api.closeMissionModalEvent
+import com.bytelegend.app.client.api.configureBookSprite
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
@@ -31,6 +39,7 @@ import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
 import com.bytelegend.app.shared.JAVA_ISLAND_SPRING_DUNGEON
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.objects.GameObjectRole
 import kotlinx.browser.window
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
@@ -83,6 +92,10 @@ fun main() {
                 bouncingTitle = false
             }
 
+            configureMissionTowers()
+            configureStarByteLegendBook()
+            configureInstallJavaIDEChest()
+
             pubGuard()
             newbieVillageOldMan()
             newbieVillageNoticeboard()
@@ -102,6 +115,51 @@ fun main() {
             castleDoor()
             castleNoticeboard()
         }
+    }
+}
+
+fun GameScene.configureMissionTowers() {
+    objects.getByRole<DynamicSprite>(GameObjectRole.Mission).forEach {
+        it.animation = it.mapDynamicSprite.animationWithFixedInterval(500)
+    }
+}
+
+fun GameScene.configureStarByteLegendBook() {
+    objects.getById<DynamicSprite>("star-bytelegend").configureBookSprite()
+}
+
+fun GameScene.configureInstallJavaIDEChest() {
+    val sprite = objects.getById<DynamicSprite>("install-java-ide")
+
+    if (playerChallenges.challengeAccomplished("install-java-ide-challenge")) {
+        sprite.animation = StaticFrame(3)
+    }
+
+    val onMissionModalClose: EventListener<Unit> = {
+        if (sprite.animation.isStatic &&
+            sprite.animation.unsafeCast<StaticFrame>().frameIndex != 3 &&
+            playerChallenges.challengeAccomplished("install-java-ide-challenge")
+        ) {
+            // the player finishes the challenge. Play the animation
+            sprite.animation = FramePlayingAnimation(
+                frames = arrayOf(
+                    AnimationFrame(0, 300),
+                    AnimationFrame(1, 300),
+                    AnimationFrame(2, 300),
+                    AnimationFrame(3, 300)
+                ),
+                repeating = false
+            )
+            window.setTimeout({
+                sprite.animation = StaticFrame(3)
+            }, 1200)
+        }
+    }
+
+    gameRuntime.eventBus.on(closeMissionModalEvent(sprite.id), onMissionModalClose)
+
+    sprite.onCloseFunction = {
+        gameRuntime.eventBus.remove(closeMissionModalEvent(sprite.id), onMissionModalClose)
     }
 }
 
