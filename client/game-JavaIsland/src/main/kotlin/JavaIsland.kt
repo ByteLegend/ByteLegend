@@ -120,7 +120,9 @@ fun main() {
 
 fun GameScene.configureMissionTowers() {
     objects.getByRole<DynamicSprite>(GameObjectRole.Mission).forEach {
-        it.animation = it.mapDynamicSprite.animationWithFixedInterval(500)
+        if (it.mapDynamicSprite.id == "MissionTower") {
+            it.animation = it.mapDynamicSprite.animationWithFixedInterval(500)
+        }
     }
 }
 
