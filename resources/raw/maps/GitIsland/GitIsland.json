@@ -498,8 +498,8 @@
                  "type":"GameMapText",
                  "visible":true,
                  "width":215,
-                 "x":1352.5,
-                 "y":97.5
+                 "x":1332.5,
+                 "y":155.5
                 }],
          "opacity":1,
          "type":"objectgroup",
