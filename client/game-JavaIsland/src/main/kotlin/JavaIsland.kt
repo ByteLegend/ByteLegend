@@ -30,7 +30,6 @@ import com.bytelegend.app.client.api.closeMissionModalEvent
 import com.bytelegend.app.client.api.configureBookSprite
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
-import com.bytelegend.app.shared.GIT_ISLAND
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
@@ -391,30 +390,12 @@ fun GameScene.newbieVillageSailor() = objects {
             sailorId,
             {
                 scripts {
-                    speech {
-                        speakerId = sailorId
-                        contentHtmlId = "WouldYouLikeToGitIsland"
-                        arrow = false
-                        showYesNo = true
-                        onYes = {
-                            scripts {
-                                enterScene(GIT_ISLAND, {
-                                    scripts {
-                                        characterEnterVehicleAndMoveToMap(HERO_ID, "Boat", helpers.searchVehiclePath("JavaNewbieVillageToGitIsland"), GIT_ISLAND)
-                                    }
-                                }, {
-                                    scripts {
-                                        speech(sailorId, "SorryYouDontHaveEnoughCoin", arrow = false)
-                                    }
-                                })
-                            }
-                        }
-                    }
+                    speech(sailorId, "ImSupposedToTakeYouToGitIsland", arrow = false)
                 }
             }
         ) {
             scripts {
-                speech(sailorId, "ICantHearYou", arrow = false)
+                speech(sailorId, "ImSupposedToTakeYouToGitIsland", arrow = false)
             }
         }
     }
