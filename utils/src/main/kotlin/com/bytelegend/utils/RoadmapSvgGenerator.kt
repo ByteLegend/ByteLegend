@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -105,15 +105,6 @@ class RoadmapSvgGenerator(
             it.setAttribute("onmousemove", "console.log('You have mousemove the polygon.')")
             it.setAttribute("onmouseleave", "console.log('You have mouseleave the polygon.')")
         }
-
-        // to respond to JS events
-//        g.drawPolygon(
-//            region.vertices.map { it.x }.toIntArray(),
-//            region.vertices.map { it.y }.toIntArray(),
-//            region.vertices.size
-//        ) {
-//            it.setAttribute("onclick", "alert('You have clicked the polygon.')")
-//        }
     }
 
     private fun writeToFile() {
@@ -127,17 +118,6 @@ class RoadmapSvgGenerator(
     fun generate() {
         regions.forEach(this::drawRegion)
         writeToFile()
-
-//        g.drawRect(0,0, tiledMap.width.toInt(), tiledMap.height.toInt())
-//
-//        g.paint = Color.BLACK
-//        g.fill(Rectangle(0, 0, 1000, 1000)) {
-//            it.setAttributeNS(null, "onclick", "alert('You have clicked the rect.')")
-//        }
-//        g.paint = Color.RED
-//        g.fill(Ellipse2D.Double(0.0, 0.0, 500.0, 500.0)) {
-//            it.setAttributeNS(null, "onclick", "alert('You have clicked the circle.')")
-//        }
     }
 
     fun SVGGraphics2D.fill(s: Shape, elementConfigurer: ElementConfigurer) {

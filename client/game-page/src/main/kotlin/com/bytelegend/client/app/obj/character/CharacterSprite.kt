@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bytelegend.client.app.obj
+package com.bytelegend.client.app.obj.character
 
 import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.EventListener
@@ -22,7 +22,6 @@ import com.bytelegend.app.client.api.GameSceneAware
 import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.dsl.UnitFunction
-import com.bytelegend.app.client.misc.search
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
@@ -32,6 +31,9 @@ import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.client.app.engine.GAME_CLOCK_20MS_EVENT
 import com.bytelegend.client.app.engine.atTileBorder
 import com.bytelegend.client.app.engine.logger
+import com.bytelegend.client.app.obj.drawImage
+import com.bytelegend.client.app.obj.getSpriteBlockOnCanvas
+import com.bytelegend.client.app.obj.outOfCanvas
 import org.w3c.dom.CanvasRenderingContext2D
 
 // How many pixels does a character move per second?
@@ -127,7 +129,7 @@ abstract class CharacterSprite(
      */
     private var movePath: List<GridCoordinate> = emptyList()
         set(value) {
-            field = value
+            field = sanityCheck(value)
             currentMovePathIndex = value.indexOf(gridCoordinate)
             require(currentMovePathIndex != -1) { "Setting new path. Current: $gridCoordinate, path: $value" }
 
@@ -136,6 +138,18 @@ abstract class CharacterSprite(
                 lastAnimationTime = Timestamp.now()
             }
         }
+
+    // manhattan distance between every point and next point should be 1
+    private fun sanityCheck(movePath: List<GridCoordinate>): List<GridCoordinate> {
+        if (logger.debugEnabled) {
+            for (i in 0 until movePath.size - 1) {
+                require(movePath[i].manhattanDistanceTo(movePath[i + 1]) == 1) {
+                    "Invalid move path: $i in ${movePath.joinToString(",")}"
+                }
+            }
+        }
+        return movePath
+    }
 
     override fun moveAlong(movePath: List<GridCoordinate>, callback: UnitFunction?) {
         callbackOnDestination = callback
@@ -159,7 +173,7 @@ abstract class CharacterSprite(
     }
 
     override fun searchPath(destination: GridCoordinate): List<GridCoordinate> {
-        return search(gameScene.blockers, gridCoordinate, destination) {
+        return gameScene.searchPath(gridCoordinate, destination) {
             it > NON_BLOCKER
         }
     }

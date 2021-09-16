@@ -26,7 +26,6 @@ const val GET_SCENE_INIT_DATA = "protocol.get.scene.init.data"
  * Player move to another point
  */
 const val MOVE_TO = "protocol.move.to"
-const val LEAVE_SCENE = "protocol.leave.scene"
 const val ENTER_SCENE = "protocol.enter.scene"
 const val SPEAK = "protocol.speak"
 
@@ -52,6 +51,7 @@ val PLAYER_SPEECH_EVENT_PREFIX = playerSpeechEvent("")
 const val REMOVE_STATE_EVENT = "protocol.remove.state"
 const val PUT_STATE_EVENT = "protocol.put.state"
 const val REMOVE_ITEM_EVENT = "protocol.remove.item"
+const val PROTOCOL_PAY_AND_ENTER_SCENE = "protocol.pay.and.enter.scene"
 const val KICK_OFF_EVENT = "protocol.kick.off"
 
 fun logStreamEvent(mapId: String) = "protocol.log.stream.$mapId"
@@ -64,15 +64,13 @@ interface GameServerProtocol {
      */
     suspend fun getSceneInitData(mapId: String): SceneInitData
 
-    suspend fun moveTo(x: Int, y: Int)
+    suspend fun moveTo(map: String, x: Int, y: Int)
 
     // TODO verify frontend input
     suspend fun putState(key: String, value: String)
     suspend fun removeState(key: String)
     suspend fun removeItem(item: String)
-
-    suspend fun leaveScene(srcMapId: String, destMapId: String)
-    suspend fun enterScene(srcMapId: String, destMapId: String)
+    suspend fun switchScene(destMapId: String)
     suspend fun speak(sentenceId: String)
 }
 

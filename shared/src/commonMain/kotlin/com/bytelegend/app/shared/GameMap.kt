@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,7 @@ import com.bytelegend.app.shared.ConstantPoolType.StaticImageLayer
 import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.objects.CompressedGameMapCurve
 import com.bytelegend.app.shared.objects.CompressedGameMapDynamicObject
+import com.bytelegend.app.shared.objects.CompressedGameMapEntrancePoint
 import com.bytelegend.app.shared.objects.CompressedGameMapMission
 import com.bytelegend.app.shared.objects.CompressedGameMapObject
 import com.bytelegend.app.shared.objects.CompressedGameMapPoint
@@ -286,6 +287,8 @@ object CompressedGameMapObjectSerializer : JsonContentPolymorphicSerializer<Comp
             GameMapObjectType.GameMapCurve -> CompressedGameMapCurve.serializer()
             GameMapObjectType.GameMapDynamicSprite -> CompressedGameMapDynamicObject.serializer()
             GameMapObjectType.GameMapMission -> CompressedGameMapMission.serializer()
+            GameMapObjectType.GameMapEntrancePoint -> CompressedGameMapEntrancePoint.serializer()
+            GameMapObjectType.GameMapEntranceDestinationPoint -> CompressedGameMapEntrancePoint.serializer()
             else -> throw IllegalStateException("Unsupported type: $type")
         }
     }

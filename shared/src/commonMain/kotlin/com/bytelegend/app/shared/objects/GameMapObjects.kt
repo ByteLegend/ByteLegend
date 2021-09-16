@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -63,8 +63,18 @@ enum class GameMapObjectType(
      */
     GameMapCurve(4),
 
+    /**
+     * A special layer in "DynamicSprite" group layer.
+     */
     GameMapDynamicSprite(5),
-    GameMapMission(6);
+    GameMapMission(6),
+
+    /**
+     * A point that will be placed an entrance so player can travel
+     * across different maps. The name must be "{mapX}-{mapY}-entrance-point"
+     */
+    GameMapEntrancePoint(7),
+    GameMapEntranceDestinationPoint(8);
 
     companion object {
         fun fromIndex(index: Int): GameMapObjectType = values()[index - 1]

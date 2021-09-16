@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,10 +24,10 @@ import com.bytelegend.app.shared.entities.mission.MissionSpec
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.i18n.render
+import com.bytelegend.app.shared.objects.GameMapEntrancePoint
 import com.bytelegend.app.shared.objects.GameMapObject
-import com.bytelegend.app.shared.objects.GameMapPoint
-import com.bytelegend.app.shared.objects.defaultMapEntranceDestinationId
-import com.bytelegend.app.shared.objects.defaultMapEntranceId
+import com.bytelegend.app.shared.objects.mapEntranceDestinationId
+import com.bytelegend.app.shared.objects.mapEntranceId
 import com.fasterxml.jackson.core.type.TypeReference
 import kotlinx.serialization.json.Json
 import java.io.File
@@ -110,8 +110,8 @@ abstract class AbstractRRBDResourceProvider(
     override fun getMissionChallengeByRepo(repo: String) = repoToMissionChallenge[repo]
     override fun getI18nText(id: String, locale: Locale, vararg args: String) = localizedText.getValue(id).getTextOrDefaultLocale(locale).render(*args)
     override fun getEntranceDestinationPoint(srcMapId: String, destMapId: String): GridCoordinate {
-        return idToMaps.getValue(destMapId).getObjectById<GameMapPoint>(
-            defaultMapEntranceDestinationId(defaultMapEntranceId(srcMapId, destMapId))
+        return idToMaps.getValue(destMapId).getObjectById<GameMapEntrancePoint>(
+            mapEntranceDestinationId(mapEntranceId(srcMapId, destMapId))
         ).gridCoordinate
     }
 }

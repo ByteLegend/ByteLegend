@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,7 +28,6 @@ import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.GameServerProtocol
 import com.bytelegend.app.shared.protocol.KICK_OFF_EVENT
 import com.bytelegend.app.shared.protocol.KickOffEventData
-import com.bytelegend.app.shared.protocol.LEAVE_SCENE
 import com.bytelegend.app.shared.protocol.MOVE_TO
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PUT_STATE_EVENT
@@ -48,8 +47,8 @@ import com.bytelegend.app.shared.protocol.WebSocketMessageType.SEND
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.SUBSCRIBE
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.UNSUBSCRIBE
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
-import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.app.obj.uuid
+import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.utils.parseServerEvent
 import com.bytelegend.client.utils.toSceneInitData
 import kotlinext.js.js
@@ -212,8 +211,8 @@ class WebSocketClient(
         return toSceneInitData(gameRuntime.heroPlayer.id, send(GET_SCENE_INIT_DATA, mapId))
     }
 
-    override suspend fun moveTo(x: Int, y: Int) {
-        send<Unit>(MOVE_TO, x.toString(), y.toString())
+    override suspend fun moveTo(map: String, x: Int, y: Int) {
+        send<Unit>(MOVE_TO, map, x.toString(), y.toString())
     }
 
     override suspend fun putState(key: String, value: String) {
@@ -228,12 +227,8 @@ class WebSocketClient(
         send<Unit>(REMOVE_ITEM_EVENT, item)
     }
 
-    override suspend fun leaveScene(srcMapId: String, destMapId: String) {
-        send<Unit>(LEAVE_SCENE, srcMapId, destMapId)
-    }
-
-    override suspend fun enterScene(srcMapId: String, destMapId: String) {
-        send<Unit>(ENTER_SCENE, srcMapId, destMapId)
+    override suspend fun switchScene(destMapId: String) {
+        send<Unit>(ENTER_SCENE, destMapId)
     }
 
     override suspend fun speak(sentenceId: String) {

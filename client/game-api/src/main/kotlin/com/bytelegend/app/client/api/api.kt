@@ -233,6 +233,11 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
 
     fun objects(block: ObjectsBuilder.() -> Unit)
     fun scripts(block: ScriptsBuilder.() -> Unit)
+
+    /**
+     * Search a path in the scene, using the predicate to determine wall point.
+     */
+    fun searchPath(start: GridCoordinate, end: GridCoordinate, wallPredicate: (Int) -> Boolean): List<GridCoordinate>
 }
 
 interface PlayerChallengeContainer {

@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,9 @@ package com.bytelegend.app.client.api
 
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.Direction
+import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
+import com.bytelegend.app.shared.objects.GameMapCurve
 
 /**
  * We have to use instance method due to the defect of current module loading mechanism
@@ -27,6 +29,25 @@ class GameScriptHelpers(val gameScene: GameScene) {
         return getCharacter(character1Id).gridCoordinate.manhattanDistanceTo(
             getCharacter(character2Id).gridCoordinate
         )
+    }
+
+    /**
+     * Search a path along the `GameMapCurve` points, for vehicles, like boats, planes, etc.
+     */
+    fun searchVehiclePath(curveName: String): List<GridCoordinate> {
+        val list = mutableListOf<GridCoordinate>()
+        val curvePoints = gameScene.objects.getById<GameMapCurve>(curveName).points
+        for (i in 0 until curvePoints.size - 1) {
+            val start = curvePoints[i] / gameScene.map.tileSize
+            val end = curvePoints[i + 1] / gameScene.map.tileSize
+            val path = gameScene.searchPath(start, end) { false }
+            // Not adding the last point because it's next path's start point
+            // If we don't do this will get: [(1,1), (1,2), (1,3), (1,3), ...]
+            for (j in 0 until path.size - 1) {
+                list.add(path[j])
+            }
+        }
+        return list
     }
 
     fun getCharacter(characterId: String) = gameScene.objects.getById<Character>(characterId)

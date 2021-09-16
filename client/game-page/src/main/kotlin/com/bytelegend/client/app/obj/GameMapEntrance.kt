@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,15 +19,17 @@ package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneAware
+import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.INVISIBLE_OBJECT_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.DefaultGameSceneContainer
 import com.bytelegend.client.app.engine.Game
-import com.bytelegend.client.app.ui.mission.BouncingTitle
-import com.bytelegend.client.app.web.WebSocketClient
+import com.bytelegend.client.app.obj.character.CharacterSprite
+import com.bytelegend.client.app.ui.mission.BouncingTitleWidget
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -38,51 +40,30 @@ class GameMapEntrance(
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
     private val destMapId: String,
-    private val backEntrancePointId: String,
-    private val bouncingTitle: Boolean,
-    private val webSocketClient: WebSocketClient
+    override var bouncingTitleEnabled: Boolean
 ) : GameObject, GameSceneAware, CoordinateAware, HasBouncingTitle {
     override val layer: Int = INVISIBLE_OBJECT_LAYER
-    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.MapEntrance, GameObjectRole.CoordinateAware).apply {
-        if (bouncingTitle) {
-            add(GameObjectRole.HasBouncingTitle.toString())
-        }
-    }
+    override val roles: Set<String> = jsObjectBackedSetOf(
+        GameObjectRole.MapEntrance.toString(),
+        GameObjectRole.CoordinateAware.toString(),
+        GameObjectRole.HasBouncingTitle.toString()
+    )
     override val pixelCoordinate: PixelCoordinate = gridCoordinate * gameScene.map.tileSize
 
     @Suppress("UnsafeCastFromDynamic")
     override fun onTouch(obj: GameObject) {
         if (gameRuntime.hero != null && gameRuntime.hero!!.id == obj.id) {
-            val heroId = gameRuntime.hero!!.id
             GlobalScope.launch {
-                webSocketClient.leaveScene(gameScene.map.id, destMapId)
+                gameScene.gameRuntime.unsafeCast<Game>().webSocketClient.switchScene(destMapId)
             }
-
-            gameRuntime.sceneContainer.loadScene(destMapId) { oldScene, newScene ->
-                val oldHero = oldScene!!.objects.getById<HeroCharacter>(heroId)
-
-                val newHero = HeroCharacter(newScene, oldHero.player.asDynamic()).apply { init() }
-                newHero.direction = oldHero.direction
-                val newMapEntrance = newScene.objects.getPointById(backEntrancePointId)
-                newHero.pixelCoordinate = newMapEntrance * newScene.map.tileSize
-                gameRuntime.heroPlayer.map = newScene.map.id
-                gameRuntime.heroPlayer.x = newMapEntrance.x
-                gameRuntime.heroPlayer.y = newMapEntrance.y
-
-                oldHero.close()
-                gameRuntime.unsafeCast<Game>()._hero = newHero
-
-                GlobalScope.launch {
-                    webSocketClient.enterScene(oldScene.map.id, newScene.map.id)
-                }
-            }
+            gameRuntime.sceneContainer.unsafeCast<DefaultGameSceneContainer>().heroEnterScene(destMapId)
         } else {
             gameRuntime.activeScene.objects.getById<CharacterSprite>(obj.id).close()
         }
     }
 
     override fun renderBouncingTitle(builder: RBuilder) {
-        builder.child(BouncingTitle::class) {
+        builder.child(BouncingTitleWidget::class) {
             attrs.title = gameScene.gameRuntime.i(destMapId)
             attrs.pixelCoordinate = pixelCoordinate + PixelCoordinate(gameScene.map.tileSize.width / 2, 0)
             attrs.gameScene = gameScene

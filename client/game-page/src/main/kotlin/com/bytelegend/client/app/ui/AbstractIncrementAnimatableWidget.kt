@@ -67,9 +67,11 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
         }
     }
 
+    protected fun formatChange(change: Int): String = if (change > 0) "+$change" else change.toString()
+
     private fun getIncrementAnimationDiv(numberChange: NumberChange): Node {
         val div = document.createElement("div")
-        div.appendChild(document.createTextNode("+${numberChange.change}"))
+        div.appendChild(document.createTextNode(formatChange(numberChange.change)))
         div.appendChild(
             document.createElement("div").unsafeCast<HTMLDivElement>().apply {
                 className = "$iconClassName inline-icon-16"

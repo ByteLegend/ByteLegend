@@ -16,6 +16,8 @@
 package com.bytelegend.client.app.ui.script
 
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
@@ -26,15 +28,15 @@ import com.bytelegend.client.app.script.MAIN_CHANNEL
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
-import com.bytelegend.client.app.ui.unsafeSpan
+import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.RHandler
 import react.State
+import react.dom.div
 import react.dom.jsStyle
-import react.dom.p
 import react.dom.span
 import react.setState
 import kotlin.reflect.KClass
@@ -52,6 +54,9 @@ interface SpeechBubbleWidgetProps : GameProps {
     var speakerCoordinate: PixelCoordinate?
     var contentHtml: String
     var arrow: Boolean
+    var showYesNo: Boolean
+    var onYes: UnitFunction
+    var onNo: UnitFunction
 }
 
 interface SpeechBubbleWidgetState : State {
@@ -85,7 +90,7 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
             SPEECH_BUBBLE_OFFSET_X
         val bubbleBottom = gameContainerHeight -
             (speakerCoordinate.y - canvasCoordinateInMap.y + canvasCoordinateInGameContainer.y)
-        p {
+        div {
             attrs.classes = jsObjectBackedSetOf("speech-bubble")
             val z = Layer.ScriptWidget.zIndex()
             attrs.jsStyle {
@@ -98,7 +103,29 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
                 props.game.eventBus.emit(GAME_SCRIPT_NEXT, MAIN_CHANNEL)
             }
             // Can only set one of 'children' or props.dangerouslySetInnerHTML'
-            unsafeSpan(props.contentHtml)
+            unsafeDiv(props.contentHtml)
+
+            if (props.showYesNo) {
+                BootstrapButton {
+                    attrs.className = "speech-bubble-button"
+                    attrs.size = "sm"
+                    attrs.onClick = { it: dynamic ->
+                        it.stopPropagation()
+                        props.onYes()
+                    }
+                    +"Yes"
+                }
+                BootstrapButton {
+                    attrs.className = "speech-bubble-button"
+                    attrs.size = "sm"
+                    attrs.onClick = { it: dynamic ->
+                        it.stopPropagation()
+                        props.onNo()
+                    }
+                    +"No"
+                }
+            }
+
             if (props.arrow) {
                 span {
                     attrs.jsStyle {

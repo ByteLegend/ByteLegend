@@ -19,6 +19,7 @@ import com.bytelegend.app.client.api.Animation
 import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameScene
+import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.Static
 import com.bytelegend.app.client.api.closeMissionModalEvent
 import com.bytelegend.app.client.api.dsl.UnitFunction
@@ -31,7 +32,6 @@ import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.obj.AbstractStaticLocationSprite
-import com.bytelegend.client.app.obj.HasBouncingTitle
 import com.bytelegend.client.app.obj.draw
 import com.bytelegend.client.app.ui.mission.MissionModal
 import com.bytelegend.client.app.ui.mission.MissionTitle
@@ -53,6 +53,7 @@ class GameMission(
     override val id: String = gameMapMission.id
     override val layer: Int = gameMapMission.layer
 
+    override var bouncingTitleEnabled: Boolean = true
     override var animation: Animation = Static
     override var onClickFunction: UnitFunction? = null
     override var onCloseFunction: UnitFunction? = null

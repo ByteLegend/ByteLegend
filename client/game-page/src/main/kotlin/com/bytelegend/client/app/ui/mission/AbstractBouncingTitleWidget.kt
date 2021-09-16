@@ -49,7 +49,7 @@ interface BouncingTitleState : State {
     var hovered: Boolean
 }
 
-abstract class AbstractBouncingTitle<R : BouncingTitleProps> : RComponent<R, BouncingTitleState>() {
+abstract class AbstractBouncingTitleWidget<R : BouncingTitleProps> : RComponent<R, BouncingTitleState>() {
     private val mouseOutOfMapListener: EventListener<Any> = {
         setState { hovered = false }
     }

@@ -16,11 +16,11 @@
 package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
-import com.bytelegend.client.app.obj.HasBouncingTitle
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
@@ -108,7 +108,10 @@ class BouncingTitles : GameUIComponent<GameProps, BouncingTitlesState>() {
     }
 
     private fun RBuilder.renderOne(hasBouncingTitle: GameObject) {
-        hasBouncingTitle.unsafeCast<HasBouncingTitle>().renderBouncingTitle(this)
+        val obj = hasBouncingTitle.unsafeCast<HasBouncingTitle>()
+        if (obj.bouncingTitleEnabled) {
+            obj.renderBouncingTitle(this)
+        }
     }
 
     override fun componentDidMount() {

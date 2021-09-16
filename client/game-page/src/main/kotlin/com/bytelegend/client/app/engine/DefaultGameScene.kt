@@ -26,30 +26,29 @@ import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.dsl.BouncingTitleBuilder
 import com.bytelegend.app.client.api.dsl.DynamicSpriteBuilder
 import com.bytelegend.app.client.api.dsl.EMPTY_FUNCTION
-import com.bytelegend.app.client.api.dsl.MapEntranceBuilder
-import com.bytelegend.app.client.api.dsl.NoticeboardBuilder
 import com.bytelegend.app.client.api.dsl.NpcBuilder
 import com.bytelegend.app.client.api.dsl.ObjectsBuilder
+import com.bytelegend.app.client.misc.search
 import com.bytelegend.app.shared.GameMap
+import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.mapToArray
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
+import com.bytelegend.app.shared.objects.GameMapEntrancePoint
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
-import com.bytelegend.app.shared.objects.defaultMapEntranceDestinationId
-import com.bytelegend.app.shared.objects.defaultMapEntranceId
-import com.bytelegend.app.shared.objects.defaultMapEntrancePointId
+import com.bytelegend.app.shared.objects.mapEntranceId
 import com.bytelegend.client.app.obj.BouncingTitleObject
 import com.bytelegend.client.app.obj.DefaultDynamicSprite
 import com.bytelegend.client.app.obj.EmptyClickablePoint
 import com.bytelegend.client.app.obj.GameCurveSprite
 import com.bytelegend.client.app.obj.GameMapEntrance
 import com.bytelegend.client.app.obj.GameTextSprite
-import com.bytelegend.client.app.obj.NPC
+import com.bytelegend.client.app.obj.character.NPC
 import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.MAIN_CHANNEL
@@ -104,6 +103,10 @@ class DefaultGameScene(
         scripts(MAIN_CHANNEL, true, block)
     }
 
+    override fun searchPath(start: GridCoordinate, end: GridCoordinate, wallPredicate: (Int) -> Boolean): List<GridCoordinate> {
+        return search(blockers, start, end, wallPredicate)
+    }
+
     fun scripts(channel: String, runImmediately: Boolean, block: ScriptsBuilder.() -> Unit) {
         getDirectorOfChannel(channel).scripts(runImmediately, block)
     }
@@ -127,6 +130,8 @@ class DefaultGameScene(
                     missions.add(it.unsafeCast<GameMapMission>())
                     // it may reference a dynamic sprite, so we need a second pass
                 }
+                GameMapObjectType.GameMapEntrancePoint -> addMapEntrance(it.unsafeCast<GameMapEntrancePoint>())
+                GameMapObjectType.GameMapEntranceDestinationPoint -> objects.add(it.unsafeCast<GameMapEntrancePoint>())
                 else -> throw IllegalStateException("Unsupported type: ${it.type}")
             }
         }
@@ -135,25 +140,16 @@ class DefaultGameScene(
         }
     }
 
-    override fun mapEntrance(action: MapEntranceBuilder.() -> Unit) {
-        val builder = MapEntranceBuilder()
-        builder.action()
-
-        val destMapId = builder.destMapId ?: throw IllegalArgumentException("Dest map id not set!")
-        val entranceId = builder.id ?: defaultMapEntranceId(map.id, destMapId)
-        val entrancePointId = builder.coordinatePointId ?: defaultMapEntrancePointId(entranceId)
-
-        val coordinate = objects.getPointById(entrancePointId)
-        val backEntrancePointId = builder.backEntrancePointId ?: defaultMapEntranceDestinationId(entranceId)
+    private fun addMapEntrance(entrancePoint: GameMapEntrancePoint) {
+        objects.add(entrancePoint)
+        val entranceId = mapEntranceId(entrancePoint.srcMap, entrancePoint.destMap)
 
         val mapEntrance = GameMapEntrance(
             entranceId,
             this,
-            coordinate,
-            destMapId,
-            backEntrancePointId,
-            builder.bouncingTitle,
-            gameRuntime.unsafeCast<Game>().webSocketClient
+            entrancePoint.gridCoordinate,
+            entrancePoint.destMap,
+            true
         )
 
         objects.add(mapEntrance)
@@ -184,18 +180,6 @@ class DefaultGameScene(
                 this.onClick = builder.onClickFunction ?: EMPTY_FUNCTION
             }
         }
-    }
-
-    override fun noticeboard(action: NoticeboardBuilder.() -> Unit) {
-//        val builder = NoticeboardBuilder()
-//        builder.action()
-//
-//        val dynamicSprite = objects.getById<GameMapDynamicSprite>(builder.spriteId!!)
-//
-//        NoticeboardSprite(builder.id!!, this, dynamicSprite).apply {
-//            objects.add(this)
-//            init()
-//        }
     }
 
     override fun npc(action: NpcBuilder.() -> Unit) {
@@ -247,6 +231,7 @@ class DefaultGameScene(
     }
 
     private fun gameMapCurve(curve: GameMapCurve) {
+        objects.add(curve)
         objects.add(GameCurveSprite(this, curve))
     }
 }

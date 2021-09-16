@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@ import java.util.function.Consumer
  */
 class BuildGameResourcesPlugin : Plugin<Project> {
     private lateinit var rootProject: Project
-    private val allMaps: List<String> by lazy {
+    private val allMapIds: List<String> by lazy {
         rootProject.file("game-data/hierarchy.yml").apply {
             if (!isFile) {
                 throw IllegalStateException("game-data/hierarchy.yml not found. Did you run `git submodule update game-data`?")
@@ -79,7 +79,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
         processResourcesTasks.add(project.createGenerateI18nJsonTask())
         processResourcesTasks.add(project.createGeneratePlayerAnimationSetTask())
 
-        allMaps.forEach {
+        allMapIds.forEach {
             project.createMapGeneratorTask(it, processResourcesTasks)
         }
 
@@ -206,6 +206,8 @@ class BuildGameResourcesPlugin : Plugin<Project> {
             gameDataInputDir.absolutePath,
             outputMapJsonsDir.absolutePath
         ) {
+            jvmArgs("-DallMapIds=${allMapIds.joinToString(",")}")
+
             inputs.file(inputTiledJson).withPathSensitivity(PathSensitivity.RELATIVE)
             inputs.dir(inputGameDataMapDir).withPathSensitivity(PathSensitivity.RELATIVE)
             inputs.dir(rootProject.file("resources/raw/tilesets")).withPathSensitivity(PathSensitivity.RELATIVE)
@@ -310,7 +312,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
     }
 
     private fun forEachMapWithProject(consumer: Consumer<String>) {
-        allMaps.filter { rootProject.findProject(":client:game-$it") != null }.forEach(consumer)
+        allMapIds.filter { rootProject.findProject(":client:game-$it") != null }.forEach(consumer)
     }
 }
 

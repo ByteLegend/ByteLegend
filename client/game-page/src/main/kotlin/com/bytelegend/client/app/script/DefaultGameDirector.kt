@@ -19,6 +19,7 @@ package com.bytelegend.client.app.script
 
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
+import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.SpeechBuilder
 import com.bytelegend.app.client.api.dsl.SuspendUnitFunction
@@ -27,6 +28,7 @@ import com.bytelegend.app.client.misc.playAudio
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.DefaultGameScene
+import com.bytelegend.client.app.engine.DefaultGameSceneContainer
 import com.bytelegend.client.app.engine.GAME_SCRIPT_NEXT
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
@@ -34,7 +36,8 @@ import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
 import com.bytelegend.client.app.engine.calculateCoordinateInGameContainer
 import com.bytelegend.client.app.engine.logger
-import com.bytelegend.client.app.obj.CharacterSprite
+import com.bytelegend.client.app.obj.character.CharacterSprite
+import com.bytelegend.client.app.obj.character.NPC
 import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.script.effect.showArrowGif
 import com.bytelegend.client.app.ui.COORDINATE_BORDER_FLICKER
@@ -84,7 +87,8 @@ class DefaultGameDirector(
     private val gameScene: DefaultGameScene
 ) : ScriptsBuilder {
     private val gameControl: GameControl by di.instance()
-    private val game: GameRuntime by di.instance()
+    private val gameRuntime: GameRuntime by di.instance()
+    private val game: Game = gameRuntime.unsafeCast<Game>()
     private val eventBus: EventBus by di.instance()
 
     /**
@@ -147,7 +151,7 @@ class DefaultGameDirector(
         if (scripts.isEmpty()) {
             throw IllegalStateException("Scripts should not be empty!")
         }
-        if (channel == ASYNC_ANIMATION_CHANNEL && (!gameControl.isWindowVisible || game.modalController.visible)) {
+        if (channel == ASYNC_ANIMATION_CHANNEL && (!gameControl.isWindowVisible || gameRuntime.modalController.visible)) {
             return
         }
 
@@ -181,7 +185,9 @@ class DefaultGameDirector(
 
     fun scripts(runImmediately: Boolean, block: ScriptsBuilder.() -> Unit) {
         block()
-        if (runImmediately) {
+        // `scripts {}` may be called during running.
+        // In this case we don't need to start, just let each script take over.
+        if (!isRunning && runImmediately) {
             next()
         }
     }
@@ -204,6 +210,12 @@ class DefaultGameDirector(
                     attrs.speakerCoordinate = builder.speakerCoordinate
                     attrs.contentHtml = gameScene.gameRuntime.i(builder.contentHtmlId!!, *builder.args)
                     attrs.arrow = builder.arrow
+                    attrs.showYesNo = builder.showYesNo
+                    attrs.onYes = {
+                        builder.onYes()
+                        next()
+                    }
+                    attrs.onNo = { next() }
                 },
                 builder.contentHtmlId,
                 builder.dismissMs
@@ -215,12 +227,37 @@ class DefaultGameDirector(
         scripts.add(RunSuspendFunctionScript(fn))
     }
 
-    override fun playAnimate(objectId: String, frames: List<Int>, intervalMs: Int) {
-        TODO("Not yet implemented")
+    override fun characterMove(characterId: String, destMapCoordinate: GridCoordinate, onArrival: UnitFunction) {
+        scripts.add(CharacterMoveScript(gameScene.objects.getById(characterId), destMapCoordinate, onArrival))
     }
 
-    override fun characterMove(characterId: String, destMapCoordinate: GridCoordinate, callback: UnitFunction) {
-        scripts.add(CharacterMoveScript(gameScene.objects.getById(characterId), destMapCoordinate, callback))
+    override fun characterEnterVehicleAndMoveToMap(
+        characterId: String,
+        vehicleSpriteId: String,
+        movingPath: List<GridCoordinate>,
+        destMapId: String
+    ) {
+        scripts.add(FunctionScript {
+            gameScene.objects.getById<CharacterSprite>(HERO_ID).close()
+
+            // Create a special NPC, and make it move.
+            val playerInVehicle = NPC(
+                characterId,
+                gameScene.objects.getById(vehicleSpriteId),
+                gameScene
+            )
+            playerInVehicle.pixelCoordinate = movingPath[0] * gameScene.map.tileSize
+            playerInVehicle.init()
+            game._hero = playerInVehicle
+
+            playerInVehicle.moveAlong(movingPath) {
+                next()
+                if (isRunning) {
+                    logger.warn("We're going to switch scene but the script hasn't finised yet.")
+                }
+                game.sceneContainer.unsafeCast<DefaultGameSceneContainer>().heroEnterScene(destMapId)
+            }
+        })
     }
 
     override fun startBeginnerGuide() {
@@ -231,7 +268,7 @@ class DefaultGameDirector(
         scripts.add(
             RunSuspendFunctionScript {
                 webSocketClient.putState(key, value)
-                game.heroPlayer.states[key] = value
+                gameRuntime.heroPlayer.states[key] = value
             }
         )
     }
@@ -240,9 +277,21 @@ class DefaultGameDirector(
         scripts.add(
             RunSuspendFunctionScript {
                 webSocketClient.removeState(key)
-                game.heroPlayer.states.remove(key)
+                gameRuntime.heroPlayer.states.remove(key)
             }
         )
+    }
+
+    override fun enterScene(targetMapId: String, onSuccess: UnitFunction, onFail: UnitFunction) {
+        scripts.add(RunSuspendFunctionScript {
+            try {
+                webSocketClient.switchScene(targetMapId)
+                onSuccess()
+            } catch (e: Exception) {
+                logger.error(e.stackTraceToString())
+                onFail()
+            }
+        })
     }
 
     override fun removeItem(item: String, targetCoordinate: GridCoordinate?) {
@@ -255,7 +304,7 @@ class DefaultGameDirector(
             // show gif arrow pointing to the coordinate
             // highlight the first mission
             respondToClick(true)
-            arrowGif = showArrowGif(gameScene.canvasState.getUICoordinateInGameContainer(), game.i("ThisIsCoordinate"))
+            arrowGif = showArrowGif(gameScene.canvasState.getUICoordinateInGameContainer(), gameRuntime.i("ThisIsCoordinate"))
             eventBus.emit(COORDINATE_BORDER_FLICKER, true)
             eventBus.emit(HIGHTLIGHT_TITLES_EVENT, listOf(STAR_BYTELEGEND_MISSION_ID))
         }
@@ -315,18 +364,6 @@ class DefaultGameDirector(
         }
     }
 
-    inner class RunNativeJsScript(
-        val pixelCoordinate: PixelCoordinate
-    ) : GameScript {
-        override fun start() {
-            next()
-//            window.asDynamic().starFly(0, 0, 500, 500, 2).then
-//            , {
-//                next()
-//            })
-        }
-    }
-
     inner class RemoveItemScript(
         private val item: String,
         private val destination: GridCoordinate?
@@ -354,8 +391,8 @@ class DefaultGameDirector(
 
         fun itemDisappearAnimation() {
             GlobalScope.launch {
-                game.heroPlayer.items.remove(item)
-                game.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+                gameRuntime.heroPlayer.items.remove(item)
+                gameRuntime.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
                 webSocketClient.removeItem(item)
             }
         }
@@ -369,6 +406,14 @@ class DefaultGameDirector(
                 fn()
                 next()
             }
+        }
+    }
+
+    inner class FunctionScript(
+        private val fn: () -> Unit
+    ) : GameScript {
+        override fun start() {
+            fn()
         }
     }
 }

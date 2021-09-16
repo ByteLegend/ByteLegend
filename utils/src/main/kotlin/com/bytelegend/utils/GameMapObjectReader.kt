@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,15 +18,16 @@ package com.bytelegend.utils
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.entities.mission.MissionSpec
 import com.bytelegend.app.shared.objects.GameMapCurve
+import com.bytelegend.app.shared.objects.GameMapEntrancePoint
 import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameMapObject
+import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.github.utils.generated.TiledMap
 import java.awt.Point
 import java.awt.Polygon
-import java.lang.IllegalStateException
 import com.bytelegend.github.utils.generated.TiledMap.Layer as TiledMapLayer
 import com.bytelegend.github.utils.generated.TiledMap.Object as TiledMapObject
 
@@ -60,14 +61,17 @@ enum class TiledObjectType {
     /**
      * A reference to Mission defined in `game-data/` directory.
      */
-    GameMapMission
+    GameMapMission,
+    GameMapEntrancePoint,
+    GameMapEntranceDestinationPoint;
 }
 
 class TiledObjectReader(
     private val mapId: String,
     private val tiledMap: TiledMap,
     private val missionDataReader: MissionDataReader,
-    private val rawLayerIdToIndexMap: Map<Int, Int>
+    private val rawLayerIdToIndexMap: Map<Int, Int>,
+    private val allMapIds: Set<String> = emptySet()
 ) {
     private val tileSize = tiledMap.getTileSize()
     val regions: List<GameMapRegion> by lazy {
@@ -78,6 +82,10 @@ class TiledObjectReader(
     }
     val points: List<GameMapPoint> by lazy {
         readPoints()
+    }
+    val entrancePoints: List<GameMapEntrancePoint> by lazy {
+        readMapEntrancePoints(TiledObjectType.GameMapEntrancePoint) +
+            readMapEntrancePoints(TiledObjectType.GameMapEntranceDestinationPoint)
     }
 
     /**
@@ -102,8 +110,9 @@ class TiledObjectReader(
         return readCurves() +
             readTexts() +
             regions +
+            missions +
             points +
-            missions
+            entrancePoints
     }
 
     private fun TiledMap.verify(): TiledMap {
@@ -229,6 +238,31 @@ class TiledObjectReader(
             obj.name,
             rawLayerIdToIndexMap.getValue(layer.id.toInt()),
             obj.toPoint()
+        )
+    }
+
+    private fun readMapEntrancePoints(type: TiledObjectType): List<GameMapEntrancePoint> = readObjects(type) { layer, obj ->
+        val objId = obj.name
+        // {src}-{dest}-entrance-point
+        // {src}-{dest}-entrance-destination-point
+        // For 2-tile-wide entrance:
+        // {src}-{dest}-left-point
+        // {src}-{dest}-right-point
+        val srcMap = objId.split("-")[0]
+        val destMap = objId.split("-")[1]
+        require(allMapIds.contains(srcMap)) {
+            "Invalid $srcMap in $objId"
+        }
+        require(allMapIds.contains(destMap)) {
+            "Invalid $destMap in $objId"
+        }
+        GameMapEntrancePoint(
+            obj.name,
+            rawLayerIdToIndexMap.getValue(layer.id.toInt()),
+            obj.toPoint(),
+            srcMap,
+            destMap,
+            GameMapObjectType.valueOf(type.toString())
         )
     }
 

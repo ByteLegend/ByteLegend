@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 import com.bytelegend.app.client.api.GameRuntime
-import com.bytelegend.app.shared.JAVA_ISLAND_CONCURRENCY_DUNGEON
-import com.bytelegend.app.shared.JAVA_ISLAND_MAVEN_DUNGEON
-import com.bytelegend.app.shared.JAVA_ISLAND_SPRING_DUNGEON
 import com.bytelegend.app.shared.PixelCoordinate
 import kotlinx.browser.window
 
@@ -25,16 +22,6 @@ val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
 fun main() {
     gameRuntime.sceneContainer.getSceneById("JavaIslandSeniorJavaCastle").apply {
         objects {
-            listOf(
-                JAVA_ISLAND_CONCURRENCY_DUNGEON,
-                JAVA_ISLAND_MAVEN_DUNGEON,
-                JAVA_ISLAND_SPRING_DUNGEON
-            ).forEach {
-                mapEntrance {
-                    destMapId = it
-                }
-            }
-
             bouncingTitle {
                 val point = objects.getPointById("SeniorJavaCastle-JUnitDungeon-entrance-point")
                 pixelCoordinate = point * map.tileSize + PixelCoordinate(16, 0)
@@ -57,11 +44,6 @@ fun main() {
                 text = gameRuntime.i("MessageQueueIsland")
                 backgroundColor = "rgba(36,102,233,0.8)"
                 tileCoordinates.add(point)
-            }
-
-            mapEntrance {
-                destMapId = "WebIsland"
-                coordinatePointId = "SeniorJavaCastle-WebIsland-entrance-point"
             }
 
             bouncingTitle {

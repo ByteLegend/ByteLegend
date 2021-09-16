@@ -498,7 +498,7 @@ body {
     box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
 }
 
-p.speech-bubble {
+div.speech-bubble {
     max-width: 30em;
     min-width: 10em;
     background-color: #fff;
@@ -509,7 +509,7 @@ p.speech-bubble {
     box-shadow: 0 0.5rem 0.5rem rgba(0, 0, 0, .3), 0 0.5rem 0.5rem rgba(0, 0, 0, .2);
 }
 
-p.speech-bubble::after {
+div.speech-bubble::after {
     content: '';
     position: absolute;
     width: 0;
@@ -736,4 +736,8 @@ p.speech-bubble::after {
     border-radius: 50%;
     cursor: pointer;
     background-image: url("data:image/svg+xml,%3Csvg class='icon' viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cpath d='M512.008 422.3L915.699 18.61a63.437 63.437 0 1 1 89.707 89.707l-403.69 403.691 403.69 403.691a63.437 63.437 0 0 1-89.707 89.707l-403.691-403.69-403.691 403.69A63.437 63.437 0 0 1 18.61 915.7L422.3 512.008 18.61 108.317a63.437 63.437 0 1 1 89.707-89.707L512.008 422.3z' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+.speech-bubble-button {
+    margin: 4px 4px 4px 4px;
 }

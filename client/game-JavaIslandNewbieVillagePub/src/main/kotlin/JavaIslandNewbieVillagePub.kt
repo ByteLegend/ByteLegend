@@ -21,15 +21,16 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
+import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.openMissionModalEvent
 import com.bytelegend.app.shared.COFFEE_MACHINE_MISSION
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.HumanReadableCoordinate
-import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
+import com.bytelegend.app.shared.objects.mapEntranceId
 import kotlinx.browser.window
 
 val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
@@ -37,16 +38,13 @@ val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
 fun main() {
     gameRuntime.sceneContainer.getSceneById(JAVA_ISLAND_NEWBIE_VILLAGE_PUB).apply {
         objects {
-            mapEntrance {
-                destMapId = JAVA_ISLAND
-                bouncingTitle = false
-            }
-
             pubEngineer()
             pubGirl()
             pubBartender()
 
             configureCoffeeMachine()
+            objects.getById<GameObject>(mapEntranceId("JavaIslandNewbieVillagePub", "JavaIsland"))
+                .unsafeCast<HasBouncingTitle>().bouncingTitleEnabled = false
         }
     }
 }
@@ -55,7 +53,6 @@ fun GameScene.configureCoffeeMachine() {
     val id = "install-java"
     val installJavaMission = objects.getById<DynamicSprite>(id)
     installJavaMission.onClickFunction = {
-        console.log("Click", GameScriptHelpers(this).distanceOf(HERO_ID, id))
         if (GameScriptHelpers(this).distanceOf(HERO_ID, id) <= 2) {
             installJavaMission.animation = FramePlayingAnimation(
                 frames = arrayOf(

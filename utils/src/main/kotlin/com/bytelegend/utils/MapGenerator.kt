@@ -127,10 +127,15 @@ class MapGenerator(
     private var used: Boolean = false
 
     private val visibleFlattenedLayers: List<TiledMap.Layer> = tiledMap.layers.apply {
-        // Check dumplicate layer id
+        // Check duplicate layer id and name
         groupBy { it.id }.forEach { (layerId: Long, layers: List<TiledMap.Layer>) ->
             if (layers.size > 1) {
                 throw IllegalStateException("Multiple layers with same id: $layerId ${layers.joinToString(",") { it.name }}")
+            }
+        }
+        groupBy { it.name }.forEach { (layerName: String, layers: List<TiledMap.Layer>) ->
+            if (layers.size > 1) {
+                throw IllegalStateException("Multiple layers with same name: $layerName ${layers.joinToString(",") { it.name }}")
             }
         }
     }.flatMap { layer ->
@@ -167,7 +172,10 @@ class MapGenerator(
     private val rawLayerIdToIndexMap = visibleFlattenedLayers.mapIndexed { i, layer ->
         layer.id.toInt() to i - playerLayerIndex
     }.toMap()
-    private val tiledObjectReader = TiledObjectReader(mapId, tiledMap, mapDataReader, rawLayerIdToIndexMap)
+    private val tiledObjectReader = TiledObjectReader(
+        mapId, tiledMap, mapDataReader, rawLayerIdToIndexMap,
+        System.getProperty("allMapIds").split(",").toSet()
+    )
     private val dynamicSpriteReader = DynamicSpriteReader()
 
     fun generate() {

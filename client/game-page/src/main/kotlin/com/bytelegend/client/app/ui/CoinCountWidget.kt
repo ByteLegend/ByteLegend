@@ -48,7 +48,7 @@ class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, 
             playAudio("coin")
         }
         game.toastController.addToast(
-            "${if (numberChange.change > 0) "+" else ""}${numberChange.change} <div class='$iconClassName inline-icon-16'></div>",
+            "${formatChange(numberChange.change)} <div class='$iconClassName inline-icon-16'></div>",
             game.i(coinChange.reasonId, *coinChange.reasonArgs),
             5000
         )

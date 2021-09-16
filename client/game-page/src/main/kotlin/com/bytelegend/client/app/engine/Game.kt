@@ -41,7 +41,7 @@ import com.bytelegend.app.shared.i18n.render
 import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
-import com.bytelegend.client.app.obj.PlayerSprite
+import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.ui.DefaultBannerController
 import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.DefaultToastController
@@ -110,7 +110,7 @@ class Game(
     override val activeScene: GameScene
         get() = sceneContainer.activeScene!!
     val webSocketClient: WebSocketClient by di.instance()
-    var _hero: PlayerSprite? = null
+    var _hero: CharacterSprite? = null
     override val hero: Character?
         get() = _hero
     override val heroPlayer: Player by di.instance()

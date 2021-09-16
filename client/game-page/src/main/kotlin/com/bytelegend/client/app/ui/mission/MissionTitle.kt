@@ -33,7 +33,7 @@ interface MissionTitleProps : BouncingTitleProps {
     var mission: GameMission
 }
 
-class MissionTitle : AbstractBouncingTitle<MissionTitleProps>() {
+class MissionTitle : AbstractBouncingTitleWidget<MissionTitleProps>() {
     private val onMissionRepaintListener: EventListener<ChallengeUpdateEventData> = this::onMissionRepaint
 
     private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {

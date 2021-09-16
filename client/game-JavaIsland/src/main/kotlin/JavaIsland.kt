@@ -22,6 +22,7 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
+import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.client.api.animationWithFixedInterval
@@ -29,17 +30,14 @@ import com.bytelegend.app.client.api.closeMissionModalEvent
 import com.bytelegend.app.client.api.configureBookSprite
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
+import com.bytelegend.app.shared.GIT_ISLAND
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.JAVA_ISLAND
-import com.bytelegend.app.shared.JAVA_ISLAND_COMMENT_DUNGEON
-import com.bytelegend.app.shared.JAVA_ISLAND_CONCURRENCY_DUNGEON
-import com.bytelegend.app.shared.JAVA_ISLAND_DEBUGGER_DUNGEON
-import com.bytelegend.app.shared.JAVA_ISLAND_MAVEN_DUNGEON
-import com.bytelegend.app.shared.JAVA_ISLAND_NEWBIE_VILLAGE_PUB
 import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
-import com.bytelegend.app.shared.JAVA_ISLAND_SPRING_DUNGEON
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.app.shared.objects.mapEntranceId
 import kotlinx.browser.window
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
@@ -48,50 +46,12 @@ const val NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID = "remember-brave-people-challen
 const val STAR_BYTELEGEND_MISSION_ID = "star-bytelegend"
 const val STAR_BYTELEGEND_CHALLENGE_ID = "star-bytelegend-challenge"
 
-val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
-
 private const val SHOW_AD_MODAL = "show.ad.modal"
 fun main() {
+    val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
+
     gameRuntime.sceneContainer.getSceneById(JAVA_ISLAND).apply {
         objects {
-            mapEntrance {
-                destMapId = JAVA_ISLAND_NEWBIE_VILLAGE_PUB
-            }
-
-            mapEntrance {
-                destMapId = JAVA_ISLAND_COMMENT_DUNGEON
-            }
-
-            mapEntrance {
-                destMapId = JAVA_ISLAND_DEBUGGER_DUNGEON
-            }
-
-            mapEntrance {
-                destMapId = JAVA_ISLAND_MAVEN_DUNGEON
-            }
-
-            mapEntrance {
-                destMapId = JAVA_ISLAND_SPRING_DUNGEON
-            }
-
-            mapEntrance {
-                destMapId = JAVA_ISLAND_CONCURRENCY_DUNGEON
-            }
-
-            mapEntrance {
-                id = "JavaIsland-SeniorJavaCastle-entrance-left"
-                destMapId = JAVA_ISLAND_SENIOR_JAVA_CASTLE
-                coordinatePointId = "SeniorJavaCastleDoor-left"
-                bouncingTitle = false
-            }
-
-            mapEntrance {
-                id = "JavaIsland-SeniorJavaCastle-entrance-right"
-                destMapId = JAVA_ISLAND_SENIOR_JAVA_CASTLE
-                coordinatePointId = "SeniorJavaCastleDoor-right"
-                bouncingTitle = false
-            }
-
             configureMissionTowers()
             configureStarByteLegendBook()
             configureInstallJavaIDEChest()
@@ -183,7 +143,9 @@ fun GameScene.newbieVillageNoticeboard() = objects {
 }
 
 fun GameScene.castleDoor() = objects {
-    val castleDoorPoint = objects.getPointById("JavaIsland-SeniorJavaCastle-entrance-left") - GridCoordinate(0, 1)
+    objects.getById<GameObject>(mapEntranceId("JavaIsland", "JavaIslandSeniorJavaCastle"))
+        .unsafeCast<HasBouncingTitle>().bouncingTitleEnabled = false
+    val castleDoorPoint = objects.getPointById("JavaIsland-JavaIslandSeniorJavaCastle-left") - GridCoordinate(0, 1)
 
     dynamicSprite {
         id = "JavaSeniorCastleDoor-sprite"
@@ -392,7 +354,7 @@ fun GameScene.newbieVillageHead() = objects {
                     }
                 } else {
                     val noticeboardPoint = objects.getPointById("remember-brave-people").toHumanReadableCoordinate().toString()
-                    val javaCastlePoint = objects.getPointById("JavaIsland-SeniorJavaCastle-entrance-left").toHumanReadableCoordinate().toString()
+                    val javaCastlePoint = objects.getPointById("JavaIsland-JavaIslandSeniorJavaCastle-left").toHumanReadableCoordinate().toString()
 
                     scripts {
                         speech(villageHeadId, "OutsideWorldIsDangerous")
@@ -429,12 +391,30 @@ fun GameScene.newbieVillageSailor() = objects {
             sailorId,
             {
                 scripts {
-                    speech(sailorId, "ImSupposedToTakeYouToGitIsland", arrow = false)
+                    speech {
+                        speakerId = sailorId
+                        contentHtmlId = "WouldYouLikeToGitIsland"
+                        arrow = false
+                        showYesNo = true
+                        onYes = {
+                            scripts {
+                                enterScene(GIT_ISLAND, {
+                                    scripts {
+                                        characterEnterVehicleAndMoveToMap(HERO_ID, "Boat", helpers.searchVehiclePath("JavaNewbieVillageToGitIsland"), GIT_ISLAND)
+                                    }
+                                }, {
+                                    scripts {
+                                        speech(sailorId, "SorryYouDontHaveEnoughCoin", arrow = false)
+                                    }
+                                })
+                            }
+                        }
+                    }
                 }
             }
         ) {
             scripts {
-                speech(sailorId, "ImSupposedToTakeYouToGitIsland", arrow = false)
+                speech(sailorId, "ICantHearYou", arrow = false)
             }
         }
     }
@@ -458,7 +438,7 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
             soldierId,
             {
                 scripts {
-                    speech(soldierId, "ImSupposedToDoSomething", arrow = false)
+                    speech(soldierId, "YouMustGetBronzeGitMedal", arrow = false)
                 }
             }
         ) {

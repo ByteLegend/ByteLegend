@@ -39,7 +39,7 @@ private val REALWORLD_PROJECTS: List<String> = JSArrayBackedList<String>().apply
     add("java-e-commerce-website")
 }
 
-private const val JAVA_CASTLE_REGION_CENTER = "SeniorJavaCastleDoor-left"
+private const val JAVA_CASTLE_REGION_CENTER = "JavaIsland-JavaIslandSeniorJavaCastle-left"
 
 // https://echarts.apache.org/examples/en/index.html#chart-type-map
 fun GameScene.getMinimapMapFeatures(): dynamic {

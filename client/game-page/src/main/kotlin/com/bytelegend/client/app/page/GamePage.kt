@@ -31,7 +31,7 @@ import com.bytelegend.client.app.engine.init
 import com.bytelegend.client.app.engine.resource.AudioResource
 import com.bytelegend.client.app.engine.resource.I18nTextResource
 import com.bytelegend.client.app.engine.resource.ImageResource
-import com.bytelegend.client.app.obj.HeroCharacter
+import com.bytelegend.client.app.obj.character.HeroCharacter
 import com.bytelegend.client.app.ui.AudioSwitchWidget
 import com.bytelegend.client.app.ui.BannerUIComponent
 import com.bytelegend.client.app.ui.CoinCountWidget

@@ -16,11 +16,10 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
-import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_20MS_EVENT
 import com.bytelegend.client.utils.jsObjectBackedSetOf
-import com.bytelegend.client.app.obj.CharacterSprite
+import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.obj.getSpriteBlockOnCanvas
 import react.RBuilder
 import react.RComponent
@@ -38,26 +37,25 @@ class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
 
     override fun RBuilder.render() {
         if (!game.heroPlayer.isAnonymous && !game._hero!!.outOfCanvas() && game.heroPlayer.map == activeScene.map.id) {
-            renderOne(game.heroPlayer, game._hero!!, true)
+            renderOne(game.heroPlayer.nickname, game._hero!!, true)
         }
 
         game.activeScene.unsafeCast<DefaultGameScene>()
             .players
             .getDrawableCharacters()
             .forEach {
-                renderOne(it.player, it, false)
+                renderOne(it.player.nickname, it, false)
             }
     }
 
-    private fun RBuilder.renderOne(player: BasePlayer, sprite: CharacterSprite, isHero: Boolean) {
+    private fun RBuilder.renderOne(playerNickName: String, sprite: CharacterSprite, isHero: Boolean) {
         val imageBlockOnCanvas = sprite.getSpriteBlockOnCanvas(activeScene)
         val x = imageBlockOnCanvas.x + canvasCoordinateInGameContainer.x + activeScene.map.tileSize.width / 2
         val y = imageBlockOnCanvas.y + canvasCoordinateInGameContainer.y - 10
-        val name = player.nickname
         child(PlayerNameSpan::class) {
             attrs.x = x
             attrs.y = y
-            attrs.name = name
+            attrs.name = playerNickName
             attrs.isHero = isHero
         }
     }
