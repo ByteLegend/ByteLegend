@@ -53,7 +53,9 @@ fun GameScene.configureCoffeeMachine() {
     val id = "install-java"
     val installJavaMission = objects.getById<DynamicSprite>(id)
     installJavaMission.onClickFunction = {
-        if (GameScriptHelpers(this).distanceOf(HERO_ID, id) <= 2) {
+        if (gameRuntime.heroPlayer.map == map.id &&
+            GameScriptHelpers(this).distanceOf(HERO_ID, id) <= 2
+        ) {
             installJavaMission.animation = FramePlayingAnimation(
                 frames = arrayOf(
                     AnimationFrame(0, 300),
