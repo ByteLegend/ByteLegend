@@ -194,7 +194,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         } else {
             div {
                 gameContainer(game) {
-                    heroIndicator(attrs)
+                    // heroIndicator(attrs)
                     modalController(attrs)
                     bannerController(attrs)
                     toastController(attrs)
