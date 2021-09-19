@@ -16,6 +16,9 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.misc.playAudio
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.protocol.COIN_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.CoinUpdateEventData
 import com.bytelegend.app.shared.protocol.NumberChange
@@ -23,8 +26,10 @@ import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.id
+import kotlinx.html.js.onClickFunction
 import react.State
 import react.dom.RDOMBuilder
+import react.dom.p
 import react.dom.span
 
 interface CoinCountWidgetProps : GameProps
@@ -40,6 +45,21 @@ class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, 
             +game.heroPlayer.coin.toString()
         }
         renderIcon()
+        attrs.onClickFunction = {
+            game.modalController.show {
+                BootstrapModalHeader {
+                    attrs.closeButton = true
+                    BootstrapModalTitle {
+                        +i("UnfinishedTitle")
+                    }
+                }
+                BootstrapModalBody {
+                    p {
+                        unsafeSpan(i("UnfinishedText2"))
+                    }
+                }
+            }
+        }
     }
 
     override fun onNumberChange(numberChange: NumberChange) {
