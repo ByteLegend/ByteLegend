@@ -156,8 +156,8 @@ class BuildGameResourcesPlugin : Plugin<Project> {
             if (variant == Variant.Production) {
                 doLast {
                     outputRRBD.resolve("js").listFiles()?.forEach {
-                        require(it.length() < 2 * 1024 * 1024) {
-                            "${it.absolutePath} is larger than 2MiB!"
+                        require(it.length() < 2.5 * 1024 * 1024) {
+                            "${it.absolutePath} is larger than 2.5MiB!"
                         }
                     }
                 }

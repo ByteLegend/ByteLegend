@@ -42,7 +42,6 @@ class ReputationCountWidget : AbstractIncrementAnimatableWidget<ReputationCountW
         renderIcon()
         attrs.onClickFunction = {
             game.modalController.show {
-                attrs.className = "history-modal"
                 child(HistoryModal::class) {
                     attrs.game = game
                 }

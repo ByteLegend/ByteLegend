@@ -52,7 +52,6 @@ class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
             attrs.classes = jsObjectBackedSetOf("map-title-text", "items-widget")
             attrs.onClickFunction = {
                 game.modalController.show {
-                    attrs.className = "history-modal"
                     child(HistoryModal::class) {
                         attrs.game = game
                     }
