@@ -16,19 +16,15 @@
 package com.bytelegend.client.app.ui.item
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
-import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
-import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
-import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
-import com.bytelegend.client.app.ui.unsafeSpan
+import com.bytelegend.client.app.ui.HistoryModal
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.State
 import react.dom.div
-import react.dom.p
 
 interface ItemWidgetProps : GameProps
 
@@ -56,16 +52,9 @@ class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
             attrs.classes = jsObjectBackedSetOf("map-title-text", "items-widget")
             attrs.onClickFunction = {
                 game.modalController.show {
-                    BootstrapModalHeader {
-                        attrs.closeButton = true
-                        BootstrapModalTitle {
-                            +i("UnfinishedTitle")
-                        }
-                    }
-                    BootstrapModalBody {
-                        p {
-                            unsafeSpan(i("UnfinishedText2"))
-                        }
+                    attrs.className = "history-modal"
+                    child(HistoryModal::class) {
+                        attrs.game = game
                     }
                 }
             }
