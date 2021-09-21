@@ -16,10 +16,12 @@
 package com.bytelegend.client.app.ui.item
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.HistoryModal
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
+import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.State
 import react.dom.div
@@ -48,6 +50,13 @@ class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
     private fun RBuilder.renderText(text: String) {
         div {
             attrs.classes = jsObjectBackedSetOf("map-title-text", "items-widget")
+            attrs.onClickFunction = {
+                game.modalController.show {
+                    child(HistoryModal::class) {
+                        attrs.game = game
+                    }
+                }
+            }
             +text
         }
     }

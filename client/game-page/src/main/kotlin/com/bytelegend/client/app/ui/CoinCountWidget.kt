@@ -23,6 +23,7 @@ import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.DIV
 import kotlinx.html.classes
 import kotlinx.html.id
+import kotlinx.html.js.onClickFunction
 import react.State
 import react.dom.RDOMBuilder
 import react.dom.span
@@ -40,6 +41,13 @@ class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, 
             +game.heroPlayer.coin.toString()
         }
         renderIcon()
+        attrs.onClickFunction = {
+            game.modalController.show {
+                child(HistoryModal::class) {
+                    attrs.game = game
+                }
+            }
+        }
     }
 
     override fun onNumberChange(numberChange: NumberChange) {
