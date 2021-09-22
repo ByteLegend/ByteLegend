@@ -72,7 +72,7 @@ val batikVersion = "1.14"
 val googleTranslationSdkVersion = "19.2.1"
 val reactPlayerVersion = "2.9.0"
 val reactSelectVersion = "4.3.0"
-val commonmarkVersion = "0.17.2"
+val commonmarkVersion = "0.18.0"
 val reactTextAreaAutosizeVersion = "8.3.2"
 // for sync-server because it useus JCL underlying
 val jclOverSlf4JVersion = "1.7.30"
@@ -80,6 +80,9 @@ val logbackCloudWatchAppenderVersion = "1.0.6.3"
 val javaOptVersion = "0.2.0"
 val canvasConfettiVersion = "1.4.0"
 val springCoreVersion = "5.3.9"
+val reactMarkdownVersion = "7.0.1"
+val javaDiffUtilsVersion = "4.9"
+val diffParserVersion = "1.4"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -292,6 +295,29 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         version = springCoreVersion,
         creditName = "spring-core",
         url = "https://github.com/spring-projects/spring-framework",
+        license = Apache2
+    ),
+    OpenSourceLibrary(
+        name = "react-markdown",
+        version = reactMarkdownVersion,
+        creditName = "react-markdown",
+        url = "https://github.com/remarkjs/react-markdown",
+        license = MIT
+    ),
+    OpenSourceLibrary(
+        name = "diffparser",
+        groupArtifactId = "io.reflectoring.diffparser:diffparser",
+        version = diffParserVersion,
+        creditName = "diffparser",
+        url = "https://github.com/thombergs/diffparser",
+        license = Apache2
+    ),
+    OpenSourceLibrary(
+        name = "java-diff-utils",
+        groupArtifactId = "io.github.java-diff-utils:java-diff-utils",
+        version = javaDiffUtilsVersion,
+        creditName = "java-diff-utils",
+        url = "https://github.com/java-diff-utils/java-diff-utils",
         license = Apache2
     )
 )
