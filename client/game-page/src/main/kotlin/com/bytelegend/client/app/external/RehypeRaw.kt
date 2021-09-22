@@ -13,23 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JsModule("react-markdown")
+@file:JsModule("rehype-raw")
 @file:JsNonModule
 
 package com.bytelegend.client.app.external
 
-import react.ElementType
-import react.PropsWithChildren
-
 @JsName("default")
-external val ReactMarkdown: ElementType<ReactMarkdownProps>
+external val RehypeRaw: Any
 
-// https://www.npmjs.com/package/react-markdown
-external interface ReactMarkdownProps : PropsWithChildren {
-    var className: String
-    var skipHtml: Boolean
-    var sourcePos: Boolean
-    var rawSourcePos: Boolean
-    var transformImageUri: Any
-    var rehypePlugins: Any
-}
