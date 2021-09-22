@@ -105,7 +105,7 @@ jobs:
       - name: Ktlint
         run: ./gradlew ktlint --scan
       - name: Build with Gradle
-        run: ./gradlew ktlint server-opensource:check --scan
+        run: ./gradlew ktlint server-opensource:check utils:checkLicenses --scan
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
