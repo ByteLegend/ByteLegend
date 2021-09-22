@@ -38,7 +38,7 @@ interface RRBDResourceProvider {
     val allMaps: List<String>
 
     fun getMissionSpecByMissionId(missionId: String): MissionSpec?
-    fun getMissionChallengeByChallengeId(id: String): Pair<MissionSpec, ChallengeSpec>?
+    fun getMissionChallengeByChallengeId(challengeId: String): Pair<MissionSpec, ChallengeSpec>?
     fun getMissionChallengeByRepo(repo: String): Pair<MissionSpec, ChallengeSpec>?
     fun getI18nText(id: String, locale: Locale, vararg args: String): String
     fun getEntranceDestinationPoint(srcMapId: String, destMapId: String): GridCoordinate
