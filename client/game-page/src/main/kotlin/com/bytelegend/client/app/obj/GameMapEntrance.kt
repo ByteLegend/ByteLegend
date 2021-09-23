@@ -55,8 +55,9 @@ class GameMapEntrance(
         if (gameRuntime.hero != null && gameRuntime.hero!!.id == obj.id) {
             GlobalScope.launch {
                 gameScene.gameRuntime.unsafeCast<Game>().webSocketClient.switchScene(destMapId)
+                // after switching scene, load the new scene
+                gameRuntime.sceneContainer.unsafeCast<DefaultGameSceneContainer>().heroEnterScene(destMapId)
             }
-            gameRuntime.sceneContainer.unsafeCast<DefaultGameSceneContainer>().heroEnterScene(destMapId)
         } else {
             gameRuntime.activeScene.objects.getById<CharacterSprite>(obj.id).close()
         }

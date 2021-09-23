@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JsModule("rehype-raw")
-@file:JsNonModule
 
-package com.bytelegend.client.app.external
+package com.bytelegend.app.servershared.codechecker
 
-@JsName("default")
-external val RehypeRaw: Any
+const val CODE_CHECKER_SECRET_HEADER_NAME = "Code-Checker-Secret"

@@ -52,7 +52,9 @@ import com.bytelegend.client.app.obj.character.NPC
 import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.MAIN_CHANNEL
+import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.invitationcode.InvitationCodeModal
 import com.bytelegend.client.app.ui.mission.DefaultPullRequestLogContainer
 import com.bytelegend.client.app.ui.script.Widget
 import com.bytelegend.client.utils.JSArrayBackedList
@@ -224,6 +226,25 @@ class DefaultGameScene(
                 }
             )
         }
+    }
+
+    override fun invitationCodeBox(point: GridCoordinate) {
+        objects.add(
+            DefaultDynamicSprite(
+                "invitation-code-box",
+                this,
+                point,
+                objects.getById("InvitationCodeBox")
+            ).apply {
+                onClickFunction = {
+                    gameRuntime.modalController.unsafeCast<DefaultModalController>().show {
+                        child(InvitationCodeModal::class) {
+                            attrs.game = gameRuntime.unsafeCast<Game>()
+                        }
+                    }
+                }
+            }
+        )
     }
 
     private fun gameMapText(gameMapText: GameMapText) {

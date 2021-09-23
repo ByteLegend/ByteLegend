@@ -235,7 +235,7 @@ class DefaultGameDirector(
         characterId: String,
         vehicleSpriteId: String,
         movingPath: List<GridCoordinate>,
-        destMapId: String
+        destMap: String
     ) {
         scripts.add(FunctionScript {
             gameScene.objects.getById<CharacterSprite>(HERO_ID).close()
@@ -255,7 +255,7 @@ class DefaultGameDirector(
                 if (isRunning) {
                     logger.warn("We're going to switch scene but the script hasn't finised yet.")
                 }
-                game.sceneContainer.unsafeCast<DefaultGameSceneContainer>().heroEnterScene(destMapId)
+                game.sceneContainer.unsafeCast<DefaultGameSceneContainer>().heroEnterScene(destMap)
             }
         })
     }

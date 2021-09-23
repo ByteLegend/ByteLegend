@@ -93,7 +93,6 @@ class LoadableMarkdown : RComponent<LoadableMarkdownProps, LoadableMarkdownState
         }
     }
 
-
     override fun UNSAFE_componentWillReceiveProps(nextProps: LoadableMarkdownProps) {
         if (nextProps.link != props.link) {
             loading = false

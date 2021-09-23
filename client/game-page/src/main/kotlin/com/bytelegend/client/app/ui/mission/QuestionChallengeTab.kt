@@ -145,7 +145,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
             +i("Problem")
         }
         div {
-            attrs.classes = jsObjectBackedSetOf("mission-modal-question-challenge-readme")
+            attrs.classes = jsObjectBackedSetOf("mission-modal-challenge-readme")
             unsafeDiv(i(props.challengeSpec.readme))
         }
     }

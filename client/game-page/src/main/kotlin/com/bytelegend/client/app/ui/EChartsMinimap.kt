@@ -113,7 +113,7 @@ class EChartsMinimap : GameUIComponent<EChartsMinimapProps, EChartsRoadmapState>
         document.getElementById(echartsContainerElementId)?.firstChild?.dispatchEvent(MouseEvent("mousemove", event.asDynamic()))
     }
 
-    private fun onMouseout(event: dynamic) {
+    private fun onMouseout() {
         setState {
             hoveredRegionName = undefined
             hoveredPosition = undefined

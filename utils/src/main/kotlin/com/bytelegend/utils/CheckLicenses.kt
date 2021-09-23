@@ -41,7 +41,8 @@ limitations under the License."""
 internal val IGNORED_PATHS = listOf(
     "**/build/**",
     "**/.*/**",
-    "**/generated/**"
+    "**/generated/**",
+    "**/githubdiffparser" // It's a copy which uses Apache-2 license
 )
 internal val INCLUDED_PATHS = listOf(
     "**/*.kt",

@@ -20,11 +20,37 @@ import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapCurve
+import com.bytelegend.app.shared.objects.GridCoordinateAware
 
 /**
  * We have to use instance method due to the defect of current module loading mechanism
  */
 class GameScriptHelpers(val gameScene: GameScene) {
+    // Remove mission from the map so player can walk through it
+    // For example, the mission is a blocker stone, people can walk through after finishing mission
+    // the mission is an evil, after finishing the mission it becomes a dead body
+    // See `GameMission.init`
+    fun removeMissionBlocker(mission: DynamicSprite) {
+        val dynamicSprite = mission.mapDynamicSprite
+        val missionX = mission.unsafeCast<GridCoordinateAware>().gridCoordinate.x
+        val missionY = mission.unsafeCast<GridCoordinateAware>().gridCoordinate.y
+
+        for (y in 0 until dynamicSprite.size.height) {
+            for (x in 0 until dynamicSprite.size.width) {
+                gameScene.blockers[missionY + y][missionX + x]++
+                gameScene.objects.removeFromCoordinate(mission, GridCoordinate(missionX + x, missionY + y))
+            }
+        }
+    }
+
+    fun addCloseCallbackToMission(mission: DynamicSprite, callback: EventListener<Unit>) {
+        gameScene.gameRuntime.eventBus.on(closeMissionModalEvent(mission.id), callback)
+
+        mission.onCloseFunction = {
+            gameScene.gameRuntime.eventBus.remove(closeMissionModalEvent(mission.id), callback)
+        }
+    }
+
     fun distanceOf(character1Id: String, character2Id: String): Int {
         return getCharacter(character1Id).gridCoordinate.manhattanDistanceTo(
             getCharacter(character2Id).gridCoordinate

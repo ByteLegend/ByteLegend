@@ -40,8 +40,11 @@ fun DynamicSprite.configureBookSprite() {
     }
 }
 
-fun GameMapDynamicSprite.animationWithFixedInterval(ms: Int): FramePlayingAnimation {
-    val size = frames[0][0].size
+/**
+ * Create an animation with `ms` interval, and the beginning `frameNum` frames. `frameNum=0` means all frames.
+ */
+fun GameMapDynamicSprite.animationWithFixedInterval(ms: Int, frameNum: Int = 0): FramePlayingAnimation {
+    val size = if (frameNum == 0) frames[0][0].size else frameNum
     val array = emptyArray<AnimationFrame>()
     repeat(size) {
         array[it] = (AnimationFrame(it, ms))

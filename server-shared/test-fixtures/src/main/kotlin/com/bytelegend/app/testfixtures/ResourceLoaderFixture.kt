@@ -13,10 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JsModule("rehype-raw")
-@file:JsNonModule
 
-package com.bytelegend.client.app.external
+package com.bytelegend.app.testfixtures
 
-@JsName("default")
-external val RehypeRaw: Any
+import org.junit.jupiter.api.Assertions
+import java.io.File
+
+interface ResourceLoaderFixture {
+    @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+    fun getResourceDir(path: String): File =
+        File(javaClass.classLoader.getResource(path).toURI()).also {
+            Assertions.assertTrue(it.isDirectory) { "$it must be directory!" }
+        }
+
+    fun getResource(path: String): File =
+        File(javaClass.classLoader.getResource(path).toURI())
+}

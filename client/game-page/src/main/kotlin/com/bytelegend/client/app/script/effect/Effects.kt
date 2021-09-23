@@ -141,6 +141,7 @@ fun <T : Element> Document.create(tagName: String, configure: T.() -> Unit): T {
     return tag
 }
 
+@Suppress("UNUSED_PARAMETER")
 suspend fun numberIncrementEffect(
     incrementAnimationDiv: Node,
     left: Int,
@@ -262,6 +263,7 @@ private fun itemFlyTo(
     )
 }
 
+@Suppress("UNUSED_PARAMETER")
 private fun itemScale(
     itemId: String,
     gameContainerSize: PixelSize,

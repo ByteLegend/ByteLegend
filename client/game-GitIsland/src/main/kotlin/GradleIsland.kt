@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
+import com.bytelegend.app.client.api.StaticFrame
+import com.bytelegend.app.client.api.animationWithFixedInterval
 import com.bytelegend.app.shared.GIT_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND
 import kotlinx.browser.window
@@ -26,6 +29,33 @@ fun main() {
     val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
     gameRuntime.sceneContainer.getSceneById(GIT_ISLAND).apply {
         dockSailor()
+        installGitStone()
+        configureBronzeGitMedalAnimation()
+    }
+}
+
+fun GameScene.installGitStone() = objects {
+    val installGitMission = objects.getById<DynamicSprite>("install-git")
+    val installGitChallenge = "install-git-challenge"
+    val helpers = GameScriptHelpers(this@installGitStone)
+    if (playerChallenges.challengeAccomplished(installGitChallenge)) {
+        helpers.removeMissionBlocker(installGitMission)
+        installGitMission.animation = StaticFrame(1)
+    } else {
+        helpers.addCloseCallbackToMission(installGitMission) {
+            if (playerChallenges.challengeAccomplished(installGitChallenge) &&
+                installGitMission.animation.unsafeCast<StaticFrame>().frameIndex != 1
+            ) {
+                helpers.removeMissionBlocker(installGitMission)
+                installGitMission.animation = StaticFrame(1)
+            }
+        }
+    }
+}
+
+fun GameScene.configureBronzeGitMedalAnimation() {
+    objects.getById<DynamicSprite>("git-commit-and-push").apply {
+        animation = mapDynamicSprite.animationWithFixedInterval(500, 2)
     }
 }
 

@@ -15,6 +15,8 @@
  */
 package com.bytelegend.utils
 
+import com.bytelegend.app.shared.entities.mission.ChallengeSpec
+import com.bytelegend.app.shared.entities.mission.ChallengeType
 import com.bytelegend.app.shared.entities.mission.MissionSpec
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import java.io.File
@@ -50,6 +52,12 @@ class MapData(ymlDir: File) {
             require(missionSpec.onFinish.coin >= 0) {
                 "${missionSpec.id} must have positive coin change!"
             }
+            missionSpec.validateChallenges(ChallengeType.Question) {
+                require(tldr.isNotBlank() && readme.isNotBlank()) {
+                    "tldr or readme is empty for $id!"
+                }
+            }
+
             missionSpec
         } catch (e: Throwable) {
             throw IllegalStateException("Failed to parse ${it.absolutePath}", e)
@@ -58,6 +66,10 @@ class MapData(ymlDir: File) {
         require(duplicateIdChecker.add(it.id)) { "Duplicate id: ${it.id}" }
     }.associateBy {
         it.id
+    }
+
+    private fun MissionSpec.validateChallenges(type: ChallengeType, action: ChallengeSpec.() -> Unit) {
+        challenges.filter { it.type == type }.forEach(action)
     }
 
     val tutorials: Map<String, Tutorial> = missionSpecs.values.flatMap {

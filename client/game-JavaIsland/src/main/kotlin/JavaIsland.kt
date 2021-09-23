@@ -15,7 +15,6 @@
  */
 import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.DynamicSprite
-import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
@@ -26,10 +25,10 @@ import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.client.api.animationWithFixedInterval
-import com.bytelegend.app.client.api.closeMissionModalEvent
 import com.bytelegend.app.client.api.configureBookSprite
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
+import com.bytelegend.app.shared.GIT_ISLAND
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
@@ -61,7 +60,7 @@ fun main() {
             newbieVillageHead()
             newbieVillageSailor()
             newbieVillageBridgeSoldier()
-            invitationBox()
+            invitationCodeBox()
 
             billboard()
             // #28a745
@@ -90,19 +89,19 @@ fun GameScene.configureStarByteLegendBook() {
 }
 
 fun GameScene.configureInstallJavaIDEChest() {
-    val sprite = objects.getById<DynamicSprite>("install-java-ide")
+    val mission = objects.getById<DynamicSprite>("install-java-ide")
 
     if (playerChallenges.challengeAccomplished("install-java-ide-challenge")) {
-        sprite.animation = StaticFrame(3)
+        mission.animation = StaticFrame(3)
     }
 
-    val onMissionModalClose: EventListener<Unit> = {
-        if (sprite.animation.isStatic &&
-            sprite.animation.unsafeCast<StaticFrame>().frameIndex != 3 &&
+    GameScriptHelpers(this).addCloseCallbackToMission(mission) {
+        if (mission.animation.isStatic &&
+            mission.animation.unsafeCast<StaticFrame>().frameIndex != 3 &&
             playerChallenges.challengeAccomplished("install-java-ide-challenge")
         ) {
             // the player finishes the challenge. Play the animation
-            sprite.animation = FramePlayingAnimation(
+            mission.animation = FramePlayingAnimation(
                 frames = arrayOf(
                     AnimationFrame(0, 300),
                     AnimationFrame(1, 300),
@@ -112,15 +111,9 @@ fun GameScene.configureInstallJavaIDEChest() {
                 repeating = false
             )
             window.setTimeout({
-                sprite.animation = StaticFrame(3)
+                mission.animation = StaticFrame(3)
             }, 1200)
         }
-    }
-
-    gameRuntime.eventBus.on(closeMissionModalEvent(sprite.id), onMissionModalClose)
-
-    sprite.onCloseFunction = {
-        gameRuntime.eventBus.remove(closeMissionModalEvent(sprite.id), onMissionModalClose)
     }
 }
 
@@ -390,18 +383,41 @@ fun GameScene.newbieVillageSailor() = objects {
             sailorId,
             {
                 scripts {
-                    speech(sailorId, "ImSupposedToTakeYouToGitIsland", arrow = false)
+                    speech {
+                        speakerId = sailorId
+                        contentHtmlId = "WouldYouLikeToGitIsland"
+                        arrow = false
+                        showYesNo = true
+                        onYes = {
+                            scripts {
+                                enterScene(GIT_ISLAND, {
+                                    scripts {
+                                        characterEnterVehicleAndMoveToMap(HERO_ID, "Boat", helpers.searchVehiclePath("JavaNewbieVillageToGitIsland"), GIT_ISLAND)
+                                    }
+                                }, {
+                                    scripts {
+                                        speech(sailorId, "SorryYouDontHaveEnoughCoin", arrow = false)
+                                    }
+                                })
+                            }
+                        }
+                    }
                 }
             }
         ) {
             scripts {
-                speech(sailorId, "ImSupposedToTakeYouToGitIsland", arrow = false)
+                speech(sailorId, "ICantHearYou", arrow = false)
             }
         }
     }
 }
 
-fun GameScene.invitationBox() {}
+fun GameScene.invitationCodeBox() {
+    objects {
+        invitationCodeBox(objects.getPointById("InvitationBox-point"))
+    }
+}
+
 fun GameScene.newbieVillageBridgeSoldier() = objects {
     val helpers = GameScriptHelpers(this@newbieVillageBridgeSoldier)
     npc {

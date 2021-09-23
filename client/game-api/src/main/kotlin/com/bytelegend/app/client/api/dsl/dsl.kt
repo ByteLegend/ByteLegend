@@ -65,4 +65,5 @@ interface ObjectsBuilder {
     fun bouncingTitle(action: BouncingTitleBuilder.() -> Unit)
     fun npc(action: NpcBuilder.() -> Unit)
     fun dynamicSprite(action: DynamicSpriteBuilder.() -> Unit)
+    fun invitationCodeBox(point: GridCoordinate)
 }

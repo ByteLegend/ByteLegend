@@ -31,12 +31,17 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 // | gh#alice     |   PC#mapId#mission#challenge |            |            |    |    | [{star:0, ...}] |            |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
-// | gh#alice     |   H#5843f14c34f5d0e05        | pullRequest: listOf(repo: github.com/ByteLegend/ByteLegend) number:1234 state:closed merged: true
+// | gh#alice     |   H#5843f14c34f5d0e05        | pullRequests: listOf(repo: github.com/ByteLegend/ByteLegend number:1234 state:closed merged: true)
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+// | gh#alice     | CodeChangeHistory#2021-10-01 | records: List<CoinChangeHistoryRecord>                           |
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+// | gh#alice     | PullRequestProblem#github.com/ByteLegendQuest/remember-brave-people/1#1a2b3c   | problems: List<PullRequestProblem>                           |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 const val PLAYER_SORT_KEY = "P"
 const val PLAYER_CHALLENGE_SORT_KEY = "PC"
 const val HEAD_SHA_SORT_KEY = "H"
 const val PLAYER_COIN_CHANGE_HISTORY_KEY = "CoinChangeHistory"
+const val PULL_REQUEST_PROBLEM = "PullRequestProblem"
 
 interface StoredInPlayerTable {
     val pk: String

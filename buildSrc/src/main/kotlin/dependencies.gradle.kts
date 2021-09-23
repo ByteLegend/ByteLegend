@@ -80,9 +80,10 @@ val logbackCloudWatchAppenderVersion = "1.0.6.3"
 val javaOptVersion = "0.2.0"
 val canvasConfettiVersion = "1.4.0"
 val springCoreVersion = "5.3.9"
-val reactMarkdownVersion = "7.0.1"
 val javaDiffUtilsVersion = "4.9"
-val diffParserVersion = "1.4"
+val githubDiffParserVersion = "1.0.1"
+val reactMarkdownVersion = "7.0.1"
+val rehypeRawVersion = "6.1.0"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -298,18 +299,11 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         license = Apache2
     ),
     OpenSourceLibrary(
-        name = "react-markdown",
-        version = reactMarkdownVersion,
-        creditName = "react-markdown",
-        url = "https://github.com/remarkjs/react-markdown",
-        license = MIT
-    ),
-    OpenSourceLibrary(
-        name = "diffparser",
-        groupArtifactId = "io.reflectoring.diffparser:diffparser",
-        version = diffParserVersion,
-        creditName = "diffparser",
-        url = "https://github.com/thombergs/diffparser",
+        name = "githubdiffparser",
+        groupArtifactId = "com.github.stkent:githubdiffparser",
+        version = githubDiffParserVersion,
+        creditName = "githubdiffparser",
+        url = "https://github.com/stkent/githubdiffparser",
         license = Apache2
     ),
     OpenSourceLibrary(
@@ -319,6 +313,20 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         creditName = "java-diff-utils",
         url = "https://github.com/java-diff-utils/java-diff-utils",
         license = Apache2
+    ),
+    OpenSourceLibrary(
+        name = "react-markdown",
+        version = reactMarkdownVersion,
+        creditName = "react-markdown",
+        url = "https://github.com/remarkjs/react-markdown",
+        license = MIT
+    ),
+    OpenSourceLibrary(
+        name = "rehype-raw",
+        version = rehypeRawVersion,
+        creditName = "rehype-raw",
+        url = "https://github.com/rehypejs/rehype-raw",
+        license = MIT
     )
 )
 

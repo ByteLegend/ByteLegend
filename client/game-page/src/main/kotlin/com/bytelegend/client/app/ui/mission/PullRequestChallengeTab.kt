@@ -15,12 +15,51 @@
  */
 package com.bytelegend.client.app.ui.mission
 
+import com.bytelegend.app.client.misc.githubUrlToRawGithubUserContentUrl
+import com.bytelegend.app.shared.entities.mission.ChallengeSpec
+import com.bytelegend.client.app.external.LoadableMarkdown
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.unsafeDiv
+import com.bytelegend.client.app.ui.unsafeH4
 import react.RBuilder
 import react.State
+import react.dom.br
+import react.dom.h4
 
-class PullRequestChallengeTab : GameUIComponent<GameProps, State>() {
+interface PullRequestChallengeTabProps : GameProps {
+    var missionId: String
+    var challengeSpec: ChallengeSpec
+}
+
+class PullRequestChallengeTab : GameUIComponent<PullRequestChallengeTabProps, State>() {
     override fun RBuilder.render() {
+        unsafeH4(i("TLDR"))
+        if (props.challengeSpec.tldr.isNotBlank()) {
+            unsafeDiv(i(props.challengeSpec.tldr))
+        } else {
+            unsafeDiv(i("FinishChallengeInRepo", props.challengeSpec.spec))
+        }
+
+        br { }
+
+        h4 {
+            +i("Problem")
+        }
+
+        val readme = githubUrlToRawGithubUserContentUrl(
+            props.challengeSpec.readme.ifBlank {
+                "https://${props.challengeSpec.spec}/blob/master/README.md"
+            }
+        )
+        if (readme.startsWith("https://raw.githubusercontent.com")) {
+            child(LoadableMarkdown::class) {
+                attrs.game = props.game
+                attrs.link = readme
+                attrs.allowRawHtml = true
+            }
+        } else {
+            unsafeDiv(i(readme))
+        }
     }
 }

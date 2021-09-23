@@ -20,6 +20,7 @@ plugins {
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
 }
 
 dependencies {
@@ -30,6 +31,8 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion")
     implementation("com.github.blindpirate:jsonschema2pojo-core:1.1.0.4")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.30")
+
+    implementation("gradle.plugin.com.github.jengelman.gradle.plugins:shadow:7.0.0")
 
     implementation(gradleApi())
 }
@@ -60,6 +63,13 @@ gradlePlugin {
         register("deployment") {
             id = "deployment"
             implementationClass = "com.bytelegend.buildsupport.DeploymentPlugin"
+        }
+    }
+
+    plugins {
+        register("shadow-release") {
+            id = "shadow-release"
+            implementationClass = "com.bytelegend.buildsupport.ShadowReleasePlugin"
         }
     }
 }
