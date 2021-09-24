@@ -16,7 +16,7 @@
 
 package com.bytelegend.app.client.misc
 
-private val GITHUB_BLOB_URL_PATTERN = "https://github.com/([\\w_]+)/([\\w_]+)/blob/([\\w_.]+)/(.*)".toRegex()
+private val GITHUB_BLOB_URL_PATTERN = "https://github.com/([\\w_-]+)/([\\w_-]+)/blob/([\\w_.-]+)/(.*)".toRegex()
 
 // https://github.com/gradle/gradle/blob/master/README.md -> https://raw.githubusercontent.com/gradle/gradle/master/README.md
 fun githubUrlToRawGithubUserContentUrl(url: String): String {

@@ -23,5 +23,6 @@ class GitHubRegexBrowserTest {
     fun test() {
         assertEquals("https://raw.githubusercontent.com/gradle/gradle/master/README.md", githubUrlToRawGithubUserContentUrl("https://github.com/gradle/gradle/blob/master/README.md"))
         assertEquals("https://raw.githubusercontent.com/gradle/gradle/6.7.1/README.md", githubUrlToRawGithubUserContentUrl("https://github.com/gradle/gradle/blob/6.7.1/README.md"))
+        assertEquals("https://raw.githubusercontent.com/ByteLegendQuest/fix-typo/master/README.md", githubUrlToRawGithubUserContentUrl("https://github.com/ByteLegendQuest/fix-typo/blob/master/README.md"))
     }
 }
