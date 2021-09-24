@@ -64,8 +64,16 @@ data class ChallengeUpdateEventData(
 
 data class ItemsStatesUpdateEventData(
     override val playerId: String,
+    val map: String,
     val missionId: String,
     val onFinishSpec: OnFinishSpec,
+) : UnicastEventData
+
+data class AchievementUpdateEventData(
+    override val playerId: String,
+    val map: String,
+    val missionId: String,
+    val achievementId: String
 ) : UnicastEventData
 
 data class KickOffEventData(

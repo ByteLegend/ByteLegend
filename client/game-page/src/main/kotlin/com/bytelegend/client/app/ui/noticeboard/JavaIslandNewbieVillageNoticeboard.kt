@@ -155,9 +155,7 @@ class JavaIslandNewbieVillageNoticeboard :
                 if (state.hoveredTileCoordinate != null) {
                     +"(${state.hoveredTileCoordinate!!.x}, ${state.hoveredTileCoordinate!!.y})"
                 } else {
-                    attrs.jsStyle {
-                        color = "transparent"
-                    }
+                    attrs.classes = jsObjectBackedSetOf("transparent-text")
                     +"Yay! You found an easter egg!"
                 }
             }
@@ -229,6 +227,7 @@ class JavaIslandNewbieVillageNoticeboard :
 
     private fun RBuilder.avatarTooltip() {
         child(AvatarTooltip::class) {
+            attrs.game = props.game
             attrs.joinedAtI18n = props.game.i("JoinedAt")
             attrs.tile = state.hoveredTile!!
         }

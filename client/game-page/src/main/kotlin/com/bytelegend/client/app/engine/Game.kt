@@ -17,7 +17,6 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.EventBus
-import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.GameContainerSizeAware
 import com.bytelegend.app.client.api.GameRuntime
@@ -38,9 +37,6 @@ import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.render
-import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
-import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
-import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.ui.DefaultBannerController
 import com.bytelegend.client.app.ui.DefaultModalController
@@ -48,7 +44,6 @@ import com.bytelegend.client.app.ui.DefaultToastController
 import com.bytelegend.client.app.ui.ModalControllerInternal
 import com.bytelegend.client.app.web.WebSocketClient
 import com.bytelegend.client.utils.JSObjectBackedMap
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import org.kodein.di.DI
@@ -125,7 +120,7 @@ class Game(
         DefaultModalController(di)
     }
 
-    val startTime: Timestamp = Timestamp.now()
+    private val startTime: Timestamp = Timestamp.now()
     var lastAnimationFrameTime: Timestamp = startTime
 
     val i18nTextContainer: MutableMap<String, String> by di.instance(tag = "i18nTextContainer")
@@ -135,24 +130,29 @@ class Game(
     val mainMapCanvasRenderer: MainMapCanvasRenderer = MainMapCanvasRenderer(this)
     override val toastController = DefaultToastController(eventBus)
     override val bannerController = DefaultBannerController(eventBus)
-
-    private val onItemsStatesUpdateEventListener: EventListener<ItemsStatesUpdateEventData> = this::onItemsStatesUpdateEvent
+    private val globalEventHandler = GlobalEventHandler(di, this)
 
     var gfw: Boolean = true
 
     fun start() {
         gameControl.start()
+        globalEventHandler.start()
         animate()
         setClock(GAME_CLOCK_60S, GAME_CLOCK_60S_EVENT)
         setClock(GAME_CLOCK_1S, GAME_CLOCK_1S_EVENT)
         setClock(GAME_CLOCK_100MS, GAME_CLOCK_100MS_EVENT)
         setClock(GAME_CLOCK_20MS, GAME_CLOCK_20MS_EVENT)
-        eventBus.on(ITEMS_STATES_UPDATE_EVENT, onItemsStatesUpdateEventListener)
-        eventBus.on(ONLINE_COUNTER_UPDATE_EVENT) { number: Int ->
-            onlineNumber = number
-        }
 
         checkGfw()
+    }
+
+    fun transformGitHubUrl(url: String): String {
+        return if (!gfw) {
+            url
+        } else {
+            return url.replace("https://raw.githubusercontent.com/", "/ghraw/")
+                .replace("https://avatars.githubusercontent.com/", "/ghavatars/")
+        }
     }
 
     private fun checkGfw() {
@@ -184,30 +184,6 @@ class Game(
     override fun i(textId: String, vararg args: String): String = i18nTextContainer.getValue(textId).render(*args)
 
     fun resolve(path: String) = "${RRBD}$path"
-
-    private fun onItemsStatesUpdateEvent(itemsStatesUpdateEvent: ItemsStatesUpdateEventData) {
-        if (!itemsStatesUpdateEvent.onFinishSpec.items.isEmpty()) {
-            val set = jsObjectBackedSetOf().apply { addAll(heroPlayer.items) }
-            itemsStatesUpdateEvent.onFinishSpec.items.add.forEach {
-                set.add(it)
-            }
-            itemsStatesUpdateEvent.onFinishSpec.items.remove.forEach {
-                set.remove(it)
-            }
-            heroPlayer.items.clear()
-            heroPlayer.items.addAll(set)
-            activeScene.unsafeCast<DefaultGameScene>().playerChallenges.onItemsUpdate(itemsStatesUpdateEvent)
-        }
-        if (!itemsStatesUpdateEvent.onFinishSpec.states.isEmpty()) {
-            itemsStatesUpdateEvent.onFinishSpec.states.put.forEach {
-                heroPlayer.states[it.key] = it.value
-            }
-            itemsStatesUpdateEvent.onFinishSpec.states.remove.forEach {
-                heroPlayer.states.remove(it)
-            }
-        }
-        eventBus.emit(GAME_UI_UPDATE_EVENT, null)
-    }
 }
 
 private fun List<GameMapDefinition>.toMap(): Map<String, GameMapDefinition> {

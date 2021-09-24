@@ -427,20 +427,48 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
         id = soldierId
         sprite = "$soldierId-sprite"
 
+        val medalId = "bronze-git-medal"
+
         onInit = {
-            helpers.getCharacter(soldierId).gridCoordinate = startPoint
+            if (gameRuntime.heroPlayer.achievements.contains(medalId)) {
+                helpers.getCharacter(soldierId).gridCoordinate = destPoint
+            } else {
+                helpers.getCharacter(soldierId).gridCoordinate = startPoint
+            }
         }
 
         onClick = helpers.standardNpcSpeech(
             soldierId,
             {
-                scripts {
-                    speech(soldierId, "YouMustGetBronzeGitMedal", arrow = false)
+                val hasMedal = gameRuntime.heroPlayer.achievements.contains(medalId)
+
+                if (helpers.getCharacter(soldierId).gridCoordinate == startPoint) {
+                    if (hasMedal) {
+                        scripts {
+                            // move to dest point
+                            speech(soldierId, "GoodLuckPursueHolyJavaCoffee", arrow = false)
+                            characterMove(soldierId, destPoint) {
+                                helpers.getCharacter(soldierId).direction = Direction.DOWN
+                            }
+                        }
+                    } else {
+                        scripts {
+                            speech(soldierId, "YouMustGetBronzeGitMedal", arrow = false)
+                        }
+                    }
+                } else {
+                    if (hasMedal) {
+                        scripts {
+                            speech(soldierId, "NiceDayHuh", arrow = false)
+                        }
+                    } else {
+                        // this should not happen, do nothing
+                    }
                 }
             }
         ) {
             scripts {
-                speech(soldierId, "ImSupposedToDoSomething", arrow = false)
+                speech(soldierId, "ICantHearYou", arrow = false)
             }
         }
     }

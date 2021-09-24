@@ -17,7 +17,6 @@
 
 package com.bytelegend.client.app.engine
 
-import com.bytelegend.app.client.api.Banner
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameCanvasState
@@ -31,17 +30,14 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.PlayerChallenge
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.toPullRequestAnswers
-import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
-import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
 import com.bytelegend.app.shared.protocol.STAR_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.StarUpdateEventData
 import com.bytelegend.app.shared.protocol.challengeUpdateEvent
 import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.STAR_BYTELEGEND_MISSION_ID
-import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.script.effect.showConfetti
 import com.bytelegend.client.app.script.effect.starFlyEffect
 import com.bytelegend.client.app.ui.STAR_INCREMENT_EVENT
@@ -75,6 +71,15 @@ class DefaultPlayerChallengeContainer(
 
     private val starUpdateEventListener: EventListener<StarUpdateEventData> = this::onStarUpdate
     private val challengeUpdateEventListener: EventListener<ChallengeUpdateEventData> = this::onPlayerChallengeUpdate
+
+    fun init(gameScene: GameScene) {
+        this.gameScene = gameScene.unsafeCast<DefaultGameScene>()
+        this.gameScene.objects.getByRole<GameMission>(GameObjectRole.Mission).forEach {
+            missionIdToChallenges[it.gameMapMission.id] = it.gameMapMission.challenges
+        }
+        eventBus.on(STAR_UPDATE_EVENT, starUpdateEventListener)
+        eventBus.on(challengeUpdateEvent(gameScene.map.id), challengeUpdateEventListener)
+    }
 
     override fun challengeAccomplished(challengeId: String): Boolean {
         return playerChallenges[challengeId]?.accomplished == true
@@ -129,30 +134,6 @@ class DefaultPlayerChallengeContainer(
         }
     }
 
-    private fun isCanvasInvisible(): Boolean {
-        return !gameControl.isWindowVisible
-    }
-
-    fun onItemsUpdate(eventData: ItemsStatesUpdateEventData) {
-        val mission = gameScene.objects.getByIdOrNull<GameMission>(eventData.missionId)?.gameMapMission ?: return
-
-        if (isCanvasInvisible()) {
-            gameScene.scripts(ASYNC_ANIMATION_CHANNEL, false) {
-                eventData.onFinishSpec.items.add.forEach { item ->
-                    this.unsafeCast<DefaultGameDirector>().suspendAnimation {
-                        itemPopup(item, mission)
-                    }
-                }
-            }
-        } else {
-            GlobalScope.launch {
-                eventData.onFinishSpec.items.add.forEach { item ->
-                    itemPopup(item, mission)
-                }
-            }
-        }
-    }
-
     private fun onStarUpdate(eventData: StarUpdateEventData) {
         val currentMap: String = gameScene.map.id
         if (currentMap == eventData.map) {
@@ -169,7 +150,7 @@ class DefaultPlayerChallengeContainer(
                 else
                     canvasState.calculateCoordinateInGameContainer(mission.gridCoordinate)
 
-            if (isCanvasInvisible()) {
+            if (!gameControl.isWindowVisible) {
                 gameScene.scripts(ASYNC_ANIMATION_CHANNEL, false) {
                     this.unsafeCast<DefaultGameDirector>().suspendAnimation {
                         starFlyThenIncrement(
@@ -196,7 +177,7 @@ class DefaultPlayerChallengeContainer(
         ) {
             // the corresponding scene is not loaded, let activeScene respond
             // only add star
-            if (isCanvasInvisible()) {
+            if (!gameControl.isWindowVisible) {
                 // if modal is visible, add to script list
                 gameScene.scripts(ASYNC_ANIMATION_CHANNEL, false) {
                     this.unsafeCast<DefaultGameDirector>().suspendAnimation {
@@ -210,28 +191,6 @@ class DefaultPlayerChallengeContainer(
                 }
             }
         }
-    }
-
-    private suspend fun itemPopup(item: String, mission: GameMapMission) {
-        game.bannerController.showBanner(
-            Banner(
-                game.i("GetItem", "Coffee"),
-                "success",
-                5
-            )
-        )
-        playAudio("popup")
-        val canvasState = gameScene.canvasState
-        itemPopupEffect(
-            item,
-            canvasState.gameContainerSize,
-            canvasState.calculateCoordinateInGameContainer(mission.gridCoordinate),
-            canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(
-                0,
-                200
-            ), /* items box offset */
-            3.0
-        )
     }
 
     private suspend fun starFlyThenIncrement(
@@ -264,15 +223,6 @@ class DefaultPlayerChallengeContainer(
             showConfetti(gameScene.canvasState, gameScene.objects.getPointById(eventData.newValue.missionId))
         }
         eventBus.emit(MISSION_REPAINT_EVENT, eventData)
-    }
-
-    fun init(gameScene: GameScene) {
-        this.gameScene = gameScene.unsafeCast<DefaultGameScene>()
-        this.gameScene.objects.getByRole<GameMission>(GameObjectRole.Mission).forEach {
-            missionIdToChallenges[it.gameMapMission.id] = it.gameMapMission.challenges
-        }
-        eventBus.on(STAR_UPDATE_EVENT, starUpdateEventListener)
-        eventBus.on(challengeUpdateEvent(gameScene.map.id), challengeUpdateEventListener)
     }
 
     fun close() {

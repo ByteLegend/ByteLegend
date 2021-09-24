@@ -24,6 +24,10 @@ data class OnFinishSpec(
     val items: OnFinishItemsChange = OnFinishItemsChange(),
     val states: OnFinishStatesChange = OnFinishStatesChange(),
     /**
+     * The achievements to get after finishing the mission
+     */
+    val achievements: List<String> = emptyList(),
+    /**
      * Add coin to player's balance. Must be positive.
      */
     val coin: Int = 0

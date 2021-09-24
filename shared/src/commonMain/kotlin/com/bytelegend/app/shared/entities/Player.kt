@@ -19,7 +19,7 @@ import com.bytelegend.app.shared.annotations.DynamoDbIgnore
 import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.annotations.ReadOnly
 
-val ANONYMOUS_DUMMY_MAP = "ANONYMOUS_DUMMY_MAP"
+const val ANONYMOUS_DUMMY_MAP = "ANONYMOUS_DUMMY_MAP"
 
 open class Player : BasePlayer() {
     /**
@@ -49,6 +49,10 @@ open class Player : BasePlayer() {
     @get: ReadOnly
     // it's stored as dynamodb set
     var items: MutableList<String> = ArrayList()
+
+    @get: ReadOnly
+    // it's stored as dynamodb set
+    var achievements: MutableList<String> = ArrayList()
 
     /**
      * This is actually a set, but enhanced ddb client can't map to java.util.LinkedHashSet by default.

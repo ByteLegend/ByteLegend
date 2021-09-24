@@ -72,6 +72,8 @@ import com.bytelegend.client.app.ui.TileCursorWidget
 import com.bytelegend.client.app.ui.ToastUIComponent
 import com.bytelegend.client.app.ui.UserAvatarWidget
 import com.bytelegend.client.app.ui.UserMouseInteractionLayer
+import com.bytelegend.client.app.ui.achievement.AchievementWidget
+import com.bytelegend.client.app.ui.achievement.AchievementWidgetProps
 import com.bytelegend.client.app.ui.gameChild
 import com.bytelegend.client.app.ui.item.ItemWidgetProps
 import com.bytelegend.client.app.ui.item.ItemsWidget
@@ -218,6 +220,7 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
                         coinCountWidget(attrs)
                         reputationCountWidget(attrs)
                         itemWidget(attrs)
+                        achievementWidget(attrs)
                     }
                     livestreamIndicators(attrs)
                     bouncingTitleWidgets(attrs)
@@ -333,6 +336,13 @@ class GamePage : RComponent<GamePageProps, GamePageState>() {
         block: RElementBuilder<ItemWidgetProps>.() -> Unit = {}
     ) {
         gameChild(parentProps, ItemsWidget::class, block)
+    }
+
+    private fun RElementBuilder<RightSideBarProps>.achievementWidget(
+        parentProps: RightSideBarProps,
+        block: RElementBuilder<AchievementWidgetProps>.() -> Unit = {}
+    ) {
+        gameChild(parentProps, AchievementWidget::class, block)
     }
 
     private fun RElementBuilder<GameContainerProps>.tileCursorWidget(

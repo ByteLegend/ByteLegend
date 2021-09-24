@@ -219,7 +219,7 @@ suspend fun itemPopupEffect(
     val itemId = "item-$item"
     document.createAndAppend<HTMLDivElement>("div") {
         id = itemId
-        style.zIndex = (Layer.ScriptWidget.zIndex() + 1).toString()
+        style.zIndex = EFFECT_Z_INDEX.toString()
         style.backgroundColor = "transparent"
         style.position = "absolute"
         className = "$item inline-icon-16"
@@ -236,7 +236,7 @@ suspend fun itemPopupEffect(
     gsap.timeline().to(
         "#$itemId",
         jsObject {
-            scale = 4
+            scale = 5
         }
     )
 }

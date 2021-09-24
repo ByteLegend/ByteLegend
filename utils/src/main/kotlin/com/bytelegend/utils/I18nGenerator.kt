@@ -115,7 +115,7 @@ class I18nResource(
 
 fun generate(gameDataDir: File, outputI18nDir: File, outputAllJson: File) {
     val allI18nResources: List<I18nResource> = gameDataDir.listFiles()
-        .filter { it.isDirectory }
+        .filter { it.isDirectory && it.resolve("i18n.yml").isFile }
         .map { I18nResource(it.name, it.resolve("i18n.yml")) }
         .toMutableList()
         .apply {

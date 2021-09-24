@@ -85,12 +85,7 @@ class LoadableMarkdown : RComponent<LoadableMarkdownProps, LoadableMarkdownState
      */
     private fun rebuildUrl(url: String): String {
         val replaceToRawGithubUserContent = githubUrlToRawGithubUserContentUrl(url)
-
-        return if (props.game.gfw) {
-            replaceToRawGithubUserContent.replace("https://raw.githubusercontent.com/", "/ghraw/")
-        } else {
-            replaceToRawGithubUserContent
-        }
+        return props.game.transformGitHubUrl(replaceToRawGithubUserContent)
     }
 
     override fun UNSAFE_componentWillReceiveProps(nextProps: LoadableMarkdownProps) {

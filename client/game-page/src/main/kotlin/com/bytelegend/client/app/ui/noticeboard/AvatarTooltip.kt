@@ -15,11 +15,11 @@
  */
 package com.bytelegend.client.app.ui.noticeboard
 
+import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
 import react.RBuilder
 import react.RComponent
-import react.Props
 import react.State
 import react.dom.div
 import react.dom.img
@@ -34,7 +34,7 @@ const val TOOLTIP_OFFSET_Y = -72
 const val TRIANGLE_OFFSET_X = 92
 const val TRIANGLE_OFFSET_Y = 64
 
-interface AvatarCardProps : Props {
+interface AvatarCardProps : GameProps {
     var joinedAtI18n: String
     var tile: AvatarTile
 }
@@ -68,7 +68,7 @@ class AvatarTooltip : RComponent<AvatarCardProps, State>() {
                     width = "${TOOLTIP_HEIGHT}px"
                     height = "${TOOLTIP_HEIGHT}px"
                 }
-                attrs.src = "https://avatars.githubusercontent.com/${props.tile.username}?size=200"
+                attrs.src = props.game.transformGitHubUrl("https://avatars.githubusercontent.com/${props.tile.username}?size=200")
             }
             div {
                 attrs.jsStyle {

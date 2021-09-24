@@ -51,6 +51,7 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
     override fun RBuilder.render() {
         BootstrapListGroupItem {
             div {
+                attrs.classes = jsObjectBackedSetOf("text-align-right")
                 renderDiv()
                 ref = div
             }

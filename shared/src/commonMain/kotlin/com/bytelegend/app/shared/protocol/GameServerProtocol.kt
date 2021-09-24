@@ -45,6 +45,7 @@ const val STAR_UPDATE_EVENT = "protocol.star.update"
 const val COIN_UPDATE_EVENT = "protocol.coin.update"
 const val REPUTATION_UPDATE_EVENT = "protocol.reputation.update"
 const val ITEMS_STATES_UPDATE_EVENT = "protocol.items.states.update"
+const val ACHIEVEMENT_UPDATE_EVENT = "protocol.achievement.update"
 fun challengeUpdateEvent(mapId: String) = "protocol.challenge.update.$mapId"
 val CHALLENGE_UPDATE_EVENT_PREFIX = challengeUpdateEvent("")
 val PLAYER_SPEECH_EVENT_PREFIX = playerSpeechEvent("")

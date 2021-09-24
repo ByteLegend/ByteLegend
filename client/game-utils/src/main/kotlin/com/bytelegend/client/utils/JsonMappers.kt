@@ -49,6 +49,8 @@ import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.i18n.LocalizedTextFormat
+import com.bytelegend.app.shared.protocol.ACHIEVEMENT_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.AchievementUpdateEventData
 import com.bytelegend.app.shared.protocol.CHALLENGE_UPDATE_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.COIN_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
@@ -78,6 +80,7 @@ fun parseServerEvent(eventMessage: dynamic): Any {
         event == COIN_UPDATE_EVENT -> toCoinUpdateEventData(eventMessage.payload)
         event == REPUTATION_UPDATE_EVENT -> toReputationUpdateEventData(eventMessage.payload)
         event == ITEMS_STATES_UPDATE_EVENT -> toItemsStatesUpdateEventData(eventMessage.payload)
+        event == ACHIEVEMENT_UPDATE_EVENT -> toAchievementUpdateEventData(eventMessage.payload)
         event == KICK_OFF_EVENT -> toKickOffEventData(eventMessage.payload)
         event.startsWith(LOG_STREAM_EVENT_PREFIX) -> toLogStreamEventData(eventMessage.payload)
         event.startsWith(CHALLENGE_UPDATE_EVENT_PREFIX) -> toChallengeUpdateEventData(eventMessage.payload)
@@ -107,8 +110,16 @@ fun toKickOffEventData(jsonObject: dynamic) = KickOffEventData(
 
 fun toItemsStatesUpdateEventData(jsonObject: dynamic) = ItemsStatesUpdateEventData(
     jsonObject.playerId,
+    jsonObject.map,
     jsonObject.missionId,
     toOnFinishSpec(jsonObject.onFinishSpec)
+)
+
+fun toAchievementUpdateEventData(jsonObject: dynamic) = AchievementUpdateEventData(
+    jsonObject.playerId,
+    jsonObject.map,
+    jsonObject.missionId,
+    jsonObject.achievementId
 )
 
 fun toOnFinishSpec(jsonObject: dynamic) = OnFinishSpec(
@@ -165,6 +176,7 @@ fun toPlayer(jsonObject: dynamic) = Player().apply {
     locale = jsonObject.locale
     avatarUrl = jsonObject.avatarUrl
     items = arrayToList(jsonObject.items)
+    achievements = arrayToList(jsonObject.achievements)
     states = JSObjectBackedMap(jsonObject.states)
 }
 
