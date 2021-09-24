@@ -157,7 +157,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
                 doLast {
                     outputRRBD.resolve("js").listFiles()?.forEach {
                         require(it.length() < 2.5 * 1024 * 1024) {
-                            "${it.absolutePath} is larger than 2.5MiB!"
+                            "${it.absolutePath} is ${String.format("%.2f", it.length().toDouble() / 1024 / 1024)}B, larger than 2.5MiB!"
                         }
                     }
                 }
