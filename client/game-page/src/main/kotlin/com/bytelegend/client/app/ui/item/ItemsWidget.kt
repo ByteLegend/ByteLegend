@@ -16,6 +16,7 @@
 package com.bytelegend.client.app.ui.item
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
+import com.bytelegend.client.app.engine.getIconUrl
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.HistoryModal
@@ -25,6 +26,7 @@ import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import react.State
 import react.dom.div
+import react.dom.img
 
 interface ItemWidgetProps : GameProps
 
@@ -42,8 +44,9 @@ class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
     }
 
     private fun RBuilder.renderOne(item: String) {
-        div {
-            attrs.classes = jsObjectBackedSetOf("inline-icon-16", item)
+        img {
+            attrs.src = game.getIconUrl(item)
+            attrs.classes = jsObjectBackedSetOf("inline-icon-16", "item-$item")
         }
     }
 

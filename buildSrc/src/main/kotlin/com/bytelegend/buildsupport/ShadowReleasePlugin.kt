@@ -44,7 +44,7 @@ class ShadowReleasePlugin : Plugin<Project> {
             target.buildDir.resolve("libs/${target.name}.jar").absolutePath
         ) {
             jvmArgs("-DgitHubToken=${System.getProperty("gitHubToken", "")}")
-            dependsOn(shadowJar)
+            dependsOn(shadowJar, target.tasks.named("check"))
         }
     }
 

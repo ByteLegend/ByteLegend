@@ -21,6 +21,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.client.app.engine.getIconUrl
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.utils.jsObjectBackedSetOf
@@ -108,7 +109,7 @@ class AchievementModal : GameUIComponent<GameProps, AchievementModalState>() {
                 setState { hoveredAchievementId = null }
             }
             img {
-                attrs.src = game.transformGitHubUrl("https://raw.githubusercontent.com/ByteLegend/game-data/master/achievements/$achievementId.png")
+                attrs.src = game.getIconUrl(achievementId)
             }
         }
     }

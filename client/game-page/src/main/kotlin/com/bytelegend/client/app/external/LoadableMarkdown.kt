@@ -34,6 +34,7 @@ import react.setState
 interface LoadableMarkdownProps : GameProps {
     var link: String
     var allowRawHtml: Boolean
+    var components: dynamic
 }
 
 interface LoadableMarkdownState : State {
@@ -68,10 +69,13 @@ class LoadableMarkdown : RComponent<LoadableMarkdownProps, LoadableMarkdownState
             }
         } else {
             ReactMarkdown {
+                attrs.className = "markdown-body"
                 +state.markdownContent!!
+                attrs.components = props.components
                 attrs.transformImageUri = { src: String, _: Any, _: Any ->
                     rebuildUrl(src)
                 }
+                attrs.remarkPlugins = arrayOf(remarkGfm)
                 if (props.allowRawHtml == true) {
                     attrs.rehypePlugins = arrayOf(RehypeRaw)
                 }
@@ -81,7 +85,6 @@ class LoadableMarkdown : RComponent<LoadableMarkdownProps, LoadableMarkdownState
 
     /**
      * GitHub doesn't support iframe, so we have to use raw.githubusercontent.com
-     *
      */
     private fun rebuildUrl(url: String): String {
         val replaceToRawGithubUserContent = githubUrlToRawGithubUserContentUrl(url)

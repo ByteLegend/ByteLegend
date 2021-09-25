@@ -35,6 +35,7 @@ import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
 import com.bytelegend.client.app.engine.calculateCoordinateInGameContainer
+import com.bytelegend.client.app.engine.getIconUrl
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.obj.character.NPC
@@ -376,6 +377,7 @@ class DefaultGameDirector(
                     val canvasState = gameScene.canvasState
                     itemPopupEffect(
                         item,
+                        game.getIconUrl(item),
                         canvasState.gameContainerSize,
                         canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(0, 200), /* items box offset */
                         canvasState.calculateCoordinateInGameContainer(destination),

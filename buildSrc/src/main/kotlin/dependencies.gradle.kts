@@ -84,6 +84,7 @@ val javaDiffUtilsVersion = "4.9"
 val githubDiffParserVersion = "1.0.1"
 val reactMarkdownVersion = "7.0.1"
 val rehypeRawVersion = "6.1.0"
+val remarkGfmVersion = "2.0.0"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -326,6 +327,13 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         version = rehypeRawVersion,
         creditName = "rehype-raw",
         url = "https://github.com/rehypejs/rehype-raw",
+        license = MIT
+    ),
+    OpenSourceLibrary(
+        name = "remark-gfm",
+        version = remarkGfmVersion,
+        creditName = "remark-gfm",
+        url = "https://github.com/remarkjs/remark-gfm",
         license = MIT
     )
 )

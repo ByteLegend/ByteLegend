@@ -17,7 +17,6 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.EventBus
-import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.GameContainerSizeAware
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
@@ -27,10 +26,7 @@ import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.WindowBasedEventBus
 import com.bytelegend.app.shared.GameInitData
-import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.GameMapDefinition
-import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.Player
@@ -199,31 +195,11 @@ private fun GameMapDefinition.putIntMap(map: MutableMap<String, GameMapDefinitio
     }
 }
 
-val Game.gameContainerWidth: Int
-    get() = gameContainerSize.width
-val Game.gameCanvasState: GameCanvasState
-    get() = activeScene.canvasState
+fun Game.getIconUrl(id: String) = transformGitHubUrl("https://raw.githubusercontent.com/ByteLegend/game-data/master/achievements/$id.png")
+
 val Game.gameContainerHeight: Int
     get() = gameContainerSize.height
-val Game.tileSize: PixelSize
-    get() = activeScene.map.tileSize
-val Game.canvasCoordinateInMap: PixelCoordinate
-    get() = activeScene.canvasState.getCanvasCoordinateInMap()
-val Game.canvasGridCoordinateInMap: GridCoordinate
-    get() = activeScene.canvasState.getCanvasGridCoordinateInMap()
 val Game.uiContainerCoordinateInGameContainer: PixelCoordinate
     get() = activeScene.canvasState.getUICoordinateInGameContainer()
 val Game.uiContainerSize: PixelSize
     get() = activeScene.canvasState.getUIContainerSize()
-val Game.canvasCoordinateInGameContainer: PixelCoordinate
-    get() = activeScene.canvasState.getCanvasCoordinateInGameContainer()
-val Game.canvasGridSize: GridSize
-    get() = activeScene.canvasState.getCanvasGridSize()
-val Game.canvasPixelSize: PixelSize
-    get() = activeScene.canvasState.getCanvasPixelSize()
-val Game.mapGridSize: GridSize
-    get() = activeScene.map.size
-val Game.mapPixelSize: PixelSize
-    get() = activeScene.map.pixelSize
-val Game.gameMap: GameMap
-    get() = activeScene.map

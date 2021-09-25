@@ -207,7 +207,8 @@ fun showArrowGif(
  * Fly to center of window, then fly to item box
  */
 suspend fun itemPopupEffect(
-    item: String,
+    itemOrAchievement: String,
+    imgUrl: String,
     gameContainerSize: PixelSize,
     startCoordinateInGameContainer: PixelCoordinate,
     endCoordinateInGameContainer: PixelCoordinate,
@@ -216,13 +217,13 @@ suspend fun itemPopupEffect(
     // 1/3 time to fly to center of screen
     // 1/3 time to scale
     // 1/3 time to fly to item box
-    val itemId = "item-$item"
-    document.createAndAppend<HTMLDivElement>("div") {
+    val itemId = "item-$itemOrAchievement"
+    document.createAndAppend<HTMLImageElement>("img") {
         id = itemId
+        src = imgUrl
         style.zIndex = EFFECT_Z_INDEX.toString()
-        style.backgroundColor = "transparent"
         style.position = "absolute"
-        className = "$item inline-icon-16"
+        className = "inline-icon-16 outer-glow"
     }
 
     itemFlyTo(
