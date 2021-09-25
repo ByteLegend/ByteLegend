@@ -81,10 +81,10 @@ val javaOptVersion = "0.2.0"
 val canvasConfettiVersion = "1.4.0"
 val springCoreVersion = "5.3.9"
 val javaDiffUtilsVersion = "4.9"
-val githubDiffParserVersion = "1.0.1"
 val reactMarkdownVersion = "7.0.1"
 val rehypeRawVersion = "6.1.0"
 val remarkGfmVersion = "2.0.0"
+val unifiedDiffParserVersion = "1.4"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -302,7 +302,7 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary(
         name = "githubdiffparser",
         groupArtifactId = "com.github.stkent:githubdiffparser",
-        version = githubDiffParserVersion,
+        version = "1.0.1", // we maintain a fork, this is just for displaying
         creditName = "githubdiffparser",
         url = "https://github.com/stkent/githubdiffparser",
         license = Apache2
@@ -313,6 +313,14 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         version = javaDiffUtilsVersion,
         creditName = "java-diff-utils",
         url = "https://github.com/java-diff-utils/java-diff-utils",
+        license = Apache2
+    ),
+    OpenSourceLibrary(
+        name = "diffparser",
+        groupArtifactId = "io.reflectoring.diffparser:diffparser",
+        version = unifiedDiffParserVersion,
+        creditName = "diffparser",
+        url = "https://github.com/thombergs/diffparser",
         license = Apache2
     ),
     OpenSourceLibrary(
