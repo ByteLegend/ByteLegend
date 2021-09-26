@@ -16,9 +16,9 @@
 package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.client.app.engine.GameMission
-import com.bytelegend.client.app.engine.MISSION_REPAINT_EVENT
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
@@ -38,9 +38,7 @@ class MissionTitle : AbstractBouncingTitleWidget<MissionTitleProps>() {
 
     private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
         // Refresh upon mission update event
-        if (eventData.newValue.missionId == props.mission.id) {
-            setState {}
-        }
+        setState {}
     }
 
     override fun RBuilder.render() {
@@ -70,11 +68,11 @@ class MissionTitle : AbstractBouncingTitleWidget<MissionTitleProps>() {
 
     override fun componentDidMount() {
         super.componentDidMount()
-        props.gameScene.gameRuntime.eventBus.on(MISSION_REPAINT_EVENT, onMissionRepaintListener)
+        props.gameScene.gameRuntime.eventBus.on(missionRepaintEvent(props.mission.id), onMissionRepaintListener)
     }
 
     override fun componentWillUnmount() {
         super.componentWillUnmount()
-        props.gameScene.gameRuntime.eventBus.remove(MISSION_REPAINT_EVENT, onMissionRepaintListener)
+        props.gameScene.gameRuntime.eventBus.remove(missionRepaintEvent(props.mission.id), onMissionRepaintListener)
     }
 }

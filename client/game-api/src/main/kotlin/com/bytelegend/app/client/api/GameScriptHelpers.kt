@@ -21,6 +21,7 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GridCoordinateAware
+import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 
 /**
  * We have to use instance method due to the defect of current module loading mechanism
@@ -48,6 +49,14 @@ class GameScriptHelpers(val gameScene: GameScene) {
 
         mission.onCloseFunction = {
             gameScene.gameRuntime.eventBus.remove(closeMissionModalEvent(mission.id), callback)
+        }
+    }
+
+    fun addMissionRepaintCallback(mission: DynamicSprite, callback: EventListener<ChallengeUpdateEventData>) {
+        gameScene.gameRuntime.eventBus.on(missionRepaintEvent(mission.id), callback)
+
+        mission.onCloseFunction = {
+            gameScene.gameRuntime.eventBus.remove(missionRepaintEvent(mission.id), callback)
         }
     }
 

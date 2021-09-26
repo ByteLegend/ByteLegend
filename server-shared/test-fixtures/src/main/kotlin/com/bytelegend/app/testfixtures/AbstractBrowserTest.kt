@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 
 package com.bytelegend.app.testfixtures
 
+import com.bytelegend.app.servershared.codechecker.CODE_CHECKER_SECRET_HEADER_NAME
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -60,6 +61,13 @@ abstract class AbstractByteLegendIntegrationTest {
         post(
             "http://localhost:$gameServerPort/github_webhook", json,
             mapOf("Content-Type" to "application/json", "X-GitHub-Event" to event)
+        ).assert2XXStatusCode()
+    }
+    protected fun sendProblemsFromResource(resource: String) {
+        val json = javaClass.getResourceAsFile(resource).readText()
+        post(
+            "http://localhost:$gameServerPort/code-checker/add-problems", json,
+            mapOf("Content-Type" to "application/json", CODE_CHECKER_SECRET_HEADER_NAME to "dummy")
         ).assert2XXStatusCode()
     }
 

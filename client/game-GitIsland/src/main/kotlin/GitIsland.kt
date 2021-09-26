@@ -30,7 +30,7 @@ fun main() {
     gameRuntime.sceneContainer.getSceneById(GIT_ISLAND).apply {
         dockSailor()
         installGitStone()
-        configureBronzeGitMedalAnimation()
+        configureBronzeGitMedalMission()
     }
 }
 
@@ -53,9 +53,20 @@ fun GameScene.installGitStone() = objects {
     }
 }
 
-fun GameScene.configureBronzeGitMedalAnimation() {
-    objects.getById<DynamicSprite>("git-commit-and-push").apply {
-        animation = mapDynamicSprite.animationWithFixedInterval(500, 2)
+fun GameScene.configureBronzeGitMedalMission() {
+    val gitCommitPushSprite = objects.getById<DynamicSprite>("git-commit-and-push")
+
+    configureBronzeGitMedalAnimation(gitCommitPushSprite)
+    GameScriptHelpers(this).addMissionRepaintCallback(gitCommitPushSprite) {
+        configureBronzeGitMedalAnimation(gitCommitPushSprite)
+    }
+}
+
+fun GameScene.configureBronzeGitMedalAnimation(sprite: DynamicSprite) {
+    if (playerChallenges.challengeAccomplished("git-commit-and-push-challenge")) {
+        sprite.animation = StaticFrame(2)
+    } else {
+        sprite.animation = sprite.mapDynamicSprite.animationWithFixedInterval(500, 2)
     }
 }
 

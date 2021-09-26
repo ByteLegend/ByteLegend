@@ -295,6 +295,7 @@ private fun itemScale(
     )
 }
 
+// TODO multiple effects at the same time.
 suspend fun starFlyEffect(
     gameContainerSize: PixelSize,
     from: PixelCoordinate,

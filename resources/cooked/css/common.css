@@ -789,3 +789,7 @@ blockquote {
     border-radius: 5px;
     padding: 0 .2em
 }
+
+#starfly-canvas {
+    pointer-events: none;
+}

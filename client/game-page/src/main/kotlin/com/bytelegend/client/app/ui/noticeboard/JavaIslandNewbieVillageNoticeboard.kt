@@ -18,12 +18,12 @@
 package com.bytelegend.client.app.ui.noticeboard
 
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.util.currentTimeMillis
-import com.bytelegend.client.app.engine.MISSION_REPAINT_EVENT
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.utils.jsObjectBackedSetOf
@@ -83,7 +83,7 @@ class JavaIslandNewbieVillageNoticeboard :
 
     private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
         // Refresh upon mission finished event
-        if (eventData.change.accomplished && eventData.newValue.missionId == "remember-brave-people") {
+        if (eventData.change.accomplished) {
             setState {
                 init()
             }
@@ -234,10 +234,10 @@ class JavaIslandNewbieVillageNoticeboard :
     }
 
     override fun componentDidMount() {
-        props.game.eventBus.on(MISSION_REPAINT_EVENT, onChallengeRepaintListener)
+        props.game.eventBus.on(missionRepaintEvent("remember-brave-people"), onChallengeRepaintListener)
     }
 
     override fun componentWillUnmount() {
-        props.game.eventBus.remove(MISSION_REPAINT_EVENT, onChallengeRepaintListener)
+        props.game.eventBus.remove(missionRepaintEvent("remember-brave-people"), onChallengeRepaintListener)
     }
 }

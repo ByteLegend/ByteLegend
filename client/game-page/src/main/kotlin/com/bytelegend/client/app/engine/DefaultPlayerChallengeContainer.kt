@@ -23,6 +23,7 @@ import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.PlayerChallengeContainer
+import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.client.misc.playAudio
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
@@ -49,8 +50,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
-
-const val MISSION_REPAINT_EVENT = "mission.repaint"
 
 class DefaultPlayerChallengeContainer(
     di: DI,
@@ -222,7 +221,7 @@ class DefaultPlayerChallengeContainer(
         if (eventData.change.accomplished) {
             showConfetti(gameScene.canvasState, gameScene.objects.getPointById(eventData.newValue.missionId))
         }
-        eventBus.emit(MISSION_REPAINT_EVENT, eventData)
+        eventBus.emit(missionRepaintEvent(eventData.newValue.missionId), eventData)
     }
 
     fun close() {
