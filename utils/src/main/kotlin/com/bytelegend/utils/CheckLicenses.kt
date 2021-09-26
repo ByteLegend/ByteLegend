@@ -129,10 +129,7 @@ fun main() {
                 require(license.isValidLicense()) {
                     """${file.toAbsolutePath()} doesn't contain a valid license: $license
                         |
-                        |Please run:
-                        |
-                        |   ./gradlew addLicenses
-                        |
+                        |Please run `./gradlew utils:addLicenses` or add the file into `CheckLicenses.IGNORED_PATHS`.
                     """.trimMargin()
                 }
             }
