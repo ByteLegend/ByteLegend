@@ -93,8 +93,8 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                 +game.i("YouMustBeAdjacentToTheMission")
             }
         }
-        unsafeH4(i("TLDR"))
-        unsafeDiv(i(props.challengeSpec.tldr))
+        renderTldr()
+
         h4 {
             +i("YourAnswer")
         }
@@ -140,13 +140,20 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         val answers = game.activeScene.playerChallenges.getPlayerChallengesByMissionId(props.missionId).flatMap { it.answers }
 
         renderPlayerAnswers(answers)
-
         h4 {
             +i("Problem")
         }
-        div {
-            attrs.classes = jsObjectBackedSetOf("mission-modal-challenge-readme")
-            unsafeDiv(i(props.challengeSpec.readme))
+
+        renderReadme(props.game, props.challengeSpec.readme)
+    }
+
+    private fun RBuilder.renderTldr() {
+        if (props.challengeSpec.tldr.isNotBlank()) {
+            unsafeH4(i("TLDR"))
+            unsafeDiv(i(props.challengeSpec.tldr))
+        } else if (props.challengeSpec.readme.startsWith("https://")) {
+            unsafeH4(i("TLDR"))
+            unsafeDiv(i("AnswerTheQuestionInReadme", props.challengeSpec.readme))
         }
     }
 

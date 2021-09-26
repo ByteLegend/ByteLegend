@@ -17,17 +17,21 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.misc.githubUrlToRawGithubUserContentUrl
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
+import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.external.LoadableMarkdown
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeH4
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinext.js.jsObject
+import kotlinx.html.classes
 import react.RBuilder
 import react.State
 import react.dom.br
 import react.dom.details
+import react.dom.div
 import react.dom.h4
 
 interface PullRequestChallengeTabProps : GameProps {
@@ -55,10 +59,18 @@ class PullRequestChallengeTab : GameUIComponent<PullRequestChallengeTabProps, St
                 "https://${props.challengeSpec.spec}/blob/main/README.md"
             }
         )
-        if (readme.startsWith("https://raw.githubusercontent.com")) {
+
+        renderReadme(props.game, readme)
+    }
+}
+
+fun RBuilder.renderReadme(game: Game, readmeOrLink: String) {
+    if (readmeOrLink.startsWith("https://")) {
+        div {
+            attrs.classes = jsObjectBackedSetOf("mission-modal-challenge-readme")
             child(LoadableMarkdown::class) {
-                attrs.game = props.game
-                attrs.link = readme
+                attrs.game = game
+                attrs.link = readmeOrLink
                 attrs.allowRawHtml = true
                 attrs.components = jsObject {
                     h1 = "h3"
@@ -66,14 +78,14 @@ class PullRequestChallengeTab : GameUIComponent<PullRequestChallengeTabProps, St
                     details = openDetailsWithDefaultLocale
                 }
             }
-        } else {
-            unsafeDiv(i(readme))
         }
+    } else {
+        unsafeDiv(game.i(readmeOrLink))
     }
 }
 
 @Suppress("UnsafeCastFromDynamic")
-private val openDetailsWithDefaultLocale: (dynamic, dynamic) -> dynamic = { node, props ->
+private val openDetailsWithDefaultLocale: (dynamic, dynamic) -> dynamic = { node, _ ->
     val localeDisplayName = game.locale.displayName
     react.buildElements {
         details {

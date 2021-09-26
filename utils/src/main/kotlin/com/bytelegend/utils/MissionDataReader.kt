@@ -53,7 +53,7 @@ class MapData(ymlDir: File) {
                 "${missionSpec.id} must have positive coin change!"
             }
             missionSpec.validateChallenges(ChallengeType.Question) {
-                require(tldr.isNotBlank() && readme.isNotBlank()) {
+                require(readme.isNotBlank()) {
                     "tldr or readme is empty for $id!"
                 }
             }

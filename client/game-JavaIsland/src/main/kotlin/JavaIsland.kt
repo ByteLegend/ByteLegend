@@ -62,6 +62,9 @@ fun main() {
             newbieVillageBridgeSoldier()
             invitationCodeBox()
 
+            javaCloneRunDoor("clone-and-run-java-project", "clone-and-run-java-project-challenge")
+            javaCloneRunDoor("clone-and-switch-branch", "clone-and-switch-branch-challenge")
+
             billboard()
             // #28a745
             missionCastle("java-todo-webapp", "white", "rgba(40,167,69,0.8)")
@@ -72,6 +75,35 @@ fun main() {
             missionCastle("java-e-commerce-website", "white", "rgba(220,53,69,0.8)")
             castleDoor()
             castleNoticeboard()
+        }
+    }
+}
+
+fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
+    val mission = objects.getById<DynamicSprite>(missionId)
+    val helpers = GameScriptHelpers(this)
+    if (playerChallenges.challengeAccomplished(challengeId)) {
+        helpers.removeMissionBlocker(mission)
+        mission.animation = StaticFrame(3)
+    } else {
+        helpers.addCloseCallbackToMission(mission) {
+            if (playerChallenges.challengeAccomplished(challengeId) &&
+                mission.animation.unsafeCast<StaticFrame>().frameIndex != 3
+            ) {
+                helpers.removeMissionBlocker(mission)
+                mission.animation = FramePlayingAnimation(
+                    frames = arrayOf(
+                        AnimationFrame(0, 1500),
+                        AnimationFrame(1, 500),
+                        AnimationFrame(2, 500),
+                        AnimationFrame(3, 500)
+                    ),
+                    repeating = false
+                )
+                window.setTimeout({
+                    mission.animation = StaticFrame(3)
+                }, 3000)
+            }
         }
     }
 }
@@ -446,7 +478,8 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
                     if (hasMedal) {
                         scripts {
                             // move to dest point
-                            speech(soldierId, "GoodLuckPursueHolyJavaCoffee", arrow = false)
+                            speech(soldierId, "BravePeopleISeeYourBronzeGitMedal", arrow = false)
+                            speech(HERO_ID, "IPromise", arrow = false)
                             characterMove(soldierId, destPoint) {
                                 helpers.getCharacter(soldierId).direction = Direction.DOWN
                             }
@@ -459,7 +492,7 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
                 } else {
                     if (hasMedal) {
                         scripts {
-                            speech(soldierId, "NiceDayHuh", arrow = false)
+                            speech(soldierId, "DidYouForgetYourPromise", arrow = false)
                         }
                     } else {
                         // this should not happen, do nothing
