@@ -26,15 +26,16 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.entities.ChallengeTabData
 import com.bytelegend.app.shared.entities.DiscussionsTabData
+import com.bytelegend.app.shared.entities.HeroNoticeboardTabData
 import com.bytelegend.app.shared.entities.MissionTabData
 import com.bytelegend.app.shared.entities.MissionTabType
 import com.bytelegend.app.shared.entities.TutorialsTabData
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.MISSION_DATA_LOAD_FINISH
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
-import com.bytelegend.client.app.ui.noticeboard.JavaIslandNewbieVillageNoticeboard
+import com.bytelegend.client.app.ui.heronoticeboard.JavaIslandHeroNoticeboard
+import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
 import kotlinx.html.classes
 import react.RBuilder
@@ -103,7 +104,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                         MissionTabType.QuestionChallenge -> renderQuestionChallenge(activeTab.asDynamic())
                         MissionTabType.StarChallenge -> renderStarChallenge(activeTab.asDynamic())
                         MissionTabType.PullRequestChallenge -> renderPullRequestChallenge(activeTab.asDynamic())
-                        MissionTabType.NoticeboardChallenge -> renderRememberBravePeopleChallenge(activeTab.asDynamic())
+                        MissionTabType.HeroNoticeboardChallenge -> heroNoticeboardChallenge(activeTab.asDynamic())
                         MissionTabType.Tutorials -> renderTutorials(activeTab.asDynamic())
                         else -> throw IllegalArgumentException(activeTab.title)
                     }
@@ -121,9 +122,11 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
         }
     }
 
-    private fun RBuilder.renderRememberBravePeopleChallenge(tab: ChallengeTabData) {
-        child(JavaIslandNewbieVillageNoticeboard::class) {
+    private fun RBuilder.heroNoticeboardChallenge(tab: HeroNoticeboardTabData) {
+        child(JavaIslandHeroNoticeboard::class) {
             attrs.game = game
+            attrs.initTiles = tab.data.tiles
+            attrs.totalPage = tab.data.page
         }
     }
 

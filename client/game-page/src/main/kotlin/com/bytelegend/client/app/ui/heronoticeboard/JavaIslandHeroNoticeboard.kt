@@ -15,18 +15,23 @@
  */
 @file:Suppress("EXPERIMENTAL_API_USAGE")
 
-package com.bytelegend.client.app.ui.noticeboard
+package com.bytelegend.client.app.ui.heronoticeboard
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.missionRepaintEvent
+import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapPagination
+import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationItem
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTile
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.client.utils.toHeroNoticeboardTilesData
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.await
@@ -46,59 +51,83 @@ import react.dom.div
 import react.dom.h2
 import react.dom.img
 import react.dom.jsStyle
-import react.dom.p
 import react.dom.span
 import react.setState
 
-fun bravePeopleJsonUrl(timestamp: Long) = "/proxy/brave-people-all.json?timestamp=$timestamp"
-fun bravePeopleImgUrl(timestamp: Long) = "/proxy/brave-people.png?timestamp=$timestamp"
+fun heroesJsonUrl(page: Int, timestamp: Long) = "/proxy/heroes-$page.json?timestamp=$timestamp"
+fun heroesImgUrl(page: Int, timestamp: Long) = "/proxy/heroes-$page.png?timestamp=$timestamp"
 
 // Don't change these values. They are defined elsewhere:
 // https://github.com/ByteLegendQuest/remember-brave-people/blob/master/src/main/java/com/bytelegend/game/Constants.java#L26
 const val AVATAR_TILE_SIZE = 30
 
-// https://github.com/ByteLegendQuest/remember-brave-people/blob/master/src/main/java/com/bytelegend/game/SimpleTile.java
-// https://github.com/ByteLegendQuest/remember-brave-people/blob/master/src/main/java/com/bytelegend/game/AllInfoTile.java
-data class AvatarTile(
-    val x: Int,
-    val y: Int,
-    val color: String,
-    val username: String,
-    val createdAt: String,
-    val changedAt: String
-)
+interface JavaIslandHeroNoticeboardProps : GameProps {
+    // When the component first loads, it always returns the "heroes-current.json`,
+    // in which `currentPage` is the current "totalPage".
+    // After the component loads, player can click the page number to browse different pages,
+    // but "totalPage" doesn't change - it's always the "page" number when requesting
+    // the mission modal data from backend.
+    var initTiles: List<HeroNoticeboardTile>
+    var totalPage: Int
+}
 
-interface JavaIslandNewbieVillageNoticeboardState : State {
-    var hoveredTile: AvatarTile?
+interface JavaIslandHeroNoticeboardState : State {
+    var imageIsLoading: Boolean
+    var jsonIsLoading: Boolean
+
+    // "current" or 1/2/3/.../X
+    var currentPage: Int
+    var tiles: List<HeroNoticeboardTile>
+    var hoveredTile: HeroNoticeboardTile?
     var hoveredTileCoordinate: GridCoordinate?
-    var avatarTiles: Array<AvatarTile>?
-    var imageDisplay: String
     var timestamp: Long
 }
 
-class JavaIslandNewbieVillageNoticeboard :
-    RComponent<GameProps, JavaIslandNewbieVillageNoticeboardState>() {
-    private var loading = false
+class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
+    RComponent<JavaIslandHeroNoticeboardProps, JavaIslandHeroNoticeboardState>(props) {
     private val onChallengeRepaintListener: EventListener<ChallengeUpdateEventData> = this::onMissionRepaint
 
     private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
         // Refresh upon mission finished event
         if (eventData.change.accomplished) {
-            setState {
-                init()
-            }
+            onClickPage(state.currentPage)
         }
     }
 
-    override fun JavaIslandNewbieVillageNoticeboardState.init() {
-        loading = false
-        avatarTiles = undefined
-        imageDisplay = "none"
+    override fun JavaIslandHeroNoticeboardState.init(props: JavaIslandHeroNoticeboardProps) {
+        currentPage = props.totalPage
+        tiles = props.initTiles
+        jsonIsLoading = false
+        imageIsLoading = true
         timestamp = currentTimeMillis()
     }
 
-    private fun imgAndJsonLoaded(): Boolean {
-        return state.avatarTiles != undefined && state.imageDisplay == "block"
+    private fun onClickPage(number: Int) {
+        if (number < 1 || number > props.totalPage) {
+            return
+        }
+        setState {
+            imageIsLoading = true
+            jsonIsLoading = true
+            timestamp = currentTimeMillis()
+            currentPage = number
+            tiles = emptyList()
+        }
+
+        GlobalScope.launch {
+            val json = window.fetch(heroesJsonUrl(number, state.timestamp))
+                .await()
+                .apply {
+                    if (status < 200 || status > 400) {
+                        throw Exception("Got response status code $status")
+                    }
+                }.text().await()
+            val heroNoticeboardTilesData = toHeroNoticeboardTilesData(JSON.parse(json))
+            setState {
+                jsonIsLoading = false
+                tiles = heroNoticeboardTilesData.tiles
+            }
+        }
     }
 
     override fun RBuilder.render() {
@@ -106,47 +135,31 @@ class JavaIslandNewbieVillageNoticeboard :
             h2 {
                 attrs.jsStyle.textAlign = "center"
                 b {
-                    +props.game.i("BravePeopleBoard")
+                    +props.game.i("HeroNoticeboard")
                 }
             }
-            p {
+            div {
                 attrs.jsStyle.textAlign = "center"
                 unsafeSpan(props.game.i("BravePeopleDedication"))
             }
+
             div {
                 attrs.classes = jsObjectBackedSetOf("noticeboard-avatars-div")
 
-                if (!imgAndJsonLoaded()) {
-                    if (loading) {
-                        div {
-                            attrs.classes = jsObjectBackedSetOf("flex-center")
-                            BootstrapSpinner {
-                                attrs.animation = "border"
-                            }
+                if (state.imageIsLoading || state.jsonIsLoading) {
+                    div {
+                        attrs.classes = jsObjectBackedSetOf("center-of-parent")
+                        BootstrapSpinner {
+                            attrs.animation = "border"
                         }
-                    } else {
-                        GlobalScope.launch {
-                            val json = window.fetch(bravePeopleJsonUrl(state.timestamp))
-                                .await()
-                                .apply {
-                                    if (status < 200 || status > 400) {
-                                        throw Exception("Got response status code $status")
-                                    }
-                                }.text().await()
-                            setState({
-                                it.avatarTiles = JSON.parse(json)
-                                it
-                            }, { loading = false })
-                        }
-                        loading = true
                     }
                 }
-                avatarImg()
 
-                if (state.hoveredTile != undefined) {
-                    avatarTooltip()
-                }
+                leftButton()
+                rightButton()
+                avatarImg()
             }
+            paginationButtons()
             span {
                 attrs.jsStyle {
                     margin = "0 auto"
@@ -162,11 +175,54 @@ class JavaIslandNewbieVillageNoticeboard :
         }
     }
 
-    private fun findTileByMouseCoordinate(event: Event): AvatarTile? {
+    private fun RBuilder.paginationButtons() {
+        if (props.totalPage > 1) {
+            BootstrapPagination {
+                repeat(props.totalPage) { page ->
+                    BootstrapPaginationItem {
+                        +(page + 1).toString()
+                        attrs.active = page + 1 == state.currentPage
+                        attrs.onClick = {
+                            onClickPage(page + 1)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun RBuilder.leftButton() {
+        if (state.currentPage > 1) {
+            BootstrapButton {
+                attrs.className = "noticeboard-button noticeboard-left-button"
+                +"<"
+                attrs.onClick = {
+                    onClickPage(state.currentPage - 1)
+                }
+            }
+        }
+    }
+
+    private fun RBuilder.rightButton() {
+        if (state.currentPage < props.totalPage) {
+            BootstrapButton {
+                attrs.className = "noticeboard-button noticeboard-right-button"
+                +">"
+                attrs.onClick = {
+                    onClickPage(state.currentPage + 1)
+                }
+            }
+        }
+    }
+
+    private fun findTileByMouseCoordinate(event: Event): HeroNoticeboardTile? {
+        if (state.jsonIsLoading) {
+            return null
+        }
         val e = event.asDynamic().nativeEvent as MouseEvent
         val hoveredTileX = e.offsetX.toInt() / AVATAR_TILE_SIZE
         val hoveredTileY = e.offsetY.toInt() / AVATAR_TILE_SIZE
-        for (tile in state.avatarTiles!!) {
+        for (tile in state.tiles) {
             if (tile.x == hoveredTileX && tile.y == hoveredTileY) {
                 return tile
             }
@@ -183,26 +239,23 @@ class JavaIslandNewbieVillageNoticeboard :
     }
 
     private fun RBuilder.avatarImg() {
-        img {
+        div {
             attrs.classes = jsObjectBackedSetOf("noticeboard-avatars-img")
-            attrs.src = bravePeopleImgUrl(state.timestamp)
-            attrs.jsStyle {
-                display = state.imageDisplay
-            }
-            attrs.onLoadFunction = {
-                setState {
-                    imageDisplay = "block"
+            img {
+                attrs.src = heroesImgUrl(state.currentPage, state.timestamp)
+                attrs.onLoadFunction = {
+                    setState {
+                        imageIsLoading = false
+                    }
                 }
-            }
-            if (imgAndJsonLoaded()) {
                 attrs.onClickFunction = {
                     findTileByMouseCoordinate(it)?.apply {
-                        window.open("https://github.com/$username", "_blank")
+                        window.open("https://github.com/$userid", "_blank")
                     }
                 }
                 attrs.onMouseMoveFunction = {
                     val coordinate: GridCoordinate = toCoordinate(it)
-                    val hoveredTile: AvatarTile? = findTileByMouseCoordinate(it)
+                    val hoveredTile: HeroNoticeboardTile? = findTileByMouseCoordinate(it)
 
                     val updateCoordinate = (state.hoveredTileCoordinate != coordinate)
                     val updateTile = (state.hoveredTile?.x != hoveredTile?.x || state.hoveredTile?.y != hoveredTile?.y)
@@ -221,6 +274,10 @@ class JavaIslandNewbieVillageNoticeboard :
                         hoveredTileCoordinate = null
                     }
                 }
+            }
+
+            if (state.hoveredTile != undefined) {
+                avatarTooltip()
             }
         }
     }

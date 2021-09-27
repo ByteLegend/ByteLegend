@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package com.bytelegend.app.shared.entities
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.entities.mission.ChallengeType
 import com.bytelegend.app.shared.entities.mission.DiscussionsSpec
+import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTilesData
 import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
@@ -49,12 +50,18 @@ class ChallengeTabData(
 ) : MissionTabData<ChallengeSpec> {
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override val type: MissionTabType = when (data.type) {
-        ChallengeType.Noticeboard -> MissionTabType.NoticeboardChallenge
         ChallengeType.Star -> MissionTabType.StarChallenge
         ChallengeType.PullRequest -> MissionTabType.PullRequestChallenge
         ChallengeType.Question -> MissionTabType.QuestionChallenge
         else -> throw IllegalArgumentException(data.type.toString())
     }
+    override val title: String = "MissionChallenge"
+}
+
+class HeroNoticeboardTabData(
+    override val data: HeroNoticeboardTilesData
+) : MissionTabData<HeroNoticeboardTilesData> {
+    override val type: MissionTabType = MissionTabType.HeroNoticeboardChallenge
     override val title: String = "MissionChallenge"
 }
 
@@ -75,7 +82,7 @@ enum class MissionTabType {
 
     PullRequestChallenge,
 
-    NoticeboardChallenge,
+    HeroNoticeboardChallenge,
 
     /**
      * A tab displaying the tutorials

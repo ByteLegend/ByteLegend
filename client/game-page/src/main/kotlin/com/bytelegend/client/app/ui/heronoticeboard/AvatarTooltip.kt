@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bytelegend.client.app.ui.noticeboard
+package com.bytelegend.client.app.ui.heronoticeboard
 
+import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTile
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.html.classes
@@ -36,7 +37,7 @@ const val TRIANGLE_OFFSET_Y = 64
 
 interface AvatarCardProps : GameProps {
     var joinedAtI18n: String
-    var tile: AvatarTile
+    var tile: HeroNoticeboardTile
 }
 
 class AvatarTooltip : RComponent<AvatarCardProps, State>() {
@@ -68,7 +69,7 @@ class AvatarTooltip : RComponent<AvatarCardProps, State>() {
                     width = "${TOOLTIP_HEIGHT}px"
                     height = "${TOOLTIP_HEIGHT}px"
                 }
-                attrs.src = props.game.transformGitHubUrl("https://avatars.githubusercontent.com/${props.tile.username}?size=200")
+                attrs.src = props.game.transformGitHubUrl("https://avatars.githubusercontent.com/${props.tile.userid}?size=200")
             }
             div {
                 attrs.jsStyle {
@@ -78,7 +79,7 @@ class AvatarTooltip : RComponent<AvatarCardProps, State>() {
                 attrs.classes = jsObjectBackedSetOf("white-text-black-shadow-1")
                 p {
                     attrs.jsStyle.fontSize = "16px"
-                    +props.tile.username
+                    +props.tile.userid
                 }
                 p {
                     attrs.jsStyle.fontSize = "12px"

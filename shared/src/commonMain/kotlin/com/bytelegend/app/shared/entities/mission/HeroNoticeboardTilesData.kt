@@ -13,28 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.bytelegend.app.shared.entities.mission
 
-data class ChallengeSpec(
-    val id: String,
-    val type: ChallengeType,
-    val star: Int,
-
-    val spec: String,
-    /**
-     * A TL;DR description i18n id of this challenge
-     */
-    val tldr: String = "",
-    /**
-     * The detail description i18n id of this challenge
-     */
-    val readme: String = ""
+data class HeroNoticeboardTile(
+    val x: Int,
+    val y: Int,
+    val userid: String,
+    val color: String,
+    val createdAt: String,
+    val changedAt: String
 )
 
-enum class ChallengeType(val withGitHubRepo: Boolean) {
-    None(false),
-    Star(true),
-    HeroNoticeboard(true),
-    PullRequest(true),
-    Question(false)
-}
+data class HeroNoticeboardTilesData(
+    val page: Int,
+    val tiles: List<HeroNoticeboardTile>
+)

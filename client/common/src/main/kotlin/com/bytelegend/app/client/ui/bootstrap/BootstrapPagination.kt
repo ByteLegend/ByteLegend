@@ -25,6 +25,7 @@ import react.Props
 external val BootstrapPagination: ElementType<BootstrapPaginationProps>
 
 external interface BootstrapPaginationProps : Props {
+    var className: String
     var size: String
     var bsPrefix: String
 }

@@ -580,23 +580,50 @@ div.speech-bubble::after {
     border: black 1px solid;
 }
 
-.center-notification {
-    position: fixed;
+.noticeboard-avatars-div {
+    position: relative;
+    width: 100%;
+    height: 600px;
+}
+
+.center-of-parent {
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
 
-.noticeboard-avatars-div {
-    position: relative;
+.noticeboard-avatars-img {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
     width: 600px;
     height: 600px;
-    border: 1px solid black;
-    margin: 0 auto;
+    border: black 1px solid;
     cursor: pointer;
 }
 
-.noticeboard-avatars-img {
+.mission-tab-content .pagination {
+    margin: 4px;
+    justify-content: center;
+}
+
+.noticeboard-left-button {
+    left: calc(50% - 360px);
+}
+
+.noticeboard-right-button {
+    right: calc(50% - 360px);
+}
+
+.noticeboard-button {
+    position: absolute;
+    height: 300px;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.noticeboard-avatars-img img {
     width: 100%;
     height: 100%;
 }

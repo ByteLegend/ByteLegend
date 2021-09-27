@@ -22,11 +22,12 @@ import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.entities.ChallengeTabData
 import com.bytelegend.app.shared.entities.DiscussionsTabData
+import com.bytelegend.app.shared.entities.HeroNoticeboardTabData
 import com.bytelegend.app.shared.entities.LivestreamData
 import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.MissionTabData
 import com.bytelegend.app.shared.entities.MissionTabType.Discussions
-import com.bytelegend.app.shared.entities.MissionTabType.NoticeboardChallenge
+import com.bytelegend.app.shared.entities.MissionTabType.HeroNoticeboardChallenge
 import com.bytelegend.app.shared.entities.MissionTabType.PullRequestChallenge
 import com.bytelegend.app.shared.entities.MissionTabType.QuestionChallenge
 import com.bytelegend.app.shared.entities.MissionTabType.StarChallenge
@@ -40,6 +41,8 @@ import com.bytelegend.app.shared.entities.TutorialsTabData
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.entities.mission.ChallengeType
 import com.bytelegend.app.shared.entities.mission.DiscussionsSpec
+import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTile
+import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTilesData
 import com.bytelegend.app.shared.entities.mission.OnFinishItemsChange
 import com.bytelegend.app.shared.entities.mission.OnFinishSpec
 import com.bytelegend.app.shared.entities.mission.OnFinishStatesChange
@@ -223,9 +226,11 @@ fun toMissionTabData(jsonObject: dynamic): MissionTabData<*> {
     return when (valueOf(jsonObject.type)) {
         QuestionChallenge,
         StarChallenge,
-        PullRequestChallenge,
-        NoticeboardChallenge -> ChallengeTabData(
+        PullRequestChallenge -> ChallengeTabData(
             toChallengeSpec(jsonObject.data)
+        )
+        HeroNoticeboardChallenge -> HeroNoticeboardTabData(
+            toHeroNoticeboardTilesData(jsonObject.data)
         )
         Tutorials -> TutorialsTabData(
             toPagination(jsonObject.data, ::toTutorial),
@@ -322,3 +327,17 @@ fun toLivestreams(jsonObject: dynamic) = toTypedList(jsonObject) {
         it.endEpochMs
     )
 }
+
+fun toHeroNoticeboardTilesData(jsonObject: dynamic) = HeroNoticeboardTilesData(
+    jsonObject.page,
+    toTypedList(jsonObject.tiles) {
+        HeroNoticeboardTile(
+            it.x,
+            it.y,
+            it.userid,
+            it.color,
+            it.createdAt,
+            it.changedAt
+        )
+    }
+)
