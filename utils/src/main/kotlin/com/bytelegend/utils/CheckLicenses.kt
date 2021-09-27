@@ -127,7 +127,10 @@ fun main() {
             if (file.isIncludedPath()) {
                 val license = file.toFile().parseLicense()
                 require(license.isValidLicense()) {
-                    "${file.toAbsolutePath()} doesn't contain a valid license: $license"
+                    """${file.toAbsolutePath()} doesn't contain a valid license: $license
+                        |
+                        |Please run `./gradlew utils:addLicenses` or add the file into `CheckLicenses.IGNORED_PATHS`.
+                    """.trimMargin()
                 }
             }
             return FileVisitResult.CONTINUE
