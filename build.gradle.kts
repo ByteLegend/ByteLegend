@@ -43,7 +43,7 @@ allprojects {
     tasks.withType<Test>().configureEach {
         useJUnitPlatform()
         if (isCI()) {
-            jvmArgs("-Djava.io.tmpdir=${rootProject.buildDir.resolve("tmp").absolutePath}")
+            jvmArgs("-Djava.io.tmpdir=${project.buildDir.resolve("tmp").absolutePath}")
         }
     }
     tasks.withType<org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack>().configureEach {
