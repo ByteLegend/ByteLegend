@@ -80,7 +80,9 @@ fun RBuilder.renderReadme(game: Game, readmeOrLink: String) {
             }
         }
     } else {
-        unsafeDiv(game.i(readmeOrLink))
+        unsafeDiv(game.i(readmeOrLink)) {
+            attrs.classes = jsObjectBackedSetOf("mission-modal-challenge-readme")
+        }
     }
 }
 

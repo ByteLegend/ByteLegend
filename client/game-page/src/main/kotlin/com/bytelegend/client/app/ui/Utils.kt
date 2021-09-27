@@ -121,8 +121,9 @@ fun RBuilder.unsafeSpan(html: String, vararg classes: String) {
     }
 }
 
-fun RBuilder.unsafeDiv(html: String) {
+fun RBuilder.unsafeDiv(html: String, config: RDOMBuilder<DIV>.() -> Unit = {}) {
     div {
+        config()
         consumer.onTagContentUnsafe {
             +html
         }
