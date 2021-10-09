@@ -102,10 +102,14 @@ class PrismCodeBlock : RComponent<CodeBlockProps, State>() {
         }
     }
 
+    /**
+     * Determine the first "dirty" line comparing old and new lines.
+     * Returned line number starts from 0.
+     */
     private fun determineFirstDirtyLineNumber(currentLines: List<String>, prevLines: List<String>): Int {
         if (currentLines === prevLines) {
             // lines are appended
-            return displayedLineNumber + 1
+            return displayedLineNumber
         } else {
             val min = min(currentLines.size, prevLines.size)
             var firstDirtyLineNumber: Int = -1
