@@ -90,6 +90,8 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                 val mission = missions.getMissionModalDataById(props.missionId)
                 BootstrapNav {
                     attrs.variant = "tabs"
+                    var challengeCounter = 0
+                    val moreThanOneChallenge = mission.tabs.count { it.title == "MissionChallenge" } > 1
                     mission.tabs.forEachIndexed { index: Int, tab: MissionTabData<*> ->
                         BootstrapNavItem {
                             BootstrapNavLink {
@@ -98,6 +100,10 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                                 span {
                                     +i(tab.title)
                                     if (tab.title == "MissionChallenge") {
+                                        challengeCounter++
+                                        if (moreThanOneChallenge) {
+                                            +"$challengeCounter "
+                                        }
                                         child(TitleStarCounter::class) {
                                             val challengeSpec = tab.unsafeCast<ChallengeTabData>().data
                                             attrs.total = challengeSpec.star
