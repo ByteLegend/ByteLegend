@@ -15,6 +15,7 @@
  */
 package com.bytelegend.client.app.external
 
+import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.uuid
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -84,14 +85,20 @@ class PrismCodeBlock : RComponent<CodeBlockProps, State>() {
     override fun componentDidUpdate(prevProps: CodeBlockProps, prevState: State, snapshot: Any) {
         val firstDirtyLineNumber: Int = determineFirstDirtyLineNumber(props.lines, prevProps.lines)
 
+        if (logger.debugEnabled) {
+            logger.debug("displayedLineNumber $displayedLineNumber")
+            logger.debug("Append to code block, previous lines ${prevProps.lines.size}, current lines ${props.lines.size}, first dirty line: $firstDirtyLineNumber")
+        }
+
         // remove <code id = "xxxx-line-i"> and append new <code>
-        document.getElementById(preElementId)?.apply {
+        document.getElementById(preElementId)?.let { pre ->
             for (j in firstDirtyLineNumber until displayedLineNumber) {
                 document.getElementById("$codeContainerElementId-line-$j")?.let {
-                    removeChild(it)
+                    pre.removeChild(it)
                 }
             }
-            appendAndHighlightLines(props.lines, firstDirtyLineNumber)
+            pre.appendAndHighlightLines(props.lines, firstDirtyLineNumber)
+            displayedLineNumber = props.lines.size
         }
     }
 
