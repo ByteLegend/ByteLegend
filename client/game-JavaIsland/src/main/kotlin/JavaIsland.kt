@@ -152,6 +152,9 @@ fun GameScene.firstBugEvil() = objects {
     val mission = objects.getById<DynamicSprite>("fix-simple-add")
     val helpers = GameScriptHelpers(this@firstBugEvil)
     helpers.configureAnimation(mission, 3)
+    if (playerChallenges.missionAccomplished("fix-simple-add")) {
+        helpers.removeMissionBlocker(mission)
+    }
     helpers.addMissionRepaintCallback(mission) {
         if (!it.wasAccomplished && it.newValue.accomplished) {
             helpers.removeMissionBlocker(mission)
