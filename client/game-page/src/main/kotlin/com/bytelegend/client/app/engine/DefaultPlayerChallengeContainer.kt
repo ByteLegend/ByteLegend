@@ -86,6 +86,11 @@ class DefaultPlayerChallengeContainer(
 
     override fun missionAccomplished(missionId: String): Boolean {
         val challengeIds = missionIdToChallenges.getValue(missionId)
+        if (challengeIds.isEmpty()) {
+            // For mission without challenges yet,
+            // we would like them to display "unfinished" animation
+            return false
+        }
         return challengeIds.all { challengeAccomplished(it) }
     }
 
