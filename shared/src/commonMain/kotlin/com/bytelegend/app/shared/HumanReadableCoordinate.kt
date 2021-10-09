@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@ package com.bytelegend.app.shared
 
 import kotlinx.serialization.Serializable
 import kotlin.math.abs
+import kotlin.math.pow
 
 /**
  * A coordinate system for human reading:
@@ -27,45 +28,61 @@ import kotlin.math.abs
  * (2,1) -> (C, 1)
  * (3,1) -> (D, 1)
  * ...
- * (26,26) -> (AA, 26)
+ * (26,26) -> (BA, 26)
  */
 data class HumanReadableCoordinate(val x: Int, val y: Int) {
+    // BA26 -> (26,26)
+    constructor(letterX: String, y: Int) : this(fromLetters(letterX), y)
     constructor(viewportCoordinate: GridCoordinate) : this(viewportCoordinate.x, viewportCoordinate.y)
+    private val letters: String = toLetters(x)
 
-    val letters: String = toLetters(x)
-
-    /**
-     * 0 -> A
-     * 1 -> B
-     * ...
-     * 25 -> Z
-     * 26 -> AA
-     * 27 -> AB
-     * 28 -> AC
-     * ...
-     *
-     */
-    private fun toLetters(x: Int): String {
-        val charArray = mutableListOf<Char>()
-        var current = x
-        while (true) {
-            if (current >= 26) {
-                charArray.add('A' + current % 26)
-                current /= 26
-            } else {
-                if (charArray.isEmpty()) {
-                    charArray.add('A' + current)
-                } else {
-                    charArray.add('A' + current - 1)
-                }
-                return charArray.reversed().joinToString("")
-            }
-        }
-    }
+    fun toGridCoordinate() = GridCoordinate(x, y)
+    fun toHash() = "$letters$y"
 
     override fun toString(): String {
         return "($letters, $y)"
     }
+}
+
+/**
+ * 0 <- A
+ * 1 <- B
+ * ...
+ * 25 <- Z
+ * 26 <- BA
+ * 676 <- BAA
+ */
+internal fun fromLetters(letters: String): Int {
+    var ret = 0
+    letters.toCharArray().reversed().forEachIndexed { index, c ->
+        ret += (c - 'A') * (26.0.pow(index).toInt())
+    }
+    return ret
+}
+
+/**
+ * 0 -> A
+ * 1 -> B
+ * ...
+ * 25 -> Z
+ * 26 -> BA
+ * 27 -> BB
+ * ...
+ * 52 -> CA
+ * 675 (25*26+25) -> ZZ
+ * 676 -> BAA
+ */
+internal fun toLetters(x: Int): String {
+    if (x == 0) {
+        return "A"
+    }
+    val charArray = mutableListOf<Char>()
+    var current = x
+    while (current != 0) {
+        charArray.add('A' + current % 26)
+        current /= 26
+    }
+    return charArray.reversed().joinToString("")
 }
 
 @Serializable

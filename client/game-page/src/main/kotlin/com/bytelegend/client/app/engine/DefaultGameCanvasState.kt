@@ -23,6 +23,7 @@ import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.GridSize
+import com.bytelegend.app.shared.HumanReadableCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.math.adjustCanvasCoordinateIfNecessary
@@ -30,6 +31,7 @@ import com.bytelegend.app.shared.math.calculateCanvasCoordinateInMapFromCenterPo
 import com.bytelegend.app.shared.math.limitIn
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.client.app.page.game
+import kotlinx.browser.window
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
@@ -79,14 +81,20 @@ class DefaultGameCanvasState(
     init {
         /**
          * Calculate the initial canvas coordinate in map, based on:
+         * The anchor of current URL: bytelegend.com/#A13;
          * The logged-in user's location as center point;
          * If user is anonymous, determine from map predefined location ("XInitCenterPoint")
          */
-        if (!game.heroPlayer.isAnonymous && game.heroPlayer.map == gameMap.id) {
-            onResizeGameContainer(gameContainerSize, GridCoordinate(game.heroPlayer.x, game.heroPlayer.y))
-        } else {
-            onResizeGameContainer(gameContainerSize, getDefaultMapCenterPoint())
+        val hash = window.location.hash.substringAfter("#")
+        val center = when {
+            hash.matches("[A-Z]+\\d+") ->
+                HumanReadableCoordinate(hash.replace("\\d+".toRegex(), ""), hash.replace("[A-Z]+".toRegex(), "").toInt())
+                    .toGridCoordinate()
+            !game.heroPlayer.isAnonymous && game.heroPlayer.map == gameMap.id -> GridCoordinate(game.heroPlayer.x, game.heroPlayer.y)
+            else -> getDefaultMapCenterPoint()
         }
+
+        onResizeGameContainer(gameContainerSize, center)
     }
 
     private fun onResizeGameContainer(newContainerSize: PixelSize, initMapCenterPoint: GridCoordinate? = null) {

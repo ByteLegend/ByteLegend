@@ -17,6 +17,7 @@
 
 package com.bytelegend.app.testfixtures
 
+import com.bytelegend.app.servershared.DefaultJsonMapper
 import com.bytelegend.app.servershared.codechecker.CODE_CHECKER_SECRET_HEADER_NAME
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -54,6 +55,7 @@ fun BrowserWebDriverContainer<Nothing>.safeStop() {
 abstract class AbstractByteLegendIntegrationTest {
     @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     abstract val gameServerPort: Int
+    private val defaultJsonMapper = DefaultJsonMapper(true)
     private val httpClient by lazy { HttpClient.newHttpClient() }
 
     protected fun sendWebhookFromResource(event: String, resource: String) {
@@ -63,6 +65,15 @@ abstract class AbstractByteLegendIntegrationTest {
             mapOf("Content-Type" to "application/json", "X-GitHub-Event" to event)
         ).assert2XXStatusCode()
     }
+
+    protected fun sendWebhookFromJsonObject(event: String, payload: Any) {
+        val json = defaultJsonMapper.toJson(payload)
+        post(
+            "http://localhost:$gameServerPort/github_webhook", json,
+            mapOf("Content-Type" to "application/json", "X-GitHub-Event" to event)
+        ).assert2XXStatusCode()
+    }
+
     protected fun sendProblemsFromResource(resource: String) {
         val json = javaClass.getResourceAsFile(resource).readText()
         post(

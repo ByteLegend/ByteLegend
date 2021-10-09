@@ -127,7 +127,7 @@ class IndexController(
 }
 
 @Service
-class SprintBootRRBDResourceProvider(
+class SpringBootRRBDResourceProvider(
     jsonMapper: JsonMapper
 ) : AbstractRRBDResourceProvider(System.getProperty("local.RRBD"), jsonMapper)
 
