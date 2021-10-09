@@ -41,6 +41,7 @@ class HeroCharacter(
     )
 
     override fun enterTile(gridCoordinate: GridCoordinate) {
+        console.log("Enter tile: $gridCoordinate")
         super.enterTile(gridCoordinate)
 
         player.x = gridCoordinate.x
@@ -48,6 +49,7 @@ class HeroCharacter(
         gameScene.objects.getByCoordinate(gridCoordinate).filter {
             it.id != this.id
         }.forEach {
+            console.log("Touch ${it.id}")
             it.onTouch(this)
         }
     }

@@ -61,7 +61,7 @@
                  "name":"JavaIslandCommentDungeon-JavaIsland-entrance-point",
                  "point":true,
                  "rotation":0,
-                 "type":"GameMapPoint",
+                 "type":"GameMapEntrancePoint",
                  "visible":true,
                  "width":0,
                  "x":174.927293784584,
@@ -70,10 +70,10 @@
                 {
                  "height":0,
                  "id":3,
-                 "name":"JavaIsland-JavaIslandCommentDungeon-destination",
+                 "name":"JavaIsland-JavaIslandCommentDungeon-entrance-destination",
                  "point":true,
                  "rotation":0,
-                 "type":"GameMapPoint",
+                 "type":"GameMapEntranceDestinationPoint",
                  "visible":true,
                  "width":0,
                  "x":175.586153648179,
@@ -84,17 +84,33 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "data":[2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 0, 0, 0, 0, 0, 0, 0, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 0, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041, 2041],
+         "height":16,
+         "id":6,
+         "name":"Blockers",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":11,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":6,
+ "nextlayerid":7,
  "nextobjectid":4,
  "orientation":"orthogonal",
  "renderorder":"right-down",
- "tiledversion":"1.6.0",
+ "tiledversion":"1.7.2",
  "tileheight":32,
  "tilesets":[
         {
          "firstgid":1,
          "source":"..\/..\/tileset-jsons\/BrowserQuest_32x32.json"
+        }, 
+        {
+         "firstgid":2021,
+         "source":"..\/..\/tileset-jsons\/sea_animation_32x32.json"
         }],
  "tilewidth":32,
  "type":"map",

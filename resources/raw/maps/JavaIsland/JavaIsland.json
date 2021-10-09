@@ -2669,7 +2669,7 @@
                 {
                  "height":0,
                  "id":192,
-                 "name":"JavaIslandCommentDungeon-JavaIsland-destination",
+                 "name":"JavaIslandCommentDungeon-JavaIsland-entrance-destination",
                  "point":true,
                  "rotation":0,
                  "type":"GameMapEntranceDestinationPoint",
