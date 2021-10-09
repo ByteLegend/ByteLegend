@@ -97,6 +97,7 @@ class BouncingTitles : GameUIComponent<GameProps, BouncingTitlesState>() {
         setState { objectIds = titleIds }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onAnimation(n: Nothing) {
         val animationOffset = ((game.elapsedTimeSinceStart * FLOATING_TITLE_FPS / 1000).toInt() % 2) * FLOATING_TITLE_ANIMATION_OFFSET_PX
 

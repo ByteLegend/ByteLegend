@@ -83,6 +83,7 @@ val springCoreVersion = "5.3.9"
 val javaDiffUtilsVersion = "4.9"
 val reactMarkdownVersion = "7.0.1"
 val rehypeRawVersion = "6.1.0"
+val rehypeExternalLinksVersion = "1.0.0"
 val remarkGfmVersion = "2.0.0"
 val unifiedDiffParserVersion = "1.4"
 
@@ -181,6 +182,8 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("software.amazon.awssdk:dynamodb-enhanced:$awsSdkV2Version"),
     OpenSourceLibrary("software.amazon.awssdk:netty-nio-client:$awsSdkV2Version"),
     OpenSourceLibrary("com.github.blindpirate:dynamodb-cross-region-replication:$dynamodbCrossRegionReplicationVersion"),
+
+    OpenSourceLibrary("org.commonmark:commonmark-ext-task-list-items:$commonmarkVersion"),
 
     OpenSourceLibrary("com.github.houbb:opencc4j:$opencc4jVersion"),
 
@@ -335,6 +338,13 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         version = rehypeRawVersion,
         creditName = "rehype-raw",
         url = "https://github.com/rehypejs/rehype-raw",
+        license = MIT
+    ),
+    OpenSourceLibrary(
+        name = "rehype-external-links",
+        version = rehypeExternalLinksVersion,
+        creditName = "rehype-external-links",
+        url = "https://github.com/rehypejs/rehype-external-links",
         license = MIT
     ),
     OpenSourceLibrary(

@@ -20,7 +20,6 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.StaticFrame
-import com.bytelegend.app.client.api.animationWithFixedInterval
 import com.bytelegend.app.shared.GIT_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND
 import kotlinx.browser.window
@@ -55,18 +54,11 @@ fun GameScene.installGitStone() = objects {
 
 fun GameScene.configureBronzeGitMedalMission() {
     val gitCommitPushSprite = objects.getById<DynamicSprite>("git-commit-and-push")
+    val helpers = GameScriptHelpers(this)
 
-    configureBronzeGitMedalAnimation(gitCommitPushSprite)
-    GameScriptHelpers(this).addMissionRepaintCallback(gitCommitPushSprite) {
-        configureBronzeGitMedalAnimation(gitCommitPushSprite)
-    }
-}
-
-fun GameScene.configureBronzeGitMedalAnimation(sprite: DynamicSprite) {
-    if (playerChallenges.challengeAccomplished("git-commit-and-push-challenge")) {
-        sprite.animation = StaticFrame(2)
-    } else {
-        sprite.animation = sprite.mapDynamicSprite.animationWithFixedInterval(500, 2)
+    helpers.configureAnimation(gitCommitPushSprite, 2)
+    helpers.addMissionRepaintCallback(gitCommitPushSprite) {
+        helpers.configureAnimation(gitCommitPushSprite, 2)
     }
 }
 

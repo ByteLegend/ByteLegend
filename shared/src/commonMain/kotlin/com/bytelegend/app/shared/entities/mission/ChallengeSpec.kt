@@ -18,9 +18,8 @@ package com.bytelegend.app.shared.entities.mission
 data class ChallengeSpec(
     val id: String,
     val type: ChallengeType,
-    val star: Int,
-
     val spec: String,
+    val star: Int = 0,
     /**
      * A TL;DR description i18n id of this challenge
      */
@@ -36,5 +35,6 @@ enum class ChallengeType(val withGitHubRepo: Boolean) {
     Star(true),
     HeroNoticeboard(true),
     PullRequest(true),
-    Question(false)
+    Question(false),
+    TextContent(false)
 }

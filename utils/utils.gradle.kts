@@ -48,6 +48,7 @@ dependencies {
     implementation(libs("batik-dom"))
     implementation(libs("batik-swing"))
     implementation(libs("commonmark"))
+    implementation(libs("commonmark-ext-task-list-items"))
 
     testImplementation(libs("junit-jupiter-api"))
     testImplementation(libs("junit-jupiter-engine"))

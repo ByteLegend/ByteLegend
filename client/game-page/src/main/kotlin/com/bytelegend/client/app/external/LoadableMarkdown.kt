@@ -77,7 +77,9 @@ class LoadableMarkdown : RComponent<LoadableMarkdownProps, LoadableMarkdownState
                 }
                 attrs.remarkPlugins = arrayOf(remarkGfm)
                 if (props.allowRawHtml == true) {
-                    attrs.rehypePlugins = arrayOf(RehypeRaw)
+                    attrs.rehypePlugins = arrayOf(RehypeRaw, RehypeExternalLinks)
+                } else {
+                    attrs.rehypePlugins = arrayOf(RehypeExternalLinks)
                 }
             }
         }

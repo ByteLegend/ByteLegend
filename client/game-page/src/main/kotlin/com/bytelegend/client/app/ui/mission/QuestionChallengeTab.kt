@@ -34,7 +34,7 @@ import com.bytelegend.app.shared.entities.PlayerChallengeAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.protocol.challengeUpdateEvent
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
-import com.bytelegend.client.app.engine.GameMission
+import com.bytelegend.client.app.engine.DefaultGameMission
 import com.bytelegend.client.app.engine.util.format
 import com.bytelegend.client.app.external.TextareaAutosize
 import com.bytelegend.client.app.ui.GameProps
@@ -76,7 +76,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
     // If player is not adjacent to the mission, disable the input box and submit button
     private fun isDisabled(): Boolean {
         val heroInScene = activeScene.objects.getByIdOrNull<Character>(HERO_ID) ?: return true
-        return heroInScene.gridCoordinate.manhattanDistanceTo(activeScene.objects.getById<GameMission>(props.missionId).gridCoordinate) > 2
+        return heroInScene.gridCoordinate.manhattanDistanceTo(activeScene.objects.getById<DefaultGameMission>(props.missionId).gridCoordinate) > 2
     }
 
     override fun RBuilder.render() {

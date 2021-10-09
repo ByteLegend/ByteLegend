@@ -31,6 +31,7 @@ import com.bytelegend.app.shared.entities.MissionTabType.HeroNoticeboardChalleng
 import com.bytelegend.app.shared.entities.MissionTabType.PullRequestChallenge
 import com.bytelegend.app.shared.entities.MissionTabType.QuestionChallenge
 import com.bytelegend.app.shared.entities.MissionTabType.StarChallenge
+import com.bytelegend.app.shared.entities.MissionTabType.TextContentChallenge
 import com.bytelegend.app.shared.entities.MissionTabType.Tutorials
 import com.bytelegend.app.shared.entities.MissionTabType.valueOf
 import com.bytelegend.app.shared.entities.Player
@@ -165,6 +166,7 @@ fun toStarUpdateEventData(jsonObject: dynamic) = StarUpdateEventData(
 )
 
 fun toChallengeUpdateEventData(jsonObject: dynamic) = ChallengeUpdateEventData(
+    jsonObject.wasAccomplished,
     toPlayerChallengeAnswer(jsonObject.change),
     toPlayerChallenge(jsonObject.newValue)
 )
@@ -226,6 +228,7 @@ fun toMissionTabData(jsonObject: dynamic): MissionTabData<*> {
     return when (valueOf(jsonObject.type)) {
         QuestionChallenge,
         StarChallenge,
+        TextContentChallenge,
         PullRequestChallenge -> ChallengeTabData(
             toChallengeSpec(jsonObject.data)
         )
@@ -247,8 +250,8 @@ fun toChallengeSpec(jsonObject: dynamic): ChallengeSpec {
     return ChallengeSpec(
         jsonObject.id,
         ChallengeType.valueOf(jsonObject.type),
-        jsonObject.star,
         jsonObject.spec,
+        jsonObject.star,
         jsonObject.tldr,
         jsonObject.readme
     )

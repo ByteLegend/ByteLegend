@@ -87,7 +87,7 @@ class DefaultGameScene(
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
     private val channelToDirector: MutableMap<String, DefaultGameDirector> = JSObjectBackedMap()
-    val missions: MissionContainer = MissionContainer(di, this)
+    val missions: MissionContainer = MissionContainer(di)
     val mainChannelDirector by lazy {
         getDirectorOfChannel(MAIN_CHANNEL)
     }
@@ -138,7 +138,7 @@ class DefaultGameScene(
             }
         }
         missions.forEach { mission ->
-            GameMission(this, mission, objects.getById(mission.sprite))
+            DefaultGameMission(this, mission, objects.getById(mission.sprite))
         }
     }
 

@@ -21,6 +21,7 @@ import BootstrapNavItem
 import BootstrapNavLink
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
@@ -30,17 +31,20 @@ import com.bytelegend.app.shared.entities.HeroNoticeboardTabData
 import com.bytelegend.app.shared.entities.MissionTabData
 import com.bytelegend.app.shared.entities.MissionTabType
 import com.bytelegend.app.shared.entities.TutorialsTabData
+import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.MISSION_DATA_LOAD_FINISH
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.heronoticeboard.JavaIslandHeroNoticeboard
+import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
 import kotlinx.html.classes
 import react.RBuilder
 import react.State
 import react.dom.div
+import react.dom.span
 import react.setState
 
 interface MissionModalProps : GameProps {
@@ -54,6 +58,14 @@ interface MissionModalState : State {
 
 class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
     private val missionDataLoadFinishListener: EventListener<String> = this::onMissionDataLoadFinish
+    private val onMissionRepaintListener: EventListener<ChallengeUpdateEventData> = this::onMissionRepaint
+
+    @Suppress("UNUSED_PARAMETER")
+    private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
+        // refresh the star count at tab index
+        setState {}
+    }
+
     override fun MissionModalState.init() {
         activeTabIndex = 0
     }
@@ -83,7 +95,17 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                             BootstrapNavLink {
                                 attrs.active = (index == state.activeTabIndex)
                                 attrs.eventKey = "tab-$index"
-                                +i(tab.title)
+                                span {
+                                    +i(tab.title)
+                                    if (tab.title == "MissionChallenge") {
+                                        child(TitleStarCounter::class) {
+                                            val challengeSpec = tab.unsafeCast<ChallengeTabData>().data
+                                            attrs.total = challengeSpec.star
+                                            attrs.current = game.activeScene.playerChallenges.challengeStar(challengeSpec.id)
+                                            attrs.starSize = 16
+                                        }
+                                    }
+                                }
                                 attrs.onSelect = {
                                     if (tab.type == MissionTabType.Discussions) {
                                         window.open(tab.unsafeCast<DiscussionsTabData>().data.url, "_blank")
@@ -105,6 +127,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                         MissionTabType.StarChallenge -> renderStarChallenge(activeTab.asDynamic())
                         MissionTabType.PullRequestChallenge -> renderPullRequestChallenge(activeTab.asDynamic())
                         MissionTabType.HeroNoticeboardChallenge -> heroNoticeboardChallenge(activeTab.asDynamic())
+                        MissionTabType.TextContentChallenge -> textContentChallenge(activeTab.asDynamic())
                         MissionTabType.Tutorials -> renderTutorials(activeTab.asDynamic())
                         else -> throw IllegalArgumentException(activeTab.title)
                     }
@@ -128,6 +151,10 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
             attrs.initTiles = tab.data.tiles
             attrs.totalPage = tab.data.page
         }
+    }
+
+    private fun RBuilder.textContentChallenge(tab: ChallengeTabData) {
+        unsafeDiv(i(tab.data.spec))
     }
 
     private fun RBuilder.renderPullRequestChallenge(tab: ChallengeTabData) {
@@ -162,10 +189,11 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
     override fun componentDidMount() {
         super.componentDidMount()
         props.game.eventBus.on(MISSION_DATA_LOAD_FINISH, missionDataLoadFinishListener)
+        props.game.eventBus.on(missionRepaintEvent(props.missionId), onMissionRepaintListener)
     }
 
     override fun componentWillUnmount() {
         super.componentWillUnmount()
-        props.game.eventBus.remove(MISSION_DATA_LOAD_FINISH, missionDataLoadFinishListener)
+        props.game.eventBus.remove(missionRepaintEvent(props.missionId), onMissionRepaintListener)
     }
 }

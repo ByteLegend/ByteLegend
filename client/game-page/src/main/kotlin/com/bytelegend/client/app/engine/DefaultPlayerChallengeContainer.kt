@@ -73,7 +73,7 @@ class DefaultPlayerChallengeContainer(
 
     fun init(gameScene: GameScene) {
         this.gameScene = gameScene.unsafeCast<DefaultGameScene>()
-        this.gameScene.objects.getByRole<GameMission>(GameObjectRole.Mission).forEach {
+        this.gameScene.objects.getByRole<DefaultGameMission>(GameObjectRole.Mission).forEach {
             missionIdToChallenges[it.gameMapMission.id] = it.gameMapMission.challenges
         }
         eventBus.on(STAR_UPDATE_EVENT, starUpdateEventListener)
@@ -82,6 +82,11 @@ class DefaultPlayerChallengeContainer(
 
     override fun challengeAccomplished(challengeId: String): Boolean {
         return playerChallenges[challengeId]?.accomplished == true
+    }
+
+    override fun missionAccomplished(missionId: String): Boolean {
+        val challengeIds = missionIdToChallenges.getValue(missionId)
+        return challengeIds.all { challengeAccomplished(it) }
     }
 
     override fun challengeStar(challengeId: String): Int {
@@ -138,7 +143,7 @@ class DefaultPlayerChallengeContainer(
         if (currentMap == eventData.map) {
             // star/mission change happens on current map
             // respond to the event
-            val mission = gameScene.objects.getById<GameMission>(eventData.missionId).gameMapMission
+            val mission = gameScene.objects.getById<DefaultGameMission>(eventData.missionId).gameMapMission
             val canvasState = gameScene.canvasState
             val endCoordinateInGameContainer: PixelCoordinate =
                 canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer()

@@ -52,6 +52,14 @@ class GameScriptHelpers(val gameScene: GameScene) {
         }
     }
 
+    fun configureAnimation(sprite: DynamicSprite, animationFrameNumber: Int) {
+        if (gameScene.playerChallenges.missionAccomplished(sprite.id)) {
+            sprite.animation = StaticFrame(animationFrameNumber)
+        } else {
+            sprite.animation = sprite.mapDynamicSprite.animationWithFixedInterval(500, animationFrameNumber)
+        }
+    }
+
     fun addMissionRepaintCallback(mission: DynamicSprite, callback: EventListener<ChallengeUpdateEventData>) {
         gameScene.gameRuntime.eventBus.on(missionRepaintEvent(mission.id), callback)
 

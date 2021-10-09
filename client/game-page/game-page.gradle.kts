@@ -33,6 +33,7 @@ dependencies {
     implementation(npm("canvas-confetti", libVersions("canvas-confetti")))
     implementation(npm("react-markdown", libVersions("react-markdown")))
     implementation(npm("rehype-raw", libVersions("rehype-raw")))
+    implementation(npm("rehype-external-links", libVersions("rehype-external-links")))
     implementation(npm("remark-gfm", libVersions("remark-gfm")))
     testImplementation(kotlin("test-js"))
 }

@@ -178,6 +178,9 @@ class Game(
     }
 
     override fun i(textId: String, vararg args: String): String = i18nTextContainer.getValue(textId).render(*args)
+    override fun putText(textId: String, text: String) {
+        i18nTextContainer.put(textId, text)
+    }
 
     fun resolve(path: String) = "${RRBD}$path"
 }

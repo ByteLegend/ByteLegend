@@ -26,6 +26,7 @@ import com.bytelegend.app.shared.entities.PlayerChallenge
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import kotlinx.coroutines.Deferred
@@ -78,6 +79,7 @@ interface GameRuntime {
     val toastController: ToastController
 
     fun i(textId: String, vararg args: String): String
+    fun putText(textId: String, text: String)
 }
 
 interface GameContainerSizeAware {
@@ -203,6 +205,10 @@ data class ImageResourceData(
     val htmlElement: HTMLImageElement
 )
 
+interface GameMission : DynamicSprite {
+    val gameMapMission: GameMapMission
+}
+
 interface GameScene : GameContainerSizeAware, GameRuntimeAware {
     val isActive: Boolean
 
@@ -245,6 +251,8 @@ interface PlayerChallengeContainer {
      * Is the challenge accomplished?
      */
     fun challengeAccomplished(challengeId: String): Boolean
+
+    fun missionAccomplished(missionId: String): Boolean
 
     /**
      * How many star the player gets from the challenge?

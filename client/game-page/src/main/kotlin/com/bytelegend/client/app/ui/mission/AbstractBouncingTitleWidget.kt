@@ -49,12 +49,12 @@ interface BouncingTitleState : State {
     var hovered: Boolean
 }
 
-abstract class AbstractBouncingTitleWidget<R : BouncingTitleProps> : RComponent<R, BouncingTitleState>() {
+abstract class AbstractBouncingTitleWidget<R : BouncingTitleProps, S : BouncingTitleState>(props: R) : RComponent<R, S>(props) {
     private val mouseOutOfMapListener: EventListener<Any> = {
         setState { hovered = false }
     }
 
-    override fun BouncingTitleState.init() {
+    override fun S.init(props: R) {
         hovered = false
     }
 
@@ -150,7 +150,7 @@ abstract class AbstractBouncingTitleWidget<R : BouncingTitleProps> : RComponent<
         }
     }
 
-    override fun shouldComponentUpdate(nextProps: R, nextState: BouncingTitleState): Boolean {
+    override fun shouldComponentUpdate(nextProps: R, nextState: S): Boolean {
         return props.pixelCoordinate != nextProps.pixelCoordinate ||
             props.title != nextProps.title ||
             state.hovered != nextState.hovered

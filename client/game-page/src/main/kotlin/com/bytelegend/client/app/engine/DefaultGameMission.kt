@@ -16,8 +16,8 @@
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.Animation
-import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.Static
@@ -42,14 +42,14 @@ import react.RBuilder
 /**
  * Represent a mission object in the game
  */
-class GameMission(
+class DefaultGameMission(
     override val gameScene: GameScene,
-    val gameMapMission: GameMapMission,
+    override val gameMapMission: GameMapMission,
     override val mapDynamicSprite: GameMapDynamicSprite
 ) : AbstractStaticLocationSprite(
     gameMapMission.gridCoordinate,
     gameMapMission.gridCoordinate * gameScene.map.tileSize
-), DynamicSprite, HasBouncingTitle {
+), GameMission, HasBouncingTitle {
     override val id: String = gameMapMission.id
     override val layer: Int = gameMapMission.layer
 
@@ -127,10 +127,9 @@ class GameMission(
             attrs.pixelCoordinate = pixelCoordinate + PixelCoordinate(pixelSize.width / 2, 0)
             attrs.title = gameScene.gameRuntime.i(gameMapMission.title)
             attrs.totalStar = gameMapMission.totalStar
-            attrs.currentStar = gameScene.playerChallenges.missionStar(id)
-            attrs.mission = this@GameMission
+            attrs.mission = this@DefaultGameMission
             attrs.onClickFunction = {
-                this@GameMission.onClick()
+                this@DefaultGameMission.onClick()
             }
         }
     }

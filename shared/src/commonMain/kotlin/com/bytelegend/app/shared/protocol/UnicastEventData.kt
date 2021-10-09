@@ -54,6 +54,8 @@ class ReputationUpdateEventData(
 ) : UnicastEventData, NumberChange
 
 data class ChallengeUpdateEventData(
+    // Is the challenge accomplished before this change?
+    val wasAccomplished: Boolean,
     val change: PlayerChallengeAnswer,
     val newValue: PlayerChallenge,
 ) : UnicastEventData {

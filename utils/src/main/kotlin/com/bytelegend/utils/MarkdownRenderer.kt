@@ -1,12 +1,12 @@
 /*
  * Copyright 2021 ByteLegend Technologies and the original author or authors.
- * 
+ *
  * Licensed under the GNU Affero General Public License v3.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      https://github.com/ByteLegend/ByteLegend/blob/master/LICENSE
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@ package com.bytelegend.utils
 
 import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.i18n.LocalizedTextFormat
+import org.commonmark.ext.task.list.items.TaskListItemsExtension
 import org.commonmark.node.Code
 import org.commonmark.node.Link
 import org.commonmark.node.Node
@@ -31,10 +32,14 @@ interface MarkdownRenderer {
 object CommonmarkMarkdownRenderer : MarkdownRenderer {
     override fun render(localizedText: LocalizedText): LocalizedText {
         if (localizedText.format == LocalizedTextFormat.MARKDOWN) {
-            val parser: Parser = Parser.builder().build()
+            val extensions = listOf(TaskListItemsExtension.create())
+            val parser: Parser = Parser.builder()
+                .extensions(extensions)
+                .build()
             val renderer: HtmlRenderer = HtmlRenderer.builder()
                 .attributeProviderFactory { NoTranslateClassAttributeProvider }
                 .attributeProviderFactory { TargetBlankLinkProvider }
+                .extensions(extensions)
                 .build()
 
             return LocalizedText(

@@ -23,7 +23,7 @@ import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.GridCoordinateAware
-import com.bytelegend.client.app.engine.GameMission
+import com.bytelegend.client.app.engine.DefaultGameMission
 import com.bytelegend.client.app.obj.htmlToText
 import com.bytelegend.client.app.ui.minimapGraphSeries
 import com.bytelegend.client.utils.JSArrayBackedList
@@ -345,7 +345,7 @@ val ITEM_STYLE: dynamic = JSON.parse(
 fun GameScene.getRoadmapMissionGraphSeries(showMissionTitles: Boolean): dynamic {
     val nodes: dynamic = js("[]")
     val edges: dynamic = js("[]")
-    objects.getByRole<GameMission>(GameObjectRole.Mission).forEach { mission ->
+    objects.getByRole<DefaultGameMission>(GameObjectRole.Mission).forEach { mission ->
         val coordinate = mission.gridCoordinate * map.tileSize
         val labelOptions: dynamic = labelOptions(
             showMissionTitles,

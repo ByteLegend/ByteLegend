@@ -18,7 +18,7 @@ package com.bytelegend.client.app.ui.mission
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
-import com.bytelegend.client.app.engine.GameMission
+import com.bytelegend.client.app.engine.DefaultGameMission
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
@@ -29,16 +29,26 @@ import react.setState
 
 interface MissionTitleProps : BouncingTitleProps {
     var totalStar: Int
-    var currentStar: Int
-    var mission: GameMission
+    var mission: DefaultGameMission
 }
 
-class MissionTitle : AbstractBouncingTitleWidget<MissionTitleProps>() {
+interface MissionTitleState : BouncingTitleState {
+    var currentStar: Int
+}
+
+class MissionTitle(props: MissionTitleProps) : AbstractBouncingTitleWidget<MissionTitleProps, MissionTitleState>(props) {
     private val onMissionRepaintListener: EventListener<ChallengeUpdateEventData> = this::onMissionRepaint
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
-        // Refresh upon mission update event
-        setState {}
+        setState {
+            currentStar = props.gameScene.playerChallenges.missionStar(props.mission.id)
+        }
+    }
+
+    override fun MissionTitleState.init(props: MissionTitleProps) {
+        hovered = false
+        currentStar = props.gameScene.playerChallenges.missionStar(props.mission.id)
     }
 
     override fun RBuilder.render() {
@@ -50,7 +60,8 @@ class MissionTitle : AbstractBouncingTitleWidget<MissionTitleProps>() {
                 div {
                     child(TitleStarCounter::class) {
                         attrs.total = props.totalStar
-                        attrs.current = props.currentStar
+                        attrs.current = state.currentStar
+                        attrs.starSize = 24
                     }
 
                     child(MissionTitleAnswers::class) {
@@ -62,8 +73,8 @@ class MissionTitle : AbstractBouncingTitleWidget<MissionTitleProps>() {
         }
     }
 
-    override fun shouldComponentUpdate(nextProps: MissionTitleProps, nextState: BouncingTitleState): Boolean {
-        return super.shouldComponentUpdate(nextProps, nextState) || props.currentStar != nextProps.currentStar
+    override fun shouldComponentUpdate(nextProps: MissionTitleProps, nextState: MissionTitleState): Boolean {
+        return super.shouldComponentUpdate(nextProps, nextState) || state.currentStar != nextState.currentStar
     }
 
     override fun componentDidMount() {

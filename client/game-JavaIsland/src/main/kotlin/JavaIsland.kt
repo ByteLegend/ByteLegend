@@ -16,6 +16,7 @@
 import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.FramePlayingAnimation
+import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
@@ -36,7 +37,10 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.mapEntranceId
+import kotlinx.browser.document
 import kotlinx.browser.window
+import org.w3c.dom.Element
+import org.w3c.dom.get
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
 const val NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE = "OldManGotCoffee"
@@ -45,6 +49,7 @@ const val STAR_BYTELEGEND_MISSION_ID = "star-bytelegend"
 const val STAR_BYTELEGEND_CHALLENGE_ID = "star-bytelegend-challenge"
 
 private const val SHOW_AD_MODAL = "show.ad.modal"
+
 fun main() {
     val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
 
@@ -64,6 +69,9 @@ fun main() {
 
             javaCloneRunDoor("clone-and-run-java-project", "clone-and-run-java-project-challenge")
             javaCloneRunDoor("clone-and-switch-branch", "clone-and-switch-branch-challenge")
+            firstBugEvil()
+            basicStructureStone()
+            commentDungeonNoticeboard()
 
             billboard()
             // #28a745
@@ -76,6 +84,79 @@ fun main() {
             castleDoor()
             castleNoticeboard()
         }
+    }
+}
+
+fun GameScene.commentDungeonNoticeboard() = objects {
+    dynamicSprite {
+        id = "CommentDungeonNoticeboard"
+        gridCoordinate = objects.getPointById("CommentDungeonNoticeboard-point")
+        onClick = {
+            gameRuntime.modalController.showModal(gameRuntime.i("WhatIsDungeonExplanation"), gameRuntime.i("WhatIsDungeon"))
+        }
+    }
+}
+
+/**
+ * Upon initialization and mission repaint events,
+ * update the checkboxes and mission animation/blockers.
+ */
+fun GameScriptHelpers.updateCheckboxes() {
+    val textId = "JavaBasicStructure-challenge-text"
+    val html = gameScene.gameRuntime.i(textId)
+    val tmp = document.createElement("div")
+    tmp.innerHTML = html
+
+    val accomplishedMissionBefore = tmp.querySelectorAll("li>input[checked]").length
+    listOf("import-third-party-package", "import-class", "create-a-new-class").forEach {
+        if (gameScene.playerChallenges.missionAccomplished(it)) {
+            val mission = gameScene.objects.getById<GameMission>(it)
+            val title = gameScene.gameRuntime.i(mission.gameMapMission.title)
+            val list = tmp.querySelectorAll("li")
+            for (i in 0 until list.length) {
+                val li = list[i]
+                if (li?.textContent?.trim() == title) {
+                    li.firstChild?.unsafeCast<Element>()?.setAttribute("checked", "")
+                    break
+                }
+            }
+        }
+    }
+
+    gameScene.gameRuntime.putText(textId, tmp.innerHTML)
+
+    val accomplishedMissionAfter = tmp.querySelectorAll("li>input[checked]").length
+    val missionStone = gameScene.objects.getById<GameMission>("JavaBasicStructure")
+    if (accomplishedMissionAfter == 3) {
+        missionStone.animation = StaticFrame(1)
+    } else {
+        missionStone.animation = StaticFrame(0)
+    }
+    if (accomplishedMissionBefore < 3 && accomplishedMissionAfter == 3) {
+        removeMissionBlocker(missionStone)
+    }
+}
+
+fun GameScene.basicStructureStone() {
+    val helpers = GameScriptHelpers(this)
+    helpers.updateCheckboxes()
+    listOf("import-third-party-package", "import-class", "create-a-new-class").forEach {
+        val mission = objects.getById<DynamicSprite>(it)
+        helpers.addMissionRepaintCallback(mission) {
+            helpers.updateCheckboxes()
+        }
+    }
+}
+
+fun GameScene.firstBugEvil() = objects {
+    val mission = objects.getById<DynamicSprite>("fix-simple-add")
+    val helpers = GameScriptHelpers(this@firstBugEvil)
+    helpers.configureAnimation(mission, 3)
+    helpers.addMissionRepaintCallback(mission) {
+        if (!it.wasAccomplished && it.newValue.accomplished) {
+            helpers.removeMissionBlocker(mission)
+        }
+        helpers.configureAnimation(mission, 3)
     }
 }
 
@@ -109,9 +190,14 @@ fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
 }
 
 fun GameScene.configureMissionTowers() {
-    objects.getByRole<DynamicSprite>(GameObjectRole.Mission).forEach {
-        if (it.mapDynamicSprite.id == "MissionTower") {
-            it.animation = it.mapDynamicSprite.animationWithFixedInterval(500)
+    val helpers = GameScriptHelpers(this@configureMissionTowers)
+
+    objects.getByRole<DynamicSprite>(GameObjectRole.Mission).forEach { mission ->
+        if (mission.mapDynamicSprite.id == "MissionTower") {
+            mission.animation = mission.mapDynamicSprite.animationWithFixedInterval(500)
+            helpers.addMissionRepaintCallback(mission) {
+                helpers.configureAnimation(mission, 2)
+            }
         }
     }
 }

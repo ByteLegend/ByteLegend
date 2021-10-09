@@ -27,6 +27,7 @@ import react.dom.span
 interface TitleStarCounterProps : Props {
     var total: Int
     var current: Int
+    var starSize: Int
 }
 
 class TitleStarCounter : RComponent<TitleStarCounterProps, State>() {
@@ -36,13 +37,13 @@ class TitleStarCounter : RComponent<TitleStarCounterProps, State>() {
                 attrs.classes = jsObjectBackedSetOf("map-title-text")
                 +"${props.current}/${props.total}"
             }
-            icon(24, jsObjectBackedSetOf("mission-star-icon"))
+            icon(props.starSize, jsObjectBackedSetOf("mission-star-icon"))
         } else {
             repeat(props.current) {
-                icon(24, jsObjectBackedSetOf("mission-star-icon"))
+                icon(props.starSize, jsObjectBackedSetOf("mission-star-icon"))
             }
             repeat(props.total - props.current) {
-                icon(24, jsObjectBackedSetOf("mission-hollow-star-icon"))
+                icon(props.starSize, jsObjectBackedSetOf("mission-hollow-star-icon"))
             }
         }
     }

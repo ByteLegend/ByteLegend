@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bytelegend.client.app.ui.mission
+@file:JsModule("rehype-external-links")
+@file:JsNonModule
 
-import react.RBuilder
+package com.bytelegend.client.app.external
 
-class BouncingTitleWidget(props: BouncingTitleProps) : AbstractBouncingTitleWidget<BouncingTitleProps, BouncingTitleState>(props) {
-    override fun RBuilder.render() {
-        renderTitle {
-        }
-    }
-}
+@JsName("default")
+external val RehypeExternalLinks: Any

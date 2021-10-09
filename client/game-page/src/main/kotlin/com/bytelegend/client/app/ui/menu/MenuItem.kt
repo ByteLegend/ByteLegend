@@ -192,6 +192,7 @@ class Menu : GameUIComponent<MenuProps, State>() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onShowAdModalEvent(n: Nothing) {
         game.modalController.show {
             BootstrapModalHeader {

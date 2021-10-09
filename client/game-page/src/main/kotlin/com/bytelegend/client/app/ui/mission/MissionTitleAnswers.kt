@@ -22,7 +22,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSplitButton
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
-import com.bytelegend.client.app.engine.GameMission
+import com.bytelegend.client.app.engine.DefaultGameMission
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.Layer
 import kotlinext.js.jsObject
@@ -39,7 +39,7 @@ import react.setState
 interface MissionTitleAnswersState : State
 
 interface MissionTitleAnswerProps : GameProps {
-    var mission: GameMission
+    var mission: DefaultGameMission
 }
 
 class MissionTitleAnswers : RComponent<MissionTitleAnswerProps, MissionTitleAnswersState>() {

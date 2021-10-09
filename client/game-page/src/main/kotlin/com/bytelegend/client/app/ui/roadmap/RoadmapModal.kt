@@ -354,6 +354,7 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onMouseUpEvent(event: MouseEvent) {
         setState {
             cursor = "grab"

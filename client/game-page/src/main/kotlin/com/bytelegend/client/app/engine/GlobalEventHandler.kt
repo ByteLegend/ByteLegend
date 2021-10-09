@@ -112,7 +112,7 @@ class GlobalEventHandler(
             return gameContainerCenter
         }
 
-        val mission = scene.objects.getByIdOrNull<GameMission>(missionId)?.gameMapMission ?: return gameContainerCenter
+        val mission = scene.objects.getByIdOrNull<DefaultGameMission>(missionId)?.gameMapMission ?: return gameContainerCenter
         val missionCoordinateInGameContainer: PixelCoordinate = canvasState.calculateCoordinateInGameContainer(mission.gridCoordinate)
         return if (missionCoordinateInGameContainer.isOutOfGameContainer(canvasState.gameContainerSize))
             gameContainerCenter

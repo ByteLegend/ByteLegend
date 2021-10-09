@@ -53,6 +53,7 @@ class ChallengeTabData(
         ChallengeType.Star -> MissionTabType.StarChallenge
         ChallengeType.PullRequest -> MissionTabType.PullRequestChallenge
         ChallengeType.Question -> MissionTabType.QuestionChallenge
+        ChallengeType.TextContent -> MissionTabType.TextContentChallenge
         else -> throw IllegalArgumentException(data.type.toString())
     }
     override val title: String = "MissionChallenge"
@@ -83,6 +84,11 @@ enum class MissionTabType {
     PullRequestChallenge,
 
     HeroNoticeboardChallenge,
+
+    /**
+     * A tab with some texts only
+     */
+    TextContentChallenge,
 
     /**
      * A tab displaying the tutorials
