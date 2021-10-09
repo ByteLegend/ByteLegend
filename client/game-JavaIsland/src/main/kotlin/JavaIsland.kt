@@ -25,7 +25,6 @@ import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.StaticFrame
-import com.bytelegend.app.client.api.animationWithFixedInterval
 import com.bytelegend.app.client.api.configureBookSprite
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
@@ -197,7 +196,7 @@ fun GameScene.configureMissionTowers() {
 
     objects.getByRole<DynamicSprite>(GameObjectRole.Mission).forEach { mission ->
         if (mission.mapDynamicSprite.id == "MissionTower") {
-            mission.animation = mission.mapDynamicSprite.animationWithFixedInterval(500)
+            helpers.configureAnimation(mission, 2)
             helpers.addMissionRepaintCallback(mission) {
                 helpers.configureAnimation(mission, 2)
             }
