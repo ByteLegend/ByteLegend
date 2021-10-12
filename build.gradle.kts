@@ -21,7 +21,6 @@ plugins {
     kotlin("js") apply false
     kotlin("multiplatform") apply false
     kotlin("plugin.serialization") apply false
-    id("build-scan")
     id("setupBuildVersion")
     id("dependencies")
 }

@@ -21,6 +21,6 @@ jobs:
             ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
             ${{ runner.os }}-
       - name: Check and Release
-        run: ./gradlew :server:github-release:uploadCodeMergerToGitHubRelease -DgitHubToken=${{ secrets.BYTELEGENDBOT_TOKEN }} --scan
+        run: ./gradlew :server:github-release:uploadCodeMergerToGitHubRelease -DgitHubToken=${{ secrets.BYTELEGENDBOT_TOKEN }} -DagreePublicBuildScanTermOfService=yes
 
 

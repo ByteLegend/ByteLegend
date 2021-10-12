@@ -41,9 +41,9 @@ jobs:
             ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
             ${{ runner.os }}-
       - name: Ktlint
-        run: ./gradlew ktlint --scan
+        run: ./gradlew ktlint -DagreePublicBuildScanTermOfService=yes
       - name: Build with Gradle
-        run: ./gradlew check -x server:app:browserTest --scan
+        run: ./gradlew check -x server:app:browserTest -DagreePublicBuildScanTermOfService=yes
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
@@ -73,7 +73,7 @@ jobs:
             ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
             ${{ runner.os }}-
       - name: Build with Gradle
-        run: ./gradlew server:app:browserTest --scan
+        run: ./gradlew server:app:browserTest -DagreePublicBuildScanTermOfService=yes
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
@@ -103,9 +103,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-
       - name: Ktlint
-        run: ./gradlew ktlint --scan
+        run: ./gradlew ktlint -DagreePublicBuildScanTermOfService=yes
       - name: Build with Gradle
-        run: ./gradlew ktlint server-opensource:check utils:checkLicenses --scan
+        run: ./gradlew ktlint server-opensource:check utils:checkLicenses -DagreePublicBuildScanTermOfService=yes
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
