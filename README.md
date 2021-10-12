@@ -36,7 +36,14 @@
   - 从第一天起，我们就支持地球上的**所有语言**，您只需要点击[字节传说](https://bytelegend.com)右上角的切换语言按钮即可。
   - 如前所述，你可以对[字节传说](https://bytelegend.com)中能看到的任何东西做出修改，包括修正不佳的翻译或者添加一种新语言。
   - 点击[这里](https://github.com/ByteLegend/ByteLegend/blob/master/docs/zh_hans/i18n.md)查看如何增加一种语言或者帮助我们改进翻译的质量。  
-    
+
+## 加入玩家QQ群
+
+我们的玩家QQ群是`788942934`，但是请注意您需要在登录游戏之后打开右下角的`关于&联系`菜单获取入群密码后方可加入。入群密码各不相同，且只能
+使用一次，请勿泄漏给他人。
+
+![1](https://raw.githubusercontent.com/ByteLegend/ByteLegend/master/docs/images/qq-group.png)
+
 ## 致谢
 
 没有社区和开源世界的帮助，这个游戏不可能存在。我们唯一能做的就是让它免费开源，从而使更多人受益。
