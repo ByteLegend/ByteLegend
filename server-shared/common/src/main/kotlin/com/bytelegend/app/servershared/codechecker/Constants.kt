@@ -16,4 +16,7 @@
 
 package com.bytelegend.app.servershared.codechecker
 
+@Deprecated("Use INTERNAL_API_SECRET_HEADER_NAME")
 const val CODE_CHECKER_SECRET_HEADER_NAME = "Code-Checker-Secret"
+
+const val INTERNAL_API_SECRET_HEADER_NAME = "Internal-Api-Secret"

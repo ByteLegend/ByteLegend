@@ -22,10 +22,12 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
+import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
@@ -222,24 +224,16 @@ class Menu : GameUIComponent<MenuProps, State>() {
             }
 
             BootstrapModalBody {
-                h5 { +i("AboutByteLegendTitle") }
-                p {
-                    unsafeSpan(i("AboutByteLegendParagraph"))
-                }
+                unsafeDiv(i("AboutByteLegendBody"))
 
-                h5 { +i("ReportBugFeatureRequestTitle") }
-                p {
-                    unsafeSpan(i("ReportBugFeatureRequestParagraph"))
-                }
+                if (!game.heroPlayer.isAnonymous && game.locale == Locale.ZH_HANS) {
+                    h5 {
+                        +"加入QQ群"
+                    }
 
-                h5 { +i("DiscussHowToPlayTitle") }
-                p {
-                    unsafeSpan(i("DiscussHowToPlayParagraph"))
-                }
-
-                h5 { +i("ContactUsTitle") }
-                p {
-                    unsafeSpan(i("ContactUsParagraph"))
+                    unsafeDiv(
+                        "<p>欢迎加入玩家QQ群788942934，您的个人入群密码为<span style='color:red;font-weight: bold;'>${game.joinQQGroupSecret}</span>，请勿透露给他人。</p>"
+                    )
                 }
             }
         }

@@ -37,11 +37,16 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 // | gh#alice     | PullRequestProblem#github.com/ByteLegendQuest/remember-brave-people/1#1a2b3c   | problems: List<PullRequestProblem>                           |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+// | gh#alice     | AccountBinding               | qq: 12345  |
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+// | qq#12345     | AccountBinding               | gh: alice  |
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 const val PLAYER_SORT_KEY = "P"
 const val PLAYER_CHALLENGE_SORT_KEY = "PC"
 const val HEAD_SHA_SORT_KEY = "H"
 const val PLAYER_COIN_CHANGE_HISTORY_KEY = "CoinChangeHistory"
 const val PULL_REQUEST_PROBLEM = "PullRequestProblem"
+const val ACCOUNT_BINDING = "AccountBinding"
 
 interface StoredInPlayerTable {
     val pk: String

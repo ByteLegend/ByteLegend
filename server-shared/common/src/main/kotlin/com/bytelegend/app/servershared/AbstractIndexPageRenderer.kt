@@ -32,7 +32,8 @@ abstract class AbstractIndexPageRenderer(
         player: Player,
         locale: Locale,
         RRBD: String,
-        serverLocation: ServerLocation
+        serverLocation: ServerLocation,
+        joinQQGroupSecret: String
     ): String {
         val enjoyProgrammingText = rrbdResourceProvider.getI18nText("EnjoyProgramming", locale)
         if (player.locale == null) {
@@ -51,7 +52,8 @@ abstract class AbstractIndexPageRenderer(
                     enjoyProgrammingText,
                     player,
                     rrbdResourceProvider.mapDefinitions,
-                    emptyList()
+                    emptyList(),
+                    joinQQGroupSecret
                 )
             )
         )

@@ -105,6 +105,7 @@ class Game(
     override val hero: Character?
         get() = _hero
     override val heroPlayer: Player by di.instance()
+    val joinQQGroupSecret = gameInitData.joinQQGroupSecret
     var onlineNumber: Int = gameInitData.onlineCount
 
     val mapHierarchy: List<GameMapDefinition> = gameInitData.maps

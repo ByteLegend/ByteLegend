@@ -313,6 +313,7 @@ fun toGameInitData(jsonObject: dynamic) = GameInitData(
     toPlayer(jsonObject.player),
     toTypedList(jsonObject.maps, ::toGameMapDefinition),
     toTypedList(jsonObject.localizedTexts, ::toLocalizedText),
+    jsonObject.joinQQGroupSecret
 )
 
 fun toLocalizedText(jsonObject: dynamic) = LocalizedText(

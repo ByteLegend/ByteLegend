@@ -85,9 +85,9 @@ abstract class AbstractByteLegendIntegrationTest {
     protected fun post(uri: String, body: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {
         val request = HttpRequest.newBuilder()
             .apply {
-                headers.forEach { key, value -> header(key, value) }
+                headers.forEach { (key, value) -> header(key, value) }
             }
-            .uri(URI.create(uri))
+            .uri(URI.create(if (uri.startsWith("/")) "http://localhost:$gameServerPort$uri" else uri))
             .POST(HttpRequest.BodyPublishers.ofString(body))
             .build()
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString())
