@@ -18,7 +18,7 @@
 package com.bytelegend.app.testfixtures
 
 import com.bytelegend.app.servershared.DefaultJsonMapper
-import com.bytelegend.app.servershared.codechecker.CODE_CHECKER_SECRET_HEADER_NAME
+import com.bytelegend.app.servershared.codechecker.INTERNAL_API_SECRET_HEADER_NAME
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -77,8 +77,8 @@ abstract class AbstractByteLegendIntegrationTest {
     protected fun sendProblemsFromResource(resource: String) {
         val json = javaClass.getResourceAsFile(resource).readText()
         post(
-            "http://localhost:$gameServerPort/code-checker/add-problems", json,
-            mapOf("Content-Type" to "application/json", CODE_CHECKER_SECRET_HEADER_NAME to "dummy")
+            "http://localhost:$gameServerPort/internal-api/add-problems", json,
+            mapOf("Content-Type" to "application/json", INTERNAL_API_SECRET_HEADER_NAME to "dummy")
         ).assert2XXStatusCode()
     }
 
