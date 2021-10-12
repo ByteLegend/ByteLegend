@@ -232,7 +232,9 @@ class Menu : GameUIComponent<MenuProps, State>() {
                     }
 
                     unsafeDiv(
-                        "<p>欢迎加入玩家QQ群788942934，您的个人入群密码为<span style='color:red;font-weight: bold;'>${game.joinQQGroupSecret}</span>，请勿透露给他人。</p>"
+                        """<p>欢迎加入玩家QQ群788942934，您的个人入群密码为<span style='color:red;font-weight: bold;'>${game.joinQQGroupSecret}</span>，请勿透露给他人。
+                            <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=C0UVtpyyFqkAQp6bRfAiE0caJucOSzXQ&jump_from=webapi"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="字节传说ByteLegend" title="字节传说ByteLegend"></a>
+                            </p>"""
                     )
                 }
             }
