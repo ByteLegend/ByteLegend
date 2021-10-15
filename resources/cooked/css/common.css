@@ -811,6 +811,14 @@ blockquote {
     border-left: 0.5em darkgray solid;
 }
 
+.markdown-body pre {
+    background-color: #f6f8fa;
+}
+
+.markdown-body pre code {
+    background-color: #f6f8fa;
+}
+
 .markdown-body code {
     background-color: rgba(175, 184, 193, 0.2);
     border-radius: 5px;
@@ -820,3 +828,4 @@ blockquote {
 #starfly-canvas {
     pointer-events: none;
 }
+

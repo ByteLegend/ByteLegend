@@ -78,6 +78,30 @@
                  "width":0,
                  "x":175.586153648179,
                  "y":424.635182087247
+                }, 
+                {
+                 "gid":2034,
+                 "height":32,
+                 "id":4,
+                 "name":"java-comment",
+                 "rotation":0,
+                 "type":"GameMapMission",
+                 "visible":true,
+                 "width":32,
+                 "x":68.6666666666667,
+                 "y":268
+                }, 
+                {
+                 "gid":2034,
+                 "height":32,
+                 "id":5,
+                 "name":"java-javadoc",
+                 "rotation":0,
+                 "type":"GameMapMission",
+                 "visible":true,
+                 "width":32,
+                 "x":261.333333333333,
+                 "y":102.666666666666
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -96,9 +120,31 @@
          "width":11,
          "x":0,
          "y":0
+        }, 
+        {
+         "id":7,
+         "layers":[
+                {
+                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2034, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 "height":16,
+                 "id":8,
+                 "name":"Chest",
+                 "opacity":1,
+                 "type":"tilelayer",
+                 "visible":true,
+                 "width":11,
+                 "x":0,
+                 "y":0
+                }],
+         "name":"DynamicSprites",
+         "opacity":1,
+         "type":"group",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":4,
+ "nextlayerid":9,
+ "nextobjectid":6,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",

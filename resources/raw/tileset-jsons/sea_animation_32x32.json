@@ -46,6 +46,26 @@
          "animation":[
                 {
                  "duration":500,
+                 "tileid":13
+                }, 
+                {
+                 "duration":500,
+                 "tileid":33
+                }, 
+                {
+                 "duration":500,
+                 "tileid":53
+                }, 
+                {
+                 "duration":500,
+                 "tileid":73
+                }],
+         "id":13
+        }, 
+        {
+         "animation":[
+                {
+                 "duration":500,
                  "tileid":5
                 }, 
                 {
