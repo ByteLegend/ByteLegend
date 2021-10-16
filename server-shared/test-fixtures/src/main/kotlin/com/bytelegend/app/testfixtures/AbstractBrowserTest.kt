@@ -82,15 +82,33 @@ abstract class AbstractByteLegendIntegrationTest {
         ).assert2XXStatusCode()
     }
 
-    protected fun post(uri: String, body: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {
+    protected fun sendHttpRequest(
+        uri: String,
+        headers: Map<String, String> = emptyMap(),
+        requestConfiguration: HttpRequest.Builder.() -> Unit
+    ): HttpResponse<String> {
         val request = HttpRequest.newBuilder()
             .apply {
                 headers.forEach { (key, value) -> header(key, value) }
             }
             .uri(URI.create(if (uri.startsWith("/")) "http://localhost:$gameServerPort$uri" else uri))
-            .POST(HttpRequest.BodyPublishers.ofString(body))
+            .apply {
+                requestConfiguration(this)
+            }
             .build()
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+    }
+
+    protected fun delete(uri: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {
+        return sendHttpRequest(uri, headers) {
+            DELETE()
+        }
+    }
+
+    protected fun post(uri: String, body: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {
+        return sendHttpRequest(uri, headers) {
+            POST(HttpRequest.BodyPublishers.ofString(body))
+        }
     }
 }
 
