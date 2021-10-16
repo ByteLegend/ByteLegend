@@ -45,6 +45,7 @@ const val PLAYER_SORT_KEY = "P"
 const val PLAYER_CHALLENGE_SORT_KEY = "PC"
 const val HEAD_SHA_SORT_KEY = "H"
 const val PLAYER_COIN_CHANGE_HISTORY_KEY = "CoinChangeHistory"
+const val PLAYER_REPUTATION_CHANGE_HISTORY_KEY = "ReputationChangeHistory"
 const val PULL_REQUEST_PROBLEM = "PullRequestProblem"
 const val ACCOUNT_BINDING = "AccountBinding"
 
