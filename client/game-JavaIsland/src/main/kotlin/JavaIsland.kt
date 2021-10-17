@@ -30,6 +30,7 @@ import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GIT_ISLAND
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.INVITER_ID_STATE
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
 import com.bytelegend.app.shared.PixelCoordinate
@@ -535,6 +536,9 @@ fun GameScene.newbieVillageSailor() = objects {
 fun GameScene.invitationCodeBox() {
     objects {
         invitationCodeBox(objects.getPointById("InvitationBox-point"))
+    }
+    if (gameRuntime.heroPlayer.states.containsKey(INVITER_ID_STATE)) {
+        objects.getById<DynamicSprite>("invitation-code-box").animation = StaticFrame(3)
     }
 }
 

@@ -35,9 +35,11 @@ interface CodeBlockProps : Props {
     var lines: List<String>
 }
 
-fun RBuilder.codeBlock(block: RElementBuilder<CodeBlockProps>.() -> Unit = {}) {
+fun RBuilder.codeBlock(withLineNumber: Boolean = true, block: RElementBuilder<CodeBlockProps>.() -> Unit = {}) {
     child(PrismCodeBlock::class) {
-        attrs.pluginClassName = "line-numbers"
+        if (withLineNumber) {
+            attrs.pluginClassName = "line-numbers"
+        }
         block()
     }
 }

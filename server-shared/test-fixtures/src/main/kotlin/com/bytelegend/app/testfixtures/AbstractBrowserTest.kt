@@ -99,10 +99,14 @@ abstract class AbstractByteLegendIntegrationTest {
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString())
     }
 
+    protected fun get(uri: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {
+        return sendHttpRequest(uri, headers) { GET() }
+    }
+
+    protected fun <T> HttpResponse<String>.bodyAs(klass: Class<T>): T = defaultJsonMapper.fromJson(body(), klass)
+
     protected fun delete(uri: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {
-        return sendHttpRequest(uri, headers) {
-            DELETE()
-        }
+        return sendHttpRequest(uri, headers) { DELETE() }
     }
 
     protected fun post(uri: String, body: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {

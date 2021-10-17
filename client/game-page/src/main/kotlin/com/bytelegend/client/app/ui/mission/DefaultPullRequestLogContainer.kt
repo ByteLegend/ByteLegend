@@ -25,15 +25,12 @@ import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.logStreamEvent
 import com.bytelegend.client.app.engine.DefaultGameMission
-import com.bytelegend.client.app.web.checkStatusCode
+import com.bytelegend.client.app.web.get
 import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.JSObjectBackedMap
-import kotlinx.browser.window
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.await
-import org.w3c.fetch.Response
 
 class DefaultPullRequestLogContainer(
     private val gameScene: GameScene
@@ -79,11 +76,7 @@ class DefaultPullRequestLogContainer(
     }
 
     private suspend fun download(repo: String, sha: String, checkRunId: String): String {
-        return window.fetch("/game/api/log?repo=$repo&sha=$sha&checkRunId=$checkRunId")
-            .await()
-            .apply(Response::checkStatusCode)
-            .text()
-            .await()
+        return get("/game/api/log?repo=$repo&sha=$sha&checkRunId=$checkRunId")
     }
 
     inner class LiveLog(

@@ -16,21 +16,79 @@
 
 package com.bytelegend.client.app.ui.invitationcode
 
+import com.bytelegend.app.client.api.Character
+import com.bytelegend.app.client.api.DynamicSprite
+import com.bytelegend.app.client.api.HERO_ID
+import com.bytelegend.app.client.api.StaticFrame
+import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapFormControl
 import com.bytelegend.app.client.ui.bootstrap.BootstrapInputGroup
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
+import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
+import com.bytelegend.app.shared.COIN_REWARD_PER_CODE
+import com.bytelegend.app.shared.INVITER_ID_STATE
+import com.bytelegend.app.shared.InvitationInformation
+import com.bytelegend.app.shared.MAX_COIN_REWARD_PER_CODE
+import com.bytelegend.client.app.external.codeBlock
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.unsafeDiv
+import com.bytelegend.client.app.ui.unsafeSpan
+import com.bytelegend.client.app.web.HttpRequestException
+import com.bytelegend.client.app.web.get
+import com.bytelegend.client.app.web.post
+import com.bytelegend.client.utils.toInvitationInformation
+import kotlinext.js.jsObject
+import kotlinx.browser.document
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.get
 import react.RBuilder
 import react.RComponent
 import react.State
+import react.dom.h4
 import react.dom.p
+import react.setState
 
-private const val INVITATION_CODE_REWARDED = "INVITATION_CODE_REWARDED"
+interface InvitationCodeModalState : State {
+    var inviterId: String?
+    var invitationInformation: InvitationInformation?
+    var errorMessage: String?
+    var loading: Boolean
+}
 
-class InvitationCodeModal : RComponent<GameProps, State>() {
+interface InvitationCodeModalProps : GameProps
+
+/**
+ * If the player hasn't opened this box yet, just display an input box;
+ * if the player has already opened the box, send an AJAX to render the modal
+ * because we need to know how much reward the player got
+ */
+class InvitationCodeModal(props: InvitationCodeModalProps) : RComponent<GameProps, InvitationCodeModalState>(props) {
+    override fun InvitationCodeModalState.init() {
+        inviterId = props.game.heroPlayer.states[INVITER_ID_STATE]
+        invitationInformation = null
+        loading = false
+    }
+
+    override fun componentDidMount() {
+        if (!state.loading && props.game.heroPlayer.states.containsKey(INVITER_ID_STATE)) {
+            setState {
+                loading = true
+            }
+            runCatchingHttpException {
+                val newInformation = getInvitationInformation()
+                setState {
+                    loading = false
+                    invitationInformation = newInformation
+                }
+            }
+        }
+    }
+
     override fun RBuilder.render() {
         BootstrapModalHeader {
             attrs.closeButton = true
@@ -39,27 +97,136 @@ class InvitationCodeModal : RComponent<GameProps, State>() {
             }
         }
         BootstrapModalBody {
+            attrs.className = "text-center"
             if (props.game.heroPlayer.isAnonymous) {
-                +""
-            } else if (props.game.heroPlayer.states.containsKey(INVITATION_CODE_REWARDED)) {
+                h4 {
+                    +props.game.i("YouAreNotLoggedIn")
+                }
                 p {
-                    +"You have already got the reward from @xxx's invitation code"
-                    +"You invitation code is:"
-                    +"XXXXXXX"
-                    +"Feel free to share this code in any forums, SNS."
+                    unsafeSpan(props.game.i("ClickHereToLogin"))
+                }
+            } else if (state.loading) {
+                BootstrapSpinner {
+                    attrs.animation = "border"
+                }
+            } else if (props.game.heroPlayer.states.containsKey(INVITER_ID_STATE)) {
+                if (state.invitationInformation != null) {
+                    unsafeDiv(
+                        props.game.i(
+                            "YouAreInvitedBy",
+                            state.invitationInformation!!.invitationCode!!,
+                            COIN_REWARD_PER_CODE.toString(),
+                            state.invitationInformation!!.rewardedCoin.toString(),
+                            MAX_COIN_REWARD_PER_CODE.toString(),
+                            state.invitationInformation?.inviterId?.substringAfter("#")!!
+                        )
+                    )
+                    codeBlock(withLineNumber = false) {
+                        attrs.lines = listOf(
+                            props.game.i(
+                                "JoinMeWithInvitationCode",
+                                state.invitationInformation!!.invitationCode!!,
+                                invitationBoxPoint().toHumanReadableCoordinate().toString(),
+                                COIN_REWARD_PER_CODE.toString()
+                            )
+                        )
+                        attrs.language = "none"
+                    }
                 }
             } else {
                 p {
-                    +props.game.i("InvitationCodeBoxDescription")
+                    +props.game.i("InvitationCodeBoxDescription", COIN_REWARD_PER_CODE.toString())
+                }
+                val disabled = isDisabled()
+                if (disabled) {
+                    BootstrapAlert {
+                        attrs.show = true
+                        attrs.variant = "warning"
+                        +props.game.i("YouMustBeAdjacentToOpenTheBox")
+                    }
                 }
                 BootstrapInputGroup {
                     BootstrapFormControl {
+                        attrs.disabled = disabled
+                        attrs.className = "invitation-code-input"
                     }
                     BootstrapButton {
+                        attrs.className = "invitation-code-ok-button"
                         +"OK"
+                        attrs.disabled = disabled
+                        attrs.onClick = {
+                            useInvitationCode()
+                        }
+                    }
+                }
+            }
+
+            if (state.errorMessage != null) {
+                BootstrapAlert {
+                    attrs.show = true
+                    attrs.variant = "danger"
+                    +state.errorMessage!!
+                }
+            }
+        }
+    }
+
+    private fun isDisabled(): Boolean {
+        val activeScene = props.game.activeScene
+        val heroInScene = activeScene.objects.getByIdOrNull<Character>(HERO_ID) ?: return true
+        return heroInScene.gridCoordinate.manhattanDistanceTo(invitationBoxPoint()) > 2
+    }
+
+    private fun invitationBoxPoint() = props.game.activeScene.objects.getPointById("InvitationBox-point")
+
+    private fun useInvitationCode() {
+        val code = (document.getElementsByClassName("invitation-code-input")[0]!! as HTMLInputElement).value
+        if (code.isBlank() || isDisabled()) {
+            return
+        }
+        setState {
+            loading = true
+            errorMessage = null
+        }
+        runCatchingHttpException {
+            val postResult = postInvitationInformation(code)
+            if (postResult.inviterId != null) {
+                props.game.heroPlayer.states[INVITER_ID_STATE] = postResult.inviterId!!
+            }
+            // Open the box
+            props.game.activeScene.objects.getById<DynamicSprite>("invitation-code-box").animation = StaticFrame(3)
+            setState {
+                invitationInformation = postResult
+                loading = false
+            }
+        }
+    }
+
+    private fun runCatchingHttpException(block: suspend () -> Unit) {
+        GlobalScope.launch {
+            try {
+                block()
+            } catch (e: HttpRequestException) {
+                setState {
+                    loading = false
+                    errorMessage = when (e.statusCode) {
+                        400 -> "Invalid input!"
+                        404 -> "Invalid invitation code!"
+                        409 -> "You are already invited!"
+                        else -> e.message
                     }
                 }
             }
         }
+    }
+
+    private suspend fun postInvitationInformation(code: String): InvitationInformation {
+        return toInvitationInformation(JSON.parse(post("/game/api/invitation", JSON.stringify(jsObject<dynamic> {
+            this.invitationCode = code
+        }))))
+    }
+
+    private suspend fun getInvitationInformation(): InvitationInformation {
+        return toInvitationInformation(JSON.parse(get("/game/api/invitation")))
     }
 }

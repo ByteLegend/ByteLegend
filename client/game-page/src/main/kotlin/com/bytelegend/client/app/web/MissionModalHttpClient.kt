@@ -20,9 +20,8 @@ import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
-import com.bytelegend.client.utils.JSObjectBackedMap
-import com.bytelegend.client.utils.toMissionModalData
 import com.bytelegend.client.utils.toChallengeUpdateEventData
+import com.bytelegend.client.utils.toMissionModalData
 import com.bytelegend.client.utils.toPagination
 import com.bytelegend.client.utils.toTutorial
 import kotlinext.js.jsObject
@@ -30,30 +29,37 @@ import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.fetch.Response
 
-fun Response.checkStatusCode(): Response {
-    if (status < 200 || status > 400) {
-        throw Exception("Got response status code $status")
+class HttpRequestException(val statusCode: Int, override val message: String) : RuntimeException(message)
+
+suspend fun Response.checkStatusCode(): Response {
+    if (status < 200 || status >= 400) {
+        throw HttpRequestException(status.toInt(), text().await())
     }
     return this
 }
 
-suspend fun post(uri: String, body: String, headers: MutableMap<String, String> = JSObjectBackedMap()): String {
+suspend fun get(uri: String): String {
+    return window.fetch(uri).await().apply {
+        checkStatusCode()
+    }.text().await()
+}
+
+suspend fun post(uri: String, body: String): String {
     return window.fetch(
         uri,
         jsObject {
             method = "POST"
-            if (!headers.containsKey("Content-Type")) {
-                headers["Content-Type"] = "application/json"
+            this.headers = jsObject {
+                this["Content-Type"] = "application/json"
+                this["Accept"] = "application/json"
             }
-            if (!headers.containsKey("Accept")) {
-                headers["Accept"] = "application/json"
-            }
-            this.headers = headers.toDynamic()
             this.body = body
         }
     )
         .await()
-        .apply(Response::checkStatusCode)
+        .apply {
+            checkStatusCode()
+        }
         .text()
         .await()
 }
@@ -82,12 +88,7 @@ suspend fun submitChallengeAnswer(
 suspend fun getMissionModalData(
     missionId: String
 ): MissionModalData {
-    return window.fetch("/game/api/mission/$missionId")
-        .await()
-        .apply(Response::checkStatusCode)
-        .text()
-        .await()
-        .let { toMissionModalData(JSON.parse(it)) }
+    return toMissionModalData(JSON.parse(get("/game/api/mission/$missionId")))
 }
 
 suspend fun getMissionTutorial(
@@ -95,10 +96,5 @@ suspend fun getMissionTutorial(
     pageNumber: Int,
     locales: List<Locale>
 ): Pagination<Tutorial> {
-    return window.fetch("/game/api/tutorials?missionId=$missionId&locales=${locales.joinToString(",")}&pageNumber=$pageNumber&pageSize=20")
-        .await()
-        .apply(Response::checkStatusCode)
-        .text()
-        .await()
-        .let { toPagination(JSON.parse(it), ::toTutorial) }
+    return toPagination(JSON.parse(get("/game/api/tutorials?missionId=$missionId&locales=${locales.joinToString(",")}&pageNumber=$pageNumber&pageSize=20")), ::toTutorial)
 }

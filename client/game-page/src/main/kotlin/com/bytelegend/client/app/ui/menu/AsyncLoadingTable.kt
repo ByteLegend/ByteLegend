@@ -22,9 +22,8 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.client.ui.bootstrap.BootstrapTable
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.unsafeSpan
-import kotlinx.browser.window
+import com.bytelegend.client.app.web.get
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.html.TR
 import react.RBuilder
@@ -56,13 +55,7 @@ abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : RComponent<GamePr
             }
         } else if (state.data == undefined) {
             GlobalScope.launch {
-                val json = window.fetch(url)
-                    .await()
-                    .apply {
-                        if (status < 200 || status > 400) {
-                            throw Exception("Got response status code $status")
-                        }
-                    }.text().await()
+                val json = get(url)
                 setState {
                     data = JSON.parse(json)
                 }

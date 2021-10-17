@@ -30,11 +30,11 @@ import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.unsafeSpan
+import com.bytelegend.client.app.web.get
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.utils.toHeroNoticeboardTilesData
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.html.classes
 import kotlinx.html.js.onClickFunction
@@ -115,13 +115,7 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
         }
 
         GlobalScope.launch {
-            val json = window.fetch(heroesJsonUrl(number, state.timestamp))
-                .await()
-                .apply {
-                    if (status < 200 || status > 400) {
-                        throw Exception("Got response status code $status")
-                    }
-                }.text().await()
+            val json = get(heroesJsonUrl(number, state.timestamp))
             val heroNoticeboardTilesData = toHeroNoticeboardTilesData(JSON.parse(json))
             setState {
                 jsonIsLoading = false

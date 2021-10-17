@@ -26,19 +26,16 @@ import com.bytelegend.client.app.engine.gameContainerHeight
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.engine.uiContainerCoordinateInGameContainer
 import com.bytelegend.client.app.engine.uiContainerSize
-import com.bytelegend.client.app.web.checkStatusCode
+import com.bytelegend.client.app.web.get
 import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.JSObjectBackedStringSet
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.utils.toLivestreams
 import kotlinx.browser.localStorage
-import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import kotlinx.html.classes
 import kotlinx.html.currentTimeMillis
-import org.w3c.fetch.Response
 import react.RBuilder
 import react.RComponent
 import react.State
@@ -107,14 +104,7 @@ class LivestreamIndicators : RComponent<GameProps, LivestreamIndicatorsState>() 
     init {
         GlobalScope.launch {
             try {
-                val livestreamData = window.fetch(LIVESTREAM_DATA_URL)
-                    .await()
-                    .apply(Response::checkStatusCode)
-                    .text()
-                    .await()
-                    .let {
-                        toLivestreams(JSON.parse(it))
-                    }
+                val livestreamData = toLivestreams(JSON.parse(get(LIVESTREAM_DATA_URL)))
                 setState({
                     it.livestreams = livestreamData
                     it

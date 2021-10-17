@@ -41,13 +41,16 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 // | qq#12345     | AccountBinding               | gh: alice  |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
+// | gh#alice     | InvitedPeople                | people: [bob,...]       |  reward: 500                            |
+// +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 const val PLAYER_SORT_KEY = "P"
 const val PLAYER_CHALLENGE_SORT_KEY = "PC"
 const val HEAD_SHA_SORT_KEY = "H"
 const val PLAYER_COIN_CHANGE_HISTORY_KEY = "CoinChangeHistory"
 const val PLAYER_REPUTATION_CHANGE_HISTORY_KEY = "ReputationChangeHistory"
 const val PULL_REQUEST_PROBLEM = "PullRequestProblem"
-const val ACCOUNT_BINDING = "AccountBinding"
+const val ACCOUNT_BINDING_SORT_KEY = "AccountBinding"
+const val INVITED_PEOPLE_SORT_KEY = "InvitedPeople"
 
 interface StoredInPlayerTable {
     val pk: String

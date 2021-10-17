@@ -13,23 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JsModule("react-bootstrap/FormControl")
-@file:JsNonModule
+package com.bytelegend.app.shared
 
-package com.bytelegend.app.client.ui.bootstrap
+val INVITER_ID_STATE = "INVITER_ID"
 
-import react.ElementType
-import react.Props
+// How many coins the inviter and invitee can get from an invitation code
+val COIN_REWARD_PER_CODE = 500
 
-@JsName("default")
-external val BootstrapFormControl: ElementType<BootstrapFormControlProps>
+// Max coins the inviter can get from an invitation code
+val MAX_COIN_REWARD_PER_CODE = 5000
 
-external interface BootstrapFormControlProps : Props {
-    var className: String
-    var disabled: Boolean
-    var `as`: Any
-    var ariaDescribedby: String
-    var type: String
-    var placeholder: String
-    var ref: Any
-}
+data class InvitationInformation(
+    // The inviterId. null means it's not invited by anyone.
+    val inviterId: String?,
+    // The invitation code to give to other people.
+    val invitationCode: String?,
+    // How many coins rewarded by the invitation code
+    val rewardedCoin: Int
+)

@@ -19,6 +19,7 @@ package com.bytelegend.client.utils
 
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition
+import com.bytelegend.app.shared.InvitationInformation
 import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.entities.ChallengeTabData
 import com.bytelegend.app.shared.entities.DiscussionsTabData
@@ -344,4 +345,10 @@ fun toHeroNoticeboardTilesData(jsonObject: dynamic) = HeroNoticeboardTilesData(
             it.changedAt
         )
     }
+)
+
+fun toInvitationInformation(jsonObject: dynamic) = InvitationInformation(
+    jsonObject.inviterId,
+    jsonObject.invitationCode,
+    jsonObject.rewardedCoin
 )

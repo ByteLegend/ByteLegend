@@ -21,10 +21,8 @@ package com.bytelegend.client.app.external
 import com.bytelegend.app.client.misc.githubUrlToRawGithubUserContentUrl
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.client.app.ui.GameProps
-import com.bytelegend.client.app.web.checkStatusCode
-import kotlinx.browser.window
+import com.bytelegend.client.app.web.get
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import react.RBuilder
 import react.RComponent
@@ -56,11 +54,7 @@ class LoadableMarkdown : RComponent<LoadableMarkdownProps, LoadableMarkdownState
             if (!loading) {
                 GlobalScope.launch {
                     loading = true
-                    val content = window.fetch(rebuildUrl(props.link))
-                        .await()
-                        .checkStatusCode()
-                        .text()
-                        .await()
+                    val content = get(rebuildUrl(props.link))
                     loading = false
                     setState {
                         this.markdownContent = content
