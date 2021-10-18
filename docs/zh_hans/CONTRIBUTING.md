@@ -48,4 +48,4 @@
 ## 创建新的游戏地图
 
 您可以为您的项目创建新的游戏地图，作为文档或者教程。
-请看[创建新的游戏地图](https://github.com/ByteLegend/ByteLegend/blob/master/docs/zh_hans/create-a-new-map.md)。
+请看[创建新的游戏地图](https://github.com/ByteLegend/ByteLegend/blob/master/docs/zh_hans/create-new-game-map.md)。
