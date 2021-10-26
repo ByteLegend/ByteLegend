@@ -57,7 +57,7 @@ class MissionTitleAnswers : RComponent<MissionTitleAnswerProps, MissionTitleAnsw
                 it.stopPropagation()
             }
 
-            val pullRequestAnswers = props.game.activeScene.playerChallenges.getPullRequestChallengeAnswersByMissionId(props.mission.id)
+            val pullRequestAnswers = props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByMissionId(props.mission.id)
             if (pullRequestAnswers.isNotEmpty()) {
                 renderPullRequestAnswers(pullRequestAnswers)
             }

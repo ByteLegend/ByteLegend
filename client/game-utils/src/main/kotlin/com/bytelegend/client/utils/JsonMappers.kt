@@ -21,6 +21,8 @@ import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.InvitationInformation
 import com.bytelegend.app.shared.entities.BasePlayer
+import com.bytelegend.app.shared.entities.ChallengeAnswer
+import com.bytelegend.app.shared.entities.ChallengeAnswers
 import com.bytelegend.app.shared.entities.ChallengeTabData
 import com.bytelegend.app.shared.entities.DiscussionsTabData
 import com.bytelegend.app.shared.entities.HeroNoticeboardTabData
@@ -36,8 +38,6 @@ import com.bytelegend.app.shared.entities.MissionTabType.TextContentChallenge
 import com.bytelegend.app.shared.entities.MissionTabType.Tutorials
 import com.bytelegend.app.shared.entities.MissionTabType.valueOf
 import com.bytelegend.app.shared.entities.Player
-import com.bytelegend.app.shared.entities.PlayerChallenge
-import com.bytelegend.app.shared.entities.PlayerChallengeAnswer
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.entities.TutorialsTabData
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
@@ -168,8 +168,8 @@ fun toStarUpdateEventData(jsonObject: dynamic) = StarUpdateEventData(
 
 fun toChallengeUpdateEventData(jsonObject: dynamic) = ChallengeUpdateEventData(
     jsonObject.wasAccomplished,
-    toPlayerChallengeAnswer(jsonObject.change),
-    toPlayerChallenge(jsonObject.newValue)
+    toChallengeAnswer(jsonObject.change),
+    toChallengeAnswers(jsonObject.newValue)
 )
 
 fun <T> arrayToList(jsonArray: dynamic) = JSArrayBackedList<T>(delegate = jsonArray)
@@ -218,7 +218,7 @@ fun <T> toTypedMap(jsonObject: dynamic, valueMapper: (dynamic) -> T): Map<String
 fun toSceneInitData(heroId: String, jsonObject: dynamic) = SceneInitData(
     jsonObject.online as Int,
     toTypedList(jsonObject.players, ::toBasePlayer).filter { it.id != heroId },
-    toTypedMap(jsonObject.playerChallenges, ::toPlayerChallenge)
+    toTypedList(jsonObject.challengeAnswers, ::toChallengeAnswers)
 )
 
 fun toMissionModalData(jsonObject: dynamic) = MissionModalData(
@@ -283,19 +283,21 @@ fun toTutorial(jsonObject: dynamic): Tutorial {
     )
 }
 
-fun toPlayerChallenge(jsonObject: dynamic) = PlayerChallenge(
+fun toChallengeAnswers(jsonObject: dynamic) = ChallengeAnswers(
     playerId = jsonObject.playerId,
     missionId = jsonObject.missionId,
     challengeId = jsonObject.challengeId,
     map = jsonObject.map,
-    answers = toTypedList(jsonObject.answers, ::toPlayerChallengeAnswer)
+    answers = toTypedMap(jsonObject.answers) {
+        toTypedList(it, ::toChallengeAnswer)
+    }
 )
 
-fun toPlayerChallengeAnswer(jsonObject: dynamic) = PlayerChallengeAnswer(
+fun toChallengeAnswer(jsonObject: dynamic) = ChallengeAnswer(
     star = jsonObject.star,
     answer = jsonObject.answer,
     accomplished = jsonObject.accomplished.toString() == "true",
-    createdAt = jsonObject.createdAt,
+    time = jsonObject.time,
     data = JSObjectBackedMap(jsonObject.data)
 )
 

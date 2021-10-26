@@ -42,13 +42,13 @@ class MissionTitle(props: MissionTitleProps) : AbstractBouncingTitleWidget<Missi
     @Suppress("UNUSED_PARAMETER")
     private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
         setState {
-            currentStar = props.gameScene.playerChallenges.missionStar(props.mission.id)
+            currentStar = props.gameScene.challengeAnswers.missionStar(props.mission.id)
         }
     }
 
     override fun MissionTitleState.init(props: MissionTitleProps) {
         hovered = false
-        currentStar = props.gameScene.playerChallenges.missionStar(props.mission.id)
+        currentStar = props.gameScene.challengeAnswers.missionStar(props.mission.id)
     }
 
     override fun RBuilder.render() {
@@ -75,6 +75,12 @@ class MissionTitle(props: MissionTitleProps) : AbstractBouncingTitleWidget<Missi
 
     override fun shouldComponentUpdate(nextProps: MissionTitleProps, nextState: MissionTitleState): Boolean {
         return super.shouldComponentUpdate(nextProps, nextState) || state.currentStar != nextState.currentStar
+    }
+
+    override fun componentWillReceiveProps(nextProps: MissionTitleProps) {
+        setState {
+            currentStar = props.gameScene.challengeAnswers.missionStar(props.mission.id)
+        }
     }
 
     override fun componentDidMount() {

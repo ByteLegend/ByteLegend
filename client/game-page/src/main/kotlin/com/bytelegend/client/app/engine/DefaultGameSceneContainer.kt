@@ -132,7 +132,7 @@ class DefaultGameSceneContainer(
         val initData = sceneInitData.await()
 
         scene.players = PlayerContainer(mapId, eventBus, game.webSocketClient, resourceLoader, initData.players).apply { init(scene) }
-        scene.playerChallenges = DefaultPlayerChallengeContainer(di, sceneInitData.await().playerChallenges.asDynamic()).apply { init(scene) }
+        scene.challengeAnswers = DefaultChallengeAnswersContainer(di, sceneInitData.await().challengeAnswers.asDynamic()).apply { init(scene) }
         scenes[mapId] = scene
         switchScene(oldScene, scene, switchAfterLoading, action)
 

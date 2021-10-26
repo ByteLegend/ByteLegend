@@ -16,6 +16,7 @@
 import com.bytelegend.buildsupport.OpenSourceLibrary
 import com.bytelegend.buildsupport.OpenSourceLicense.Apache2
 import com.bytelegend.buildsupport.OpenSourceLicense.BSD2Clause
+import com.bytelegend.buildsupport.OpenSourceLicense.EDL
 import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
 import com.bytelegend.buildsupport.OpenSourceLicense.ISC
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
@@ -86,6 +87,7 @@ val rehypeRawVersion = "6.1.0"
 val rehypeExternalLinksVersion = "1.0.0"
 val remarkGfmVersion = "2.0.0"
 val unifiedDiffParserVersion = "1.4"
+val jgitVersion = "5.13.0.202109080827-r"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -325,6 +327,14 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         creditName = "diffparser",
         url = "https://github.com/thombergs/diffparser",
         license = Apache2
+    ),
+        OpenSourceLibrary(
+        name = "jgit",
+        groupArtifactId = "org.eclipse.jgit:org.eclipse.jgit",
+        version = jgitVersion,
+        creditName = "jgit",
+        url = "https://www.eclipse.org/jgit/",
+        license = EDL
     ),
     OpenSourceLibrary(
         name = "react-markdown",

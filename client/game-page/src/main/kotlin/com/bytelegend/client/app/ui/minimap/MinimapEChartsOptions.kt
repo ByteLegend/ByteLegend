@@ -350,7 +350,7 @@ fun GameScene.getRoadmapMissionGraphSeries(showMissionTitles: Boolean): dynamic 
         val labelOptions: dynamic = labelOptions(
             showMissionTitles,
             mission.gameMapMission.totalStar,
-            playerChallenges.missionStar(mission.id),
+            challengeAnswers.missionStar(mission.id),
             gameRuntime.i(mission.gameMapMission.title)
         )
 

@@ -30,11 +30,11 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapCard
 import com.bytelegend.app.client.ui.bootstrap.BootstrapCardHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapCol
 import com.bytelegend.app.client.ui.bootstrap.BootstrapRow
-import com.bytelegend.app.shared.entities.PlayerChallengeAnswer
+import com.bytelegend.app.shared.entities.ChallengeAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.protocol.challengeUpdateEvent
-import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.DefaultGameMission
+import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.util.format
 import com.bytelegend.client.app.external.TextareaAutosize
 import com.bytelegend.client.app.ui.GameProps
@@ -137,9 +137,12 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         }
         br { }
 
-        val answers = game.activeScene.playerChallenges.getPlayerChallengesByMissionId(props.missionId).flatMap { it.answers }
+        val answers: List<ChallengeAnswer> = game.activeScene.challengeAnswers.getChallengeAnswersByMissionId(props.missionId)
+            .flatMap { answersOfChallenge ->
+                answersOfChallenge.answers.values.map { it.last().unsafeCast<ChallengeAnswer>() }
+            }
 
-        renderPlayerAnswers(answers)
+        renderQuestionAnswers(answers)
         h4 {
             +i("Problem")
         }
@@ -183,7 +186,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         }
     }
 
-    private fun RBuilder.renderPlayerAnswers(answers: List<PlayerChallengeAnswer>) {
+    private fun RBuilder.renderQuestionAnswers(answers: List<ChallengeAnswer>) {
         if (answers.isEmpty()) {
             return
         }
@@ -211,7 +214,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                             }
                             BootstrapCol {
                                 attrs.md = "auto"
-                                +format(missionAnswer.createdAt, game.locale)
+                                +format(missionAnswer.time, game.locale)
                             }
                             BootstrapCol {
                                 attrs.md = "auto"

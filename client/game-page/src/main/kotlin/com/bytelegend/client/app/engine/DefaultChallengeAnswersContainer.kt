@@ -17,18 +17,19 @@
 
 package com.bytelegend.client.app.engine
 
+import com.bytelegend.app.client.api.ChallengeAnswersContainer
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.PlayerChallengeContainer
 import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.client.misc.playAudio
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.entities.PlayerChallenge
+import com.bytelegend.app.shared.entities.ChallengeAnswer
+import com.bytelegend.app.shared.entities.ChallengeAnswers
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.toPullRequestAnswers
 import com.bytelegend.app.shared.objects.GameObjectRole
@@ -51,25 +52,27 @@ import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
 
-class DefaultPlayerChallengeContainer(
+class DefaultChallengeAnswersContainer(
     di: DI,
-    private val playerChallenges: MutableMap<String, PlayerChallenge>
-) : PlayerChallengeContainer {
+    challengeAnswerList: List<ChallengeAnswers>
+) : ChallengeAnswersContainer {
     private val eventBus: EventBus by di.instance()
     private val game: GameRuntime by di.instance()
     private val gameControl: GameControl by di.instance()
     private lateinit var gameScene: DefaultGameScene
     private val missionIdToChallenges: MutableMap<String, List<String>> = JSObjectBackedMap()
     private val challengeIdToPullRequestAnswers: MutableMap<String, List<PullRequestAnswer>> = JSObjectBackedMap()
+    private val challengeIdToAnswers: MutableMap<String, ChallengeAnswers> = JSObjectBackedMap()
 
     init {
-        playerChallenges.forEach {
-            challengeIdToPullRequestAnswers[it.key] = it.value.answers.toPullRequestAnswers()
+        challengeAnswerList.forEach { answerOfChallenge ->
+            challengeIdToAnswers[answerOfChallenge.challengeId] = answerOfChallenge
+            challengeIdToPullRequestAnswers[answerOfChallenge.challengeId] = answerOfChallenge.toPullRequestAnswers()
         }
     }
 
     private val starUpdateEventListener: EventListener<StarUpdateEventData> = this::onStarUpdate
-    private val challengeUpdateEventListener: EventListener<ChallengeUpdateEventData> = this::onPlayerChallengeUpdate
+    private val challengeUpdateEventListener: EventListener<ChallengeUpdateEventData> = this::onChallengeAnswersUpdate
 
     fun init(gameScene: GameScene) {
         this.gameScene = gameScene.unsafeCast<DefaultGameScene>()
@@ -81,7 +84,7 @@ class DefaultPlayerChallengeContainer(
     }
 
     override fun challengeAccomplished(challengeId: String): Boolean {
-        return playerChallenges[challengeId]?.accomplished == true
+        return challengeIdToAnswers[challengeId]?.accomplished == true
     }
 
     override fun missionAccomplished(missionId: String): Boolean {
@@ -95,7 +98,7 @@ class DefaultPlayerChallengeContainer(
     }
 
     override fun challengeStar(challengeId: String): Int {
-        return playerChallenges[challengeId]?.star ?: 0
+        return challengeIdToAnswers[challengeId]?.star ?: 0
     }
 
     override fun missionStar(missionId: String): Int {
@@ -103,12 +106,12 @@ class DefaultPlayerChallengeContainer(
         return challengeIds.sumOf { challengeStar(it) }
     }
 
-    override fun getPlayerChallengesByMissionId(missionId: String): List<PlayerChallenge> {
-        val ret = JSArrayBackedList<PlayerChallenge>()
+    override fun getChallengeAnswersByMissionId(missionId: String): List<ChallengeAnswers> {
+        val ret = JSArrayBackedList<ChallengeAnswers>()
         missionIdToChallenges[missionId]?.forEach {
-            val challenge = playerChallenges[it]
-            if (challenge != null) {
-                ret.add(challenge)
+            val challengeAnswers = challengeIdToAnswers[it]
+            if (challengeAnswers != null) {
+                ret.add(challengeAnswers)
             }
         }
         return ret
@@ -119,27 +122,35 @@ class DefaultPlayerChallengeContainer(
         return challengeIdToPullRequestAnswers[challengeId] ?: emptyList()
     }
 
-    private fun putChallenge(challenge: PlayerChallenge) {
-        val challengeId = challenge.challengeId
-        val oldChallenge = playerChallenges[challengeId]
-        if (oldChallenge == null) {
-            playerChallenges[challengeId] = challenge
-            challengeIdToPullRequestAnswers[challengeId] = challenge.answers.toPullRequestAnswers()
+    private fun putChallengeAnswers(challengeAnswers: ChallengeAnswers) {
+        val challengeId = challengeAnswers.challengeId
+        val oldChallengeAnswers = this.challengeIdToAnswers[challengeId]
+        if (oldChallengeAnswers == null) {
+            this.challengeIdToAnswers[challengeId] = challengeAnswers
+            challengeIdToPullRequestAnswers[challengeId] = challengeAnswers.toPullRequestAnswers()
         } else {
             // When the answer events from server are misordered, it might be:
             // [answer1, answer2, answer3] comes first and [answer1, answer2] comes later
-            // In this case, we need to make sure no answers missing
-            val set = oldChallenge.answers.toMutableSet().apply { addAll(challenge.answers) }
-            val newChallenge = PlayerChallenge(
-                oldChallenge.playerId,
-                oldChallenge.map,
-                oldChallenge.missionId,
-                oldChallenge.challengeId,
-                JSArrayBackedList(set)
+            // In this case, we need to make sure no answers lost
+            val newAnswers: MutableMap<String, LinkedHashSet<ChallengeAnswer>> = JSObjectBackedMap()
+
+            oldChallengeAnswers.answers.forEach { (key: String, answers: List<ChallengeAnswer>) ->
+                newAnswers.getOrPut(key) { LinkedHashSet() }.addAll(answers)
+            }
+            challengeAnswers.answers.forEach { (key: String, answers: List<ChallengeAnswer>) ->
+                newAnswers.getOrPut(key) { LinkedHashSet() }.addAll(answers)
+            }
+
+            val newChallengeAnswers = ChallengeAnswers(
+                oldChallengeAnswers.playerId,
+                oldChallengeAnswers.map,
+                oldChallengeAnswers.missionId,
+                oldChallengeAnswers.challengeId,
+                newAnswers.mapValues { it.value.toList() }
             )
 
-            playerChallenges[challengeId] = newChallenge
-            challengeIdToPullRequestAnswers[challengeId] = newChallenge.answers.toPullRequestAnswers()
+            challengeIdToAnswers[challengeId] = newChallengeAnswers
+            challengeIdToPullRequestAnswers[challengeId] = newChallengeAnswers.toPullRequestAnswers()
         }
     }
 
@@ -223,11 +234,11 @@ class DefaultPlayerChallengeContainer(
         game.eventBus.emit(STAR_INCREMENT_EVENT, eventData)
     }
 
-    private fun onPlayerChallengeUpdate(eventData: ChallengeUpdateEventData) {
+    private fun onChallengeAnswersUpdate(eventData: ChallengeUpdateEventData) {
         if (logger.debugEnabled) {
-            logger.debug("Received challenge update event: ${eventData.newValue.challengeId} ${eventData.change.answer} ${JSON.stringify(eventData.change.data)} ${eventData.change.createdAt}")
+            logger.debug("Received challenge update event: ${eventData.newValue.challengeId} ${eventData.change.answer} ${JSON.stringify(eventData.change.data)} ${eventData.change.time}")
         }
-        putChallenge(eventData.newValue)
+        putChallengeAnswers(eventData.newValue)
         if (eventData.change.accomplished) {
             showConfetti(gameScene.canvasState, gameScene.objects.getPointById(eventData.newValue.missionId))
         }

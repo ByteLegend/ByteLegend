@@ -107,7 +107,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                                         child(TitleStarCounter::class) {
                                             val challengeSpec = tab.unsafeCast<ChallengeTabData>().data
                                             attrs.total = challengeSpec.star
-                                            attrs.current = game.activeScene.playerChallenges.challengeStar(challengeSpec.id)
+                                            attrs.current = game.activeScene.challengeAnswers.challengeStar(challengeSpec.id)
                                             attrs.starSize = 16
                                         }
                                     }

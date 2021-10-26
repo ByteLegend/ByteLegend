@@ -104,7 +104,7 @@ fun GameScene.pubBartender() = objects {
 
 fun GameScene.talkAboutCoffeeWithBartender(hero: Character, bartenderId: String) {
     hero.direction = Direction.UP
-    if (playerChallenges.challengeAccomplished(COFFEE_MACHINE_MISSION)) {
+    if (challengeAnswers.challengeAccomplished(COFFEE_MACHINE_MISSION)) {
         scripts {
             speech(bartenderId, "DidYouEliminateAllBugs", arrow = false)
             speech(HERO_ID, "NoIWillDoRightNow", arrow = false)
@@ -161,7 +161,7 @@ fun GameScene.pubGirl() = objects {
             helpers.getCharacter(girlId).gridCoordinate = objects.getPointById("$girlId-point")
         }
         onClick = helpers.standardNpcSpeech(girlId) {
-            if (playerChallenges.challengeAccomplished(COFFEE_MACHINE_MISSION)) {
+            if (challengeAnswers.challengeAccomplished(COFFEE_MACHINE_MISSION)) {
                 scripts {
                     speech(HERO_ID, "WillYouGoOutWithMe")
                     speech(bartenderId, "StayAwayFromMyDaughter")

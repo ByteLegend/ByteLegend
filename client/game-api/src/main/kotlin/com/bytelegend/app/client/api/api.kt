@@ -21,8 +21,8 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.entities.ChallengeAnswers
 import com.bytelegend.app.shared.entities.Player
-import com.bytelegend.app.shared.entities.PlayerChallenge
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.app.shared.i18n.Locale
@@ -234,7 +234,7 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
     val blockers: Array<Array<Int>>
     val objects: GameObjectContainer
     val canvasState: GameCanvasState
-    val playerChallenges: PlayerChallengeContainer
+    val challengeAnswers: ChallengeAnswersContainer
     val logs: PullRequestLogContainer
 
     fun objects(block: ObjectsBuilder.() -> Unit)
@@ -246,7 +246,7 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
     fun searchPath(start: GridCoordinate, end: GridCoordinate, wallPredicate: (Int) -> Boolean): List<GridCoordinate>
 }
 
-interface PlayerChallengeContainer {
+interface ChallengeAnswersContainer {
     /**
      * Is the challenge accomplished?
      */
@@ -264,7 +264,7 @@ interface PlayerChallengeContainer {
      */
     fun missionStar(missionId: String): Int
 
-    fun getPlayerChallengesByMissionId(missionId: String): List<PlayerChallenge>
+    fun getChallengeAnswersByMissionId(missionId: String): List<ChallengeAnswers>
 
     fun getPullRequestChallengeAnswersByMissionId(missionId: String): List<PullRequestAnswer>
 }

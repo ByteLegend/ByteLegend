@@ -17,38 +17,38 @@ package com.bytelegend.app.shared.entities
 
 import com.bytelegend.app.shared.annotations.DynamoDbIgnore
 import com.bytelegend.app.shared.annotations.JsonIgnore
-import com.bytelegend.app.shared.util.currentTimeMillis
+import com.bytelegend.app.shared.util.currentTimeIso8601
 
-/**
+/*
  * A PlayerChallenge instance includes all answers a player makes to a challenge.
- */
 open class PlayerChallenge(
-    @get: DynamoDbIgnore
-    val playerId: String,
+@get: DynamoDbIgnore
+val playerId: String,
 
-    @get: DynamoDbIgnore
-    val map: String,
+@get: DynamoDbIgnore
+val map: String,
 
-    @get: DynamoDbIgnore
-    val missionId: String,
+@get: DynamoDbIgnore
+val missionId: String,
 
-    @get: DynamoDbIgnore
-    val challengeId: String,
+@get: DynamoDbIgnore
+val challengeId: String,
 
-    @get: DynamoDbIgnore
-    open val answers: List<PlayerChallengeAnswer>
+@get: DynamoDbIgnore
+open val answers: List<ChallengeAnswer>
 ) {
 
-    @get: DynamoDbIgnore
-    @get: JsonIgnore
-    val accomplished: Boolean
-        get() = answers.any { it.accomplished }
+@get: DynamoDbIgnore
+@get: JsonIgnore
+val accomplished: Boolean
+get() = answers.any { it.accomplished }
 
-    @get: DynamoDbIgnore
-    @get: JsonIgnore
-    val star: Int
-        get() = answers.maxOfOrNull { it.star } ?: 0
+@get: DynamoDbIgnore
+@get: JsonIgnore
+val star: Int
+get() = answers.maxOfOrNull { it.star } ?: 0
 }
+ */
 
 /**
  * Represents an abstract answer to a challenge.
@@ -57,27 +57,36 @@ open class PlayerChallenge(
  *
  * An answer is immutable after created.
  */
-open class PlayerChallengeAnswer(
+@Suppress("UNCHECKED_CAST")
+open class ChallengeAnswer(
     /**
      * How many stars the player can get from this answer?
      */
     val star: Int,
     val accomplished: Boolean,
     val answer: String,
-    val data: Map<String, String> = emptyMap(),
-    // Epoch ms
-    val createdAt: Long = currentTimeMillis()
+    val data: Map<String, String>,
+    val time: String = currentTimeIso8601()
 ) {
+    @get:JsonIgnore
+    @get:DynamoDbIgnore
+    val answerData: ChallengeAnswerData by lazy {
+        fromMap(data)
+    }
+
+    @DynamoDbIgnore
+    fun <T : ChallengeAnswerData> answerDataAs(): T = answerData as T
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
 
-        other as PlayerChallengeAnswer
+        other as ChallengeAnswer
 
         if (star != other.star) return false
         if (accomplished != other.accomplished) return false
         if (answer != other.answer) return false
         if (data != other.data) return false
-        if (createdAt != other.createdAt) return false
+        if (time != other.time) return false
 
         return true
     }
@@ -87,13 +96,131 @@ open class PlayerChallengeAnswer(
         result = 31 * result + accomplished.hashCode()
         result = 31 * result + answer.hashCode()
         result = 31 * result + data.hashCode()
-        result = 31 * result + createdAt.hashCode()
+        result = 31 * result + time.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "ChallengeAnswer(star=$star, accomplished=$accomplished, answer='$answer', data=$data, time='$time')"
+    }
+}
+
+interface ChallengeAnswerData {
+    // pull_request/check_run
+    val type: String
+}
+
+fun fromMap(map: Map<String, String>): ChallengeAnswerData {
+    return when {
+        map.isEmpty() -> EmptyAnswerData
+//        map.containsKey("pull_request") -> LegacyPullRequestAnswerData(
+//            map.getValue("pull_request"),
+//            map.getValue("number"),
+//            map.getValue("subjectId")
+//        )
+//        map.containsKey("check_run") -> CheckRunAnswerData(
+//            map.getValue("check_run"),
+//            map.getValue("id"),
+//            map.getValue("sha"),
+//            map["conclusion"]
+//        )
+        map["type"] == PULL_REQUEST_TYPE -> PullRequestAnswerData(
+            map.getValue("action"),
+            map.getValue("number"),
+            map.getValue("subjectId"),
+            map.getValue("headRepoFullName"),
+            map.getValue("branch"),
+            map.getValue("sha"),
+        )
+        map["type"] == CHECK_RUN_TYPE -> CheckRunAnswerData(
+            map.getValue("action"),
+            map.getValue("id"),
+            map.getValue("sha"),
+            map["conclusion"]
+        )
+        else -> throw IllegalArgumentException("Unsupported conversion: $map")
+    }
+}
+
+const val PULL_REQUEST_TYPE = "pull_request"
+
+// https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request
+enum class PullRequestEventAction(val saveInDb: Boolean = false) {
+    ASSIGNED,
+    UNASSIGNED,
+    LABELED,
+    UNLABELED,
+    OPENED(true),
+    EDITED,
+    CLOSED(true),
+    REOPENED(true),
+    SYNCHRONIZE(true),
+    READY_FOR_REVIEW,
+    LOCKED,
+    UNLOCKED,
+    REVIEW_REQUESTED,
+    REVIEW_REQUEST_REMOVED
+}
+
+// https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#check_run
+enum class CheckRunEventAction {
+    CREATED,
+    COMPLETED,
+    REREQUESTED,
+    REQUESTED_ACTION
+}
+
+enum class CheckRunConclusion {
+    ACTION_REQUIRED, CANCELLED, FAILURE, NEUTRAL, SUCCESS, SKIPPED, STALE, TIMED_OUT
+}
+
+// https://docs.github.com/en/rest/reference/checks#update-a-check-run
+enum class CheckRunStatus {
+    QUEUED, IN_PROGRESS, COMPLETED
+}
+
+const val CHECK_RUN_TYPE = "check_run"
+
+@Deprecated("Use PullRequestAnswerData")
+data class LegacyPullRequestAnswerData(
+    val action: String,
+    val number: String,
+    val subjectId: String
+) : ChallengeAnswerData {
+    override val type: String = "pull_request"
+}
+
+object EmptyAnswerData : ChallengeAnswerData {
+    @get: JsonIgnore
+    override val type: String
+        get() = throw UnsupportedOperationException()
+}
+
+data class PullRequestAnswerData(
+    val action: String,
+    val number: String,
+    val subjectId: String,
+    val headRepoFullName: String,
+    val branch: String,
+    val sha: String,
+) : ChallengeAnswerData {
+    override val type: String = "pull_request"
+}
+
+data class CheckRunAnswerData(
+    val action: String,
+    val id: String,
+    val sha: String,
+    val conclusion: String?
+) : ChallengeAnswerData {
+    override val type: String = "check_run"
+
+    fun isCompleted() = action.equals(CheckRunEventAction.COMPLETED.name, true)
+    fun isCreated() = action.equals(CheckRunEventAction.CREATED.name, true)
 }
 
 class SceneInitData(
     val online: Int,
     val players: List<BasePlayer>,
-    val playerChallenges: Map<String, PlayerChallenge>
+    val challengeAnswers: List<ChallengeAnswers>
 )

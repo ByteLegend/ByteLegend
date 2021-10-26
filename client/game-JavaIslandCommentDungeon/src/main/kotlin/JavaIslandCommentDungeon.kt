@@ -42,7 +42,7 @@ fun GameScene.configureChest(chestMisionId: String) {
     val mission = objects.getById<DynamicSprite>(chestMisionId)
     val helpers = GameScriptHelpers(this)
 
-    if (playerChallenges.missionAccomplished(chestMisionId)) {
+    if (challengeAnswers.missionAccomplished(chestMisionId)) {
         mission.animation = StaticFrame(3)
     } else {
         mission.animation = StaticFrame(0)

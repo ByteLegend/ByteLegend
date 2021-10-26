@@ -16,8 +16,8 @@
 package com.bytelegend.app.shared.protocol
 
 import com.bytelegend.app.shared.annotations.JsonIgnore
-import com.bytelegend.app.shared.entities.PlayerChallenge
-import com.bytelegend.app.shared.entities.PlayerChallengeAnswer
+import com.bytelegend.app.shared.entities.ChallengeAnswer
+import com.bytelegend.app.shared.entities.ChallengeAnswers
 import com.bytelegend.app.shared.entities.mission.OnFinishSpec
 
 interface UnicastEventData {
@@ -56,8 +56,8 @@ class ReputationUpdateEventData(
 data class ChallengeUpdateEventData(
     // Is the challenge accomplished before this change?
     val wasAccomplished: Boolean,
-    val change: PlayerChallengeAnswer,
-    val newValue: PlayerChallenge,
+    val change: ChallengeAnswer,
+    val newValue: ChallengeAnswers,
 ) : UnicastEventData {
     override val playerId: String
         @JsonIgnore

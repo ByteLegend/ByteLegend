@@ -77,12 +77,7 @@ suspend fun submitChallengeAnswer(
     challengeId: String,
     answer: String
 ): ChallengeUpdateEventData {
-    val json = JSON.stringify(
-        jsObject<dynamic> {
-            this.answer = answer
-        }
-    )
-    return toChallengeUpdateEventData(JSON.parse(post("/game/api/mission/$missionId/$challengeId/answer", json)))
+    return toChallengeUpdateEventData(JSON.parse(post("/game/api/mission/$missionId/$challengeId/question", answer)))
 }
 
 suspend fun getMissionModalData(

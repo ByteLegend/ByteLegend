@@ -109,7 +109,7 @@ fun GameScriptHelpers.updateCheckboxes() {
 
     val accomplishedMissionBefore = tmp.querySelectorAll("li>input[checked]").length
     listOf("import-third-party-package", "import-class", "create-a-new-class").forEach {
-        if (gameScene.playerChallenges.missionAccomplished(it)) {
+        if (gameScene.challengeAnswers.missionAccomplished(it)) {
             val mission = gameScene.objects.getById<GameMission>(it)
             val title = gameScene.gameRuntime.i(mission.gameMapMission.title)
             val list = tmp.querySelectorAll("li")
@@ -152,7 +152,7 @@ fun GameScene.firstBugEvil() = objects {
     val mission = objects.getById<DynamicSprite>("fix-simple-add")
     val helpers = GameScriptHelpers(this@firstBugEvil)
     helpers.configureAnimation(mission, 3)
-    if (playerChallenges.missionAccomplished("fix-simple-add")) {
+    if (challengeAnswers.missionAccomplished("fix-simple-add")) {
         helpers.removeMissionBlocker(mission)
     }
     helpers.addMissionRepaintCallback(mission) {
@@ -166,12 +166,12 @@ fun GameScene.firstBugEvil() = objects {
 fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
     val mission = objects.getById<DynamicSprite>(missionId)
     val helpers = GameScriptHelpers(this)
-    if (playerChallenges.challengeAccomplished(challengeId)) {
+    if (challengeAnswers.challengeAccomplished(challengeId)) {
         helpers.removeMissionBlocker(mission)
         mission.animation = StaticFrame(3)
     } else {
         helpers.addCloseCallbackToMission(mission) {
-            if (playerChallenges.challengeAccomplished(challengeId) &&
+            if (challengeAnswers.challengeAccomplished(challengeId) &&
                 mission.animation.unsafeCast<StaticFrame>().frameIndex != 3
             ) {
                 helpers.removeMissionBlocker(mission)
@@ -212,14 +212,14 @@ fun GameScene.configureStarByteLegendBook() {
 fun GameScene.configureInstallJavaIDEChest() {
     val mission = objects.getById<DynamicSprite>("install-java-ide")
 
-    if (playerChallenges.challengeAccomplished("install-java-ide-challenge")) {
+    if (challengeAnswers.challengeAccomplished("install-java-ide-challenge")) {
         mission.animation = StaticFrame(3)
     }
 
     GameScriptHelpers(this).addCloseCallbackToMission(mission) {
         if (mission.animation.isStatic &&
             mission.animation.unsafeCast<StaticFrame>().frameIndex != 3 &&
-            playerChallenges.challengeAccomplished("install-java-ide-challenge")
+            challengeAnswers.challengeAccomplished("install-java-ide-challenge")
         ) {
             // the player finishes the challenge. Play the animation
             mission.animation = FramePlayingAnimation(
@@ -343,7 +343,7 @@ fun GameScene.pubGuard() = objects {
                         putState(BEGINNER_GUIDE_FINISHED_STATE)
                     }
                 }
-                playerChallenges.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
+                challengeAnswers.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
                     helpers.getCharacter(guardId).gridCoordinate = guardMoveDestPoint
                 }
                 else -> {
@@ -355,7 +355,7 @@ fun GameScene.pubGuard() = objects {
         onClick = helpers.standardNpcSpeech(guardId) {
             if (helpers.getCharacter(guardId).gridCoordinate == guardStartPoint) {
                 when {
-                    !gameRuntime.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE) && playerChallenges.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
+                    !gameRuntime.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE) && challengeAnswers.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
                         // Player star first but hasn't finished beginner guide, show them
                         scripts {
                             startBeginnerGuide()
@@ -371,7 +371,7 @@ fun GameScene.pubGuard() = objects {
                             putState(BEGINNER_GUIDE_FINISHED_STATE)
                         }
                     }
-                    playerChallenges.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
+                    challengeAnswers.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
                         // mission accomplished, let's celebrate!
                         scripts {
                             speech(guardId, "NiceJob", arrayOf("1", "0"))
@@ -448,7 +448,7 @@ fun GameScene.newbieVillageHead() = objects {
         sprite = "$villageHeadId-sprite"
 
         onInit = {
-            if (playerChallenges.challengeAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
+            if (challengeAnswers.challengeAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
                 helpers.getCharacter(villageHeadId).gridCoordinate = destPoint
             } else {
                 helpers.getCharacter(villageHeadId).gridCoordinate = startPoint
@@ -457,7 +457,7 @@ fun GameScene.newbieVillageHead() = objects {
 
         onClick = helpers.standardNpcSpeech(villageHeadId) {
             if (helpers.getCharacter(villageHeadId).gridCoordinate == startPoint) {
-                if (playerChallenges.challengeAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
+                if (challengeAnswers.challengeAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
                     scripts {
                         speech(villageHeadId, "OutsideWorldIsDangerousButIHaveToLetYouGo")
                         speech(villageHeadId, "GoodLuckPursueHolyJavaCoffee", arrow = false)

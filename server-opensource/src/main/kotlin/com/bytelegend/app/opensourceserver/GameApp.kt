@@ -231,7 +231,7 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
                 GET_SCENE_INIT_DATA -> SceneInitData(
                     1,
                     emptyList(),
-                    emptyMap()
+                    emptyList()
                 )
                 PUT_STATE_EVENT -> ""
                 else -> throw IllegalArgumentException("Unsupported message name: ${message.name}")

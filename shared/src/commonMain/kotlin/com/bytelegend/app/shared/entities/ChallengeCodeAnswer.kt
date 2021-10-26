@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bytelegend.app.shared.util
 
-import kotlin.js.Date
+package com.bytelegend.app.shared.entities
 
-actual fun currentTimeMillis(): Long = Date().getTime().toLong()
-actual fun currentTimeIso8601(): String = Date().toISOString()
+data class ChallengeCodeAnswer(
+    // e.g. https://github.com/a/b/pull/12345
+    val pullRequestHtmlUrl: String?,
+    // key: file path, value: changed file
+    // e.g.
+    // {"src/main/com/bytelegend/Main.java", "package com.bytelegend..."}
+    val changes: Map<String, String>
+)

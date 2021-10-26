@@ -37,12 +37,12 @@ fun GameScene.installGitStone() = objects {
     val installGitMission = objects.getById<DynamicSprite>("install-git")
     val installGitChallenge = "install-git-challenge"
     val helpers = GameScriptHelpers(this@installGitStone)
-    if (playerChallenges.challengeAccomplished(installGitChallenge)) {
+    if (challengeAnswers.challengeAccomplished(installGitChallenge)) {
         helpers.removeMissionBlocker(installGitMission)
         installGitMission.animation = StaticFrame(1)
     } else {
         helpers.addCloseCallbackToMission(installGitMission) {
-            if (playerChallenges.challengeAccomplished(installGitChallenge) &&
+            if (challengeAnswers.challengeAccomplished(installGitChallenge) &&
                 installGitMission.animation.unsafeCast<StaticFrame>().frameIndex != 1
             ) {
                 helpers.removeMissionBlocker(installGitMission)
