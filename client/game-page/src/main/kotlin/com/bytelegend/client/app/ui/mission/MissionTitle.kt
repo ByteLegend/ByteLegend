@@ -63,11 +63,6 @@ class MissionTitle(props: MissionTitleProps) : AbstractBouncingTitleWidget<Missi
                         attrs.current = state.currentStar
                         attrs.starSize = 24
                     }
-
-                    child(MissionTitleAnswers::class) {
-                        attrs.game = game
-                        attrs.mission = props.mission
-                    }
                 }
             }
         }
