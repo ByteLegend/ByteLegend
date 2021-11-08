@@ -117,8 +117,7 @@ class DefaultChallengeAnswersContainer(
         return ret
     }
 
-    override fun getPullRequestChallengeAnswersByMissionId(missionId: String): List<PullRequestAnswer> {
-        val challengeId = missionIdToChallenges[missionId]?.firstOrNull() ?: return emptyList()
+    override fun getPullRequestChallengeAnswersByChallengeId(challengeId: String): List<PullRequestAnswer> {
         return challengeIdToPullRequestAnswers[challengeId] ?: emptyList()
     }
 

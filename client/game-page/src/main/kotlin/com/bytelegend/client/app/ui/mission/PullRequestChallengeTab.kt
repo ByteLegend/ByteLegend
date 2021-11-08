@@ -33,6 +33,8 @@ import react.dom.br
 import react.dom.details
 import react.dom.div
 import react.dom.h4
+import react.dom.iframe
+import react.dom.jsStyle
 
 interface PullRequestChallengeTabProps : GameProps {
     var missionId: String
@@ -61,6 +63,11 @@ class PullRequestChallengeTab : GameUIComponent<PullRequestChallengeTabProps, St
         )
 
         renderReadme(props.game, readme)
+
+        child(WebEditor::class) {
+            attrs.game = props.game
+            attrs.challengeSpec = props.challengeSpec
+        }
     }
 }
 

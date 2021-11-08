@@ -65,6 +65,6 @@ allprojects {
 
 idea {
     module {
-        excludeDirs = setOf(file("server/app/logs"), file("build"))
+        excludeDirs = setOf(file("server/app/logs"), file("build"), file("github1s/dist"), file("github1s/vscode-web-github1s/dist"))
     }
 }

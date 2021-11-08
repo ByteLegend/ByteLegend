@@ -266,7 +266,10 @@ interface ChallengeAnswersContainer {
 
     fun getChallengeAnswersByMissionId(missionId: String): List<ChallengeAnswers>
 
-    fun getPullRequestChallengeAnswersByMissionId(missionId: String): List<PullRequestAnswer>
+    /**
+     * Get all pull request answers of this challenge, order by last update time desc
+     */
+    fun getPullRequestChallengeAnswersByChallengeId(challengeId: String): List<PullRequestAnswer>
 }
 
 interface PullRequestLogContainer {
