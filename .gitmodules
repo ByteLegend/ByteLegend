@@ -5,5 +5,5 @@
 	path = game-data
 	url = https://github.com/ByteLegend/game-data
 [submodule "github1s"]
-	path = game-data
+	path = github1s
 	url = https://github.com/ByteLegend/github1s
