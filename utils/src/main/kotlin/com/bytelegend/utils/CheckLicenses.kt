@@ -42,7 +42,8 @@ internal val IGNORED_PATHS = listOf(
     "**/build/**",
     "**/.*/**",
     "**/generated/**",
-    "**/githubdiffparser" // It's a copy which uses Apache-2 license
+    "**/githubdiffparser", // It's a copy which uses Apache-2 license
+    "github1s/**"
 )
 internal val INCLUDED_PATHS = listOf(
     "**/*.kt",

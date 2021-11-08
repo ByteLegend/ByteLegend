@@ -4,3 +4,6 @@
 [submodule "game-data"]
 	path = game-data
 	url = https://github.com/ByteLegend/game-data
+[submodule "github1s"]
+	path = game-data
+	url = https://github.com/ByteLegend/github1s
