@@ -19,37 +19,6 @@ import com.bytelegend.app.shared.annotations.DynamoDbIgnore
 import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.util.currentTimeIso8601
 
-/*
- * A PlayerChallenge instance includes all answers a player makes to a challenge.
-open class PlayerChallenge(
-@get: DynamoDbIgnore
-val playerId: String,
-
-@get: DynamoDbIgnore
-val map: String,
-
-@get: DynamoDbIgnore
-val missionId: String,
-
-@get: DynamoDbIgnore
-val challengeId: String,
-
-@get: DynamoDbIgnore
-open val answers: List<ChallengeAnswer>
-) {
-
-@get: DynamoDbIgnore
-@get: JsonIgnore
-val accomplished: Boolean
-get() = answers.any { it.accomplished }
-
-@get: DynamoDbIgnore
-@get: JsonIgnore
-val star: Int
-get() = answers.maxOfOrNull { it.star } ?: 0
-}
- */
-
 /**
  * Represents an abstract answer to a challenge.
  * It can be an answer from frontend,
@@ -113,17 +82,6 @@ interface ChallengeAnswerData {
 fun fromMap(map: Map<String, String>): ChallengeAnswerData {
     return when {
         map.isEmpty() -> EmptyAnswerData
-//        map.containsKey("pull_request") -> LegacyPullRequestAnswerData(
-//            map.getValue("pull_request"),
-//            map.getValue("number"),
-//            map.getValue("subjectId")
-//        )
-//        map.containsKey("check_run") -> CheckRunAnswerData(
-//            map.getValue("check_run"),
-//            map.getValue("id"),
-//            map.getValue("sha"),
-//            map["conclusion"]
-//        )
         map["type"] == PULL_REQUEST_TYPE -> PullRequestAnswerData(
             map.getValue("action"),
             map.getValue("number"),
@@ -181,15 +139,6 @@ enum class CheckRunStatus {
 
 const val CHECK_RUN_TYPE = "check_run"
 
-@Deprecated("Use PullRequestAnswerData")
-data class LegacyPullRequestAnswerData(
-    val action: String,
-    val number: String,
-    val subjectId: String
-) : ChallengeAnswerData {
-    override val type: String = "pull_request"
-}
-
 object EmptyAnswerData : ChallengeAnswerData {
     @get: JsonIgnore
     override val type: String
@@ -200,8 +149,11 @@ data class PullRequestAnswerData(
     val action: String,
     val number: String,
     val subjectId: String,
+    // Where does this PR come from?
     val headRepoFullName: String,
+    // Which branch is the PR branch?
     val branch: String,
+    // the head sha upon the pr event
     val sha: String,
 ) : ChallengeAnswerData {
     override val type: String = "pull_request"
@@ -215,7 +167,9 @@ data class CheckRunAnswerData(
 ) : ChallengeAnswerData {
     override val type: String = "check_run"
 
+    @JsonIgnore
     fun isCompleted() = action.equals(CheckRunEventAction.COMPLETED.name, true)
+    @JsonIgnore
     fun isCreated() = action.equals(CheckRunEventAction.CREATED.name, true)
 }
 

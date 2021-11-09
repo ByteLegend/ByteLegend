@@ -46,7 +46,6 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue
 // | gh#alice     | ChallengeAnswers#map#mission#challenge    | answers: {"pull/12345": [{star:0}], "pull/23456"}   |
 // +--------------+------------------------------+------------+------------+----+----+-----------------+------------+
 const val PLAYER_SORT_KEY = "P"
-const val PLAYER_CHALLENGE_SORT_KEY = "PC"
 const val HEAD_SHA_SORT_KEY = "H"
 const val PLAYER_COIN_CHANGE_HISTORY_KEY = "CoinChangeHistory"
 const val PLAYER_REPUTATION_CHANGE_HISTORY_KEY = "ReputationChangeHistory"

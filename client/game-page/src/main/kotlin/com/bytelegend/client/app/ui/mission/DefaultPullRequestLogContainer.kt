@@ -69,7 +69,7 @@ class DefaultPullRequestLogContainer(
         val id = downloadedLogId(checkRun.id)
         var downloadedLog = downloadedLogs[id]
         if (downloadedLog == null) {
-            downloadedLog = GlobalScope.async { download(answer.repoFullName, checkRun.sha, checkRun.id) }
+            downloadedLog = GlobalScope.async { download(answer.baseRepoFullName, checkRun.sha, checkRun.id) }
             downloadedLogs[id] = downloadedLog
         }
         return downloadedLog

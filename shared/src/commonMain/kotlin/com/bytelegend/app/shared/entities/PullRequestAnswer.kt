@@ -21,7 +21,10 @@ package com.bytelegend.app.shared.entities
 data class PullRequestAnswer(
     val htmlUrl: String,
     val number: String,
-    val repoFullName: String,
+    val baseRepoFullName: String,
+    val headRepoFullName: String,
+    val branch: String,
+    val open: Boolean,
     val accomplished: Boolean,
     val lastUpdatedTime: String,
     val checkRuns: List<PullRequestCheckRun>
@@ -51,8 +54,16 @@ fun List<ChallengeAnswer>.toPullRequestAnswer(): PullRequestAnswer? {
         return null
     }
     val htmlUrl = get(0).answer
-    val repo = htmlUrl.substringAfter("https://github.com/").substringBefore("/pull/")
+    val baseRepoFullName = htmlUrl.substringAfter("https://github.com/").substringBeforeLast("/pull/")
     val number = htmlUrl.substringAfter("pull/")
+    val firstPrData = firstOrNull { it.answerData.type == PULL_REQUEST_TYPE }?.answerDataAs<PullRequestAnswerData>()
+    val headRepoFullName = firstPrData?.headRepoFullName ?: baseRepoFullName
+    val branch = firstPrData?.branch ?: "main"
+    val lastOpenCloseAction = filter { it.answerData.type == PULL_REQUEST_TYPE }
+        .map { it.answerDataAs<PullRequestAnswerData>() }
+        .lastOrNull { it.action.equals(PullRequestEventAction.CLOSED.name, true) || it.action.endsWith("opened") }
+    val open = lastOpenCloseAction == null || lastOpenCloseAction.action.endsWith("opened")
+
     val accomplished = any { it.accomplished }
     val sortedCheckRunByStartedTimeDesc: List<CheckRunAnswerData> = sortedByDescending { it.time }
         .map { it.answerData }.filterIsInstance<CheckRunAnswerData>()
@@ -67,8 +78,8 @@ fun List<ChallengeAnswer>.toPullRequestAnswer(): PullRequestAnswer? {
             val id = it.id
             val sha = it.sha
             val conclusion = idToConclusion[id]
-            val actionHtmlUrl = "https://github.com/$repo/runs/$id"
+            val actionHtmlUrl = "https://github.com/$baseRepoFullName/runs/$id"
             PullRequestCheckRun(id, sha, actionHtmlUrl, conclusion)
         }
-    return PullRequestAnswer(htmlUrl, number, repo, accomplished, maxOf { it.time }, checkRuns)
+    return PullRequestAnswer(htmlUrl, number, baseRepoFullName, headRepoFullName, branch, open, accomplished, maxOf { it.time }, checkRuns)
 }
