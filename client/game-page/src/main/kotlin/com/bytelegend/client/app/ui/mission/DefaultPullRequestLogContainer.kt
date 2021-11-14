@@ -69,14 +69,14 @@ class DefaultPullRequestLogContainer(
         val id = downloadedLogId(checkRun.id)
         var downloadedLog = downloadedLogs[id]
         if (downloadedLog == null) {
-            downloadedLog = GlobalScope.async { download(answer.baseRepoFullName, checkRun.sha, checkRun.id) }
+            downloadedLog = GlobalScope.async { download(answer.baseRepoFullName, checkRun.id) }
             downloadedLogs[id] = downloadedLog
         }
         return downloadedLog
     }
 
-    private suspend fun download(repo: String, sha: String, checkRunId: String): String {
-        return get("/game/api/log?repo=$repo&sha=$sha&checkRunId=$checkRunId")
+    private suspend fun download(repo: String, checkRunId: String): String {
+        return get("/game/api/log?repo=$repo&checkRunId=$checkRunId")
     }
 
     inner class LiveLog(
