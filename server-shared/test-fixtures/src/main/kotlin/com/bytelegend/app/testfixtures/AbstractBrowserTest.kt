@@ -58,8 +58,8 @@ abstract class AbstractByteLegendIntegrationTest {
     private val defaultJsonMapper = DefaultJsonMapper(true)
     private val httpClient by lazy { HttpClient.newHttpClient() }
 
-    protected fun sendWebhookFromResource(event: String, resource: String) {
-        val json = javaClass.getResourceAsFile(resource).readText()
+    protected fun sendWebhookFromResource(event: String, resource: String, mutator: (String) -> String = { it }) {
+        val json = mutator(javaClass.getResourceAsFile(resource).readText())
         post(
             "http://localhost:$gameServerPort/github_webhook", json,
             mapOf("Content-Type" to "application/json", "X-GitHub-Event" to event)

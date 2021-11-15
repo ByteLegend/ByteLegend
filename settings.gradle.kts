@@ -58,7 +58,6 @@ include(":client:game-WebIsland")
 include(":client:game-AlgorithmIsland")
 include(":client:game-DataStructureIsland")
 include(":client:common")
-include(":client:common-test-fixtures")
 include(":server-shared:common")
 include(":server-shared:test-fixtures")
 

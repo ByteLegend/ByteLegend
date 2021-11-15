@@ -29,3 +29,17 @@ fun File.newFile(path: String): File {
         parentFile.mkdirs()
     }
 }
+
+fun File.setupGitUser() {
+    execSuccessfully(this, "git", "config", "user.name", "ByteLegendBot")
+    execSuccessfully(this, "git", "config", "user.email", "bot@bytelegend.com")
+}
+
+fun File.setupUpstreamGitRepo() {
+    mkdirs()
+    execSuccessfully(this, "git", "init", "--initial-branch=main")
+    this.setupGitUser()
+    this.resolve("init.txt").writeText("Init version")
+    execSuccessfully(this, "git", "add", "init.txt")
+    execSuccessfully(this, "git", "commit", "-m", "Init commit")
+}

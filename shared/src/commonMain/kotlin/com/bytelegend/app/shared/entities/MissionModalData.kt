@@ -46,7 +46,8 @@ class TutorialsTabData(
 }
 
 class ChallengeTabData(
-    override val data: ChallengeSpec
+    override val data: ChallengeSpec,
+    val whitelist: List<String>
 ) : MissionTabData<ChallengeSpec> {
     @Suppress("REDUNDANT_ELSE_IN_WHEN")
     override val type: MissionTabType = when (data.type) {

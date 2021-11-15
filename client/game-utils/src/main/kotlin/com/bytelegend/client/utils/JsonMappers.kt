@@ -231,7 +231,8 @@ fun toMissionTabData(jsonObject: dynamic): MissionTabData<*> {
         StarChallenge,
         TextContentChallenge,
         PullRequestChallenge -> ChallengeTabData(
-            toChallengeSpec(jsonObject.data)
+            toChallengeSpec(jsonObject.data),
+            JSArrayBackedList(delegate = jsonObject.whitelist)
         )
         HeroNoticeboardChallenge -> HeroNoticeboardTabData(
             toHeroNoticeboardTilesData(jsonObject.data)

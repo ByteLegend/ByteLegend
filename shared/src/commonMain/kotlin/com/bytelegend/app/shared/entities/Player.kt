@@ -99,4 +99,5 @@ open class Player : BasePlayer() {
     }
 }
 
-fun ghLoginToPlayerId(ghLogin: String) = "gh#$ghLogin"
+fun String.ghLoginToPlayerId() = "gh#$this"
+fun String.playerIdToGhLogin() = this.substringAfter("gh#")
