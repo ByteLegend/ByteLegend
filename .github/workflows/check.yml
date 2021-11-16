@@ -43,13 +43,37 @@ jobs:
       - name: Ktlint
         run: ./gradlew ktlint -DagreePublicBuildScanTermOfService=yes
       - name: Build with Gradle
-        run: ./gradlew check -x server:app:browserTest -DagreePublicBuildScanTermOfService=yes
+        run: ./gradlew check -x server:app:browserTest -x server:app:integTest -DagreePublicBuildScanTermOfService=yes
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: artifacts
           path: |
             server/app/build/reports/tests
+  integ-test:
+    runs-on: 'ubuntu-latest'
+    if: ${{ github.event.pull_request.author_association != 'CONTRIBUTOR' }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          token: ${{ secrets.BYTELEGENDBOT_TOKEN }}
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Gradle chaches
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-gradle-user-home
+        with:
+          path: ~/.gradle
+          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
+            ${{ runner.os }}-
+      - name: Build with Gradle
+        run: ./gradlew server:app:integTest -DagreePublicBuildScanTermOfService=yes
   browser-test:
     runs-on: 'ubuntu-latest'
     if: ${{ github.event.pull_request.author_association != 'CONTRIBUTOR' }}
