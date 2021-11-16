@@ -10,17 +10,9 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.BYTELEGENDBOT_TOKEN }}
-      - name: Cache Gradle chaches
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-gradle-user-home
-        with:
-          path: ~/.gradle
-          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-            ${{ runner.os }}-
       - name: Check and Release
-        run: ./gradlew :server:github-release:uploadCodeCheckerToGitHubRelease -DgitHubToken=${{ secrets.BYTELEGENDBOT_TOKEN }} -DagreePublicBuildScanTermOfService=yes
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: :server:github-release:uploadCodeCheckerToGitHubRelease -DgitHubToken=${{ secrets.BYTELEGENDBOT_TOKEN }} -DagreePublicBuildScanTermOfService=yes
 
 

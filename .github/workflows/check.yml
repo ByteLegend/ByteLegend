@@ -30,20 +30,14 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache Gradle chaches
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-gradle-user-home
-        with:
-          path: ~/.gradle
-          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-            ${{ runner.os }}-
       - name: Ktlint
-        run: ./gradlew ktlint -DagreePublicBuildScanTermOfService=yes
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: ktlint -DagreePublicBuildScanTermOfService=yes
       - name: Build with Gradle
-        run: ./gradlew check -x server:app:browserTest -x server:app:integTest -DagreePublicBuildScanTermOfService=yes
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: check -x server:app:browserTest -x server:app:integTest -DagreePublicBuildScanTermOfService=yes
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
@@ -62,18 +56,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache Gradle chaches
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-gradle-user-home
-        with:
-          path: ~/.gradle
-          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-            ${{ runner.os }}-
       - name: Build with Gradle
-        run: ./gradlew server:app:integTest -DagreePublicBuildScanTermOfService=yes
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: ktlint server:app:integTest -DagreePublicBuildScanTermOfService=yes
   browser-test:
     runs-on: 'ubuntu-latest'
     if: ${{ github.event.pull_request.author_association != 'CONTRIBUTOR' }}
@@ -86,18 +72,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache Gradle chaches
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-gradle-user-home
-        with:
-          path: ~/.gradle
-          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-            ${{ runner.os }}-
       - name: Build with Gradle
-        run: ./gradlew server:app:browserTest -DagreePublicBuildScanTermOfService=yes
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: server:app:browserTest -DagreePublicBuildScanTermOfService=yes
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
@@ -117,19 +95,14 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache node modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-gradle-user-home
-        with:
-          path: ~/.gradle
-          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-
       - name: Ktlint
-        run: ./gradlew ktlint -DagreePublicBuildScanTermOfService=yes
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: ktlint -DagreePublicBuildScanTermOfService=yes
       - name: Build with Gradle
-        run: ./gradlew ktlint server-opensource:check utils:checkLicenses -DagreePublicBuildScanTermOfService=yes
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: server-opensource:check utils:checkLicenses -DagreePublicBuildScanTermOfService=yes
       - uses: actions/upload-artifact@v2
         if: failure()
         with:

@@ -17,16 +17,6 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.BYTELEGENDBOT_TOKEN }}
-      - name: Cache Gradle chaches
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-gradle-user-home
-        with:
-          path: ~/.gradle
-          key: ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ hashFiles('**/*.gradle.kts') }}
-            ${{ runner.os }}-
       - uses: chrnorm/deployment-action@releases/v1
         name: Create GitHub deployment
         id: deployment
@@ -35,7 +25,9 @@ jobs:
           target_url: https://bytelegend.com
           environment: production
       - name: Deploy to k8s
-        run: ./gradlew deploy "-PbuildTimestamp=${{ github.event.inputs.buildTimestamp }}" -DagreePublicBuildScanTermOfService=yes
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: deploy "-PbuildTimestamp=${{ github.event.inputs.buildTimestamp }}" -DagreePublicBuildScanTermOfService=yes
         env:
           ACCESS_KEY_ID_BEIJING: ${{ secrets.ACCESS_KEY_ID_BEIJING }}
           SECRET_ACCESS_KEY_BEIJING: ${{ secrets.SECRET_ACCESS_KEY_BEIJING }}
