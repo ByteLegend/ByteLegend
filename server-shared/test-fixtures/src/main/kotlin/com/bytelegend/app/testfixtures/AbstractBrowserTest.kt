@@ -109,6 +109,12 @@ abstract class AbstractByteLegendIntegrationTest {
         return sendHttpRequest(uri, headers) { DELETE() }
     }
 
+    protected fun options(uri: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {
+        return sendHttpRequest(uri, headers) {
+            method("OPTIONS", HttpRequest.BodyPublishers.ofString(""))
+        }
+    }
+
     protected fun post(uri: String, body: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {
         return sendHttpRequest(uri, headers) {
             POST(HttpRequest.BodyPublishers.ofString(body))
