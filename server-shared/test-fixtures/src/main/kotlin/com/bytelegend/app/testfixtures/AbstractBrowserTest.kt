@@ -56,7 +56,11 @@ abstract class AbstractByteLegendIntegrationTest {
     @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     abstract val gameServerPort: Int
     private val defaultJsonMapper = DefaultJsonMapper(true)
-    private val httpClient by lazy { HttpClient.newHttpClient() }
+    private val httpClient by lazy {
+        HttpClient.newBuilder()
+            .followRedirects(HttpClient.Redirect.ALWAYS)
+            .build()
+    }
 
     protected fun sendWebhookFromResource(event: String, resource: String, mutator: (String) -> String = { it }) {
         val json = mutator(javaClass.getResourceAsFile(resource).readText())
