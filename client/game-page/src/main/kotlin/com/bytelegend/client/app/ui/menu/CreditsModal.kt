@@ -21,6 +21,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeSpan
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.events.Event
@@ -70,13 +71,7 @@ class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
     }
 
     private fun creditsTab(builder: RElementBuilder<*>) {
-        builder.h5 {
-            +i("SpecialThanks")
-        }
-
-        builder.p {
-            +i("SpecialThanksMyDaughter")
-        }
+        builder.unsafeDiv(i("SpecialThanks"))
 
         builder.h5 {
             +i("Thanks")
@@ -94,6 +89,9 @@ class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
             }
             li {
                 unsafeSpan(i("SpecialThanksIdeaParagraph"))
+            }
+            li {
+                unsafeSpan(i("SpecialThanksGitHub1sParagraph"))
             }
             li {
                 aTag(i("ClickHere")) {
