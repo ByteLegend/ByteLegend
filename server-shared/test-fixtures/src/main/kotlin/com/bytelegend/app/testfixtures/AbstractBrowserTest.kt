@@ -37,6 +37,7 @@ import org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode
 import org.testcontainers.containers.DefaultRecordingFileFactory
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.io.File
+import java.io.InputStream
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -86,11 +87,13 @@ abstract class AbstractByteLegendIntegrationTest {
         ).assert2XXStatusCode()
     }
 
-    protected fun sendHttpRequest(
+    @Suppress("UNCHECKED_CAST")
+    protected fun <T> sendHttpRequest(
         uri: String,
         headers: Map<String, String> = emptyMap(),
-        requestConfiguration: HttpRequest.Builder.() -> Unit
-    ): HttpResponse<String> {
+        responseType: Class<T> = String::class.java as Class<T>,
+        requestConfiguration: HttpRequest.Builder.() -> Unit,
+    ): HttpResponse<T> {
         val request = HttpRequest.newBuilder()
             .apply {
                 headers.forEach { (key, value) -> header(key, value) }
@@ -100,7 +103,15 @@ abstract class AbstractByteLegendIntegrationTest {
                 requestConfiguration(this)
             }
             .build()
-        return httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+        if (responseType == String::class.java) {
+            return httpClient.send(request, HttpResponse.BodyHandlers.ofString()) as HttpResponse<T>
+        } else if (responseType == InputStream::class.java) {
+            return httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream()) as HttpResponse<T>
+        } else if (responseType == ByteArray::class.java) {
+            return httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray()) as HttpResponse<T>
+        } else {
+            throw UnsupportedOperationException()
+        }
     }
 
     protected fun get(uri: String, headers: Map<String, String> = emptyMap()): HttpResponse<String> {
@@ -126,7 +137,7 @@ abstract class AbstractByteLegendIntegrationTest {
     }
 }
 
-fun HttpResponse<String>.assert2XXStatusCode(): HttpResponse<String> {
+fun <T> HttpResponse<T>.assert2XXStatusCode(): HttpResponse<T> {
     assertTrue(statusCode() in 200..299) {
         "Received ${statusCode()} status code: ${body()}"
     }
