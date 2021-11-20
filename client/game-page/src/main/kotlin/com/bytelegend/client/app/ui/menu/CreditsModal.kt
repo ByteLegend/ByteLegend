@@ -33,7 +33,6 @@ import react.dom.a
 import react.dom.br
 import react.dom.h5
 import react.dom.li
-import react.dom.p
 import react.dom.ul
 import react.setState
 
