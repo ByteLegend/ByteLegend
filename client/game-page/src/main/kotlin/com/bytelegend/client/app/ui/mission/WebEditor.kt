@@ -226,7 +226,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
     private fun onChallengeAnswersUpdate(eventData: ChallengeUpdateEventData) {
         if (eventData.newValue.challengeId == props.challengeSpec.id) {
             val prAnswers = props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(props.challengeSpec.id)
-            if (prAnswers.none { it.isRunning }) {
+            if (!prAnswers.anyCheckRunning()) {
                 props.game.eventBus.emit(ANSWER_BUTTON_CONTROL_EVENT, jsObject<dynamic> {
                     spinning = false
                     textId = "SubmitAnswer"

@@ -105,6 +105,9 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
         setState {
             spinning = it.spinning
             textId = it.textId
+            if (it.textId == "SubmitAnswer") {
+                dotNumber = 0
+            }
         }
     }
 
@@ -126,11 +129,8 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
         } else {
             spinning = false
             textId = "SubmitAnswer"
+            dotNumber = 0
         }
-    }
-
-    private fun List<PullRequestAnswer>.anyCheckRunning(): Boolean {
-        return any { it.latestCheckRun != null && !it.latestCheckRun!!.isStale && it.latestCheckRun!!.conclusion == null }
     }
 
     override fun RBuilder.render() {
@@ -248,5 +248,12 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
     override fun componentWillUnmount() {
         props.game.eventBus.remove(ANSWER_BUTTON_CONTROL_EVENT, answerButtonControlListener)
         props.game.eventBus.remove(GAME_CLOCK_20MS_EVENT, on50HzClockListener)
+    }
+}
+
+fun List<PullRequestAnswer>.anyCheckRunning(): Boolean {
+    return any {
+        // when the PR is just created, check runs haven't started yet.
+        it.latestCheckRun == null || it.isRunning
     }
 }
