@@ -30,3 +30,5 @@ inline fun <K, V> Map<K, V>.ifNotEmpty(fn: Map<K, V>.() -> Unit) {
 expect fun currentTimeMillis(): Long
 
 expect fun currentTimeIso8601(): String
+
+expect fun Long.toIso8601(): String

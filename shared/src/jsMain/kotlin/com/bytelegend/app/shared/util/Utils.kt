@@ -19,3 +19,4 @@ import kotlin.js.Date
 
 actual fun currentTimeMillis(): Long = Date().getTime().toLong()
 actual fun currentTimeIso8601(): String = Date().toISOString()
+actual fun Long.toIso8601(): String = Date(this).toISOString()
