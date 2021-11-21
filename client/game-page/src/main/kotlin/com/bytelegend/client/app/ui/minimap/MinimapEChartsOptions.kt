@@ -484,6 +484,14 @@ fun GameScene.getRoadmapEChartsOptions(showMissionTitles: Boolean): dynamic {
     }
 }
 
+fun <T> Iterable<T>.mapToNativeJsArray(fn: (T) -> dynamic): dynamic {
+    val ret = js("[]")
+    for (element in this) {
+        ret.push(fn(element))
+    }
+    return ret
+}
+
 fun nativeJsArrayOf(vararg args: dynamic): dynamic {
     val ret = js("[]")
     for (arg in args) {
