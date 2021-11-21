@@ -40,6 +40,7 @@ import com.bytelegend.client.app.ui.DefaultToastController
 import com.bytelegend.client.app.ui.ModalControllerInternal
 import com.bytelegend.client.app.web.WebSocketClient
 import com.bytelegend.client.utils.JSObjectBackedMap
+import kotlinext.js.jsObject
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import org.kodein.di.DI
@@ -112,6 +113,13 @@ class Game(
     val idToMapDefinition: Map<String, GameMapDefinition> by lazy {
         mapHierarchy.toMap()
     }
+    val i18nTextsForWebEditor: dynamic by lazy {
+        val ret: dynamic = jsObject()
+        i18nTextContainer.forEach {
+            ret[it.key] = it.value
+        }
+        ret
+    }
 
     override val modalController: ModalControllerInternal by lazy {
         DefaultModalController(di)
@@ -141,6 +149,20 @@ class Game(
         setClock(GAME_CLOCK_20MS, GAME_CLOCK_20MS_EVENT)
 
         checkGfw()
+
+//        window.setInterval({
+//            eventBus.emit(
+//                logStreamEvent(JAVA_ISLAND), LogStreamEventData(
+//                    false,
+//                    JAVA_ISLAND,
+//                    "fix-simple-add",
+//                    "java-fix-add",
+//                    "https://github.com/ByteLegendQuest/java-fix-add/pull/24",
+//                    "3870624740",
+//                    listOf("Mock log at ${currentTimeIso8601()}", "Mock log2 at ${currentTimeMillis()}")
+//                )
+//            )
+//        }, 1000)
     }
 
     fun transformGitHubUrl(url: String): String {
@@ -180,7 +202,7 @@ class Game(
 
     override fun i(textId: String, vararg args: String): String = i18nTextContainer.getValue(textId).render(*args)
     override fun putText(textId: String, text: String) {
-        i18nTextContainer.put(textId, text)
+        i18nTextContainer[textId] = text
     }
 
     fun resolve(path: String) = "${RRBD}$path"
