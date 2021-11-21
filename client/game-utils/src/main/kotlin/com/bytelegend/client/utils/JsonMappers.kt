@@ -235,7 +235,9 @@ fun toMissionTabData(jsonObject: dynamic): MissionTabData<*> {
             JSArrayBackedList(delegate = jsonObject.whitelist)
         )
         HeroNoticeboardChallenge -> HeroNoticeboardTabData(
-            toHeroNoticeboardTilesData(jsonObject.data)
+            toHeroNoticeboardTilesData(jsonObject.data),
+            toChallengeSpec(jsonObject.challengeSpec),
+            JSArrayBackedList(delegate = jsonObject.whitelist)
         )
         Tutorials -> TutorialsTabData(
             toPagination(jsonObject.data, ::toTutorial),

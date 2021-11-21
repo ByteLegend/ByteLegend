@@ -25,10 +25,12 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapPagination
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationItem
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTile
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.mission.WebEditor
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.get
 import com.bytelegend.client.utils.jsObjectBackedSetOf
@@ -69,6 +71,9 @@ interface JavaIslandHeroNoticeboardProps : GameProps {
     // the mission modal data from backend.
     var initTiles: List<HeroNoticeboardTile>
     var totalPage: Int
+    var missionId: String
+    var challengeSpec: ChallengeSpec
+    var whitelist: List<String>
 }
 
 interface JavaIslandHeroNoticeboardState : State {
@@ -165,6 +170,13 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
                     attrs.classes = jsObjectBackedSetOf("transparent-text")
                     +"Yay! You found an easter egg!"
                 }
+            }
+
+            child(WebEditor::class) {
+                attrs.game = props.game
+                attrs.whitelist = props.whitelist
+                attrs.missionId = props.missionId
+                attrs.challengeSpec = props.challengeSpec
             }
         }
     }

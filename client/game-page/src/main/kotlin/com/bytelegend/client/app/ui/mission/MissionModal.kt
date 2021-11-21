@@ -156,6 +156,9 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
             attrs.game = game
             attrs.initTiles = tab.data.tiles
             attrs.totalPage = tab.data.page
+            attrs.missionId = props.missionId
+            attrs.challengeSpec = tab.challengeSpec
+            attrs.whitelist = tab.whitelist
         }
     }
 
@@ -168,6 +171,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
             attrs.game = game
             attrs.missionId = props.missionId
             attrs.challengeSpec = tab.data
+            attrs.whitelist = tab.whitelist
         }
     }
 

@@ -56,7 +56,7 @@ class MissionTitlePullRequestAnswerButton : RComponent<MissionTitlePullRequestAn
             attrs.classes = jsObjectBackedSetOf("pull-request-answer-button")
             val latestConclusion = props.pullRequestAnswer.latestCheckRun?.conclusion
             when {
-                props.pullRequestAnswer.accomplished || latestConclusion == CheckRunConclusion.SUCCESS ->
+                props.pullRequestAnswer.accomplished || latestConclusion == CheckRunConclusion.SUCCESS.name ->
                     icon(12, jsObjectBackedSetOf("icon-status-success", "green-tick-icon"))
                 latestConclusion == null -> pendingSpinner()
                 else -> icon(12, jsObjectBackedSetOf("icon-status-failure", "red-cross-icon"))

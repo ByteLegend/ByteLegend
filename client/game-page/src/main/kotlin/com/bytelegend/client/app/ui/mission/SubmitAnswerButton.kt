@@ -18,11 +18,17 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.client.app.engine.GAME_CLOCK_20MS_EVENT
+import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinx.browser.document
 import kotlinx.browser.localStorage
+import kotlinx.html.Draggable
 import kotlinx.html.classes
+import kotlinx.html.draggable
+import kotlinx.html.id
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onMouseDownFunction
@@ -30,6 +36,7 @@ import kotlinx.html.js.onMouseMoveFunction
 import kotlinx.html.js.onMouseOutFunction
 import kotlinx.html.js.onMouseOverFunction
 import kotlinx.html.js.onMouseUpFunction
+import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
 import react.RBuilder
@@ -38,16 +45,17 @@ import react.State
 import react.dom.div
 import react.dom.img
 import react.dom.jsStyle
+import react.dom.span
 import react.setState
 
-private const val ROTATION_SPEED_DEG_PER_SECOND = 180;
+private const val ROTATION_SPEED_DEG_PER_SECOND = 180
 private const val DEFAULT_TOP = "60vh"
 private const val DEFAULT_LEFT = "20%"
-const val STOP_SPINNING_EVENT = "stop.spinning"
+const val ANSWER_BUTTON_CONTROL_EVENT = "answer.button.control"
 
 interface SubmitAnswerButtonProps : GameProps {
     var onClick: UnitFunction
-    var spinning: Boolean
+    var challengeId: String
 }
 
 interface SubmitAnswerButtonState : State {
@@ -64,6 +72,7 @@ interface SubmitAnswerButtonState : State {
 
     // the button is spinning or not
     var spinning: Boolean
+    var textId: String
 
     // 0~3
     var dotNumber: Int
@@ -81,6 +90,7 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
     private fun loadTop() = localStorage.getItem("SubmitAnswerButtonTop")?.toIntOrNull()
     private fun saveLeft() = localStorage.setItem("SubmitAnswerButtonLeft", state.left.toString())
     private fun saveTop() = localStorage.setItem("SubmitAnswerButtonTop", state.top.toString())
+    private val elementId = "submit-answer-button-${uuid()}"
     private val on50HzClockListener: EventListener<Nothing> = {
         if (state.spinning) {
             val rotationDegree = (state.rotationDegree + (ROTATION_SPEED_DEG_PER_SECOND / 1000.0 * 20).toInt()) % 360
@@ -91,9 +101,10 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
         }
     }
 
-    private val stopSpinningListener: EventListener<Nothing> = {
+    private val answerButtonControlListener: EventListener<dynamic> = {
         setState {
-            spinning = false
+            spinning = it.spinning
+            textId = it.textId
         }
     }
 
@@ -107,18 +118,31 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
         rotationDegree = 0
         glow = false
         borderCursor = "grab"
-        spinning = props.spinning
         dotNumber = 0
+
+        if (props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(props.challengeId).anyCheckRunning()) {
+            spinning = true
+            textId = "CheckingAnswer"
+        } else {
+            spinning = false
+            textId = "SubmitAnswer"
+        }
+    }
+
+    private fun List<PullRequestAnswer>.anyCheckRunning(): Boolean {
+        return any { it.latestCheckRun != null && !it.latestCheckRun!!.isStale && it.latestCheckRun!!.conclusion == null }
     }
 
     override fun RBuilder.render() {
         // layers: border ->
         div("submit-answer-button") {
+            attrs.id = elementId
             attrs.jsStyle {
-                left = "calc(${DEFAULT_LEFT} + ${state.left}px)"
-                top = "calc(${DEFAULT_TOP} + ${state.top}px)"
+                left = "calc($DEFAULT_LEFT + ${state.left}px)"
+                top = "calc($DEFAULT_TOP + ${state.top}px)"
             }
             img {
+                attrs.draggable = Draggable.htmlTrue
                 if (state.glow) {
                     attrs.classes = jsObjectBackedSetOf("submit-answer-button-border", "submit-answer-button-border-hover")
                 } else {
@@ -136,10 +160,8 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
                 attrs.onMouseMoveFunction = this@SubmitAnswerButton::onMouseMove
             }
             div("submit-answer-button-button") {
-                if (state.spinning) {
-                    +(props.game.i("CheckingAnswer") + ".".repeat(state.dotNumber))
-                } else {
-                    +props.game.i("SubmitAnswer")
+                span {
+                    +(props.game.i(state.textId) + ".".repeat(state.dotNumber))
                 }
                 attrs.onMouseOutFunction = { setState { glow = false } }
                 attrs.onMouseOverFunction = {
@@ -161,6 +183,7 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
     private fun onClick() {
         if (!state.spinning) {
             setState {
+                textId = "SubmittingAnswer"
                 spinning = true
             }
             props.onClick()
@@ -168,13 +191,25 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
     }
 
     private fun onMouseUp(mouseEvent: Event) {
-        setState {
-            borderCursor = "grab"
-            lastMouseDownClientX = null
-            lastMouseDownClientY = null
-            lastMouseDownLeft = state.left
-            lastMouseDownTop = state.top
+        if (state.lastMouseDownClientX == null) {
+            return
         }
+        val event = mouseEvent.asDynamic().nativeEvent as MouseEvent
+
+        setState({
+            it.borderCursor = "grab"
+            it.left = it.lastMouseDownLeft!! + event.clientX - it.lastMouseDownClientX!!
+            it.top = it.lastMouseDownTop!! + event.clientY - it.lastMouseDownClientY!!
+
+            it.lastMouseDownClientX = null
+            it.lastMouseDownClientY = null
+            it.lastMouseDownLeft = null
+            it.lastMouseDownTop = null
+            it
+        }, {
+            saveTop()
+            saveLeft()
+        })
     }
 
     private fun onMouseDown(mouseEvent: Event) {
@@ -194,24 +229,24 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
             val deltaX = event.clientX - state.lastMouseDownClientX!!
             val deltaY = event.clientY - state.lastMouseDownClientY!!
 
-            setState({
-                it.left = state.lastMouseDownLeft!! + deltaX
-                it.top = state.lastMouseDownTop!! + deltaY
-                it
-            }, {
-                saveTop()
-                saveLeft()
-            })
+            // Don't use setState in mouse move, it's slow and may not catch up with mouse moving
+            val newLeft = "calc($DEFAULT_LEFT + ${state.lastMouseDownLeft!! + deltaX}px)"
+            val newTop = "calc($DEFAULT_TOP + ${state.lastMouseDownTop!! + deltaY}px)"
+            document.getElementById(elementId)?.apply {
+                val div = unsafeCast<HTMLDivElement>()
+                div.style.left = newLeft
+                div.style.top = newTop
+            }
         }
     }
 
     override fun componentDidMount() {
-        props.game.eventBus.on(STOP_SPINNING_EVENT, stopSpinningListener)
+        props.game.eventBus.on(ANSWER_BUTTON_CONTROL_EVENT, answerButtonControlListener)
         props.game.eventBus.on(GAME_CLOCK_20MS_EVENT, on50HzClockListener)
     }
 
     override fun componentWillUnmount() {
-        props.game.eventBus.remove(STOP_SPINNING_EVENT, stopSpinningListener)
+        props.game.eventBus.remove(ANSWER_BUTTON_CONTROL_EVENT, answerButtonControlListener)
         props.game.eventBus.remove(GAME_CLOCK_20MS_EVENT, on50HzClockListener)
     }
 }

@@ -17,6 +17,7 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.misc.githubUrlToRawGithubUserContentUrl
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
+import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.external.LoadableMarkdown
 import com.bytelegend.client.app.page.game
@@ -33,12 +34,11 @@ import react.dom.br
 import react.dom.details
 import react.dom.div
 import react.dom.h4
-import react.dom.iframe
-import react.dom.jsStyle
 
 interface PullRequestChallengeTabProps : GameProps {
     var missionId: String
     var challengeSpec: ChallengeSpec
+    var whitelist: List<String>
 }
 
 class PullRequestChallengeTab : GameUIComponent<PullRequestChallengeTabProps, State>() {
@@ -65,7 +65,9 @@ class PullRequestChallengeTab : GameUIComponent<PullRequestChallengeTabProps, St
         renderReadme(props.game, readme)
 
         child(WebEditor::class) {
+            attrs.whitelist = props.whitelist
             attrs.game = props.game
+            attrs.missionId = props.missionId
             attrs.challengeSpec = props.challengeSpec
         }
     }
@@ -95,7 +97,11 @@ fun RBuilder.renderReadme(game: Game, readmeOrLink: String) {
 
 @Suppress("UnsafeCastFromDynamic")
 private val openDetailsWithDefaultLocale: (dynamic, dynamic) -> dynamic = { node, _ ->
-    val localeDisplayName = game.locale.displayName
+    val localeDisplayName = when (game.locale) {
+        Locale.ZH_HANS, Locale.ZH_HANT -> Locale.ZH_HANS.displayName
+        else -> Locale.EN.displayName
+    }
+
     react.buildElements {
         details {
             node.children.forEach { it ->

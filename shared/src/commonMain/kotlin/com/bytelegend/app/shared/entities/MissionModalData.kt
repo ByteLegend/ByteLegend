@@ -61,7 +61,9 @@ class ChallengeTabData(
 }
 
 class HeroNoticeboardTabData(
-    override val data: HeroNoticeboardTilesData
+    override val data: HeroNoticeboardTilesData,
+    val challengeSpec: ChallengeSpec,
+    val whitelist: List<String>
 ) : MissionTabData<HeroNoticeboardTilesData> {
     override val type: MissionTabType = MissionTabType.HeroNoticeboardChallenge
     override val title: String = "MissionChallenge"

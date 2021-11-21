@@ -19,7 +19,6 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.client.app.engine.DefaultGameMission
-import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
 import com.bytelegend.client.utils.jsObjectBackedSetOf
@@ -63,11 +62,6 @@ class MissionTitle(props: MissionTitleProps) : AbstractBouncingTitleWidget<Missi
                         attrs.current = state.currentStar
                         attrs.starSize = 24
                     }
-
-                    child(MissionTitleAnswers::class) {
-                        attrs.game = game
-                        attrs.mission = props.mission
-                    }
                 }
             }
         }
@@ -77,7 +71,7 @@ class MissionTitle(props: MissionTitleProps) : AbstractBouncingTitleWidget<Missi
         return super.shouldComponentUpdate(nextProps, nextState) || state.currentStar != nextState.currentStar
     }
 
-    override fun componentWillReceiveProps(nextProps: MissionTitleProps) {
+    override fun UNSAFE_componentWillReceiveProps(nextProps: MissionTitleProps) {
         setState {
             currentStar = props.gameScene.challengeAnswers.missionStar(props.mission.id)
         }

@@ -864,6 +864,10 @@ blockquote {
     height: 128px;
 }
 
+.submit-answer-button-button>span {
+    flex: 0 0 80px;
+}
+
 .submit-answer-button-button {
     display: flex;
     align-items: center;

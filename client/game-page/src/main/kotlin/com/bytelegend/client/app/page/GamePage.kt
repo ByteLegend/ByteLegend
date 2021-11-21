@@ -107,7 +107,7 @@ fun main() {
     }
     window.addEventListener("message", {
         val event = it.asDynamic()
-        if(event.data.bytelegendEvent){
+        if (event.data.bytelegendEvent) {
             WindowBasedEventBus.emit(event.data.bytelegendEvent, event.data.bytelegendEventPayload)
         }
     })

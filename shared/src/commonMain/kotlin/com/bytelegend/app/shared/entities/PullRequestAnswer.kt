@@ -15,6 +15,11 @@
  */
 package com.bytelegend.app.shared.entities
 
+import com.bytelegend.app.shared.util.currentTimeMillis
+import com.bytelegend.app.shared.util.toIso8601
+
+const val MAX_CHECK_RUN_MS = 10 * 60 * 1000
+
 /**
  * Also see `PullRequestContext`
  */
@@ -27,19 +32,36 @@ data class PullRequestAnswer(
     val open: Boolean,
     val accomplished: Boolean,
     val lastUpdatedTime: String,
+    /**
+     * Ordered by created time desc
+     */
     val checkRuns: List<PullRequestCheckRun>
 ) {
     val latestCheckRun
         get() = checkRuns.firstOrNull()
+    val isRunning
+        get() = latestCheckRun.let {
+            it != null && it.conclusion == null && !it.isStale
+        }
 }
 
 data class PullRequestCheckRun(
     val id: String,
     val sha: String,
     val htmlUrl: String,
+    val time: String,
     // null means it's still running
-    val conclusion: CheckRunConclusion?
-)
+    val conclusion: String?
+) {
+    /**
+     * If a check run has no conclusion and started 10min ago, we see it as "stale".
+     */
+    val isStale: Boolean
+        get() {
+            val tenMinutesAgo = currentTimeMillis() - MAX_CHECK_RUN_MS
+            return time < tenMinutesAgo.toIso8601()
+        }
+}
 
 fun ChallengeAnswers.toPullRequestAnswers(): List<PullRequestAnswer> {
     return answers.values.mapNotNull { it.toPullRequestAnswer() }.sortedByDescending { it.lastUpdatedTime }
@@ -65,21 +87,22 @@ fun List<ChallengeAnswer>.toPullRequestAnswer(): PullRequestAnswer? {
     val open = lastOpenCloseAction == null || lastOpenCloseAction.action.endsWith("opened")
 
     val accomplished = any { it.accomplished }
-    val sortedCheckRunByStartedTimeDesc: List<CheckRunAnswerData> = sortedByDescending { it.time }
-        .map { it.answerData }.filterIsInstance<CheckRunAnswerData>()
+    val sortedCheckRunByStartedTimeDesc: List<ChallengeAnswer> = sortedByDescending { it.time }.filter { it.answerData is CheckRunAnswerData }
 
     val idToConclusion = sortedCheckRunByStartedTimeDesc
-        .filter(CheckRunAnswerData::isCompleted).associate {
-            it.id to it.conclusion?.let { CheckRunConclusion.valueOf(it.uppercase()) }
+        .filter { it.answerDataAs<CheckRunAnswerData>().isCompleted() }
+        .associate {
+            val data = it.answerDataAs<CheckRunAnswerData>()
+            data.id to data.conclusion?.let { CheckRunConclusion.valueOf(it.uppercase()) }
         }
     val checkRuns = sortedCheckRunByStartedTimeDesc
-        .filter { it.isCreated() }
+        .filter { it.answerDataAs<CheckRunAnswerData>().isCreated() }
         .map {
-            val id = it.id
-            val sha = it.sha
+            val data = it.answerDataAs<CheckRunAnswerData>()
+            val id = data.id
             val conclusion = idToConclusion[id]
             val actionHtmlUrl = "https://github.com/$baseRepoFullName/runs/$id"
-            PullRequestCheckRun(id, sha, actionHtmlUrl, conclusion)
+            PullRequestCheckRun(id, data.sha, actionHtmlUrl, it.time, conclusion?.name)
         }
     return PullRequestAnswer(htmlUrl, number, baseRepoFullName, headRepoFullName, branch, open, accomplished, maxOf { it.time }, checkRuns)
 }
