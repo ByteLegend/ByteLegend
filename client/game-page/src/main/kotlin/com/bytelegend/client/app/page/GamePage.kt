@@ -18,6 +18,7 @@
 package com.bytelegend.client.app.page
 
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.WindowBasedEventBus
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.PixelSize
@@ -104,6 +105,12 @@ fun main() {
     window.onerror = { a: dynamic, b: String, c: Int, d: Int, e: Any? ->
         BrowserConsoleLogger.error("$a $b $c $d $e")
     }
+    window.addEventListener("message", {
+        val event = it.asDynamic()
+        if(event.data.bytelegendEvent){
+            WindowBasedEventBus.emit(event.data.bytelegendEvent, event.data.bytelegendEventPayload)
+        }
+    })
 
     // TODO make this js-load-order-agnostic
     // https://github.com/PrismJS/prism/issues/1764
