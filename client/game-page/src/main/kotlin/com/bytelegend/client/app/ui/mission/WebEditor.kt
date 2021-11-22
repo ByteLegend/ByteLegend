@@ -27,6 +27,7 @@ import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.logStreamEvent
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.minimap.mapToNativeJsArray
 import com.bytelegend.client.app.ui.minimap.nativeJsArrayOf
 import kotlinext.js.jsObject
 import kotlinx.browser.document
@@ -186,7 +187,11 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
 
     // See MyAnswerTreeDataProvider
     private fun getAnswers(): dynamic {
-        return JSON.parse(JSON.stringify(props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(props.challengeSpec.id)))
+        return props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(props.challengeSpec.id).toJsArray()
+    }
+
+    private fun List<PullRequestAnswer>.toJsArray() = mapToNativeJsArray {
+        JSON.parse(JSON.stringify(it))
     }
 
     private fun postMessageToWebEditorIframe(message: Any) {
@@ -233,7 +238,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
                 })
             }
 
-            val args = nativeJsArrayOf(JSON.parse<dynamic>(JSON.stringify(prAnswers)))
+            val args = nativeJsArrayOf(prAnswers.toJsArray())
             postMessageToWebEditorIframe(jsObject<dynamic> {
                 forwardCommand = "bytelegend.updateAnswers"
                 forwardCommandArgs = args
