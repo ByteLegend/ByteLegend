@@ -44,7 +44,7 @@ import react.dom.iframe
 import react.dom.p
 import react.setState
 
-private const val IFRAME_WEBEDITOR_INIT_COMPLETED = "webditor.init.completed"
+private const val IFRAME_WEBEDITOR_INIT_COMPLETED = "webeditor.init.completed"
 
 interface WebEditorState : State {
     var open: Boolean

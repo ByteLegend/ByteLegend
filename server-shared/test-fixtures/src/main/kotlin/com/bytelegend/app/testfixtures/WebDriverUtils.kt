@@ -34,6 +34,9 @@ fun Class<*>.getResourceAsFile(name: String) = Paths.get(getResource(name).toURI
 fun WebDriver.waitUntil(timeoutMs: Int = 5000, predicate: WebDriver.() -> Boolean) {
     com.bytelegend.app.testfixtures.waitUntil(timeoutMs) { predicate() }
 }
+fun WebDriver.waitUntil(timeoutMs: Int = 5000, by: By) {
+    com.bytelegend.app.testfixtures.waitUntil(timeoutMs) { findElements(by).isNotEmpty() }
+}
 
 fun <T> waitUntilFound(timeoutMs: Int = 5000, predicate: () -> T): T {
     var ret: T? = null
