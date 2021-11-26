@@ -35,6 +35,7 @@ import org.testcontainers.Testcontainers.exposeHostPorts
 import org.testcontainers.containers.BrowserWebDriverContainer
 import org.testcontainers.containers.BrowserWebDriverContainer.VncRecordingMode
 import org.testcontainers.containers.DefaultRecordingFileFactory
+import org.testcontainers.containers.VncRecordingContainer
 import org.testcontainers.junit.jupiter.Testcontainers
 import java.io.File
 import java.io.InputStream
@@ -161,7 +162,7 @@ abstract class AbstractBrowserTest : AbstractByteLegendIntegrationTest() {
      * so that we can see the recording videos.
      */
     val buildTmpDir: File
-        get() = File(System.getProperty("build.tmp.dir"), javaClass.simpleName)
+        get() = File(requireNotNull(System.getProperty("build.tmp.dir")), javaClass.simpleName)
 
     @BeforeEach
     fun setUpAbstractBrowserTest() {
@@ -191,7 +192,7 @@ abstract class AbstractBrowserTest : AbstractByteLegendIntegrationTest() {
             }
         }
         withCapabilities(browserOptions)
-        withRecordingMode(recordingMode, recordingDir.apply { mkdirs() })
+        withRecordingMode(recordingMode, recordingDir.apply { mkdirs() }, VncRecordingContainer.VncRecordingFormat.MP4)
         withRecordingFileFactory(DefaultRecordingFileFactory())
     }
 }
