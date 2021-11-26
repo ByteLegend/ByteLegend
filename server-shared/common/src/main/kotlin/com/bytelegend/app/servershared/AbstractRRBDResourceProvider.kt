@@ -48,7 +48,7 @@ abstract class AbstractRRBDResourceProvider(
     private val localRRBD: String,
     serializer: JsonMapper
 ) : RRBDResourceProvider {
-    private val localizedText: Map<String, LocalizedText> by lazy {
+    val localizedText: Map<String, LocalizedText> by lazy {
         val i18nAllJson = File(localRRBD).resolve("i18n/all.json").readText()
         serializer.fromJson(i18nAllJson, object : TypeReference<Map<String, LocalizedText>>() {})
     }
