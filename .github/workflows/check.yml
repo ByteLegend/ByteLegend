@@ -37,7 +37,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: check -x server:app:browserTest -x server:app:integTest -DagreePublicBuildScanTermOfService=yes
+          arguments: check -x server:app:browserTest -x server:app:integTest -x server:app:webEditorBrowserTest -DagreePublicBuildScanTermOfService=yes
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
@@ -59,7 +59,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ktlint server:app:integTest -DagreePublicBuildScanTermOfService=yes
+          arguments: ktlint server:app:integTest -DagreePublicBuildScanTermOfService=yes -Dforest.github.read.token=${{ secrets.GITHUB_TOKEN }}
   browser-test:
     runs-on: 'ubuntu-latest'
     if: ${{ github.event.pull_request.author_association != 'CONTRIBUTOR' }}

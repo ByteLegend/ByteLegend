@@ -1,0 +1,90 @@
+name: build-test-webeditor
+on:
+  push:
+    branches-ignore:
+      - release
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - versions.json
+      - livestream-data.json
+  pull_request:
+    branches-ignore:
+      - release
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - versions.json
+      - livestream-data.json
+jobs:
+  build:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          token: ${{ secrets.BYTELEGENDBOT_TOKEN }}
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-${{ matrix.node-version }}
+      - run: yarn add npm-run-all --dev
+        working-directory: github1s
+      - run: yarn build:vscode
+        working-directory: github1s
+      - run: yarn yalc
+        working-directory: github1s
+      - run: yarn add fs-extra
+        working-directory: github1s
+      - run: yarn install && yarn build && yarn hash
+        working-directory: github1s
+      - uses: actions/upload-artifact@v2
+        with:
+          name: webeditor
+          path: github1s/dist
+  test:
+    runs-on: 'ubuntu-latest'
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          token: ${{ secrets.BYTELEGENDBOT_TOKEN }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: webeditor
+          path: github1s/dist
+      - name: Display structure of downloaded files
+        run: ls -alth github1s/dist
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - run: yarn install
+        working-directory: github1s
+      - run: yarn serve > ./output 2>&1 &
+        working-directory: github1s
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: server:app:webEditorBrowserTest -DagreePublicBuildScanTermOfService=yes -Dforest.github.read.token=${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: artifacts
+          path: |
+            server/app/build/tmp/**/*.mp4
+            server/app/build/reports/test

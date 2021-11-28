@@ -17,13 +17,13 @@ jobs:
         with:
           script: |
             if ('${{ github.event.inputs.deployCommit }}' == 'latest') {
-              const response = github.rest.git.getRef({
+              const response = await github.rest.git.getRef({
                 owner: 'ByteLegend',
                 repo: 'ByteLegend',
-                ref: 'webeditor'
+                ref: 'master'
               })
-              console.log(`Commit to deploy: ${response.object.sha}`)
-              core.setOutput('deploy-commit', response.object.sha)
+              console.log(`Commit to deploy: ${response.data.object.sha}`)
+              core.setOutput('deploy-commit', response.data.object.sha)
             } else {
               console.log(`Commit to deploy: ${{ github.event.inputs.deployCommit }}`)
               core.setOutput('deploy-commit', '${{ github.event.inputs.deployCommit }}')
@@ -34,20 +34,20 @@ jobs:
           name: webeditor
           commit: ${{ steps.determine-webeditor-commit.outputs.deploy-commit }}
           path: github1s/dist
-      - run: ls -alth github1s/dist
-#      - name: Deploy to s3 Seoul
-#        run: >
-#          docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
-#          -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_SEOUL}}
-#          -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_SEOUL}}
-#          -e AWS_DEFAULT_REGION=ap-northeast-2
-#          amazon/aws-cli
-#          s3 sync --delete /dist s3://bytelegend-web-editor
-#      - name: Deploy to s3 Beijing
-#        run: >
-#          docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
-#          -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_BEIJINIG}}
-#          -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_BEIJING}}
-#          -e AWS_DEFAULT_REGION=cn-north-1
-#          amazon/aws-cli
-#          s3 sync --delete /dist s3://bytelegend-web-editor
+      - run: tree github1s/dist
+      - name: Deploy to s3 Seoul
+        run: >
+          docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
+          -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_SEOUL}}
+          -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_SEOUL}}
+          -e AWS_DEFAULT_REGION=ap-northeast-2
+          amazon/aws-cli
+          s3 sync --delete /dist s3://bytelegend-web-editor
+      - name: Deploy to s3 Beijing
+        run: >
+          docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
+          -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_BEIJINIG}}
+          -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_BEIJING}}
+          -e AWS_DEFAULT_REGION=cn-north-1
+          amazon/aws-cli
+          s3 sync --delete /dist s3://bytelegend-web-editor

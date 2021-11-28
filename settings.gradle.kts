@@ -64,6 +64,7 @@ include(":server-shared:test-fixtures")
 include(":server-opensource")
 if (settingsDir.resolve("server/server.gradle.kts").isFile) {
     include(":server:app")
+    include(":server:webeditor-browser-test")
     include(":server:json-model")
     include(":server:dal-dynamodb")
     include(":server:dal-api")
