@@ -1,0 +1,53 @@
+name: deploy-webeditor
+on:
+  workflow_dispatch:
+    inputs:
+      deployCommit:
+        description: 'Commit (empty to deploy the latest commit on master)'
+        required: true
+        default: 'latest'
+jobs:
+  deploy:
+    name: Deploy webeditor
+    runs-on: ubuntu-latest
+    steps:
+      - id: determine-webeditor-commit
+        name: Determine webeditor commit to deploy
+        uses: actions/github-script@v5
+        with:
+          script: |
+            if ('${{ github.event.inputs.deployCommit }}' == 'latest') {
+              const response = github.rest.git.getRef({
+                owner: 'ByteLegend',
+                repo: 'ByteLegend,
+                ref: 'webeditor'
+              })
+              console.log(`Commit to deploy: ${response.object.sha}`)
+              core.setOutput('deploy-commit', response.object.sha)
+            } else {
+              console.log(`Commit to deploy: ${{ github.event.inputs.deployCommit }}`)
+              core.setOutput('deploy-commit', '${{ github.event.inputs.deployCommit }}')
+            }
+      - uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: build-test-webeditor.yml
+          name: webeditor
+          commit: ${{ steps.determine-webeditor-commit.outputs.deploy-commit }}
+          path: github1s/dist
+      - run: ls -alth github1s/dist
+#      - name: Deploy to s3 Seoul
+#        run: >
+#          docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
+#          -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_SEOUL}}
+#          -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_SEOUL}}
+#          -e AWS_DEFAULT_REGION=ap-northeast-2
+#          amazon/aws-cli
+#          s3 sync --delete /dist s3://bytelegend-web-editor
+#      - name: Deploy to s3 Beijing
+#        run: >
+#          docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
+#          -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_BEIJINIG}}
+#          -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_BEIJING}}
+#          -e AWS_DEFAULT_REGION=cn-north-1
+#          amazon/aws-cli
+#          s3 sync --delete /dist s3://bytelegend-web-editor
