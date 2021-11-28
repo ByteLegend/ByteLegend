@@ -45,7 +45,7 @@ jobs:
       - name: Deploy to s3 Beijing
         run: >
           docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
-          -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_BEIJINIG}}
+          -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_BEIJING}}
           -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_BEIJING}}
           -e AWS_DEFAULT_REGION=cn-north-1
           amazon/aws-cli
