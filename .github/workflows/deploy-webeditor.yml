@@ -20,9 +20,8 @@ jobs:
               const response = await github.rest.git.getRef({
                 owner: 'ByteLegend',
                 repo: 'ByteLegend',
-                ref: 'master'
+                ref: 'heads/master'
               })
-              console.log(`Commit to deploy: ${response.data.object.sha}`)
               core.setOutput('deploy-commit', response.data.object.sha)
             } else {
               console.log(`Commit to deploy: ${{ github.event.inputs.deployCommit }}`)
