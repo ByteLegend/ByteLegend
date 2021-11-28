@@ -19,7 +19,7 @@ jobs:
             if ('${{ github.event.inputs.deployCommit }}' == 'latest') {
               const response = github.rest.git.getRef({
                 owner: 'ByteLegend',
-                repo: 'ByteLegend,
+                repo: 'ByteLegend',
                 ref: 'webeditor'
               })
               console.log(`Commit to deploy: ${response.object.sha}`)
