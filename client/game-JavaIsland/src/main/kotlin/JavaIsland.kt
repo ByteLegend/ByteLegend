@@ -70,8 +70,17 @@ fun main() {
             javaCloneRunDoor("clone-and-run-java-project", "clone-and-run-java-project-challenge")
             javaCloneRunDoor("clone-and-switch-branch", "clone-and-switch-branch-challenge")
             firstBugEvil()
-            basicStructureStone()
+            basicStructureStone(
+                "JavaBasicStructure",
+                "JavaBasicStructure-challenge-text",
+                listOf("import-third-party-package", "import-class", "create-a-new-class")
+            )
             commentDungeonNoticeboard()
+            basicStructureStone(
+                "JavaMethodField",
+                "JavaMethodField-challenge-text",
+                listOf("java-method", "java-method-overloading", "java-field", "java-method-invocation", "java-local-variable-scope", "java-method-recursion")
+            )
 
             billboard()
             // #28a745
@@ -101,14 +110,13 @@ fun GameScene.commentDungeonNoticeboard() = objects {
  * Upon initialization and mission repaint events,
  * update the checkboxes and mission animation/blockers.
  */
-fun GameScriptHelpers.updateCheckboxes() {
-    val textId = "JavaBasicStructure-challenge-text"
-    val html = gameScene.gameRuntime.i(textId)
+fun GameScriptHelpers.updateCheckboxes(blockMissionId: String, blockTextId: String, missionIds: List<String>) {
+    val html = gameScene.gameRuntime.i(blockTextId)
     val tmp = document.createElement("div")
     tmp.innerHTML = html
 
     val accomplishedMissionBefore = tmp.querySelectorAll("li>input[checked]").length
-    listOf("import-third-party-package", "import-class", "create-a-new-class").forEach {
+    missionIds.forEach {
         if (gameScene.challengeAnswers.missionAccomplished(it)) {
             val mission = gameScene.objects.getById<GameMission>(it)
             val title = gameScene.gameRuntime.i(mission.gameMapMission.title)
@@ -123,27 +131,27 @@ fun GameScriptHelpers.updateCheckboxes() {
         }
     }
 
-    gameScene.gameRuntime.putText(textId, tmp.innerHTML)
+    gameScene.gameRuntime.putText(blockTextId, tmp.innerHTML)
 
     val accomplishedMissionAfter = tmp.querySelectorAll("li>input[checked]").length
-    val missionStone = gameScene.objects.getById<GameMission>("JavaBasicStructure")
-    if (accomplishedMissionAfter == 3) {
+    val missionStone = gameScene.objects.getById<GameMission>(blockMissionId)
+    if (accomplishedMissionAfter == missionIds.size) {
         missionStone.animation = StaticFrame(1)
     } else {
         missionStone.animation = StaticFrame(0)
     }
-    if (accomplishedMissionBefore < 3 && accomplishedMissionAfter == 3) {
+    if (accomplishedMissionBefore < missionIds.size && accomplishedMissionAfter == missionIds.size) {
         removeMissionBlocker(missionStone)
     }
 }
 
-fun GameScene.basicStructureStone() {
+fun GameScene.basicStructureStone(stoneMissionId: String, stoneTextId: String, missionIds: List<String>) {
     val helpers = GameScriptHelpers(this)
-    helpers.updateCheckboxes()
-    listOf("import-third-party-package", "import-class", "create-a-new-class").forEach {
+    helpers.updateCheckboxes(stoneMissionId, stoneTextId, missionIds)
+    missionIds.forEach {
         val mission = objects.getById<DynamicSprite>(it)
         helpers.addMissionRepaintCallback(mission) {
-            helpers.updateCheckboxes()
+            helpers.updateCheckboxes(stoneMissionId, stoneTextId, missionIds)
         }
     }
 }

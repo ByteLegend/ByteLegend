@@ -29,7 +29,8 @@ data class PullRequestEnvironment(
     val author: String,
     val number: Int,
     val title: String,
-    val headSha: String
+    val headSha: String,
+    val localBranch: String
 ) {
     companion object {
         fun fromSystemProperty() = PullRequestEnvironment(
@@ -37,7 +38,8 @@ data class PullRequestEnvironment(
             systemProperty("prAuthor"),
             systemProperty("prNumber").toInt(),
             systemProperty("prTitle"),
-            systemProperty("prHeadSha")
+            systemProperty("prHeadSha"),
+            systemProperty("prLocalBranch"),
         )
     }
 }
