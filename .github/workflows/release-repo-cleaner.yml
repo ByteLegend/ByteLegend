@@ -1,0 +1,18 @@
+name: release-repo-cleaner
+
+on: workflow_dispatch
+
+jobs:
+  check-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+          token: ${{ secrets.BYTELEGENDBOT_TOKEN }}
+      - name: Check and Release
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: :server:github-release:uploadRepoCleanerToGitHubRelease -DgitHubToken=${{ secrets.BYTELEGENDBOT_TOKEN }} -DagreePublicBuildScanTermOfService=yes
+
+

@@ -88,6 +88,7 @@ val rehypeExternalLinksVersion = "1.0.0"
 val remarkGfmVersion = "2.0.0"
 val unifiedDiffParserVersion = "1.4"
 val jgitVersion = "5.13.0.202109080827-r"
+val hub4jGitHubApiVersion = "1.301"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -236,6 +237,14 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         url = "https://github.com/apache/xmlgraphics-batik",
         license = Apache2
     ),
+    OpenSourceLibrary(
+        name = "github-api",
+        groupArtifactId = "org.kohsuke:github-api",
+        version = hub4jGitHubApiVersion,
+        creditName = "GitHub API (hub4j)",
+        url = "https://github.com/hub4j/github-api",
+        license = MIT
+    ),
     OpenSourceLibrary("org.apache.xmlgraphics:batik-dom:$batikVersion"),
     OpenSourceLibrary("org.apache.xmlgraphics:batik-swing:$batikVersion"),
     OpenSourceLibrary(
@@ -328,7 +337,7 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         url = "https://github.com/thombergs/diffparser",
         license = Apache2
     ),
-        OpenSourceLibrary(
+    OpenSourceLibrary(
         name = "jgit",
         groupArtifactId = "org.eclipse.jgit:org.eclipse.jgit",
         version = jgitVersion,
