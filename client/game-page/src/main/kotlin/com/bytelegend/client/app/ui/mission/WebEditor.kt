@@ -203,7 +203,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
      * because when user finish the job, we want the webeditor to stay PR branch, unless user close and reopen webeditor.
      */
     override fun shouldComponentUpdate(nextProps: WebEditorProps, nextState: WebEditorState): Boolean {
-        return state.open != nextState.open || state.showSubmitAnswerButton != nextState.showSubmitAnswerButton
+        return state.open != nextState.open || state.showSubmitAnswerButton != nextState.showSubmitAnswerButton || props.challengeSpec.id != nextProps.challengeSpec.id
     }
 
     override fun componentDidMount() {
