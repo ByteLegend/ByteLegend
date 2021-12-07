@@ -73,7 +73,7 @@ val batikVersion = "1.14"
 val googleTranslationSdkVersion = "19.2.1"
 val reactPlayerVersion = "2.9.0"
 val reactSelectVersion = "4.3.0"
-val commonmarkVersion = "0.18.0"
+val commonmarkVersion = "0.18.1"
 val reactTextAreaAutosizeVersion = "8.3.2"
 // for sync-server because it useus JCL underlying
 val jclOverSlf4JVersion = "1.7.30"
