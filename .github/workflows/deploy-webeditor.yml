@@ -3,9 +3,13 @@ on:
   workflow_dispatch:
     inputs:
       deployCommit:
-        description: 'Commit (empty to deploy the latest commit on master)'
+        description: 'Commit (empty to deploy the latest commit on release)'
         required: true
         default: 'latest'
+      fromBranch:
+        description: "From which branch (valid only when commit='latest')"
+        required: true
+        default: 'release'
 jobs:
   deploy:
     name: Deploy webeditor
@@ -20,8 +24,9 @@ jobs:
               const response = await github.rest.git.getRef({
                 owner: 'ByteLegend',
                 repo: 'ByteLegend',
-                ref: 'heads/master'
+                ref: 'heads/${{ github.event.inputs.fromBranch }}'
               })
+              console.log(`Commit to deploy: ${response.data.object.sha}`)
               core.setOutput('deploy-commit', response.data.object.sha)
             } else {
               console.log(`Commit to deploy: ${{ github.event.inputs.deployCommit }}`)
