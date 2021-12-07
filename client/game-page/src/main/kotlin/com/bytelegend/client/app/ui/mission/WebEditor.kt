@@ -137,7 +137,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
     }
 
     private fun getLatestOpenPullRequest(): PullRequestAnswer? {
-        return props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(props.challengeSpec.id).firstOrNull { it.open }
+        return props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(props.challengeSpec.id).firstOrNull { it.open && !it.stale }
     }
 
     /**
@@ -174,7 +174,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
 
     private fun getLiveLogs(): dynamic {
         return props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(props.challengeSpec.id)
-            .filter { it.isRunning }
+            .filter { it.running }
             .map {
                 val checkRunId = it.latestCheckRun!!.id
                 val checkRunLogs = props.game.activeScene.logs.getLiveLogsByAnswer(it, checkRunId).toTypedArray()

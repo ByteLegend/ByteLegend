@@ -254,6 +254,6 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : RComponent<SubmitAnsw
 fun List<PullRequestAnswer>.anyCheckRunning(): Boolean {
     return any {
         // when the PR is just created, check runs haven't started yet.
-        it.latestCheckRun == null || it.isRunning
+        it.latestCheckRun == null || it.running
     }
 }

@@ -18,7 +18,8 @@ package com.bytelegend.app.shared.entities
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.app.shared.util.toIso8601
 
-const val MAX_CHECK_RUN_MS = 10 * 60 * 1000
+const val MAX_CHECK_RUN_MS: Long = 10 * 60 * 1000
+const val STALE_PULL_REQUEST_MS: Long = 7 * 24 * 3600 * 1000
 
 /**
  * Also see `PullRequestContext`
@@ -37,12 +38,11 @@ data class PullRequestAnswer(
      */
     val checkRuns: List<PullRequestCheckRun>
 ) {
-    val latestCheckRun
-        get() = checkRuns.firstOrNull()
-    val isRunning
-        get() = latestCheckRun.let {
-            it != null && it.conclusion == null && !it.isStale
-        }
+    val latestCheckRun = checkRuns.firstOrNull()
+    val running = latestCheckRun.let {
+        it != null && it.conclusion == null && !it.isStale
+    }
+    val stale = lastUpdatedTime < (currentTimeMillis() - STALE_PULL_REQUEST_MS).toIso8601()
 }
 
 data class PullRequestCheckRun(
