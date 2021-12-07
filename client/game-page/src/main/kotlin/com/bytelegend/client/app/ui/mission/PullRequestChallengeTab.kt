@@ -33,6 +33,7 @@ import react.dom.br
 import react.dom.details
 import react.dom.div
 import react.dom.h4
+import react.dom.jsStyle
 
 interface PullRequestChallengeTabProps : GameProps {
     var missionId: String
@@ -42,17 +43,10 @@ interface PullRequestChallengeTabProps : GameProps {
 
 class PullRequestChallengeTab : GameUIComponent<PullRequestChallengeTabProps, State>() {
     override fun RBuilder.render() {
-        unsafeH4(i("TLDR"))
         if (props.challengeSpec.tldr.isNotBlank()) {
+            unsafeH4(i("TLDR"))
             unsafeDiv(i(props.challengeSpec.tldr))
-        } else {
-            unsafeDiv(i("FinishChallengeInRepo", props.challengeSpec.spec))
-        }
-
-        br { }
-
-        h4 {
-            +i("Problem")
+            br { }
         }
 
         val readme = githubUrlToRawGithubUserContentUrl(
@@ -100,15 +94,22 @@ private val openDetailsWithDefaultLocale: (dynamic, dynamic) -> dynamic = { node
 
     react.buildElements {
         details {
+            var open = false
             node.children.forEach { it ->
                 child(it)
             }
             node.node.children.forEach { it ->
                 if (it.tagName == "summary" && it.children.length > 0 && it.children[0].value == localeDisplayName) {
+                    open = true
                     attrs.open = true
                     return@forEach null
                 }
                 null
+            }
+            if (!open) {
+                attrs.jsStyle {
+                    display = "none"
+                }
             }
         }
     }
