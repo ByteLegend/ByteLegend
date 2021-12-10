@@ -60,7 +60,7 @@ abstract class AbstractByteLegendIntegrationTest {
     private val defaultJsonMapper = DefaultJsonMapper(true)
     private val httpClient by lazy {
         HttpClient.newBuilder()
-            .followRedirects(HttpClient.Redirect.ALWAYS)
+            .followRedirects(HttpClient.Redirect.NEVER)
             .build()
     }
 

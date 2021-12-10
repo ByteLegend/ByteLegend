@@ -45,10 +45,10 @@ open class Session : Mvcc {
 
     @get: DynamoDbIgnore
     val isExpired: Boolean
-        get() = expiredAt < Instant.now()
+        get() = expiredAt < Instant.now().epochSecond
 
-    val expiredAt: Instant
-        get() = createdAt.plus(DEFAULT_SESSION_AGE)
+    // Epoch seconds
+    var expiredAt: Long = createdAt.plus(DEFAULT_SESSION_AGE).epochSecond
 
     override fun hashCode(): Int {
         return id.hashCode()

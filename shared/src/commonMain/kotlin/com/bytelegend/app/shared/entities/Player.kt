@@ -87,6 +87,8 @@ open class Player : BasePlayer() {
     @JsonIgnore
     var emails: MutableList<String> = ArrayList()
 
+    var githubToken: String? = null
+
     fun toPartialEntity() = BasePlayer().apply {
         this.id = this@Player.id
         this.username = this@Player.username

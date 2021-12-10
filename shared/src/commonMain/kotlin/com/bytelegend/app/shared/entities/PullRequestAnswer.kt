@@ -18,8 +18,8 @@ package com.bytelegend.app.shared.entities
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.app.shared.util.toIso8601
 
-const val MAX_CHECK_RUN_MS: Long = 10 * 60 * 1000
-const val STALE_PULL_REQUEST_MS: Long = 7 * 24 * 3600 * 1000
+const val MAX_CHECK_RUN_MS: Long = 10L * 60 * 1000
+const val STALE_PULL_REQUEST_MS: Long = 7L * 24 * 3600 * 1000
 
 /**
  * Also see `PullRequestContext`
