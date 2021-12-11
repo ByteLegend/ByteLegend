@@ -50,7 +50,7 @@ import react.setState
 
 private const val ROTATION_SPEED_DEG_PER_SECOND = 180
 private const val DEFAULT_TOP = "60vh"
-private const val DEFAULT_LEFT = "20%"
+private const val DEFAULT_LEFT = "10%"
 const val ANSWER_BUTTON_CONTROL_EVENT = "answer.button.control"
 
 interface SubmitAnswerButtonProps : GameProps {
