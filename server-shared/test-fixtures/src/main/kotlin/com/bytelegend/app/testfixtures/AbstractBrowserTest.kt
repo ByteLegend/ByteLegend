@@ -57,7 +57,7 @@ fun BrowserWebDriverContainer<Nothing>.safeStop() {
 abstract class AbstractByteLegendIntegrationTest {
     @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     abstract val gameServerPort: Int
-    private val defaultJsonMapper = DefaultJsonMapper(true)
+    protected val defaultJsonMapper = DefaultJsonMapper(true)
     private val httpClient by lazy {
         HttpClient.newBuilder()
             .followRedirects(HttpClient.Redirect.NEVER)
