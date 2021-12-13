@@ -97,10 +97,7 @@ fun RBuilder.renderReadme(game: Game, readmeOrLink: String) {
 
 @Suppress("UnsafeCastFromDynamic")
 private val openDetailsWithDefaultLocale: (dynamic, dynamic) -> dynamic = { node, _ ->
-    val localeDisplayName = when (game.locale) {
-        Locale.ZH_HANS, Locale.ZH_HANT -> Locale.ZH_HANS.displayName
-        else -> Locale.EN.displayName
-    }
+    val localeDisplayName = game.locale.displayName
 
     react.buildElements {
         details {
