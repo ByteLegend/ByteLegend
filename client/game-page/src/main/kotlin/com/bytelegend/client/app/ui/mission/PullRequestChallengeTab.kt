@@ -17,7 +17,6 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.misc.githubUrlToRawGithubUserContentUrl
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
-import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.external.LoadableMarkdown
 import com.bytelegend.client.app.page.game
