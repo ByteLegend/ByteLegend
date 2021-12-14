@@ -52,6 +52,9 @@ class MapData(ymlDir: File) {
             require(missionSpec.onFinish.coin >= 0) {
                 "${missionSpec.id} must have positive coin change!"
             }
+            require(missionSpec.challenges.distinctBy { it.id }.size == missionSpec.challenges.size) {
+                "${missionSpec.id} has duplicate challenges!"
+            }
             missionSpec.validateChallenges(ChallengeType.Question) {
                 require(readme.isNotBlank()) {
                     "tldr or readme is empty for $id!"
