@@ -20,9 +20,9 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.missionRepaintEvent
-import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
+import com.bytelegend.app.shared.entities.mission.ChallengeType
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.logStreamEvent
@@ -38,23 +38,25 @@ import org.w3c.dom.HTMLIFrameElement
 import react.RBuilder
 import react.RComponent
 import react.State
-import react.dom.b
 import react.dom.div
 import react.dom.iframe
-import react.dom.p
 import react.setState
 
 private const val IFRAME_WEBEDITOR_INIT_COMPLETED = "webeditor.init.completed"
 
 interface WebEditorState : State {
-    var open: Boolean
     var showSubmitAnswerButton: Boolean
 }
 
 interface WebEditorProps : GameProps {
     var missionId: String
+
+    // Supported challenge type:
+    // 1. Star: hide activity bar, show tutorial view, not open any markdown by default.
+    // 2. PullRequest/HeroNoticeboard: show all views
+    // 3. Question: hide activity bar, show tutorial view, open the question readme by default (it can be a url or string).
     var challengeSpec: ChallengeSpec
-    var whitelist: List<String>
+    var whitelist: List<String>?
 }
 
 class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
@@ -65,71 +67,36 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
     private val webEditorInitCompletedEventListener: EventListener<Nothing> = {
         setState { showSubmitAnswerButton = true }
     }
+    private val isPullRequestChallenge
+        get() = props.challengeSpec.type == ChallengeType.PullRequest || props.challengeSpec.type == ChallengeType.HeroNoticeboard
 
     override fun WebEditorState.init() {
-        open = false
         showSubmitAnswerButton = false
     }
 
     override fun RBuilder.render() {
-        if (!state.open) {
-            if (props.game.heroPlayer.isAnonymous) {
-                BootstrapButton {
-                    attrs.className = "open-close-webeditor-btn"
-                    attrs.disabled = true
-                    +"↓ ${props.game.i("OpenWebEditor")}"
+        div("webeditor-wrapper") {
+            iframe {
+                attrs.id = webEditorIframeId
+                attrs.src = determineWebEditorUrl()
+                attrs.attributes["frameBorder"] = "0"
+                attrs.onLoadFunction = {
+                    postMessageToWebEditorIframe(jsObject<dynamic> {
+                        bytelegendInitData = determineWebEditorInitData()
+                    })
                 }
-                p("text-align-center") {
-                    b {
-                        +props.game.i("YouMustSignInToUseWebEditor")
-                    }
-                }
-            } else {
-                BootstrapButton {
-                    attrs.className = "open-close-webeditor-btn"
-                    +"↓ ${props.game.i("OpenWebEditor")}"
+            }
+
+            if (state.showSubmitAnswerButton && isPullRequestChallenge) {
+                child(SubmitAnswerButton::class) {
+                    attrs.game = props.game
+                    attrs.challengeId = props.challengeSpec.id
                     attrs.onClick = {
-                        setState {
-                            open = true
-                        }
-                    }
-                }
-            }
-        } else {
-            BootstrapButton {
-                attrs.className = "open-close-webeditor-btn"
-                +"↑ ${props.game.i("CloseWebEditor")}"
-                attrs.onClick = {
-                    setState {
-                        open = false
-                        showSubmitAnswerButton = false
-                    }
-                }
-            }
-
-            div("webeditor-wrapper") {
-                iframe {
-                    attrs.id = webEditorIframeId
-                    attrs.src = determineWebEditorUrl()
-                    attrs.attributes["frameBorder"] = "0"
-                    attrs.onLoadFunction = {
+                        val arg = nativeJsArrayOf()
                         postMessageToWebEditorIframe(jsObject<dynamic> {
-                            bytelegendInitData = getWebEditorInitData()
+                            forwardCommand = "bytelegend.submitAnswer"
+                            forwardCommandArgs = arg
                         })
-                    }
-                }
-
-                if (state.showSubmitAnswerButton) {
-                    child(SubmitAnswerButton::class) {
-                        attrs.game = props.game
-                        attrs.challengeId = props.challengeSpec.id
-                        attrs.onClick = {
-                            val arg = nativeJsArrayOf()
-                            postMessageToWebEditorIframe(jsObject<dynamic> {
-                                forwardCommand = "bytelegend.submitAnswer"
-                                forwardCommandArgs = arg
-                            })
-                        }
                     }
                 }
             }
@@ -140,36 +107,52 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
         return props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(props.challengeSpec.id).firstOrNull { it.open && !it.stale }
     }
 
-    /**
-     * If there're any open PR, locate to {baseUrl}/{owner}/{repo}/blob/{branch}/{whitelistFilePath}
-     * Else: {baseUrl}/{owner}/{repo}, this will open default README preview
-     */
     private fun determineWebEditorUrl(): String {
         val baseUrl = if (window.location.hostname == "localhost") "http://localhost:5000" else "https://webeditor.bytelegend.com"
 
-        val latestPullRequestAnswer = getLatestOpenPullRequest()
-        val targetBranch =
-            if (latestPullRequestAnswer != null && latestPullRequestAnswer.baseRepoFullName == latestPullRequestAnswer.headRepoFullName)
-                latestPullRequestAnswer.branch
-            else "main"
-        return if (props.whitelist.isEmpty()) {
-            "$baseUrl/${props.challengeSpec.spec.substringAfter("github.com/")}/tree/$targetBranch"
+        return if (isPullRequestChallenge) {
+            val latestPullRequestAnswer = getLatestOpenPullRequest()
+            val targetBranch =
+                if (latestPullRequestAnswer != null && latestPullRequestAnswer.baseRepoFullName == latestPullRequestAnswer.headRepoFullName)
+                    latestPullRequestAnswer.branch
+                else "main"
+            "$baseUrl/${props.challengeSpec.spec.substringAfter("github.com/")}/blob/$targetBranch/README.md"
         } else {
-            "$baseUrl/${props.challengeSpec.spec.substringAfter("github.com/")}/blob/$targetBranch/${props.whitelist.first()}"
+            baseUrl
         }
     }
 
     @Suppress("HttpUrlsUsage")
-    private fun getWebEditorInitData(): dynamic = jsObject {
-        missionId = props.missionId
-        challengeId = props.challengeSpec.id
-        apiServer = if (window.location.hostname == "localhost") "http://${window.location.host}" else "https://bytelegend.com"
-        whitelist = props.whitelist.toTypedArray()
-        answers = getAnswers()
-        repoFullName = props.challengeSpec.spec.substringAfter("github.com/")
-        i18nTexts = props.game.i18nTextsForWebEditor
-        locale = props.game.locale.javascriptLocale
-        liveLogs = getLiveLogs()
+    private fun determineWebEditorInitData(): dynamic {
+        val whitelist = props.whitelist?.toTypedArray() ?: emptyArray()
+        val apiServer = if (window.location.hostname == "localhost") "http://${window.location.host}" else "https://bytelegend.com"
+        val ret = jsObject<dynamic> {
+            missionId = props.missionId
+            challengeId = props.challengeSpec.id
+            this.apiServer = apiServer
+            this.whitelist = whitelist
+            answers = getAnswers()
+            locale = props.game.locale.javascriptLocale
+            localeName = props.game.locale.displayName
+            i18nTexts = props.game.i18nTextsForWebEditor
+            gfw = props.game.gfw
+        }
+        if (isPullRequestChallenge) {
+            ret.repoFullName = props.challengeSpec.spec.substringAfter("github.com/")
+            ret.liveLogs = getLiveLogs()
+        } else {
+            ret.repoFullName = "ByteLegend/ByteLegend"
+            ret.showActivityBar = false
+            ret.initFocusView = "tutorial"
+            if (props.challengeSpec.readme.startsWith("https://")) {
+                ret.initReadme = props.challengeSpec.readme
+            } else {
+                val readme = props.game.i(props.challengeSpec.readme)
+                val replaced = if (props.game.gfw) readme.replace("https://raw.githubusercontent.com/", "$apiServer/ghraw/") else readme
+                ret.initReadme = replaced
+            }
+        }
+        return ret
     }
 
     private fun getLiveLogs(): dynamic {
@@ -203,7 +186,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
      * because when user finish the job, we want the webeditor to stay PR branch, unless user close and reopen webeditor.
      */
     override fun shouldComponentUpdate(nextProps: WebEditorProps, nextState: WebEditorState): Boolean {
-        return state.open != nextState.open || state.showSubmitAnswerButton != nextState.showSubmitAnswerButton || props.challengeSpec.id != nextProps.challengeSpec.id
+        return state.showSubmitAnswerButton != nextState.showSubmitAnswerButton || props.challengeSpec.id != nextProps.challengeSpec.id
     }
 
     override fun componentDidMount() {

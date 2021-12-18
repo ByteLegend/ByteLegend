@@ -40,9 +40,11 @@ import com.bytelegend.client.app.ui.heronoticeboard.JavaIslandHeroNoticeboard
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.window
+import kotlinx.html.DIV
 import kotlinx.html.classes
 import react.RBuilder
 import react.State
+import react.dom.RDOMBuilder
 import react.dom.div
 import react.dom.span
 import react.setState
@@ -127,7 +129,6 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                 }
                 val activeTab = mission.tabs[state.activeTabIndex]
                 div {
-                    attrs.classes = jsObjectBackedSetOf("mission-tab-content")
                     when (activeTab.type) {
                         MissionTabType.QuestionChallenge -> renderQuestionChallenge(activeTab.asDynamic())
                         MissionTabType.StarChallenge -> renderStarChallenge(activeTab.asDynamic())
@@ -162,7 +163,8 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
         }
     }
 
-    private fun RBuilder.textContentChallenge(tab: ChallengeTabData) {
+    private fun RDOMBuilder<DIV>.textContentChallenge(tab: ChallengeTabData) {
+        attrs.classes = jsObjectBackedSetOf("mission-tab-content")
         unsafeDiv(i(tab.data.spec))
     }
 
@@ -175,14 +177,18 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
         }
     }
 
-    private fun RBuilder.renderStarChallenge(tab: ChallengeTabData) {
+    private fun RDOMBuilder<DIV>.renderStarChallenge(tab: ChallengeTabData) {
+        attrs.classes = jsObjectBackedSetOf("mission-tab-content")
         child(StarChallengeTab::class) {
             attrs.contentHtml = game.i(tab.data.readme)
             attrs.game = game
+            attrs.missionId = props.missionId
+            attrs.challengeSpec = tab.data
         }
     }
 
-    private fun RBuilder.renderQuestionChallenge(tabData: ChallengeTabData) {
+    private fun RDOMBuilder<DIV>.renderQuestionChallenge(tabData: ChallengeTabData) {
+        attrs.classes = jsObjectBackedSetOf("mission-tab-content")
         child(QuestionChallengeTab::class) {
             attrs.game = game
             attrs.missionId = props.missionId

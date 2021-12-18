@@ -15,28 +15,24 @@
  */
 package com.bytelegend.client.app.ui.mission
 
+import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.client.app.ui.GameProps
-import com.bytelegend.client.app.ui.unsafeDiv
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
 import react.RBuilder
 import react.RComponent
 import react.State
-import react.dom.div
 
 interface StarChallengeTabProps : GameProps {
     var contentHtml: String
+    var missionId: String
+    var challengeSpec: ChallengeSpec
 }
 
 class StarChallengeTab : RComponent<StarChallengeTabProps, State>() {
     override fun RBuilder.render() {
-        div {
-            attrs.classes = jsObjectBackedSetOf("mission-tab-content")
-            if (props.game.gfw) {
-                unsafeDiv(props.contentHtml.replace("https://raw.githubusercontent.com/", "/ghraw/"))
-            } else {
-                unsafeDiv(props.contentHtml)
-            }
+        child(WebEditor::class) {
+            attrs.game = props.game
+            attrs.missionId = props.missionId
+            attrs.challengeSpec = props.challengeSpec
         }
     }
 }

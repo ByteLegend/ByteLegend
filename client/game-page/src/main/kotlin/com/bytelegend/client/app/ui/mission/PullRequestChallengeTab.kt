@@ -15,7 +15,6 @@
  */
 package com.bytelegend.client.app.ui.mission
 
-import com.bytelegend.app.client.misc.githubUrlToRawGithubUserContentUrl
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.external.LoadableMarkdown
@@ -32,7 +31,6 @@ import react.State
 import react.dom.br
 import react.dom.details
 import react.dom.div
-import react.dom.h4
 import react.dom.jsStyle
 
 interface PullRequestChallengeTabProps : GameProps {
@@ -48,14 +46,6 @@ class PullRequestChallengeTab : GameUIComponent<PullRequestChallengeTabProps, St
             unsafeDiv(i(props.challengeSpec.tldr))
             br { }
         }
-
-        val readme = githubUrlToRawGithubUserContentUrl(
-            props.challengeSpec.readme.ifBlank {
-                "https://${props.challengeSpec.spec}/blob/main/README.md"
-            }
-        )
-
-        renderReadme(props.game, readme)
 
         child(WebEditor::class) {
             attrs.whitelist = props.whitelist

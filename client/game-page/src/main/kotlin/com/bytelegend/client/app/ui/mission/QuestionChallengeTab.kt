@@ -143,11 +143,12 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
             }
 
         renderQuestionAnswers(answers)
-        h4 {
-            +i("Problem")
-        }
 
-        renderReadme(props.game, props.challengeSpec.readme)
+        child(WebEditor::class) {
+            attrs.game = props.game
+            attrs.missionId = props.missionId
+            attrs.challengeSpec = props.challengeSpec
+        }
     }
 
     private fun RBuilder.renderTldr() {
