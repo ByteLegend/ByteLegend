@@ -157,7 +157,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
             unsafeDiv(i(props.challengeSpec.tldr))
         } else if (props.challengeSpec.readme.startsWith("https://")) {
             unsafeH4(i("TLDR"))
-            unsafeDiv(i("AnswerTheQuestionInReadme", props.challengeSpec.readme))
+            unsafeDiv(i("AnswerTheQuestionInReadme"))
         }
     }
 
