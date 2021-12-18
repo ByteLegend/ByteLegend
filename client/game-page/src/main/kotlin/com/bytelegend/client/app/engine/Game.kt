@@ -149,20 +149,6 @@ class Game(
         setClock(GAME_CLOCK_20MS, GAME_CLOCK_20MS_EVENT)
 
         checkGfw()
-
-//        window.setInterval({
-//            eventBus.emit(
-//                logStreamEvent(JAVA_ISLAND), LogStreamEventData(
-//                    false,
-//                    JAVA_ISLAND,
-//                    "fix-simple-add",
-//                    "java-fix-add",
-//                    "https://github.com/ByteLegendQuest/java-fix-add/pull/24",
-//                    "3870624740",
-//                    listOf("Mock log at ${currentTimeIso8601()}", "Mock log2 at ${currentTimeMillis()}")
-//                )
-//            )
-//        }, 1000)
     }
 
     fun transformGitHubUrl(url: String): String {
