@@ -1,5 +1,4 @@
-name: release-repo-cleaner
-
+name: Release repo-cleaner
 on: workflow_dispatch
 
 jobs:
