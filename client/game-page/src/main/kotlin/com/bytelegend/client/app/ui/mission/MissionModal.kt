@@ -178,7 +178,6 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
     }
 
     private fun RDOMBuilder<DIV>.renderStarChallenge(tab: ChallengeTabData) {
-        attrs.classes = jsObjectBackedSetOf("mission-tab-content")
         child(StarChallengeTab::class) {
             attrs.contentHtml = game.i(tab.data.readme)
             attrs.game = game
