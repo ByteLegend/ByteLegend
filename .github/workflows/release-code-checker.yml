@@ -1,6 +1,7 @@
 name: release-code-checker
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
 
 jobs:
   check-and-release:
