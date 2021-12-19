@@ -39,19 +39,35 @@ jobs:
           commit: ${{ steps.determine-webeditor-commit.outputs.deploy-commit }}
           path: github1s/dist
       - run: tree github1s/dist
-      - name: Deploy to s3 Seoul
+      - name: Upload /static to s3 Seoul
         run: >
           docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
           -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_SEOUL}}
           -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_SEOUL}}
           -e AWS_DEFAULT_REGION=ap-northeast-2
           amazon/aws-cli
-          s3 sync --delete /dist s3://bytelegend-web-editor
-      - name: Deploy to s3 Beijing
+          s3 sync /dist/static s3://bytelegend-web-editor/static
+      - name: Upload /static to s3 Beijing
         run: >
           docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
           -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_BEIJING}}
           -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_BEIJING}}
           -e AWS_DEFAULT_REGION=cn-north-1
           amazon/aws-cli
-          s3 sync --delete /dist s3://bytelegend-web-editor
+          s3 sync /dist/static s3://bytelegend-web-editor/static
+      - name: Sync index.html to s3 Seoul
+        run: >
+          docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
+          -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_SEOUL}}
+          -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_SEOUL}}
+          -e AWS_DEFAULT_REGION=ap-northeast-2
+          amazon/aws-cli
+          s3 sync --exclude 'static/*' --delete /dist s3://bytelegend-web-editor
+      - name: Sync /index.html to s3 Beijing
+        run: >
+          docker run -v $GITHUB_WORKSPACE/github1s/dist:/dist
+          -e AWS_ACCESS_KEY_ID=${{secrets.ACCESS_KEY_ID_BEIJING}}
+          -e AWS_SECRET_ACCESS_KEY=${{secrets.SECRET_ACCESS_KEY_BEIJING}}
+          -e AWS_DEFAULT_REGION=cn-north-1
+          amazon/aws-cli
+          s3 sync --exclude 'static/*' --delete /dist s3://bytelegend-web-editor
