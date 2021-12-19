@@ -22,6 +22,7 @@ import BootstrapDropdownItem
 import BootstrapDropdownMenu
 import BootstrapDropdownToggle
 import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdown
+import com.bytelegend.client.app.web.LOGIN_LINK_CLICKED_EVENT
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -77,6 +78,9 @@ class UserAvatarWidget : GameUIComponent<GameProps, UserAvatarWidgetState>() {
                     a {
                         attrs.id = "login-link"
                         attrs.href = "/game/login?redirect=/"
+                        attrs.onClickFunction = {
+                            props.game.eventBus.emit(LOGIN_LINK_CLICKED_EVENT, null)
+                        }
                         +i("Login")
                     }
                 }

@@ -46,7 +46,9 @@ import com.bytelegend.app.shared.protocol.WebSocketMessageType.REPLY_ERROR
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.SEND
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.SUBSCRIBE
 import com.bytelegend.app.shared.protocol.WebSocketMessageType.UNSUBSCRIBE
+import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
+import com.bytelegend.client.app.obj.isFirefox
 import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.utils.parseServerEvent
@@ -57,11 +59,19 @@ import kotlinx.coroutines.Deferred
 import org.kodein.di.DI
 import org.kodein.di.instance
 import org.w3c.dom.WebSocket
+import org.w3c.dom.events.Event
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 typealias ReplyHandler = (ReplyMessage<Any>) -> Unit
+
+/**
+ * On firefox, when you click login button, before the page redirects to login page,
+ * the WS will be disconnected and "You're offline" banner is displayed, which
+ * confuses users. In this case, we delay the banner for 5s.
+ */
+val LOGIN_LINK_CLICKED_EVENT = "login.link.clicked"
 
 /**
  * Web socket is a global resource.
@@ -76,6 +86,7 @@ class WebSocketClient(
     lateinit var self: Deferred<WebSocketClient>
     var connected = false
     var offlineReasonId = "SeemsToBeDisconnectedFromServer"
+    var loginButtonClickedTimeMs: Long = 0L
 
     private val replyHandlers: MutableMap<String, ReplyHandler> = JSObjectBackedMap()
 
@@ -97,6 +108,9 @@ class WebSocketClient(
         }
         subscribe(ONLINE_COUNTER_UPDATE_EVENT)
         eventBus.on(KICK_OFF_EVENT, this::onKickOff)
+        eventBus.on<Nothing>(LOGIN_LINK_CLICKED_EVENT) {
+            loginButtonClickedTimeMs = currentTimeMillis()
+        }
     }
 
     private fun onKickOff(event: KickOffEventData) {
@@ -195,16 +209,27 @@ class WebSocketClient(
             console.error(it)
         }
         client.onclose = {
-            connected = false
-            console.warn("WS connection is closed: $offlineReasonId ${JSON.stringify(it)}")
-            gameRuntime.bannerController.showBanner(
-                Banner(
-                    gameRuntime.i(offlineReasonId),
-                    "warning"
-                )
-            )
-            eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+            if (isFirefox() && loginButtonClickedTimeMs <= currentTimeMillis() && currentTimeMillis() <= loginButtonClickedTimeMs + 5000) {
+                console.log("delay!")
+                window.setTimeout({
+                    onClose(it)
+                }, 5000)
+            } else {
+                onClose(it)
+            }
         }
+    }
+
+    private fun onClose(event: Event) {
+        connected = false
+        console.warn("WS connection is closed: $offlineReasonId ${JSON.stringify(event)}")
+        gameRuntime.bannerController.showBanner(
+            Banner(
+                gameRuntime.i(offlineReasonId),
+                "warning"
+            )
+        )
+        eventBus.emit(GAME_UI_UPDATE_EVENT, null)
     }
 
     override suspend fun getSceneInitData(mapId: String): SceneInitData {
