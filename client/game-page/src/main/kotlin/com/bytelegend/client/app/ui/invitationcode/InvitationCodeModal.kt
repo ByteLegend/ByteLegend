@@ -202,6 +202,7 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : RComponent<GameProp
         }
     }
 
+    @Suppress("EXPERIMENTAL_API_USAGE")
     private fun runCatchingHttpException(block: suspend () -> Unit) {
         GlobalScope.launch {
             try {

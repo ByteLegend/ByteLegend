@@ -82,6 +82,7 @@ class GlobalEventHandler(
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)
     }
 
+    @Suppress("EXPERIMENTAL_API_USAGE")
     private fun onAchievementUpdateEvent(eventData: AchievementUpdateEventData) {
         val startCoordinate = determineAnimationStartPointInGameContainer(eventData.map, eventData.missionId)
         val activeScene = game.activeScene.unsafeCast<DefaultGameScene>()
@@ -120,6 +121,7 @@ class GlobalEventHandler(
             missionCoordinateInGameContainer
     }
 
+    @Suppress("EXPERIMENTAL_API_USAGE")
     private fun onItemsUpdate(eventData: ItemsStatesUpdateEventData) {
         val startCoordinate = determineAnimationStartPointInGameContainer(eventData.map, eventData.missionId)
         val activeScene = game.activeScene.unsafeCast<DefaultGameScene>()

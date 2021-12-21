@@ -41,7 +41,6 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeH4
-import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.submitChallengeAnswer
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
@@ -80,13 +79,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
     }
 
     override fun RBuilder.render() {
-        if (game.heroPlayer.isAnonymous) {
-            BootstrapAlert {
-                attrs.show = true
-                attrs.variant = "warning"
-                unsafeSpan("${game.i("YouAreNotLoggedIn")}.${game.i("ClickHereToLogin")}")
-            }
-        } else if (isDisabled()) {
+        if (!game.heroPlayer.isAnonymous && isDisabled()) {
             BootstrapAlert {
                 attrs.show = true
                 attrs.variant = "warning"

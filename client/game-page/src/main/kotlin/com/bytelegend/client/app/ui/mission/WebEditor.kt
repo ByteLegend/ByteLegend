@@ -20,6 +20,7 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.missionRepaintEvent
+import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.entities.mission.ChallengeType
@@ -29,6 +30,7 @@ import com.bytelegend.app.shared.protocol.logStreamEvent
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.minimap.mapToNativeJsArray
 import com.bytelegend.client.app.ui.minimap.nativeJsArrayOf
+import com.bytelegend.client.app.ui.unsafeSpan
 import kotlinext.js.jsObject
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -76,6 +78,13 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
 
     override fun RBuilder.render() {
         div("webeditor-wrapper") {
+            if (props.game.heroPlayer.isAnonymous) {
+                BootstrapAlert {
+                    attrs.show = true
+                    attrs.variant = "warning"
+                    unsafeSpan(props.game.i("ToSubmitAnswerClickHereToLogin"))
+                }
+            }
             iframe {
                 attrs.id = webEditorIframeId
                 attrs.src = determineWebEditorUrl()
@@ -87,7 +96,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
                 }
             }
 
-            if (state.showSubmitAnswerButton && isPullRequestChallenge) {
+            if (state.showSubmitAnswerButton && isPullRequestChallenge && !props.game.heroPlayer.isAnonymous) {
                 child(SubmitAnswerButton::class) {
                     attrs.game = props.game
                     attrs.challengeId = props.challengeSpec.id
