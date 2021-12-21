@@ -19,7 +19,7 @@ package com.bytelegend.app.shared.entities.mission
 data class HeroNoticeboardTile(
     val x: Int,
     val y: Int,
-    val userid: String,
+    val username: String,
     val color: String,
     val createdAt: String,
     val changedAt: String

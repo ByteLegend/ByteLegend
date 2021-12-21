@@ -344,7 +344,7 @@ fun toHeroNoticeboardTilesData(jsonObject: dynamic) = HeroNoticeboardTilesData(
         HeroNoticeboardTile(
             it.x,
             it.y,
-            it.userid,
+            it.username,
             it.color,
             it.createdAt,
             it.changedAt

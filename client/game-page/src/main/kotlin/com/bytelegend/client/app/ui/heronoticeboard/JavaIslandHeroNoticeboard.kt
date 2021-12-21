@@ -256,7 +256,7 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
                 }
                 attrs.onClickFunction = {
                     findTileByMouseCoordinate(it)?.apply {
-                        window.open("https://github.com/$userid", "_blank")
+                        window.open("https://github.com/$username", "_blank")
                     }
                 }
                 attrs.onMouseMoveFunction = {

@@ -69,7 +69,7 @@ class AvatarTooltip : RComponent<AvatarCardProps, State>() {
                     width = "${TOOLTIP_HEIGHT}px"
                     height = "${TOOLTIP_HEIGHT}px"
                 }
-                attrs.src = props.game.transformGitHubUrl("https://avatars.githubusercontent.com/${props.tile.userid}?size=200")
+                attrs.src = props.game.transformGitHubUrl("https://avatars.githubusercontent.com/${props.tile.username}?size=200")
             }
             div {
                 attrs.jsStyle {
@@ -79,7 +79,7 @@ class AvatarTooltip : RComponent<AvatarCardProps, State>() {
                 attrs.classes = jsObjectBackedSetOf("white-text-black-shadow-1")
                 p {
                     attrs.jsStyle.fontSize = "16px"
-                    +props.tile.userid
+                    +props.tile.username
                 }
                 p {
                     attrs.jsStyle.fontSize = "12px"
