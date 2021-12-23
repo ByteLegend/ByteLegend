@@ -90,6 +90,9 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                 }
             } else {
                 val mission = missions.getMissionModalDataById(props.missionId)
+                if (mission.tabs.isEmpty()) {
+                    return@BootstrapModalBody
+                }
                 BootstrapNav {
                     attrs.variant = "tabs"
                     var challengeCounter = 0
