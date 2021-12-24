@@ -34,6 +34,7 @@ import com.bytelegend.client.app.ui.unsafeSpan
 import kotlinext.js.jsObject
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.html.currentTimeMillis
 import kotlinx.html.id
 import kotlinx.html.js.onLoadFunction
 import org.w3c.dom.HTMLIFrameElement
@@ -125,9 +126,9 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
                 if (latestPullRequestAnswer != null && latestPullRequestAnswer.baseRepoFullName == latestPullRequestAnswer.headRepoFullName)
                     latestPullRequestAnswer.branch
                 else "main"
-            "$baseUrl/${props.challengeSpec.spec.substringAfter("github.com/")}/blob/$targetBranch/README.md"
+            "$baseUrl/${props.challengeSpec.spec.substringAfter("github.com/")}/blob/$targetBranch/README.md?v=${currentTimeMillis()}"
         } else {
-            baseUrl
+            "$baseUrl/?v=${currentTimeMillis()}"
         }
     }
 
