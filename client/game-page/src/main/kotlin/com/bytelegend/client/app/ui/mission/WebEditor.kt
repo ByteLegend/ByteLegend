@@ -73,6 +73,10 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
     private val isPullRequestChallenge
         get() = props.challengeSpec.type == ChallengeType.PullRequest || props.challengeSpec.type == ChallengeType.HeroNoticeboard
 
+    // Add a timestamp to webeditor url to avoid disk cache, but don't change in every render
+    // Otherwise, if `render()` method is called twice, the page may flickr.
+    private var timestamp: Long = currentTimeMillis()
+
     override fun WebEditorState.init() {
         showSubmitAnswerButton = false
     }
@@ -126,9 +130,9 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
                 if (latestPullRequestAnswer != null && latestPullRequestAnswer.baseRepoFullName == latestPullRequestAnswer.headRepoFullName)
                     latestPullRequestAnswer.branch
                 else "main"
-            "$baseUrl/${props.challengeSpec.spec.substringAfter("github.com/")}/blob/$targetBranch/README.md?v=${currentTimeMillis()}"
+            "$baseUrl/${props.challengeSpec.spec.substringAfter("github.com/")}/blob/$targetBranch/README.md?v=$timestamp"
         } else {
-            "$baseUrl/?v=${currentTimeMillis()}"
+            "$baseUrl?v=$timestamp"
         }
     }
 
@@ -206,6 +210,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
     }
 
     override fun componentWillUnmount() {
+        timestamp = currentTimeMillis()
         props.game.eventBus.remove(IFRAME_WEBEDITOR_INIT_COMPLETED, webEditorInitCompletedEventListener)
         props.game.eventBus.remove(missionRepaintEvent(props.missionId), missionRepaintEventListener)
         props.game.eventBus.remove(logStreamEvent(props.game.activeScene.map.id), liveLogStreamEventListener)
