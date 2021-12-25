@@ -21,7 +21,6 @@ import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.Static
-import com.bytelegend.app.client.api.closeMissionModalEvent
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.api.openMissionModalEvent
 import com.bytelegend.app.shared.GridCoordinate
