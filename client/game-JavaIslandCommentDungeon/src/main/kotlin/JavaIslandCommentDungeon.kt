@@ -13,14 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.bytelegend.app.client.api.AnimationFrame
-import com.bytelegend.app.client.api.DynamicSprite
-import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameRuntime
-import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HasBouncingTitle
-import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_COMMENT_DUNGEON
 import com.bytelegend.app.shared.objects.GameObject
@@ -33,34 +28,9 @@ fun main() {
     gameRuntime.sceneContainer.getSceneById(JAVA_ISLAND_COMMENT_DUNGEON).apply {
         objects.getById<GameObject>(mapEntranceId(JAVA_ISLAND_COMMENT_DUNGEON, JAVA_ISLAND))
             .unsafeCast<HasBouncingTitle>().bouncingTitleEnabled = false
-        configureChest("java-comment")
-        configureChest("java-javadoc")
-    }
-}
-
-fun GameScene.configureChest(chestMisionId: String) {
-    val mission = objects.getById<DynamicSprite>(chestMisionId)
-    val helpers = GameScriptHelpers(this)
-
-    if (challengeAnswers.missionAccomplished(chestMisionId)) {
-        mission.animation = StaticFrame(3)
-    } else {
-        mission.animation = StaticFrame(0)
-    }
-    helpers.addMissionRepaintCallback(mission) {
-        if (!it.wasAccomplished && it.newValue.accomplished) {
-            mission.animation = FramePlayingAnimation(
-                frames = arrayOf(
-                    AnimationFrame(0, 300),
-                    AnimationFrame(1, 300),
-                    AnimationFrame(2, 300),
-                    AnimationFrame(3, 300)
-                ),
-                repeating = false
-            )
-            window.setTimeout({
-                mission.animation = StaticFrame(3)
-            }, 1200)
+        GameScriptHelpers(this).apply {
+            configureChest("java-comment")
+            configureChest("java-javadoc")
         }
     }
 }

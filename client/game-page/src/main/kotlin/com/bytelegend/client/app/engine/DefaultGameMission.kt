@@ -101,12 +101,12 @@ class DefaultGameMission(
         val game = gameScene.gameRuntime.unsafeCast<Game>()
         game.modalController.show {
             attrs.className = "mission-modal"
+            attrs.onHide = {
+                game.modalController.hide(id)
+            }
             child(MissionModal::class) {
                 attrs.game = game
                 attrs.missionId = id
-                attrs.onClose = {
-                    game.eventBus.emit(closeMissionModalEvent(id), null)
-                }
             }
         }
     }

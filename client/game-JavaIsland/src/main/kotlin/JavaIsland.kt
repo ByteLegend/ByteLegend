@@ -218,32 +218,7 @@ fun GameScene.configureStarByteLegendBook() {
 }
 
 fun GameScene.configureInstallJavaIDEChest() {
-    val mission = objects.getById<DynamicSprite>("install-java-ide")
-
-    if (challengeAnswers.challengeAccomplished("install-java-ide-challenge")) {
-        mission.animation = StaticFrame(3)
-    }
-
-    GameScriptHelpers(this).addCloseCallbackToMission(mission) {
-        if (mission.animation.isStatic &&
-            mission.animation.unsafeCast<StaticFrame>().frameIndex != 3 &&
-            challengeAnswers.challengeAccomplished("install-java-ide-challenge")
-        ) {
-            // the player finishes the challenge. Play the animation
-            mission.animation = FramePlayingAnimation(
-                frames = arrayOf(
-                    AnimationFrame(0, 300),
-                    AnimationFrame(1, 300),
-                    AnimationFrame(2, 300),
-                    AnimationFrame(3, 300)
-                ),
-                repeating = false
-            )
-            window.setTimeout({
-                mission.animation = StaticFrame(3)
-            }, 1200)
-        }
-    }
+    GameScriptHelpers(this).configureChest("install-java-ide")
 }
 
 fun GameScene.newbieVillageNoticeboard() = objects {

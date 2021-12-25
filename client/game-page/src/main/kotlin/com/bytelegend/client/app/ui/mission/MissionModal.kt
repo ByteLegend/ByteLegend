@@ -20,7 +20,6 @@ package com.bytelegend.client.app.ui.mission
 import BootstrapNavItem
 import BootstrapNavLink
 import com.bytelegend.app.client.api.EventListener
-import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
@@ -51,7 +50,6 @@ import react.setState
 
 interface MissionModalProps : GameProps {
     var missionId: String
-    var onClose: UnitFunction
 }
 
 interface MissionModalState : State {
@@ -75,10 +73,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
     override fun RBuilder.render() {
         child(ModalCloseButton::class) {
             attrs.onClickFunction = {
-                game.modalController.hide()
-                if (props.onClose != undefined) {
-                    props.onClose()
-                }
+                game.modalController.hide(props.missionId)
             }
         }
         BootstrapModalBody {

@@ -70,10 +70,10 @@
                 {
                  "height":0,
                  "id":2,
-                 "name":"JavaIsland-JavaIslandDebuggerDungeon-destination",
+                 "name":"JavaIsland-JavaIslandDebuggerDungeon-entrance-destination",
                  "point":true,
                  "rotation":0,
-                 "type":"GameMapPoint",
+                 "type":"GameMapEntranceDestinationPoint",
                  "visible":true,
                  "width":0,
                  "x":173.939003989191,
@@ -85,20 +85,78 @@
                  "name":"JavaIslandDebuggerDungeon-JavaIsland-entrance-point",
                  "point":true,
                  "rotation":0,
-                 "type":"GameMapPoint",
+                 "type":"GameMapEntrancePoint",
                  "visible":true,
                  "width":0,
                  "x":175.586153648179,
                  "y":73.4628747908892
+                }, 
+                {
+                 "gid":2034,
+                 "height":32,
+                 "id":4,
+                 "name":"java-debugger-breakpoint",
+                 "rotation":0,
+                 "type":"GameMapMission",
+                 "visible":true,
+                 "width":32,
+                 "x":71.3333333333333,
+                 "y":226.666666666667
+                }, 
+                {
+                 "gid":2034,
+                 "height":32,
+                 "id":5,
+                 "name":"java-debugger-conditional-breakpoint",
+                 "rotation":0,
+                 "type":"GameMapMission",
+                 "visible":true,
+                 "width":32,
+                 "x":292.666666666667,
+                 "y":388.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "id":8,
+         "layers":[
+                {
+                 "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2034, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                 "height":16,
+                 "id":9,
+                 "name":"Chest",
+                 "opacity":1,
+                 "type":"tilelayer",
+                 "visible":true,
+                 "width":12,
+                 "x":0,
+                 "y":0
+                }],
+         "name":"DynamicSprites",
+         "opacity":1,
+         "type":"group",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2041, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":16,
+         "id":10,
+         "name":"Blockers",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":12,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":7,
- "nextobjectid":4,
+ "nextlayerid":11,
+ "nextobjectid":6,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.7.2",
@@ -107,6 +165,10 @@
         {
          "firstgid":1,
          "source":"..\/..\/tileset-jsons\/BrowserQuest_32x32.json"
+        }, 
+        {
+         "firstgid":2021,
+         "source":"..\/..\/tileset-jsons\/sea_animation_32x32.json"
         }],
  "tilewidth":32,
  "type":"map",

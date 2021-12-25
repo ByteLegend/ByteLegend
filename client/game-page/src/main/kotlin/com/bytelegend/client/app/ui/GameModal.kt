@@ -18,6 +18,7 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.ModalController
+import com.bytelegend.app.client.api.closeMissionModalEvent
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModal
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
@@ -33,7 +34,7 @@ import react.RElementBuilder
 import react.State
 
 interface ModalControllerInternal : ModalController {
-    fun hide()
+    fun hide(missionId: String? = null)
     fun show(modal: RElementBuilder<BootstrapModalProps>.() -> Unit)
 }
 
@@ -71,8 +72,12 @@ class DefaultModalController(
         }
     }
 
-    override fun hide() {
+    override fun hide(missionId: String?) {
         currentModal = initModalAction
+        if (missionId != null) {
+            gameRuntime.eventBus.emit(closeMissionModalEvent(missionId), null)
+        }
+
         eventBus.emit(GAME_SCRIPT_NEXT, ASYNC_ANIMATION_CHANNEL)
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)
     }

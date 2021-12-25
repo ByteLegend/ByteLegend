@@ -22,6 +22,7 @@ import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
+import kotlinx.browser.window
 
 /**
  * We have to use instance method due to the defect of current module loading mechanism
@@ -46,10 +47,6 @@ class GameScriptHelpers(val gameScene: GameScene) {
 
     fun addCloseCallbackToMission(mission: DynamicSprite, callback: EventListener<Unit>) {
         gameScene.gameRuntime.eventBus.on(closeMissionModalEvent(mission.id), callback)
-
-        mission.onCloseFunction = {
-            gameScene.gameRuntime.eventBus.remove(closeMissionModalEvent(mission.id), callback)
-        }
     }
 
     fun configureAnimation(sprite: DynamicSprite, animationFrameNumber: Int) {
@@ -57,6 +54,36 @@ class GameScriptHelpers(val gameScene: GameScene) {
             sprite.animation = StaticFrame(animationFrameNumber)
         } else {
             sprite.animation = sprite.mapDynamicSprite.animationWithFixedInterval(500, animationFrameNumber)
+        }
+    }
+
+    fun configureChest(missionId: String) {
+        val mission = gameScene.objects.getById<DynamicSprite>(missionId)
+
+        if (gameScene.challengeAnswers.missionAccomplished(missionId)) {
+            mission.animation = StaticFrame(3)
+        } else {
+            mission.animation = StaticFrame(0)
+        }
+        addCloseCallbackToMission(mission) {
+            if (mission.animation.isStatic &&
+                mission.animation.unsafeCast<StaticFrame>().frameIndex != 3 &&
+                gameScene.challengeAnswers.missionAccomplished(missionId)
+            ) {
+                // the player finishes the challenge. Play the animation
+                mission.animation = FramePlayingAnimation(
+                    frames = arrayOf(
+                        AnimationFrame(0, 300),
+                        AnimationFrame(1, 300),
+                        AnimationFrame(2, 300),
+                        AnimationFrame(3, 300)
+                    ),
+                    repeating = false
+                )
+                window.setTimeout({
+                    mission.animation = StaticFrame(3)
+                }, 1200)
+            }
         }
     }
 

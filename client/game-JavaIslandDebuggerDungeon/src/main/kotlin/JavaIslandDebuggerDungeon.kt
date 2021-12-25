@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 import com.bytelegend.app.client.api.GameRuntime
+import com.bytelegend.app.client.api.GameScriptHelpers
+import com.bytelegend.app.client.api.HasBouncingTitle
+import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_DEBUGGER_DUNGEON
+import com.bytelegend.app.shared.objects.GameObject
+import com.bytelegend.app.shared.objects.mapEntranceId
 import kotlinx.browser.window
 
 val gameRuntime = window.asDynamic().gameRuntime.unsafeCast<GameRuntime>()
 
 fun main() {
     gameRuntime.sceneContainer.getSceneById(JAVA_ISLAND_DEBUGGER_DUNGEON).apply {
-        objects {
+        objects.getById<GameObject>(mapEntranceId(JAVA_ISLAND_DEBUGGER_DUNGEON, JAVA_ISLAND))
+            .unsafeCast<HasBouncingTitle>().bouncingTitleEnabled = false
+        GameScriptHelpers(this).apply {
+            configureChest("java-debugger-breakpoint")
+            configureChest("java-debugger-conditional-breakpoint")
         }
     }
 }
