@@ -63,19 +63,23 @@ fun registerJavaExecInRootProject(name: String, mainClassName: String, action: J
 }
 
 registerJavaExecInRootProject("createNewMap", "com.bytelegend.utils.CreateNewMapKt") {
-    jvmArgs(
-        "-DmapId=${System.getProperty("mapId") ?: throw IllegalArgumentException("No mapId!")}",
-        "-DmapGridWidth=${System.getProperty("mapGridWidth") ?: throw IllegalArgumentException("No mapGridWidth!")}",
-        "-DmapGridHeight=${System.getProperty("mapGridHeight") ?: throw IllegalArgumentException("No mapGridHeight!")}",
-        "-Dapple.awt.UIElement=true"
-    )
+    doFirst {
+        jvmArgs(
+            "-DmapId=${System.getProperty("mapId") ?: throw IllegalArgumentException("No mapId!")}",
+            "-DmapGridWidth=${System.getProperty("mapGridWidth") ?: throw IllegalArgumentException("No mapGridWidth!")}",
+            "-DmapGridHeight=${System.getProperty("mapGridHeight") ?: throw IllegalArgumentException("No mapGridHeight!")}",
+            "-Dapple.awt.UIElement=true"
+        )
+    }
 }
 
 registerJavaExecInRootProject("createEmptyMissionYamls", "com.bytelegend.utils.CreateEmptyMissionYamlsKt") {
-    jvmArgs(
-        "-DmapId=${System.getProperty("mapId") ?: throw IllegalArgumentException("No mapId!")}",
-        "-Dapple.awt.UIElement=true"
-    )
+    doFirst {
+        jvmArgs(
+            "-DmapId=${System.getProperty("mapId") ?: throw IllegalArgumentException("No mapId!")}",
+            "-Dapple.awt.UIElement=true"
+        )
+    }
 }
 
 val checkLicenses = registerJavaExecInRootProject("checkLicenses", "com.bytelegend.utils.CheckLicensesKt") {}
