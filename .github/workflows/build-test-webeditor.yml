@@ -37,13 +37,11 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-${{ matrix.node-version }}
-      - run: yarn add npm-run-all --dev
+      - run: yarn
         working-directory: github1s
       - run: yarn build:vscode
         working-directory: github1s
       - run: yarn yalc
-        working-directory: github1s
-      - run: yarn add fs-extra
         working-directory: github1s
       - run: yarn install && yarn build && yarn hash
         working-directory: github1s
