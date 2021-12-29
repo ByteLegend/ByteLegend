@@ -38,6 +38,7 @@ jobs:
           name: webeditor
           commit: ${{ steps.determine-webeditor-commit.outputs.deploy-commit }}
           path: github1s/dist
+          workflow_conclusion: completed
       - run: tree github1s/dist
       - name: Upload /static to s3 Seoul
         run: >
