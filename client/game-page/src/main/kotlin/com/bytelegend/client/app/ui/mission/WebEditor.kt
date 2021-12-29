@@ -140,10 +140,12 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
     private fun determineWebEditorInitData(): dynamic {
         val whitelist = props.whitelist?.toTypedArray() ?: emptyArray()
         val apiServer = if (window.location.hostname == "localhost") "http://${window.location.host}" else "https://bytelegend.com"
+        val githubApiBaseUrl = if (props.game.heroPlayer.isAnonymous) "${window.location.protocol}//${window.location.host}/ghapi" else "https://ghapi.bytelegend.com"
         val ret = jsObject<dynamic> {
             missionId = props.missionId
             challengeId = props.challengeSpec.id
             this.apiServer = apiServer
+            this.githubApiBaseUrl = githubApiBaseUrl
             this.whitelist = whitelist
             answers = getAnswers()
             locale = props.game.locale.javascriptLocale
