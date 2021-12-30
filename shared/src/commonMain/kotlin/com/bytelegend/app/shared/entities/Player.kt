@@ -87,6 +87,7 @@ open class Player : BasePlayer() {
     @JsonIgnore
     var emails: MutableList<String> = ArrayList()
 
+    @JsonIgnore
     var githubToken: String? = null
 
     fun toPartialEntity() = BasePlayer().apply {
