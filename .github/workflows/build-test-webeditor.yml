@@ -38,6 +38,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-${{ matrix.node-version }}
       - run: yarn
+        shell: bash
         working-directory: github1s
       - run: yarn build:vscode
         working-directory: github1s
