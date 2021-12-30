@@ -78,7 +78,8 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: server:app:webEditorBrowserTest -DagreePublicBuildScanTermOfService=yes -Dforest.github.read.token=${{ secrets.GITHUB_TOKEN }}
+          # default GITHUB_TOKEN has no access to other repository, but we need to access other repo in WebEditorBrowserTest
+          arguments: server:app:webEditorBrowserTest -DagreePublicBuildScanTermOfService=yes -Dforest.github.read.token=${{ secrets.BYTELEGENDBOT_TOKEN }}
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
