@@ -37,8 +37,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-${{ matrix.node-version }}
-      - run: yarn
-        shell: bash
+      - run: yarn config set script-shell /bin/bash && yarn
         working-directory: github1s
       - run: yarn build:vscode
         working-directory: github1s
