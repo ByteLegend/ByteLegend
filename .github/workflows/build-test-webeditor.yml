@@ -45,9 +45,9 @@ jobs:
         working-directory: github1s
       - run: yarn build && yarn hash
         working-directory: github1s
-      - run: find dist -name '*.js.map' | xargs rm -rf
-      - run: find dist -name '*.gif' | xargs rm -rf
-      - run: find dist -name 'learn.svg' | xargs rm -rf
+      - run: find github1s/dist -name '*.js.map' | xargs rm -rf
+      - run: find github1s/dist -name '*.gif' | xargs rm -rf
+      - run: find github1s/dist -name 'learn.svg' | xargs rm -rf
       - uses: actions/upload-artifact@v2
         with:
           name: webeditor
@@ -82,7 +82,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           # default GITHUB_TOKEN has no access to other repository, but we need to access other repo in WebEditorBrowserTest
-          arguments: server:app:webEditorBrowserTest -DagreePublicBuildScanTermOfService=yes -Dforest.github.read.token=${{ secrets.BYTELEGENDBOT_TOKEN }}
+          arguments: >
+            server:app:webEditorBrowserTest
+            -DagreePublicBuildScanTermOfService=yes
+            -Dforest.github.read.token=${{ secrets.BYTELEGENDBOT_TOKEN }}
+            -Dforest.test.enableRecording=true
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
