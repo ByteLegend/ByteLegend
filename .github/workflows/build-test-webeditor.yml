@@ -43,8 +43,11 @@ jobs:
         working-directory: github1s
       - run: yarn yalc
         working-directory: github1s
-      - run: yarn install && yarn build && yarn hash
+      - run: yarn build && yarn hash
         working-directory: github1s
+      - run: find dist -name '*.js.map' | xargs rm -rf
+      - run: find dist -name '*.gif' | xargs rm -rf
+      - run: find dist -name 'learn.svg' | xargs rm -rf
       - uses: actions/upload-artifact@v2
         with:
           name: webeditor
