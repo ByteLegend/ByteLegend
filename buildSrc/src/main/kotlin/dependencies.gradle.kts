@@ -21,6 +21,7 @@ import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
 import com.bytelegend.buildsupport.OpenSourceLicense.ISC
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
+import com.bytelegend.buildsupport.OpenSourceLicense.LGPL
 
 val forestVersion = "0.3.16-SNAPSHOT"
 val vertxVersion = "4.1.2"
@@ -88,6 +89,7 @@ val rehypeExternalLinksVersion = "1.0.0"
 val remarkGfmVersion = "2.0.0"
 val unifiedDiffParserVersion = "1.4"
 val jgitVersion = "5.13.0.202109080827-r"
+val checkstyleVersion = "8.32"
 val hub4jGitHubApiVersion = "1.301"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
@@ -344,6 +346,13 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         creditName = "jgit",
         url = "https://www.eclipse.org/jgit/",
         license = EDL
+    ), OpenSourceLibrary(
+        name = "checkstyle",
+        groupArtifactId = "com.puppycrawl.tools:checkstyle",
+        version = checkstyleVersion,
+        creditName = "checkstyle",
+        url = "https://checkstyle.sourceforge.io/",
+        license = LGPL
     ),
     OpenSourceLibrary(
         name = "react-markdown",
