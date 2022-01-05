@@ -27,29 +27,31 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.client.app.engine.GAME_SCRIPT_NEXT
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
+import kotlinext.js.jso
 import org.kodein.di.DI
 import org.kodein.di.instance
-import react.RBuilder
-import react.RElementBuilder
+import react.ChildrenBuilder
+import react.ReactNode
 import react.State
+import react.create
 
 interface ModalControllerInternal : ModalController {
     fun hide(missionId: String? = null)
-    fun show(modal: RElementBuilder<BootstrapModalProps>.() -> Unit)
+    fun show(modal: ChildrenBuilder.(BootstrapModalProps) -> Unit)
 }
 
 class DefaultModalController(
     di: DI
 ) : ModalControllerInternal {
-    private val initModalAction: RElementBuilder<BootstrapModalProps>.() -> Unit = {}
+    private val initModalAction: ChildrenBuilder.(BootstrapModalProps) -> Unit = {}
     private val eventBus: EventBus by di.instance()
     private val gameRuntime: GameRuntime by di.instance()
-    var currentModal: RElementBuilder<BootstrapModalProps>.() -> Unit = initModalAction
+    var currentModal: ChildrenBuilder.(BootstrapModalProps) -> Unit = initModalAction
         private set
     override val visible: Boolean
         get() = currentModal != initModalAction
 
-    override fun show(modal: RElementBuilder<BootstrapModalProps>.() -> Unit) {
+    override fun show(modal: ChildrenBuilder.(BootstrapModalProps) -> Unit) {
         currentModal = modal
         // Update the modal component's state
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)
@@ -58,12 +60,12 @@ class DefaultModalController(
     override fun showModal(content: String, title: String?) {
         show {
             if (title != null) {
-                BootstrapModalHeader {
-                    attrs.closeButton = true
+                child(BootstrapModalHeader, jso {
+                    closeButton = true
                     BootstrapModalTitle {
                         unsafeSpan(title)
                     }
-                }
+                })
             }
 
             BootstrapModalBody {
@@ -84,18 +86,19 @@ class DefaultModalController(
 }
 
 class GameModal : GameUIComponent<GameProps, State>() {
-    override fun RBuilder.render() {
+    override fun render(): ReactNode? {
         if (game.modalController.visible) {
-            BootstrapModal {
-                attrs.show = true
-                attrs.size = "lg"
-                attrs.animation = false
-                attrs.onHide = {
+            return BootstrapModal.create {
+                show = true
+                size = "lg"
+                animation = false
+                onHide = {
                     game.modalController.hide()
                 }
-                attrs.centered = true
-                (game.modalController as DefaultModalController).currentModal(this)
+                centered = true
+                (game.modalController as DefaultModalController).currentModal.invoke(this, this)
             }
         }
+        return null
     }
 }

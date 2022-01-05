@@ -29,24 +29,23 @@ import com.bytelegend.app.shared.entities.DiscussionsTabData
 import com.bytelegend.app.shared.entities.HeroNoticeboardTabData
 import com.bytelegend.app.shared.entities.MissionTabData
 import com.bytelegend.app.shared.entities.MissionTabType
-import com.bytelegend.app.shared.entities.TutorialsTabData
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.MISSION_DATA_LOAD_FINISH
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.heronoticeboard.JavaIslandHeroNoticeboard
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinext.js.jso
 import kotlinx.browser.window
-import kotlinx.html.DIV
-import kotlinx.html.classes
-import react.RBuilder
+import react.ChildrenBuilder
+import react.Fragment
 import react.State
-import react.dom.RDOMBuilder
-import react.dom.div
-import react.dom.span
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.span
+import react.react
 
 interface MissionModalProps : GameProps {
     var missionId: String
@@ -66,22 +65,22 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
         setState {}
     }
 
-    override fun MissionModalState.init() {
-        activeTabIndex = 0
+    init {
+        state = jso { activeTabIndex = 0 }
     }
 
-    override fun RBuilder.render() {
-        child(ModalCloseButton::class) {
-            attrs.onClickFunction = {
+    override fun render() = Fragment.create {
+        child(ModalCloseButton::class.react, jso {
+            onClickFunction = {
                 game.modalController.hide(props.missionId)
             }
-        }
+        })
         BootstrapModalBody {
-            attrs.className = "mission-modal-body"
+            className = "mission-modal-body"
             val missions = game.activeScene.unsafeCast<DefaultGameScene>().missions
             if (missions.isMissionModalDataLoading(props.missionId)) {
                 BootstrapSpinner {
-                    attrs.animation = "border"
+                    animation = "border"
                 }
             } else {
                 val mission = missions.getMissionModalDataById(props.missionId)
@@ -89,14 +88,14 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                     return@BootstrapModalBody
                 }
                 BootstrapNav {
-                    attrs.variant = "tabs"
+                    variant = "tabs"
                     var challengeCounter = 0
                     val moreThanOneChallenge = mission.tabs.count { it.title == "MissionChallenge" } > 1
                     mission.tabs.forEachIndexed { index: Int, tab: MissionTabData<*> ->
                         BootstrapNavItem {
                             BootstrapNavLink {
-                                attrs.active = (index == state.activeTabIndex)
-                                attrs.eventKey = "tab-$index"
+                                active = (index == state.activeTabIndex)
+                                eventKey = "tab-$index"
                                 span {
                                     +i(tab.title)
                                     if (tab.title == "MissionChallenge") {
@@ -104,15 +103,15 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                                         if (moreThanOneChallenge) {
                                             +"$challengeCounter "
                                         }
-                                        child(TitleStarCounter::class) {
+                                        child(TitleStarCounter::class.react, jso {
                                             val challengeSpec = tab.unsafeCast<ChallengeTabData>().data
-                                            attrs.total = challengeSpec.star
-                                            attrs.current = game.activeScene.challengeAnswers.challengeStar(challengeSpec.id)
-                                            attrs.starSize = 16
-                                        }
+                                            total = challengeSpec.star
+                                            current = game.activeScene.challengeAnswers.challengeStar(challengeSpec.id)
+                                            starSize = 16
+                                        })
                                     }
                                 }
-                                attrs.onSelect = {
+                                onSelect = {
                                     if (tab.type == MissionTabType.Discussions) {
                                         window.open(tab.unsafeCast<DiscussionsTabData>().data.url, "_blank")
                                     } else {
@@ -133,7 +132,6 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                         MissionTabType.PullRequestChallenge -> renderPullRequestChallenge(activeTab.asDynamic())
                         MissionTabType.HeroNoticeboardChallenge -> heroNoticeboardChallenge(activeTab.asDynamic())
                         MissionTabType.TextContentChallenge -> textContentChallenge(activeTab.asDynamic())
-                        MissionTabType.Tutorials -> renderTutorials(activeTab.asDynamic())
                         else -> throw IllegalArgumentException(activeTab.title)
                     }
                 }
@@ -141,56 +139,48 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
         }
     }
 
-    private fun RBuilder.renderTutorials(tab: TutorialsTabData) {
-        child(TutorialTab::class) {
-            attrs.missionId = props.missionId
-            attrs.game = game
-            attrs.initTutorials = tab.data
-            attrs.initLocales = tab.locales
+    private fun ChildrenBuilder.heroNoticeboardChallenge(tab: HeroNoticeboardTabData) {
+        child(JavaIslandHeroNoticeboard::class.react, jso {
+            this.game = props.game
+            initTiles = tab.data.tiles
+            totalPage = tab.data.page
+            missionId = props.missionId
+            challengeSpec = tab.challengeSpec
+            whitelist = tab.whitelist
+        })
+    }
+
+    private fun ChildrenBuilder.textContentChallenge(tab: ChallengeTabData) {
+        unsafeDiv(i(tab.data.spec)) {
+            className = "mission-tab-content"
         }
     }
 
-    private fun RBuilder.heroNoticeboardChallenge(tab: HeroNoticeboardTabData) {
-        child(JavaIslandHeroNoticeboard::class) {
-            attrs.game = game
-            attrs.initTiles = tab.data.tiles
-            attrs.totalPage = tab.data.page
-            attrs.missionId = props.missionId
-            attrs.challengeSpec = tab.challengeSpec
-            attrs.whitelist = tab.whitelist
-        }
+    private fun ChildrenBuilder.renderPullRequestChallenge(tab: ChallengeTabData) {
+        child(PullRequestChallengeTab::class.react, jso {
+            this.game = props.game
+            missionId = props.missionId
+            challengeSpec = tab.data
+            whitelist = tab.whitelist
+        })
     }
 
-    private fun RDOMBuilder<DIV>.textContentChallenge(tab: ChallengeTabData) {
-        attrs.classes = jsObjectBackedSetOf("mission-tab-content")
-        unsafeDiv(i(tab.data.spec))
+    private fun ChildrenBuilder.renderStarChallenge(tab: ChallengeTabData) {
+        child(StarChallengeTab::class.react, jso {
+            contentHtml = game.i(tab.data.readme)
+            this.game = props.game
+            missionId = props.missionId
+            challengeSpec = tab.data
+        })
     }
 
-    private fun RBuilder.renderPullRequestChallenge(tab: ChallengeTabData) {
-        child(PullRequestChallengeTab::class) {
-            attrs.game = game
-            attrs.missionId = props.missionId
-            attrs.challengeSpec = tab.data
-            attrs.whitelist = tab.whitelist
-        }
-    }
-
-    private fun RDOMBuilder<DIV>.renderStarChallenge(tab: ChallengeTabData) {
-        child(StarChallengeTab::class) {
-            attrs.contentHtml = game.i(tab.data.readme)
-            attrs.game = game
-            attrs.missionId = props.missionId
-            attrs.challengeSpec = tab.data
-        }
-    }
-
-    private fun RDOMBuilder<DIV>.renderQuestionChallenge(tabData: ChallengeTabData) {
-        attrs.classes = jsObjectBackedSetOf("mission-tab-content")
-        child(QuestionChallengeTab::class) {
-            attrs.game = game
-            attrs.missionId = props.missionId
-            attrs.challengeSpec = tabData.data
-        }
+    private fun ChildrenBuilder.renderQuestionChallenge(tabData: ChallengeTabData) {
+        child(QuestionChallengeTab::class.react, jso {
+//            className = "mission-tab-content"
+            this.game = props.game
+            missionId = props.missionId
+            challengeSpec = tabData.data
+        })
     }
 
     private fun onMissionDataLoadFinish(missionId: String) {

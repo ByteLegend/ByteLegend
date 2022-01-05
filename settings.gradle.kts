@@ -15,10 +15,10 @@
  */
 pluginManagement {
     plugins {
-        id("org.jetbrains.kotlin.js") version "1.5.31"
-        id("org.jetbrains.kotlin.jvm") version "1.5.31"
-        id("org.jetbrains.kotlin.multiplatform") version "1.5.31"
-        id("org.jetbrains.kotlin.plugin.serialization") version "1.5.31"
+        id("org.jetbrains.kotlin.js") version "1.6.10"
+        id("org.jetbrains.kotlin.jvm") version "1.6.10"
+        id("org.jetbrains.kotlin.multiplatform") version "1.6.10"
+        id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
     }
 }
 

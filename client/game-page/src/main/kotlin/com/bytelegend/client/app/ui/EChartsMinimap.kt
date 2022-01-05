@@ -22,15 +22,13 @@ import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.ui.minimap.getMinimapEChartsOptions
 import com.bytelegend.client.app.ui.minimap.getMinimapMapFeatures
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.html.id
 import org.w3c.dom.events.MouseEvent
-import react.RBuilder
+import react.Fragment
 import react.State
-import react.setState
+import react.create
 
 interface EChartsMinimapProps : GameProps {
     var zIndex: Int
@@ -75,6 +73,9 @@ interface EChartsRoadmapState : State {
 }
 
 class EChartsMinimap : GameUIComponent<EChartsMinimapProps, EChartsRoadmapState>() {
+    init {
+        state = jso()
+    }
     private val echartsContainerElementId = "echarts-container-${uuid()}"
 
     private var mapId: String = ""
@@ -83,9 +84,9 @@ class EChartsMinimap : GameUIComponent<EChartsMinimapProps, EChartsRoadmapState>
     private var echarts: dynamic = undefined
     private var options: dynamic = undefined
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         absoluteDiv(left = props.left, top = props.top, width = props.width, height = props.height) {
-            attrs.id = echartsContainerElementId
+            it.id = echartsContainerElementId
         }
 
         if (state.hoveredRegionName != undefined) {
@@ -93,7 +94,7 @@ class EChartsMinimap : GameUIComponent<EChartsMinimapProps, EChartsRoadmapState>
                 absoluteDiv(
                     left = state.hoveredPosition!!.x,
                     bottom = props.height - state.hoveredPosition!!.y + 20,
-                    classes = jsObjectBackedSetOf("minimap-area-label")
+                    className = "minimap-area-label"
                 ) {
                     +game.i(state.hoveredRegionName!!)
                 }
@@ -101,7 +102,7 @@ class EChartsMinimap : GameUIComponent<EChartsMinimapProps, EChartsRoadmapState>
                 absoluteDiv(
                     left = state.hoveredPosition!!.x,
                     top = state.hoveredPosition!!.y + 20,
-                    classes = jsObjectBackedSetOf("minimap-area-label")
+                    className = "minimap-area-label"
                 ) {
                     +game.i(state.hoveredRegionName!!)
                 }
@@ -139,7 +140,7 @@ class EChartsMinimap : GameUIComponent<EChartsMinimapProps, EChartsRoadmapState>
         unmountEcharts()
 
         document.getElementById(echartsContainerElementId)?.apply {
-            echarts = window.asDynamic().echarts.init(this, props.theme, jsObject {
+            echarts = window.asDynamic().echarts.init(this, props.theme, jso {
                 renderer = props.renderer
             })
             val features = activeScene.getMinimapMapFeatures()

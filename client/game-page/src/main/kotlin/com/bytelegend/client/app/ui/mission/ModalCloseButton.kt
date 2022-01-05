@@ -15,24 +15,22 @@
  */
 package com.bytelegend.client.app.ui.mission
 
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
-import kotlinx.html.js.onClickFunction
-import react.RBuilder
-import react.RComponent
+import react.Component
+import react.Fragment
 import react.Props
 import react.State
-import react.dom.div
+import react.create
+import react.dom.html.ReactHTML.div
 
 interface ModalCloseButtonProps : Props {
     var onClickFunction: () -> Unit
 }
 
-class ModalCloseButton : RComponent<ModalCloseButtonProps, State>() {
-    override fun RBuilder.render() {
+class ModalCloseButton : Component<ModalCloseButtonProps, State>() {
+    override fun render() = Fragment.create {
         div {
-            attrs.classes = jsObjectBackedSetOf("modal-close-button")
-            attrs.onClickFunction = {
+            className = "modal-close-button"
+            onClick = {
                 props.onClickFunction()
             }
         }

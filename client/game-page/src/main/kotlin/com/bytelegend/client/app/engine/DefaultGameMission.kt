@@ -35,8 +35,10 @@ import com.bytelegend.client.app.obj.draw
 import com.bytelegend.client.app.ui.mission.MissionModal
 import com.bytelegend.client.app.ui.mission.MissionTitle
 import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinext.js.jso
 import org.w3c.dom.CanvasRenderingContext2D
-import react.RBuilder
+import react.ChildrenBuilder
+import react.react
 
 /**
  * Represent a mission object in the game
@@ -98,15 +100,15 @@ class DefaultGameMission(
         defaultGameScene.missions.refresh(id)
 
         val game = gameScene.gameRuntime.unsafeCast<Game>()
-        game.modalController.show {
-            attrs.className = "mission-modal"
-            attrs.onHide = {
+        game.modalController.show { modalProps ->
+            modalProps.className = "mission-modal"
+            modalProps.onHide = {
                 game.modalController.hide(id)
             }
-            child(MissionModal::class) {
-                attrs.game = game
-                attrs.missionId = id
-            }
+            child(MissionModal::class.react, jso {
+                this.game = game
+                this.missionId = id
+            })
         }
     }
 
@@ -118,18 +120,20 @@ class DefaultGameMission(
         }
     }
 
-    override fun renderBouncingTitle(builder: RBuilder) {
-        builder.child(MissionTitle::class) {
-            attrs.backgroundColor = "rgba(0,0,0,0.7)"
-            attrs.color = "white"
-            attrs.gameScene = gameScene
-            attrs.pixelCoordinate = pixelCoordinate + PixelCoordinate(pixelSize.width / 2, 0)
-            attrs.title = gameScene.gameRuntime.i(gameMapMission.title)
-            attrs.totalStar = gameMapMission.totalStar
-            attrs.mission = this@DefaultGameMission
-            attrs.onClickFunction = {
+    override fun renderBouncingTitle(builder: ChildrenBuilder) {
+        val scene = gameScene
+        val missionCoordinate = pixelCoordinate
+        builder.child(MissionTitle::class.react, jso {
+            backgroundColor = "rgba(0,0,0,0.7)"
+            color = "white"
+            gameScene = scene
+            pixelCoordinate = missionCoordinate + PixelCoordinate(pixelSize.width / 2, 0)
+            title = scene.gameRuntime.i(gameMapMission.title)
+            totalStar = gameMapMission.totalStar
+            mission = this@DefaultGameMission
+            onClickFunction = {
                 this@DefaultGameMission.onClick()
             }
-        }
+        })
     }
 }

@@ -27,21 +27,13 @@ import com.bytelegend.app.shared.Ratio
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.client.app.page.HERO_AVATAR_IMG_ID
 import com.bytelegend.client.app.ui.roadmap.RoadmapModal
+import kotlinext.js.jso
 import kotlinx.browser.localStorage
-import kotlinx.html.id
-import kotlinx.html.js.onBlurFunction
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onMouseDownFunction
-import kotlinx.html.js.onMouseMoveFunction
-import kotlinx.html.js.onMouseOutFunction
-import kotlinx.html.js.onMouseUpFunction
-import org.w3c.dom.events.Event
-import org.w3c.dom.events.MouseEvent
-import react.RBuilder
+import react.Fragment
 import react.State
-import react.dom.attrs
-import react.dom.jsStyle
-import react.setState
+import react.create
+import react.dom.events.MouseEvent
+import react.react
 import kotlin.math.PI
 import kotlin.math.max
 
@@ -76,10 +68,12 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
     private val miniMapY: Int
         get() = uiContainerCoordinateInGameContainer.y + uiContainerSize.height - miniMapHeight - 8
 
-    override fun MiniMapState.init() {
-        cursor = "grab"
-        collapseProgress = if (localStorage.getItem("minimapCollapsed") == "true") 0.0 else 1.0
-        animationDirection = Direction.NONE
+    init {
+        state = jso {
+            cursor = "grab"
+            collapseProgress = if (localStorage.getItem("minimapCollapsed") == "true") 0.0 else 1.0
+            animationDirection = Direction.NONE
+        }
     }
 
     private val collapseProgress: Double
@@ -89,16 +83,16 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
     private var lastMouseDownMapCoordinate: PixelCoordinate? = null
     private var lastMouseDownMiniMapCoordinate: PixelCoordinate? = null
 
-    private fun onMouseDown(mouseEvent: Event) {
-        val event = mouseEvent.asDynamic().nativeEvent as MouseEvent
+    private fun onMouseDown(mouseEvent: MouseEvent<*, *>) {
+        val event = mouseEvent.nativeEvent
         setState { cursor = "grabbing" }
 
         lastMouseDownMiniMapCoordinate = PixelCoordinate(event.offsetX.toInt(), event.offsetY.toInt())
         lastMouseDownMapCoordinate = canvasCoordinateInMap
     }
 
-    private fun onMouseUp(mouseEvent: Event) {
-        val event = mouseEvent.asDynamic().nativeEvent as MouseEvent
+    private fun onMouseUp(mouseEvent: MouseEvent<*, *>) {
+        val event = mouseEvent.nativeEvent
         if (lastMouseDownMiniMapCoordinate != null) {
             val currentCoordinate = PixelCoordinate(event.offsetX.toInt(), event.offsetY.toInt())
             val targetPixelCoordinate = determineCanvasCoordinateInMapOnMouseMove(currentCoordinate)
@@ -110,8 +104,8 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
         setState { cursor = "grab" }
     }
 
-    private fun onMouseMove(mouseEvent: Event) {
-        val event = mouseEvent.asDynamic().nativeEvent as MouseEvent
+    private fun onMouseMove(mouseEvent: MouseEvent<*, *>) {
+        val event = mouseEvent.nativeEvent
         val currentCoordinate = PixelCoordinate(event.offsetX.toInt(), event.offsetY.toInt())
         if (lastMouseDownMiniMapCoordinate != null) {
             if (currentCoordinate.x < 0 ||
@@ -128,14 +122,14 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
         game.eventBus.emit(MINIMAP_MOUSE_MOVE_EVENT, event)
     }
 
-    private fun onMouseClick(mouseEvent: Event) {
-        val event = mouseEvent.asDynamic().nativeEvent as MouseEvent
+    private fun onMouseClick(mouseEvent: MouseEvent<*, *>) {
+        val event = mouseEvent.nativeEvent
         // This is the left-top corner, we want the cursor to be at the center of viewport
         val bigMapCoordinate = PixelCoordinate(event.offsetX.toInt(), event.offsetY.toInt()) / mapRatio
         moveTo(bigMapCoordinate.offset(-canvasPixelSize.width / 2, -canvasPixelSize.height / 2).alignToTileBorder(gameMap.tileSize))
     }
 
-    private fun onMouseOutOfCanvas(mouseEvent: Event) {
+    private fun onMouseOutOfCanvas(mouseEvent: MouseEvent<*, *>) {
         onMouseUp(mouseEvent)
     }
 
@@ -144,7 +138,7 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
         return lastMouseDownMapCoordinate!! + offset / mapRatio
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         val miniMapZIndex = Layer.MiniMapCanvas.zIndex()
 
         // top:
@@ -162,7 +156,7 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
             zIndex = miniMapZIndex + 1
         ) {
             if (!isMinimized()) {
-                attrs.jsStyle {
+                it.jsStyle {
                     backgroundImage = """url("${game.resolve("/img/ui/minimap.png")}")"""
                     backgroundSize = "100% 100%"
                     backgroundRepeat = "no-repeat"
@@ -171,47 +165,47 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
             }
 
             if (isMaximized()) {
-                child(EChartsMinimap::class) {
-                    attrs.zIndex = miniMapZIndex + 2
-                    attrs.width = 200
-                    attrs.height = 200
-                    attrs.top = 16
-                    attrs.left = 16
-                    attrs.theme = "light"
-                    attrs.renderer = "svg"
-                    attrs.game = game
-                }
+                child(EChartsMinimap::class.react, jso {
+                    zIndex = miniMapZIndex + 2
+                    width = 200
+                    height = 200
+                    top = 16
+                    left = 16
+                    theme = "light"
+                    renderer = "svg"
+                    this.game = props.game
+                })
             }
 
             mapCanvas {
-                attrs {
-                    onMouseDownFunction = this@MiniMap::onMouseDown
-                    onMouseUpFunction = this@MiniMap::onMouseUp
-                    onMouseMoveFunction = this@MiniMap::onMouseMove
-                    onMouseOutFunction = this@MiniMap::onMouseOutOfCanvas
-                    onBlurFunction = this@MiniMap::onMouseOutOfCanvas
-                    onClickFunction = this@MiniMap::onMouseClick
-                    id = "minimap-canvas-layer"
-                    width = miniMapWidth.toString()
-                    height = miniMapHeight.toString()
-                    jsStyle {
-                        if (!isMaximized()) {
-                            display = "none"
-                        }
-                        backgroundSize = "100% 100%"
-                        cursor = state.cursor
-                        zIndex = miniMapZIndex + 3
-                        position = "absolute"
-                        top = "16px"
-                        left = "16px"
+                onMouseDown = this@MiniMap::onMouseDown
+                onMouseUp = this@MiniMap::onMouseUp
+                onMouseMove = this@MiniMap::onMouseMove
+                onMouseOut = this@MiniMap::onMouseOutOfCanvas
+                onBlur = {
+                    this@MiniMap.onMouseOutOfCanvas(it.unsafeCast<MouseEvent<*, *>>())
+                }
+                onClick = this@MiniMap::onMouseClick
+                id = "minimap-canvas-layer"
+                width = miniMapWidth.toDouble()
+                height = miniMapHeight.toDouble()
+                jsStyle {
+                    if (!isMaximized()) {
+                        display = "none"
                     }
+                    backgroundSize = "100% 100%"
+                    cursor = state.cursor
+                    zIndex = miniMapZIndex + 3
+                    position = "absolute"
+                    top = "16px"
+                    left = "16px"
                 }
             }
 
             BootstrapButton {
-                attrs.size = "sm"
-                attrs.className = "round-button"
-                attrs.style = kotlinext.js.js {
+                size = "sm"
+                className = "round-button"
+                style = jso<dynamic> {
                     zIndex = miniMapZIndex + 4
                     // 0.0 -> 32
                     // 1.0 -> miniMapWidth
@@ -221,13 +215,13 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                     //  (miniMapHeight - 32) * (1-state.collapseProgress)
                     top = "0px"
                 }
-                attrs.title = game.i("Maximize")
-                attrs.onClick = {
-                    game.modalController.show {
-                        attrs.className = "roadmap-dialog"
-                        child(RoadmapModal::class) {
-                            attrs.game = game
-                        }
+                title = game.i("Maximize")
+                onClick = {
+                    game.modalController.show { modalProps ->
+                        modalProps.className = "roadmap-dialog"
+                        child(RoadmapModal::class.react, jso {
+                            this.game = props.game
+                        })
                     }
                 }
                 +"↗"
@@ -235,9 +229,9 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
 
             if (!mapCoveredByCanvas) {
                 BootstrapButton {
-                    attrs.size = "sm"
-                    attrs.className = "round-button"
-                    attrs.style = kotlinext.js.js {
+                    size = "sm"
+                    className = "round-button"
+                    style = jso<dynamic> {
                         zIndex = miniMapZIndex + 4
                         left = "0"
                         top = "0px"
@@ -245,7 +239,7 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                         // 0.0 -> ↑ -> -180deg
                         transform = "rotate(${(-180 * (1 - collapseProgress)).toInt()}deg)"
                     }
-                    attrs.onClick = {
+                    onClick = {
                         if (isMaximized()) {
                             localStorage.setItem("minimapCollapsed", "true")
                             setState {
@@ -259,9 +253,9 @@ class MiniMap : AbstractMapCanvas<MiniMapState>() {
                         }
                     }
                     if (isMaximized()) {
-                        attrs.title = game.i("Collapse")
+                        title = game.i("Collapse")
                     } else if (isMinimized()) {
-                        attrs.title = game.i("Expand")
+                        title = game.i("Expand")
                     }
                     +"↓"
                 }

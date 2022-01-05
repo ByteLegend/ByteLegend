@@ -18,14 +18,13 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.shared.protocol.NumberChange
 import com.bytelegend.app.shared.protocol.REPUTATION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ReputationUpdateEventData
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.DIV
-import kotlinx.html.classes
-import kotlinx.html.id
-import kotlinx.html.js.onClickFunction
+import kotlinext.js.jso
+import org.w3c.dom.HTMLDivElement
+import react.ChildrenBuilder
 import react.State
-import react.dom.RDOMBuilder
-import react.dom.span
+import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.span
+import react.react
 
 interface ReputationCountWidgetProps : GameProps
 interface ReputationCountWidgetState : State
@@ -33,18 +32,18 @@ interface ReputationCountWidgetState : State
 class ReputationCountWidget : AbstractIncrementAnimatableWidget<ReputationCountWidgetProps, ReputationCountWidgetState>("heart-icon") {
     override val eventName: String = REPUTATION_UPDATE_EVENT
 
-    override fun RDOMBuilder<DIV>.renderDiv() {
-        attrs.id = "reputation-count"
+    override fun <T> T.renderDiv() where T : HTMLAttributes<HTMLDivElement>, T : ChildrenBuilder {
+        id = "reputation-count"
         span {
-            attrs.classes = jsObjectBackedSetOf("map-title-text")
+            className = "map-title-text"
             +game.heroPlayer.reputation.toString()
         }
         renderIcon()
-        attrs.onClickFunction = {
+        onClick = {
             game.modalController.show {
-                child(HistoryModal::class) {
-                    attrs.game = game
-                }
+                child(HistoryModal::class.react, jso {
+                    this.game = props.game
+                })
             }
         }
     }

@@ -27,33 +27,30 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
+import com.bytelegend.client.app.ui.jsStyle
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeSpan
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinext.js.jso
 import kotlinx.browser.window
-import kotlinx.html.classes
-import kotlinx.html.js.onBlurFunction
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onFocusFunction
-import kotlinx.html.js.onMouseMoveFunction
-import kotlinx.html.js.onMouseOutFunction
-import kotlinx.html.js.onMouseOverFunction
-import org.w3c.dom.events.Event
-import react.RBuilder
+import react.Fragment
 import react.State
-import react.dom.a
-import react.dom.div
-import react.dom.h5
-import react.dom.img
-import react.dom.jsStyle
-import react.dom.p
-import react.setState
+import react.create
+import react.dom.events.EventHandler
+import react.dom.events.FocusEventHandler
+import react.dom.events.MouseEventHandler
+import react.dom.html.ReactHTML.a
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.h5
+import react.dom.html.ReactHTML.img
+import react.dom.html.ReactHTML.p
+import react.react
 
 interface MenuItemProps : GameProps {
     var index: Int
     var iconImageId: String
     var titleId: String
-    var onClickFunction: (Event) -> Unit
+    var onClickFunction: MouseEventHandler<*>
 }
 
 interface MenuItemState : State {
@@ -63,41 +60,45 @@ interface MenuItemState : State {
 private const val SHOW_AD_MODAL_EVENT = "show.ad.modal"
 
 class MenuItem : GameUIComponent<MenuItemProps, MenuItemState>() {
+    init {
+        state = jso { hover = false }
+    }
+
     private val iconSize = 64
-    private val onHover: (Event) -> Unit = {
+    private val onHover: EventHandler<*> = {
         setState { hover = true }
     }
-    private val onHoverOut: (Event) -> Unit = {
+    private val onHoverOut: EventHandler<*> = {
         setState { hover = false }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         div {
-            attrs.onMouseMoveFunction = onHover
-            attrs.onMouseOverFunction = onHover
-            attrs.onFocusFunction = onHover
-            attrs.onMouseOutFunction = onHoverOut
-            attrs.onBlurFunction = onHoverOut
-            attrs.onClickFunction = props.onClickFunction
+            onMouseMove = onHover.unsafeCast<MouseEventHandler<*>>()
+            onMouseOver = onHover.unsafeCast<MouseEventHandler<*>>()
+            onFocus = onHover.unsafeCast<FocusEventHandler<*>>()
+            onMouseOut = onHoverOut.unsafeCast<MouseEventHandler<*>>()
+            onBlur = onHoverOut.unsafeCast<FocusEventHandler<*>>()
+            onClick = props.onClickFunction
 
-            attrs.classes = jsObjectBackedSetOf("menu-item-div")
-            attrs.jsStyle {
+            className = "menu-item-div"
+            jsStyle {
                 height = "${iconSize}px"
                 width = "${iconSize}px"
             }
 
             img {
-                attrs.src = game.resolve("/img/ui/${props.iconImageId}.png")
-                attrs.jsStyle {
-                    height = "${iconSize}px"
-                    width = "${iconSize}px"
+                src = props.game.resolve("/img/ui/${props.iconImageId}.png")
+                jsStyle {
+                    this.height = "${iconSize}px"
+                    this.width = "${iconSize}px"
                 }
             }
 
             if (state.hover) {
                 div {
                     +i(props.titleId)
-                    attrs.classes = jsObjectBackedSetOf("menu-item-div-title", "white-text-black-shadow-1")
+                    className = "menu-item-div-title white-text-black-shadow-1"
                 }
             }
         }
@@ -137,7 +138,7 @@ class Menu : GameUIComponent<MenuProps, State>() {
         MenuItemData("menu-github", "MenuGitHubTitle", this::onClickGitHubMenu),
     )
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         absoluteDiv(
             left = gameCanvasState.determineMenuCoordinateInGameContainer().x,
             top = gameCanvasState.determineMenuCoordinateInGameContainer().y,
@@ -146,24 +147,24 @@ class Menu : GameUIComponent<MenuProps, State>() {
             zIndex = Layer.Menu.zIndex(),
         ) {
             items.forEachIndexed { index, item ->
-                child(MenuItem::class) {
-                    attrs.game = game
-                    attrs.index = index
-                    attrs.iconImageId = item.iconImageId
-                    attrs.titleId = item.titleId
-                    attrs.onClickFunction = {
+                child(MenuItem::class.react, jso {
+                    this.game = props.game
+                    this.index = index
+                    iconImageId = item.iconImageId
+                    titleId = item.titleId
+                    onClickFunction = {
                         item.onClickFunction()
                     }
-                }
+                })
             }
         }
     }
 
     private fun onClickCreditsMenu() {
         game.modalController.show {
-            child(CreditsModal::class) {
-                attrs.game = game
-            }
+            child(CreditsModal::class.react, jso {
+                this.game = props.game
+            })
         }
     }
 
@@ -174,7 +175,7 @@ class Menu : GameUIComponent<MenuProps, State>() {
     private fun onClickUnfinishedMenu() {
         game.modalController.show {
             BootstrapModalHeader {
-                attrs.closeButton = true
+                closeButton = true
                 BootstrapModalTitle {
                     +i("UnfinishedTitle")
                 }
@@ -182,10 +183,10 @@ class Menu : GameUIComponent<MenuProps, State>() {
             BootstrapModalBody {
                 p {
                     a {
-                        attrs.onClickFunction = {
+                        onClick = {
                             onClickContactAboutMenu()
                         }
-                        attrs.href = "#"
+                        href = "#"
                         +i("ClickHere")
                     }
                     unsafeSpan(i("UnfinishedText"))
@@ -198,7 +199,7 @@ class Menu : GameUIComponent<MenuProps, State>() {
     private fun onShowAdModalEvent(n: Nothing) {
         game.modalController.show {
             BootstrapModalHeader {
-                attrs.closeButton = true
+                closeButton = true
                 BootstrapModalTitle {
                     +i("YourAdHere")
                 }
@@ -216,9 +217,9 @@ class Menu : GameUIComponent<MenuProps, State>() {
     private fun onClickContactAboutMenu() {
         game.modalController.show {
             BootstrapModalHeader {
-                attrs.closeButton = true
+                closeButton = true
                 BootstrapModalTitle {
-                    attrs.asDynamic().id = "contained-modal-title-vcenter"
+                    id = "contained-modal-title-vcenter"
                     +i("MenuContactTitle")
                 }
             }

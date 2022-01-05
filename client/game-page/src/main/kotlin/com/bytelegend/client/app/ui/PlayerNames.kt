@@ -18,14 +18,16 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_20MS_EVENT
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.obj.getSpriteBlockOnCanvas
-import react.RBuilder
-import react.RComponent
+import kotlinext.js.jso
+import react.ChildrenBuilder
+import react.Component
+import react.Fragment
 import react.Props
 import react.State
-import react.setState
+import react.create
+import react.react
 
 interface PlayerNamesProps : GameProps
 interface PlayerNamesState : State
@@ -35,7 +37,7 @@ class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
         setState { }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         if (!game.heroPlayer.isAnonymous && !game._hero!!.outOfCanvas() && game.heroPlayer.map == activeScene.map.id) {
             renderOne(game.heroPlayer.nickname, game._hero!!, true)
         }
@@ -48,16 +50,16 @@ class PlayerNames : GameUIComponent<PlayerNamesProps, PlayerNamesState>() {
             }
     }
 
-    private fun RBuilder.renderOne(playerNickName: String, sprite: CharacterSprite, isHero: Boolean) {
+    private fun ChildrenBuilder.renderOne(playerNickName: String, sprite: CharacterSprite, isHero: Boolean) {
         val imageBlockOnCanvas = sprite.getSpriteBlockOnCanvas(activeScene)
         val x = imageBlockOnCanvas.x + canvasCoordinateInGameContainer.x + activeScene.map.tileSize.width / 2
         val y = imageBlockOnCanvas.y + canvasCoordinateInGameContainer.y - 10
-        child(PlayerNameSpan::class) {
-            attrs.x = x
-            attrs.y = y
-            attrs.name = playerNickName
-            attrs.isHero = isHero
-        }
+        child(PlayerNameSpan::class.react, jso {
+            this.x = x
+            this.y = y
+            name = playerNickName
+            this.isHero = isHero
+        })
     }
 
     override fun componentDidMount() {
@@ -79,16 +81,16 @@ interface PlayerNameSpanProps : Props {
     var isHero: Boolean
 }
 
-class PlayerNameSpan : RComponent<PlayerNameSpanProps, State>() {
-    override fun RBuilder.render() {
+class PlayerNameSpan : Component<PlayerNameSpanProps, State>() {
+    override fun render() = Fragment.create {
         absoluteDiv(
             left = props.x,
             top = props.y,
             zIndex = Layer.PlayerNames.zIndex(),
-            classes = if (props.isHero)
-                jsObjectBackedSetOf("yellow-text-black-shadow", "nickname-span")
+            className = if (props.isHero)
+                "yellow-text-black-shadow nickname-span"
             else
-                jsObjectBackedSetOf("white-text-black-shadow", "nickname-span")
+                "white-text-black-shadow nickname-span"
         ) {
             +props.name
         }

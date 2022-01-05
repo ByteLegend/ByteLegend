@@ -16,35 +16,32 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSwitchButton
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
-import react.RBuilder
+import react.Fragment
 import react.State
-import react.dom.div
-import react.dom.jsStyle
-import react.dom.span
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.span
 
 class AudioSwitchWidget : GameUIComponent<GameProps, State>() {
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         div {
             span {
                 // move the music symbol slightly down
-                attrs.jsStyle {
+                jsStyle {
                     position = "relative"
                     top = "4px"
                 }
-                attrs.classes = jsObjectBackedSetOf("white-text-white-shadow-1")
+                className = "white-text-white-shadow-1"
                 +"\uD83C\uDFB5 "
             }
-            attrs.classes = jsObjectBackedSetOf("map-title-widget")
-            attrs.jsStyle {
+            className = "map-title-widget"
+            jsStyle {
                 display = "inline-block"
             }
             BootstrapSwitchButton {
-                attrs.size = "xs"
-                attrs.checked = gameControl.audioEnabled
-                attrs.onChange = {
+                size = "xs"
+                checked = gameControl.audioEnabled
+                onChange = {
                     gameControl.audioEnabled = it
                     setState { }
                 }

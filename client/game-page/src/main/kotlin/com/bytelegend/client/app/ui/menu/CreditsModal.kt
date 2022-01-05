@@ -21,20 +21,21 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeSpan
-import kotlinx.html.js.onClickFunction
-import org.w3c.dom.events.Event
-import react.RBuilder
-import react.RElementBuilder
+import kotlinext.js.jso
+import react.ChildrenBuilder
+import react.Fragment
 import react.State
-import react.dom.RDOMBuilder
-import react.dom.a
-import react.dom.br
-import react.dom.h5
-import react.dom.li
-import react.dom.ul
-import react.setState
+import react.create
+import react.dom.events.MouseEventHandler
+import react.dom.html.ReactHTML.a
+import react.dom.html.ReactHTML.br
+import react.dom.html.ReactHTML.h5
+import react.dom.html.ReactHTML.li
+import react.dom.html.ReactHTML.ul
+import react.react
 
 val CREDITS_TAB = "CreditsTab"
 val OPENSOURCE_TAB = "OpenSourceTab"
@@ -47,36 +48,42 @@ interface CreditsModalState : State {
 data class CreditsTab(
     val key: String,
     val title: String,
-    val fn: (RElementBuilder<*>) -> Unit
+    val fn: (ChildrenBuilder) -> Unit
 )
 
-fun RDOMBuilder<*>.aTag(text: String, onClickFunction: (Event) -> Unit) {
+fun ChildrenBuilder.aTag(text: String, onClickFunction: MouseEventHandler<*>) {
     a {
         +text
-        attrs.href = "#"
-        attrs.onClickFunction = onClickFunction
+        href = "#"
+        onClick = onClickFunction
     }
 }
 
 class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
     private val tabs: List<CreditsTab> = listOf(
-        CreditsTab(CREDITS_TAB, "MenuCreditsTitle", this::creditsTab),
-        CreditsTab(OPENSOURCE_TAB, OPENSOURCE_TAB, this::openSourceTab),
-        CreditsTab(MATERIAL_TAB, MATERIAL_TAB, this::materialTab),
+        CreditsTab(CREDITS_TAB, "MenuCreditsTitle") {
+            it.creditsTab()
+        },
+        CreditsTab(OPENSOURCE_TAB, OPENSOURCE_TAB) {
+            it.openSourceTab()
+        },
+        CreditsTab(MATERIAL_TAB, MATERIAL_TAB) {
+            it.materialTab()
+        }
     )
 
-    override fun CreditsModalState.init() {
-        activeTabIndex = 0
+    init {
+        state = jso { activeTabIndex = 0 }
     }
 
-    private fun creditsTab(builder: RElementBuilder<*>) {
-        builder.unsafeDiv(i("SpecialThanks"))
+    private fun ChildrenBuilder.creditsTab() {
+        unsafeDiv(i("SpecialThanks"))
 
-        builder.h5 {
+        h5 {
             +i("Thanks")
         }
 
-        builder.ul {
+        ul {
             li {
                 unsafeSpan(i("SpecialThanksGradleParagraph"))
             }
@@ -112,28 +119,28 @@ class CreditsModal : GameUIComponent<GameProps, CreditsModalState>() {
         }
     }
 
-    private fun openSourceTab(builder: RElementBuilder<*>) {
-        builder.child(OpenSourceSoftwareTable::class) {
-            attrs.game = game
-        }
+    private fun ChildrenBuilder.openSourceTab() {
+        child(OpenSourceSoftwareTable::class.react, jso {
+            this.game = props.game
+        })
     }
 
-    private fun materialTab(builder: RElementBuilder<*>) {
-        builder.child(GameMaterialTable::class) {
-            attrs.game = game
-        }
+    private fun ChildrenBuilder.materialTab() {
+        child(GameMaterialTable::class.react, jso {
+            this.game = props.game
+        })
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         BootstrapModalBody {
             BootstrapNav {
-                attrs.variant = "tabs"
+                variant = "tabs"
                 tabs.forEachIndexed { index: Int, tab: CreditsTab ->
                     BootstrapNavItem {
                         BootstrapNavLink {
-                            attrs.active = tab == tabs[state.activeTabIndex]
-                            attrs.eventKey = tab.key
-                            attrs.onSelect = {
+                            active = tab == tabs[state.activeTabIndex]
+                            eventKey = tab.key
+                            onSelect = {
                                 setState {
                                     activeTabIndex = index
                                 }

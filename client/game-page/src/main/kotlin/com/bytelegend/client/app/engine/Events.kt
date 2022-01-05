@@ -21,8 +21,8 @@ import com.bytelegend.app.shared.GridSize
 import com.bytelegend.app.shared.HumanReadableCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
-import org.w3c.dom.events.Event
-import org.w3c.dom.events.MouseEvent
+import org.w3c.dom.Element
+import react.dom.events.NativeMouseEvent
 
 // Event emitted upon window.requestAnimationFrame, usually 60~120 Hz
 const val GAME_ANIMATION_EVENT = "game.animation"
@@ -65,13 +65,13 @@ data class GameAnimationEvent(
     val lastAnimationCanvasCoordinateInMap: PixelCoordinate,
 )
 
-fun Game.toGridCoordinate(mouseEvent: Event): GridCoordinate {
-    val event = mouseEvent.asDynamic().nativeEvent as MouseEvent
+fun <T : Element, E : NativeMouseEvent> Game.toGridCoordinate(mouseEvent: react.dom.events.MouseEvent<T, E>): GridCoordinate {
+    val event = mouseEvent.nativeEvent
     return GridCoordinate(event.offsetX.toInt() / activeScene.map.tileSize.width, event.offsetY.toInt() / activeScene.map.tileSize.height)
 }
 
-fun Game.toGameMouseEvent(event: Event): GameMouseEvent {
-    val mouseEvent = event.asDynamic().nativeEvent as MouseEvent
+fun <T : Element, E : NativeMouseEvent> Game.toGameMouseEvent(event: react.dom.events.MouseEvent<T, E>): GameMouseEvent {
+    val mouseEvent = event.nativeEvent
     val coordinateInCanvas = PixelCoordinate(mouseEvent.offsetX.toInt(), mouseEvent.offsetY.toInt())
     val gridCoordinateInMap = viewportCoordinateToGridCoordinate(coordinateInCanvas)
 

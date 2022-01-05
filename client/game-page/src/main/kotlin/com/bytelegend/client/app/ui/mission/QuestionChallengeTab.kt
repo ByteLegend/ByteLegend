@@ -39,22 +39,24 @@ import com.bytelegend.client.app.engine.util.format
 import com.bytelegend.client.app.external.TextareaAutosize
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeH4
 import com.bytelegend.client.app.web.submitChallengeAnswer
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinext.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.html.classes
 import org.w3c.dom.HTMLTextAreaElement
-import react.RBuilder
+import react.ChildrenBuilder
+import react.Fragment
 import react.State
-import react.dom.br
-import react.dom.div
-import react.dom.h4
-import react.dom.pre
-import react.dom.span
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.br
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.h4
+import react.dom.html.ReactHTML.pre
+import react.dom.html.ReactHTML.span
+import react.react
 
 interface QuestionChallengeTabProps : GameProps {
     var missionId: String
@@ -68,8 +70,8 @@ interface QuestionChallengeTabState : State {
 class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, QuestionChallengeTabState>() {
     lateinit var textarea: HTMLTextAreaElement
 
-    override fun QuestionChallengeTabState.init() {
-        loading = false
+    init {
+        state = jso { loading = false }
     }
 
     // If player is not adjacent to the mission, disable the input box and submit button
@@ -78,12 +80,12 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         return heroInScene.gridCoordinate.manhattanDistanceTo(activeScene.objects.getById<DefaultGameMission>(props.missionId).gridCoordinate) > 2
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         if (!game.heroPlayer.isAnonymous && isDisabled()) {
             BootstrapAlert {
-                attrs.show = true
-                attrs.variant = "warning"
-                +game.i("YouMustBeAdjacentToTheMission")
+                show = true
+                variant = "warning"
+                +props.game.i("YouMustBeAdjacentToTheMission")
             }
         }
         renderTldr()
@@ -93,33 +95,33 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         }
         BootstrapFormRow {
             BootstrapCol {
-                attrs.xs = 10
+                xs = 10
                 TextareaAutosize {
-                    attrs.disabled = state.loading || game.heroPlayer.isAnonymous || isDisabled()
-                    attrs.minRows = 2
-                    attrs.maxRows = 5
-                    attrs.ref = { it: dynamic ->
+                    disabled = state.loading || props.game.heroPlayer.isAnonymous || isDisabled()
+                    minRows = 2
+                    maxRows = 5
+                    ref = { it: dynamic ->
                         textarea = it
                     }
                 }
             }
             BootstrapCol {
-                attrs.xs = 2
+                xs = 2
 
                 if (state.loading) {
                     BootstrapButton {
-                        attrs.disabled = true
+                        disabled = true
                         span {
-                            attrs.classes = jsObjectBackedSetOf("spinner-border", "spinner-border-sm")
+                            className = "spinner-border spinner-border-sm"
                         }
                         +("Checking...")
                     }
                 } else {
                     BootstrapButton {
                         +i("Submit")
-                        attrs.disabled = game.heroPlayer.isAnonymous || isDisabled()
-                        attrs.className = "modal-submit-answer-button"
-                        attrs.onClick = {
+                        disabled = props.game.heroPlayer.isAnonymous || isDisabled()
+                        className = "modal-submit-answer-button"
+                        onClick = {
                             GlobalScope.launch {
                                 onClickSubmitAnswer()
                             }
@@ -137,14 +139,14 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
 
         renderQuestionAnswers(answers)
 
-        child(WebEditor::class) {
-            attrs.game = props.game
-            attrs.missionId = props.missionId
-            attrs.challengeSpec = props.challengeSpec
-        }
+        child(WebEditor::class.react, jso {
+            game = props.game
+            missionId = props.missionId
+            challengeSpec = props.challengeSpec
+        })
     }
 
-    private fun RBuilder.renderTldr() {
+    private fun ChildrenBuilder.renderTldr() {
         if (props.challengeSpec.tldr.isNotBlank()) {
             unsafeH4(i("TLDR"))
             unsafeDiv(i(props.challengeSpec.tldr))
@@ -180,7 +182,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
         }
     }
 
-    private fun RBuilder.renderQuestionAnswers(answers: List<ChallengeAnswer>) {
+    private fun ChildrenBuilder.renderQuestionAnswers(answers: List<ChallengeAnswer>) {
         if (answers.isEmpty()) {
             return
         }
@@ -191,37 +193,37 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
             answers.forEachIndexed { index, missionAnswer ->
                 BootstrapCard {
                     BootstrapAccordionToggle {
-                        attrs.className =
+                        className =
                             if (missionAnswer.accomplished) "list-group-item-success mission-player-answer"
                             else "list-group-item-danger mission-player-answer"
-                        attrs.`as` = BootstrapCardHeader
-                        attrs.eventKey = index.toString()
+                        `as` = BootstrapCardHeader
+                        eventKey = index.toString()
 
                         BootstrapRow {
                             BootstrapCol {
-                                attrs.md = "auto"
+                                md = "auto"
                                 if (missionAnswer.accomplished) {
-                                    div { attrs.classes = jsObjectBackedSetOf("mission-success-tick-icon", "inline-icon-16") }
+                                    div { className = "mission-success-tick-icon inline-icon-16" }
                                 } else {
-                                    div { attrs.classes = jsObjectBackedSetOf("mission-fail-cross-icon", "inline-icon-16") }
+                                    div { className = "mission-fail-cross-icon inline-icon-16" }
                                 }
                             }
                             BootstrapCol {
-                                attrs.md = "auto"
+                                md = "auto"
                                 +format(missionAnswer.time, game.locale)
                             }
                             BootstrapCol {
-                                attrs.md = "auto"
-                                attrs.className = "mission-player-answer-inline"
+                                md = "auto"
+                                className = "mission-player-answer-inline"
                                 +missionAnswer.answer
                             }
                         }
                     }
                     BootstrapAccordionCollapse {
-                        attrs.eventKey = index.toString()
+                        eventKey = index.toString()
                         com.bytelegend.app.client.ui.bootstrap.BootstrapCardBody {
                             pre {
-                                attrs.classes = jsObjectBackedSetOf("pre-scrollable", "bg-light")
+                                className = "pre-scrollable bg-light"
                                 +missionAnswer.answer
                             }
                         }

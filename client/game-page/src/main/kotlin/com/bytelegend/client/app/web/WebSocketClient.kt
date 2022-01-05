@@ -210,7 +210,6 @@ class WebSocketClient(
         }
         client.onclose = {
             if (isFirefox() && loginButtonClickedTimeMs <= currentTimeMillis() && currentTimeMillis() <= loginButtonClickedTimeMs + 5000) {
-                console.log("delay!")
                 window.setTimeout({
                     onClose(it)
                 }, 5000)

@@ -17,16 +17,18 @@ package com.bytelegend.client.app.external
 
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.uuid
+import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.html.id
 import org.w3c.dom.Element
+import react.ChildrenBuilder
+import react.Component
+import react.Fragment
 import react.Props
-import react.RBuilder
-import react.RComponent
-import react.RElementBuilder
 import react.State
-import react.dom.div
+import react.create
+import react.dom.html.ReactHTML.div
+import react.react
 import kotlin.math.min
 
 interface CodeBlockProps : Props {
@@ -35,25 +37,25 @@ interface CodeBlockProps : Props {
     var lines: List<String>
 }
 
-fun RBuilder.codeBlock(withLineNumber: Boolean = true, block: RElementBuilder<CodeBlockProps>.() -> Unit = {}) {
-    child(PrismCodeBlock::class) {
+fun ChildrenBuilder.codeBlock(withLineNumber: Boolean = true, block: CodeBlockProps.() -> Unit = {}) {
+    child(PrismCodeBlock::class.react, jso {
         if (withLineNumber) {
-            attrs.pluginClassName = "line-numbers"
+            pluginClassName = "line-numbers"
         }
         block()
-    }
+    })
 }
 
-class PrismCodeBlock : RComponent<CodeBlockProps, State>() {
+class PrismCodeBlock : Component<CodeBlockProps, State>() {
     private val codeContainerElementId = "code-container-${uuid()}"
     private val preElementId = "pre-${uuid()}"
 
     // how many lines displayed currently
     private var displayedLineNumber: Int = 0
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         div {
-            attrs.id = codeContainerElementId
+            id = codeContainerElementId
         }
     }
 

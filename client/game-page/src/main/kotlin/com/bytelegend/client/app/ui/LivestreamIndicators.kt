@@ -21,6 +21,7 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.Banner
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.entities.LivestreamData
+import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.engine.GAME_CLOCK_60S_EVENT
 import com.bytelegend.client.app.engine.gameContainerHeight
 import com.bytelegend.client.app.engine.logger
@@ -29,19 +30,18 @@ import com.bytelegend.client.app.engine.uiContainerSize
 import com.bytelegend.client.app.web.get
 import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.JSObjectBackedStringSet
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.utils.toLivestreams
+import kotlinext.js.jso
 import kotlinx.browser.localStorage
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.html.classes
-import kotlinx.html.currentTimeMillis
-import react.RBuilder
-import react.RComponent
+import react.Component
+import react.Fragment
 import react.State
-import react.dom.a
-import react.dom.div
-import react.setState
+import react.create
+import react.dom.html.AnchorTarget
+import react.dom.html.ReactHTML.a
+import react.dom.html.ReactHTML.div
 
 private const val LIVESTREAM_DATA_URL = "/ghraw/ByteLegend/ByteLegend/master/livestream-data.json"
 
@@ -52,7 +52,7 @@ interface LivestreamIndicatorsState : State {
 /**
  * A special components which sends AJAX requests periodically and update.
  */
-class LivestreamIndicators : RComponent<GameProps, LivestreamIndicatorsState>() {
+class LivestreamIndicators : Component<GameProps, LivestreamIndicatorsState>() {
     private val containerLeft: Int
         get() = props.game.uiContainerCoordinateInGameContainer.x
     private val containerBottom: Int
@@ -117,8 +117,8 @@ class LivestreamIndicators : RComponent<GameProps, LivestreamIndicatorsState>() 
         }
     }
 
-    override fun LivestreamIndicatorsState.init() {
-        livestreams = JSArrayBackedList()
+    init {
+        state = jso { livestreams = JSArrayBackedList() }
     }
 
     @Suppress("UNUSED_VARIABLE")
@@ -155,7 +155,7 @@ class LivestreamIndicators : RComponent<GameProps, LivestreamIndicatorsState>() 
         return js("now>=start && now<=end")
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         if (state.livestreams.isNotEmpty()) {
             absoluteDiv(
                 left = containerLeft,
@@ -164,23 +164,23 @@ class LivestreamIndicators : RComponent<GameProps, LivestreamIndicatorsState>() 
             ) {
                 state.livestreams.filter { !it.isPast() }.forEach {
                     div {
-                        attrs.classes = jsObjectBackedSetOf("livestream-item")
+                        className = "livestream-item"
                         if (it.isLive()) {
                             div {
-                                attrs.classes = jsObjectBackedSetOf("livestream-icon")
+                                className = "livestream-icon"
                             }
                             a {
-                                attrs.target = "_blank"
-                                attrs.href = it.url
+                                target = AnchorTarget._blank
+                                href = it.url
                                 +(props.game.i("NowLivestreaming") + it.title)
                             }
                         } else {
                             div {
-                                attrs.classes = jsObjectBackedSetOf("incoming-livestream-icon")
+                                className = "incoming-livestream-icon"
                             }
                             a {
-                                attrs.target = "_blank"
-                                attrs.href = it.url
+                                target = AnchorTarget._blank
+                                href = it.url
                                 +(props.game.i("IncomingLivestreaming") + it.title)
                             }
                         }

@@ -17,21 +17,17 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.html.classes
-import kotlinx.html.id
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLSpanElement
-import react.RBuilder
+import react.Fragment
 import react.RefObject
 import react.State
+import react.create
 import react.createRef
-import react.dom.jsStyle
-import react.dom.span
-import react.setState
+import react.dom.html.ReactHTML.span
 
 const val ANIMATION_DIV_ID = "counter-animation-div"
 
@@ -56,9 +52,11 @@ class OnlineCounter(props: OnlineCounterProps) : GameUIComponent<OnlineCounterPr
         }
     }
 
-    override fun OnlineCounterState.init(props: OnlineCounterProps) {
-        offsetY = 0
-        count = props.initCount
+    init {
+        state = jso {
+            offsetY = 0
+            count = props.initCount
+        }
     }
 
     private fun animating() = document.getElementById(ANIMATION_DIV_ID) != null
@@ -92,8 +90,8 @@ class OnlineCounter(props: OnlineCounterProps) : GameUIComponent<OnlineCounterPr
         newDiv.appendChild(newSpan)
         window.asDynamic().gsap.fromTo(
             newSpan,
-            jsObject { y = initialSpanOffsetY },
-            jsObject {
+            jso { y = initialSpanOffsetY },
+            jso {
                 y = -2
                 duration = 1
                 ease = "elastic.out(1,0.3)"
@@ -115,24 +113,24 @@ class OnlineCounter(props: OnlineCounterProps) : GameUIComponent<OnlineCounterPr
     }
 
     @Suppress("UnsafeCastFromDynamic")
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         span {
             if (gameControl.online) {
-                attrs.id = "online-counter"
-                attrs.classes = jsObjectBackedSetOf("map-title-widget")
+                id = "online-counter"
+                className = "map-title-widget"
 
                 +i("OnlineCount")
                 span {
                     +state.count.toString()
-                    attrs.jsStyle {
+                    jsStyle {
                         position = "relative"
                         top = "${state.offsetY}px"
                     }
                     ref = spanRef
                 }
             } else {
-                attrs.id = "online-counter-offline"
-                attrs.classes = jsObjectBackedSetOf("map-title-widget")
+                id = "online-counter-offline"
+                className = "map-title-widget"
 
                 +i("OfflineMode")
             }

@@ -21,37 +21,44 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.client.ui.bootstrap.BootstrapTable
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.get
+import kotlinext.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.html.TR
-import react.RBuilder
-import react.RComponent
+import react.ChildrenBuilder
+import react.Component
+import react.Fragment
 import react.State
-import react.dom.RDOMBuilder
-import react.dom.a
-import react.dom.p
-import react.dom.tbody
-import react.dom.td
-import react.dom.th
-import react.dom.thead
-import react.dom.tr
-import react.setState
+import react.create
+import react.dom.html.AnchorTarget
+import react.dom.html.ReactHTML.a
+import react.dom.html.ReactHTML.p
+import react.dom.html.ReactHTML.tbody
+import react.dom.html.ReactHTML.td
+import react.dom.html.ReactHTML.th
+import react.dom.html.ReactHTML.thead
+import react.dom.html.ReactHTML.tr
 
 interface AsyncLoadingTableState : State {
     var data: Array<dynamic>
 }
 
-abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : RComponent<GameProps, S>() {
+abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : Component<GameProps, S>() {
     abstract val url: String
     private var loading = false
-    override fun RBuilder.render() {
+
+    init {
+        state = jso()
+    }
+
+    override fun render() = Fragment.create {
         textBeforeTable()
 
         if (state.data == undefined && loading) {
             BootstrapSpinner {
-                attrs.animation = "border"
+                animation = "border"
             }
         } else if (state.data == undefined) {
             GlobalScope.launch {
@@ -63,9 +70,9 @@ abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : RComponent<GamePr
             loading = true
         } else {
             BootstrapTable {
-                attrs.striped = true
-                attrs.bordered = true
-                attrs.hover = true
+                striped = true
+                bordered = true
+                hover = true
                 thead {
                     tr {
                         tableHeaderBuilder()
@@ -82,38 +89,38 @@ abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : RComponent<GamePr
         }
     }
 
-    abstract fun RBuilder.textBeforeTable()
-    abstract fun RDOMBuilder<TR>.tableHeaderBuilder()
-    abstract fun RDOMBuilder<TR>.tableRowBuilder(rowData: dynamic)
+    abstract fun ChildrenBuilder.textBeforeTable()
+    abstract fun ChildrenBuilder.tableHeaderBuilder()
+    abstract fun ChildrenBuilder.tableRowBuilder(rowData: dynamic)
 }
 
 class OpenSourceSoftwareTable : AsyncLoadingTable<AsyncLoadingTableState>() {
     override val url: String
         get() = props.game.resolve("/misc/oss.json")
 
-    override fun RBuilder.textBeforeTable() {
+    override fun ChildrenBuilder.textBeforeTable() {
         p {
             +props.game.i("ThisGameWouldNotExistWithoutOpenSourceSoftware")
         }
     }
 
-    override fun RDOMBuilder<TR>.tableHeaderBuilder() {
+    override fun ChildrenBuilder.tableHeaderBuilder() {
         th { +props.game.i("Software") }
         th { +props.game.i("License") }
     }
 
-    override fun RDOMBuilder<TR>.tableRowBuilder(rowData: dynamic) {
+    override fun ChildrenBuilder.tableRowBuilder(rowData: dynamic) {
         td {
             a {
-                attrs.href = rowData.url.toString()
-                attrs.target = "_blank"
+                href = rowData.url.toString()
+                target = AnchorTarget._blank
                 +(rowData.creditName.toString())
             }
         }
         td {
             a {
-                attrs.href = rowData.licenseUrl.toString()
-                attrs.target = "_blank"
+                href = rowData.licenseUrl.toString()
+                target = AnchorTarget._blank
                 +(rowData.license.toString())
             }
         }
@@ -128,17 +135,17 @@ class GameMaterialTable : AsyncLoadingTable<GameMaterialTableState>() {
     override val url: String
         get() = props.game.resolve("/misc/material.json")
 
-    override fun GameMaterialTableState.init() {
-        showAlert = true
+    init {
+        state = jso { showAlert = true }
     }
 
-    override fun RBuilder.textBeforeTable() {
+    override fun ChildrenBuilder.textBeforeTable() {
         if (state.showAlert) {
             BootstrapAlert {
-                attrs.show = true
-                attrs.variant = "success"
-                attrs.dismissible = "true"
-                attrs.onClose = {
+                show = true
+                variant = "success"
+                dismissible = "true"
+                onClose = {
                     setState { showAlert = false }
                 }
                 unsafeSpan(props.game.i("ContactUsIfYouThinkUsMisuse"))
@@ -147,17 +154,17 @@ class GameMaterialTable : AsyncLoadingTable<GameMaterialTableState>() {
         +props.game.i("ThisGameWouldNotExistWithoutArtwork")
     }
 
-    override fun RDOMBuilder<TR>.tableHeaderBuilder() {
+    override fun ChildrenBuilder.tableHeaderBuilder() {
         th { +props.game.i("Material") }
         th { +props.game.i("Author") }
         th { +props.game.i("License") }
     }
 
-    override fun RDOMBuilder<TR>.tableRowBuilder(rowData: dynamic) {
+    override fun ChildrenBuilder.tableRowBuilder(rowData: dynamic) {
         td {
             a {
-                attrs.href = rowData.url.toString()
-                attrs.target = "_blank"
+                href = rowData.url.toString()
+                target = AnchorTarget._blank
                 +(rowData.name.toString())
             }
         }
@@ -165,8 +172,8 @@ class GameMaterialTable : AsyncLoadingTable<GameMaterialTableState>() {
 
         td {
             a {
-                attrs.href = rowData.licenceUrl.toString()
-                attrs.target = "_blank"
+                href = rowData.licenceUrl.toString()
+                target = AnchorTarget._blank
                 +(rowData.licence.toString())
             }
         }

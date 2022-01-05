@@ -17,16 +17,15 @@ package com.bytelegend.client.app.ui.heronoticeboard
 
 import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTile
 import com.bytelegend.client.app.ui.GameProps
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
-import react.RBuilder
-import react.RComponent
+import com.bytelegend.client.app.ui.jsStyle
+import com.bytelegend.client.app.ui.setState
+import react.Component
+import react.Fragment
 import react.State
-import react.dom.div
-import react.dom.img
-import react.dom.jsStyle
-import react.dom.p
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.img
+import react.dom.html.ReactHTML.p
 
 const val TOOLTIP_WIDTH = 200
 const val TOOLTIP_HEIGHT = 64
@@ -40,15 +39,15 @@ interface AvatarCardProps : GameProps {
     var tile: HeroNoticeboardTile
 }
 
-class AvatarTooltip : RComponent<AvatarCardProps, State>() {
+class AvatarTooltip : Component<AvatarCardProps, State>() {
     override fun UNSAFE_componentWillReceiveProps(nextProps: AvatarCardProps) {
         setState { }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         div {
-            attrs.classes = jsObjectBackedSetOf("brave-people-avatar-tooltip")
-            attrs.jsStyle {
+            className = "brave-people-avatar-tooltip"
+            jsStyle {
                 position = "absolute"
                 left = "${props.tile.x * AVATAR_TILE_SIZE + TOOLTIP_OFFSET_X}px"
                 top = "${props.tile.y * AVATAR_TILE_SIZE + TOOLTIP_OFFSET_Y}px"
@@ -63,32 +62,36 @@ class AvatarTooltip : RComponent<AvatarCardProps, State>() {
             }
 
             img {
-                attrs.jsStyle {
+                jsStyle {
                     position = "absolute"
                     borderRadius = "5px 0 0 5px"
-                    width = "${TOOLTIP_HEIGHT}px"
-                    height = "${TOOLTIP_HEIGHT}px"
+                    this.width = "${TOOLTIP_HEIGHT}px"
+                    this.height = "${TOOLTIP_HEIGHT}px"
                 }
-                attrs.src = props.game.transformGitHubUrl("https://avatars.githubusercontent.com/${props.tile.username}?size=200")
+                src = props.game.transformGitHubUrl("https://avatars.githubusercontent.com/${props.tile.username}?size=200")
             }
             div {
-                attrs.jsStyle {
+                jsStyle {
                     position = "absolute"
                     left = "${TOOLTIP_HEIGHT + 4}px"
                 }
-                attrs.classes = jsObjectBackedSetOf("white-text-black-shadow-1")
+                className = "white-text-black-shadow-1"
                 p {
-                    attrs.jsStyle.fontSize = "16px"
+                    jsStyle {
+                        fontSize = "16px"
+                    }
                     +props.tile.username
                 }
                 p {
-                    attrs.jsStyle.fontSize = "12px"
+                    jsStyle {
+                        fontSize = "12px"
+                    }
                     +"${props.joinedAtI18n} ${props.tile.createdAt.substring(0, "yyyy-MM-dd".length)}"
                 }
             }
 
             div {
-                attrs.jsStyle {
+                jsStyle {
                     position = "absolute"
                     left = "${TRIANGLE_OFFSET_X}px"
                     top = "${TRIANGLE_OFFSET_Y}px"

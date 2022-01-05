@@ -34,24 +34,25 @@ import com.bytelegend.app.shared.InvitationInformation
 import com.bytelegend.app.shared.MAX_COIN_REWARD_PER_CODE
 import com.bytelegend.client.app.external.codeBlock
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.HttpRequestException
 import com.bytelegend.client.app.web.get
 import com.bytelegend.client.app.web.post
 import com.bytelegend.client.utils.toInvitationInformation
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.get
-import react.RBuilder
-import react.RComponent
+import react.Component
+import react.Fragment
 import react.State
-import react.dom.h4
-import react.dom.p
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.h4
+import react.dom.html.ReactHTML.p
 
 interface InvitationCodeModalState : State {
     var inviterId: String?
@@ -67,11 +68,13 @@ interface InvitationCodeModalProps : GameProps
  * if the player has already opened the box, send an AJAX to render the modal
  * because we need to know how much reward the player got
  */
-class InvitationCodeModal(props: InvitationCodeModalProps) : RComponent<GameProps, InvitationCodeModalState>(props) {
-    override fun InvitationCodeModalState.init() {
-        inviterId = props.game.heroPlayer.states[INVITER_ID_STATE]
-        invitationInformation = null
-        loading = false
+class InvitationCodeModal(props: InvitationCodeModalProps) : Component<GameProps, InvitationCodeModalState>(props) {
+    init {
+        state = jso {
+            inviterId = props.game.heroPlayer.states[INVITER_ID_STATE]
+            invitationInformation = null
+            loading = false
+        }
     }
 
     override fun componentDidMount() {
@@ -89,15 +92,15 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : RComponent<GameProp
         }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         BootstrapModalHeader {
-            attrs.closeButton = true
+            closeButton = true
             BootstrapModalTitle {
                 +props.game.i("InvitationCode")
             }
         }
         BootstrapModalBody {
-            attrs.className = "text-center"
+            className = "text-center"
             if (props.game.heroPlayer.isAnonymous) {
                 h4 {
                     +props.game.i("YouAreNotLoggedIn")
@@ -107,7 +110,7 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : RComponent<GameProp
                 }
             } else if (state.loading) {
                 BootstrapSpinner {
-                    attrs.animation = "border"
+                    animation = "border"
                 }
             } else if (props.game.heroPlayer.states.containsKey(INVITER_ID_STATE)) {
                 if (state.invitationInformation != null) {
@@ -122,7 +125,7 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : RComponent<GameProp
                         )
                     )
                     codeBlock(withLineNumber = false) {
-                        attrs.lines = listOf(
+                        lines = listOf(
                             props.game.i(
                                 "JoinMeWithInvitationCode",
                                 state.invitationInformation!!.invitationCode!!,
@@ -130,7 +133,7 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : RComponent<GameProp
                                 COIN_REWARD_PER_CODE.toString()
                             )
                         )
-                        attrs.language = "none"
+                        language = "none"
                     }
                 }
             } else {
@@ -140,21 +143,21 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : RComponent<GameProp
                 val disabled = isDisabled()
                 if (disabled) {
                     BootstrapAlert {
-                        attrs.show = true
-                        attrs.variant = "warning"
+                        show = true
+                        variant = "warning"
                         +props.game.i("YouMustBeAdjacentToOpenTheBox")
                     }
                 }
                 BootstrapInputGroup {
                     BootstrapFormControl {
-                        attrs.disabled = disabled
-                        attrs.className = "invitation-code-input"
+                        this.disabled = disabled
+                        className = "invitation-code-input"
                     }
                     BootstrapButton {
-                        attrs.className = "invitation-code-ok-button"
+                        className = "invitation-code-ok-button"
                         +"OK"
-                        attrs.disabled = disabled
-                        attrs.onClick = {
+                        this.disabled = disabled
+                        onClick = {
                             useInvitationCode()
                         }
                     }
@@ -163,8 +166,8 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : RComponent<GameProp
 
             if (state.errorMessage != null) {
                 BootstrapAlert {
-                    attrs.show = true
-                    attrs.variant = "danger"
+                    show = true
+                    variant = "danger"
                     +state.errorMessage!!
                 }
             }
@@ -222,7 +225,7 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : RComponent<GameProp
     }
 
     private suspend fun postInvitationInformation(code: String): InvitationInformation {
-        return toInvitationInformation(JSON.parse(post("/game/api/invitation", JSON.stringify(jsObject<dynamic> {
+        return toInvitationInformation(JSON.parse(post("/game/api/invitation", JSON.stringify(jso<dynamic> {
             this.invitationCode = code
         }))))
     }

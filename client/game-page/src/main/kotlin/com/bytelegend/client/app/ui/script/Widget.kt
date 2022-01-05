@@ -28,22 +28,20 @@ import com.bytelegend.client.app.script.MAIN_CHANNEL
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
+import com.bytelegend.client.app.ui.jsStyle
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
-import kotlinx.html.js.onClickFunction
-import react.RBuilder
-import react.RHandler
+import kotlinext.js.jso
+import react.ElementType
+import react.Fragment
 import react.State
-import react.dom.div
-import react.dom.jsStyle
-import react.dom.span
-import react.setState
-import kotlin.reflect.KClass
+import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.span
 
 data class Widget<P : GameProps>(
-    val klass: KClass<out GameUIComponent<P, *>>,
-    val handler: RHandler<P>
+    val type: ElementType<P>,
+    val props: P
 )
 
 // See p.speech-bubble::after left
@@ -68,8 +66,8 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
         setState { arrowUp = !arrowUp }
     }
 
-    override fun SpeechBubbleWidgetState.init() {
-        arrowUp = true
+    init {
+        state = jso { arrowUp = true }
     }
 
     override fun componentDidMount() {
@@ -82,7 +80,7 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
         props.game.eventBus.remove(GAME_CLOCK_100MS_EVENT, arrowUpDownListener)
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         val speakerCoordinate = props.speakerCoordinate ?: activeScene.objects.getById<GameObject>(props.speakerId!!).unsafeCast<CoordinateAware>().pixelCoordinate
         // bubble's parent is game container, which is absolute-positioned.
         val bubbleLeft = speakerCoordinate.x - canvasCoordinateInMap.x +
@@ -91,15 +89,15 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
         val bubbleBottom = gameContainerHeight -
             (speakerCoordinate.y - canvasCoordinateInMap.y + canvasCoordinateInGameContainer.y)
         div {
-            attrs.classes = jsObjectBackedSetOf("speech-bubble")
+            className = "speech-bubble"
             val z = Layer.ScriptWidget.zIndex()
-            attrs.jsStyle {
+            jsStyle {
                 zIndex = z
                 position = "absolute"
                 left = "${bubbleLeft}px"
                 bottom = "${bubbleBottom}px"
             }
-            attrs.onClickFunction = {
+            onClick = {
                 props.game.eventBus.emit(GAME_SCRIPT_NEXT, MAIN_CHANNEL)
             }
             // Can only set one of 'children' or props.dangerouslySetInnerHTML'
@@ -107,18 +105,18 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
 
             if (props.showYesNo) {
                 BootstrapButton {
-                    attrs.className = "speech-bubble-button"
-                    attrs.size = "sm"
-                    attrs.onClick = { it: dynamic ->
+                    className = "speech-bubble-button"
+                    size = "sm"
+                    onClick = { it: dynamic ->
                         it.stopPropagation()
                         props.onYes()
                     }
                     +"Yes"
                 }
                 BootstrapButton {
-                    attrs.className = "speech-bubble-button"
-                    attrs.size = "sm"
-                    attrs.onClick = { it: dynamic ->
+                    className = "speech-bubble-button"
+                    size = "sm"
+                    onClick = { it: dynamic ->
                         it.stopPropagation()
                         props.onNo()
                     }
@@ -128,7 +126,7 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
 
             if (props.arrow) {
                 span {
-                    attrs.jsStyle {
+                    jsStyle {
                         position = "absolute"
                         right = "6px"
                         if (state.arrowUp) {

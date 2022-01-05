@@ -18,14 +18,9 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.id
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onMouseMoveFunction
-import kotlinx.html.js.onMouseOutFunction
-import react.RBuilder
+import react.Fragment
 import react.State
-import react.dom.attrs
+import react.create
 
 /*
  This layer is a transparent layer on top of map canvas layer, it responds to user mouse interaction
@@ -75,27 +70,26 @@ import react.dom.attrs
  */
 
 const val USER_MOUSE_INTERACTION_LAYER_ID = "user-mouse-interaction-layer"
+
 class UserMouseInteractionLayer : GameUIComponent<GameProps, State>() {
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         absoluteDiv(
             left = canvasCoordinateInGameContainer.x,
             top = canvasCoordinateInGameContainer.y,
             width = canvasPixelSize.width,
             height = canvasPixelSize.height,
             zIndex = Layer.UserMouseInteraction.zIndex(),
-            classes = jsObjectBackedSetOf("user-mouse-interaction-layer")
+            className = "user-mouse-interaction-layer"
         ) {
-            attrs {
-                id = USER_MOUSE_INTERACTION_LAYER_ID
-                onClickFunction = {
-                    game.eventBus.emit(MOUSE_CLICK_EVENT, toGameMouseEvent(it))
-                }
-                onMouseMoveFunction = {
-                    game.eventBus.emit(MOUSE_MOVE_EVENT, toGameMouseEvent(it))
-                }
-                onMouseOutFunction = {
-                    game.eventBus.emit(MOUSE_OUT_OF_MAP_EVENT, null)
-                }
+            it.id = USER_MOUSE_INTERACTION_LAYER_ID
+            it.onClick = {
+                game.eventBus.emit(MOUSE_CLICK_EVENT, toGameMouseEvent(it))
+            }
+            it.onMouseMove = {
+                game.eventBus.emit(MOUSE_MOVE_EVENT, toGameMouseEvent(it))
+            }
+            it.onMouseOut = {
+                game.eventBus.emit(MOUSE_OUT_OF_MAP_EVENT, null)
             }
         }
     }

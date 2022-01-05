@@ -21,10 +21,11 @@ import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
+import kotlinext.js.jso
 import kotlinx.browser.window
-import react.RBuilder
+import react.Fragment
 import react.State
-import react.setState
+import react.create
 
 interface TileCursorWidgetState : State {
     var cursorCoordinateOnMap: GridCoordinate?
@@ -49,8 +50,8 @@ class TileCursorWidget : GameUIComponent<GameProps, TileCursorWidgetState>() {
         }
     }
 
-    override fun TileCursorWidgetState.init() {
-        animationFrameIndex = 0
+    init {
+        state = jso { animationFrameIndex = 0 }
     }
 
     override fun shouldComponentUpdate(nextProps: GameProps, nextState: TileCursorWidgetState): Boolean {
@@ -79,7 +80,7 @@ class TileCursorWidget : GameUIComponent<GameProps, TileCursorWidgetState>() {
         props.game.eventBus.remove(MOUSE_OUT_OF_MAP_EVENT, mouseOutOfMapListener)
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         if (state.cursorCoordinateOnMap != undefined && !state.cursorCoordinateOnMap!!.outOf(mapGridSize)) {
             val coordinateInCanvas = (state.cursorCoordinateOnMap!! * tileSize) - canvasCoordinateInMap + canvasCoordinateInGameContainer
             val borderColor = determineBorderColor(state.cursorCoordinateOnMap!!)
@@ -91,7 +92,7 @@ class TileCursorWidget : GameUIComponent<GameProps, TileCursorWidgetState>() {
                     width = tileSize.width,
                     height = tileSize.height,
                     zIndex = Layer.CursorWidget.zIndex(),
-                    opacity = "0.7",
+                    opacity = 0.7,
                     extraStyleBuilder = {
                         border = "$borderColor 4px dashed"
                     }
@@ -103,7 +104,7 @@ class TileCursorWidget : GameUIComponent<GameProps, TileCursorWidgetState>() {
                     width = tileSize.width - 4,
                     height = tileSize.height - 4,
                     zIndex = Layer.CursorWidget.zIndex(),
-                    opacity = "0.7",
+                    opacity = 0.7,
                     extraStyleBuilder = {
                         border = "$borderColor 4px dashed"
                     }

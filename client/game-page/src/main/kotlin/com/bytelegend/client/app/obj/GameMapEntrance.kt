@@ -31,9 +31,11 @@ import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.ui.mission.BouncingTitleWidget
 import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinext.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import react.RBuilder
+import react.ChildrenBuilder
+import react.react
 
 class GameMapEntrance(
     override val id: String,
@@ -63,16 +65,18 @@ class GameMapEntrance(
         }
     }
 
-    override fun renderBouncingTitle(builder: RBuilder) {
-        builder.child(BouncingTitleWidget::class) {
-            attrs.title = gameScene.gameRuntime.i(destMapId)
-            attrs.pixelCoordinate = pixelCoordinate + PixelCoordinate(gameScene.map.tileSize.width / 2, 0)
-            attrs.gameScene = gameScene
-            attrs.color = "white"
-            attrs.backgroundColor = "rgba(36,102,233,0.8)"
-            attrs.onClickFunction = {
-                gameScene.gameRuntime.sceneContainer.loadScene(destMapId)
+    override fun renderBouncingTitle(builder: ChildrenBuilder) {
+        val scene = gameScene
+        val entranceCoordinate = pixelCoordinate
+        builder.child(BouncingTitleWidget::class.react, jso {
+            title = scene.gameRuntime.i(destMapId)
+            pixelCoordinate = entranceCoordinate + PixelCoordinate(scene.map.tileSize.width / 2, 0)
+            gameScene = scene
+            color = "white"
+            backgroundColor = "rgba(36,102,233,0.8)"
+            onClickFunction = {
+                scene.gameRuntime.sceneContainer.loadScene(destMapId)
             }
-        }
+        })
     }
 }

@@ -31,29 +31,23 @@ import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.absoluteDiv
+import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.minimap.getMinimapMapFeatures
 import com.bytelegend.client.app.ui.minimap.getRoadmapEChartsOptions
 import com.bytelegend.client.app.ui.mission.ModalCloseButton
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinext.js.jsObject
+import com.bytelegend.client.app.ui.setState
+import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
-import kotlinx.html.classes
-import kotlinx.html.id
-import kotlinx.html.js.onMouseDownFunction
-import kotlinx.html.js.onMouseMoveFunction
-import kotlinx.html.js.onMouseOutFunction
-import kotlinx.html.js.onMouseUpFunction
-import kotlinx.html.js.onWheelFunction
 import org.w3c.dom.events.MouseEvent
 import org.w3c.dom.events.WheelEvent
-import react.RBuilder
+import react.Fragment
 import react.State
-import react.dom.div
-import react.dom.jsStyle
-import react.dom.span
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.span
+import react.react
 
 interface RoadmapModalState : State {
     // modalSize/mapSize ~ 1
@@ -89,36 +83,38 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
     private val roadmapHeight
         get() = (state.zoom * mapPixelSize.height).toInt()
 
-    override fun RoadmapModalState.init(props: GameProps) {
-        cursor = "grab"
-        mapLeftTop = PixelCoordinate(0, 0)
-        // TODO change this if map is not square. Currently all map is square
-        modalSize = determineRoadmapSize().let { PixelSize(it, it) }
-        zoom = 1.0 * modalSize.width / props.game.activeScene.map.pixelSize.width
-        showPromptBanner = localStorage.getItem(DONT_SHOW_ROADMAP_BANNER) == null
-        showMissionTitles = false
+    init {
+        state = jso {
+            cursor = "grab"
+            mapLeftTop = PixelCoordinate(0, 0)
+            // TODO change this if map is not square. Currently all map is square
+            modalSize = determineRoadmapSize().let { PixelSize(it, it) }
+            zoom = 1.0 * state.modalSize.width / props.game.activeScene.map.pixelSize.width
+            showPromptBanner = localStorage.getItem(DONT_SHOW_ROADMAP_BANNER) == null
+            showMissionTitles = false
+        }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         val roadmapSize = determineRoadmapSize()
 
-        child(ModalCloseButton::class) {
-            attrs.onClickFunction = {
+        child(ModalCloseButton::class.react, jso {
+            onClickFunction = {
                 game.modalController.hide()
             }
-        }
+        })
 
         div {
-            attrs.classes = jsObjectBackedSetOf("show-mission-titles-switch")
+            className = "show-mission-titles-switch"
 
             span {
                 +i("ShowMissionTitles")
             }
 
             BootstrapSwitchButton {
-                attrs.size = "xs"
-                attrs.checked = state.showMissionTitles
-                attrs.onChange = {
+                size = "xs"
+                checked = state.showMissionTitles
+                onChange = {
                     setState {
                         showMissionTitles = it
                     }
@@ -130,14 +126,14 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
             span {
                 +i("LearningRoadmap")
                 BootstrapButton {
-                    attrs.className = "download-my-roadmap-btn"
-                    attrs.variant = "outline-primary"
-                    attrs.size = "sm"
+                    className = "download-my-roadmap-btn"
+                    variant = "outline-primary"
+                    size = "sm"
                     +i("DownloadMyRoadmap")
-                    attrs.onClick = {
+                    onClick = {
                         if (echarts != undefined) {
                             val oldZoom = state.zoom
-                            setState(jsObject<RoadmapModalState> { zoom = 1.0 * DEFAULT_DOWNLOAD_ROADMAP_IMAGE_SIZE / mapPixelSize.width }) {
+                            setState(jso<RoadmapModalState> { zoom = 1.0 * DEFAULT_DOWNLOAD_ROADMAP_IMAGE_SIZE / mapPixelSize.width }) {
                                 downloadURI(echarts.getDataURL(), "my-roadmap.svg")
                                 setState { zoom = oldZoom }
                             }
@@ -149,30 +145,30 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
 
         BootstrapModalBody {
             div {
-                attrs.jsStyle {
+                jsStyle {
                     position = "relative"
                     overflow = "hidden"
                     width = "${roadmapSize}px"
                     height = "${roadmapSize}px"
                 }
                 absoluteDiv(top = 0, left = 0, width = roadmapSize, height = roadmapSize, zIndex = 2) {
-                    attrs.jsStyle {
+                    it.jsStyle {
                         cursor = state.cursor
                     }
-                    attrs.onMouseOutFunction = {
-                        onMouseUpEvent(it.asDynamic().nativeEvent)
+                    it.onMouseOut = {
+                        onMouseUpEvent(it.nativeEvent)
                     }
-                    attrs.onWheelFunction = {
-                        onMouseWheelEvent(it.asDynamic().nativeEvent)
+                    it.onWheel = {
+                        onMouseWheelEvent(it.nativeEvent)
                     }
-                    attrs.onMouseUpFunction = {
-                        onMouseUpEvent(it.asDynamic().nativeEvent)
+                    it.onMouseUp = {
+                        onMouseUpEvent(it.nativeEvent)
                     }
-                    attrs.onMouseDownFunction = {
-                        onMouseDownEvent(it.asDynamic().nativeEvent)
+                    it.onMouseDown = {
+                        onMouseDownEvent(it.nativeEvent)
                     }
-                    attrs.onMouseMoveFunction = {
-                        onMouseMoveEvent(it.asDynamic().nativeEvent)
+                    it.onMouseMove = {
+                        onMouseMoveEvent(it.nativeEvent)
                     }
                 }
 
@@ -183,31 +179,31 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
                     height = roadmapHeight,
                     zIndex = 1
                 ) {
-                    attrs.id = echartsContainerElementId
+                    it.id = echartsContainerElementId
                 }
             }
 
             if (state.showPromptBanner) {
                 BootstrapAlert {
-                    attrs.variant = "info"
-                    attrs.dismissible = false
-                    attrs.onClose = {
+                    variant = "info"
+                    dismissible = false
+                    onClose = {
                         setState {
                             showPromptBanner = false
                         }
                     }
-                    attrs.className = "roadmap-modal-prompt"
-                    +game.i("TryScrollAndDrag")
+                    className = "roadmap-modal-prompt"
+                    +props.game.i("TryScrollAndDrag")
                     BootstrapAlertLink {
-                        attrs.href = "#"
-                        attrs.className = "roadmap-modal-prompt-link"
-                        attrs.onClick = {
+                        href = "#"
+                        className = "roadmap-modal-prompt-link"
+                        onClick = {
                             setState {
                                 showPromptBanner = false
                             }
                             localStorage.setItem(DONT_SHOW_ROADMAP_BANNER, "1")
                         }
-                        +game.i("DontShowThisAgain")
+                        +props.game.i("DontShowThisAgain")
                     }
                 }
                 window.setTimeout({
@@ -222,7 +218,7 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
     private fun initIfNot(refresh: Boolean) {
         if (echarts == undefined) {
             document.getElementById(echartsContainerElementId)?.apply {
-                echarts = window.asDynamic().echarts.init(this, "light", jsObject {
+                echarts = window.asDynamic().echarts.init(this, "light", jso {
                     renderer = "svg"
                 })
                 window.asDynamic().echarts.registerMap("minimap", activeScene.getMinimapMapFeatures())

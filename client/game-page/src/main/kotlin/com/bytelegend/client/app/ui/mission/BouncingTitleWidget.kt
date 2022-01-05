@@ -15,10 +15,11 @@
  */
 package com.bytelegend.client.app.ui.mission
 
-import react.RBuilder
+import react.Fragment
+import react.create
 
 class BouncingTitleWidget(props: BouncingTitleProps) : AbstractBouncingTitleWidget<BouncingTitleProps, BouncingTitleState>(props) {
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         renderTitle {
         }
     }

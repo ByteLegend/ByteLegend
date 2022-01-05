@@ -15,45 +15,63 @@
  */
 package com.bytelegend.client.app.ui
 
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.DIV
-import kotlinx.html.classes
+import csstype.px
+import kotlinext.js.jso
+import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
+import react.ChildrenBuilder
 import react.Component
-import react.RBuilder
-import react.RElementBuilder
-import react.RHandler
-import react.dom.RDOMBuilder
-import react.dom.attrs
-import react.dom.div
-import react.dom.h3
-import react.dom.h4
-import react.dom.jsStyle
-import react.dom.span
-import kotlin.reflect.KClass
+import react.ComponentClass
+import react.Fragment
+import react.Props
+import react.State
+import react.create
+import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.h3
+import react.dom.html.ReactHTML.h4
+import react.dom.html.ReactHTML.span
 
 inline fun <T : Any> jsObject(builder1: T.() -> Unit, builder2: T.() -> Unit): T =
     kotlinext.js.jsObject<T>().apply(builder1).apply(builder2)
 
 fun js(builder1: dynamic.() -> Unit, builder2: dynamic.() -> Unit): dynamic = jsObject(builder1, builder2)
 
-fun RBuilder.icon(
+fun ChildrenBuilder.icon(
     size: Int = 16,
-    classes: MutableSet<String>,
-    config: RDOMBuilder<DIV>.() -> Unit = {}
+    className: String,
+    config: HTMLAttributes<HTMLDivElement>.() -> Unit = {}
 ) {
     div {
-        attrs.jsStyle {
-            width = "${size}px"
-            height = "${size}px"
+        this.className = "inline-icon $className"
+        style = jso {
+            width = size.px
+            height = size.px
         }
-        classes.add("inline-icon")
-        attrs.classes = classes
         config()
     }
 }
 
+fun <P : Props, S : State> Component<P, S>.setState(handler: S.() -> Unit) {
+    val state = jso<S>()
+    state.handler()
+    setState(state)
+}
+
+fun <T : HTMLElement> HTMLAttributes<T>.jsStyle(block: dynamic.() -> Unit) {
+    if (style == null) {
+        style = jso(block)
+    } else {
+        style.apply(block)
+    }
+}
+
+fun <T : HTMLElement> HTMLAttributes<T>.setJsStyle(obj: dynamic) {
+    style = obj
+}
+
 @Suppress("UnsafeCastFromDynamic")
-fun RBuilder.absoluteDiv(
+fun ChildrenBuilder.absoluteDiv(
     left: Int? = null,
     top: Int? = null,
     right: Int? = null,
@@ -61,87 +79,92 @@ fun RBuilder.absoluteDiv(
     width: Int? = null,
     height: Int? = null,
     zIndex: Int? = null,
-    opacity: String = "1",
-    classes: Set<String> = emptySet(),
+    opacity: Double = 1.0,
+    className: String = "",
     extraStyleBuilder: dynamic.() -> Unit = {},
-    block: RDOMBuilder<DIV>.() -> Unit = {}
+    block: ChildrenBuilder.(HTMLAttributes<HTMLDivElement>) -> Unit = {}
 ) {
     div {
-        attrs {
-            this.classes = classes
-
-            jsStyle {
-                position = "absolute"
-                if (left != null) {
-                    this.left = "${left}px"
-                }
-                if (right != null) {
-                    this.right = "${right}px"
-                }
-                if (top != null) {
-                    this.top = "${top}px"
-                }
-                if (bottom != null) {
-                    this.bottom = "${bottom}px"
-                }
-                if (width != null) {
-                    this.width = "${width}px"
-                }
-                if (height != null) {
-                    this.height = "${height}px"
-                }
-                if (zIndex != null) {
-                    this.zIndex = zIndex.toString()
-                }
-                this.opacity = opacity
+        this.className = className
+        this.style = jso<dynamic> {
+            position = "absolute"
+            if (left != null) {
+                this.left = "${left}px"
             }
-            jsStyle(extraStyleBuilder)
-            block()
+            if (right != null) {
+                this.right = "${right}px"
+            }
+            if (top != null) {
+                this.top = "${top}px"
+            }
+            if (bottom != null) {
+                this.bottom = "${bottom}px"
+            }
+            if (width != null) {
+                this.width = "${width}px"
+            }
+            if (height != null) {
+                this.height = "${height}px"
+            }
+            if (zIndex != null) {
+                this.zIndex = zIndex
+            }
+            this.opacity = opacity
         }
+
+        style.apply(extraStyleBuilder)
+        block(this)
     }
 }
 
-fun <PARENT : GameProps, CHILD : GameProps> RElementBuilder<PARENT>.gameChild(
+fun <PARENT : GameProps, CHILD : GameProps> gameChild(
     props: PARENT,
-    klazz: KClass<out Component<CHILD, *>>,
-    handler: RHandler<CHILD> = {}
+    klazz: ComponentClass<CHILD>,
+    block: CHILD.() -> Unit = {}
 ) {
-    child(klazz) {
-        attrs.game = props.game
-        handler()
+    val newChild = Fragment.create {
+        child(klazz, jso {
+            this.game = props.game
+            block()
+        })
+    }
+    if (props.children == null) {
+        props.children = arrayOf(newChild).asDynamic()
+    } else {
+        props.children.asDynamic().push(newChild)
     }
 }
 
-fun RBuilder.unsafeSpan(html: String, vararg classes: String) {
+fun ChildrenBuilder.unsafeSpan(html: String, className: String = "") {
     span {
-        attrs.classes = jsObjectBackedSetOf(*classes)
-        consumer.onTagContentUnsafe {
-            +html
+        this.className = className
+        dangerouslySetInnerHTML = jso {
+            __html = html
         }
     }
 }
 
-fun RBuilder.unsafeDiv(html: String, config: RDOMBuilder<DIV>.() -> Unit = {}) {
+fun ChildrenBuilder.unsafeDiv(html: String, config: HTMLAttributes<HTMLDivElement>.() -> Unit = {}) {
     div {
         config()
-        consumer.onTagContentUnsafe {
-            +html
+        dangerouslySetInnerHTML = jso {
+            __html = html
         }
     }
 }
 
-fun RBuilder.unsafeH3(html: String) {
+fun ChildrenBuilder.unsafeH3(html: String) {
     h3 {
-        consumer.onTagContentUnsafe {
-            +html
+        dangerouslySetInnerHTML = jso {
+            __html = html
         }
     }
 }
 
-fun RBuilder.unsafeH4(html: String) {
+fun ChildrenBuilder.unsafeH4(html: String) {
     h4 {
-        consumer.onTagContentUnsafe {
-            +html
+        dangerouslySetInnerHTML = jso {
+            __html = html
         }
     }
 }

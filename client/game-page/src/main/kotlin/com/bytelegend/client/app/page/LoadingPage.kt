@@ -18,16 +18,21 @@ package com.bytelegend.client.app.page
 import com.bytelegend.app.client.api.EventBusAware
 import com.bytelegend.client.app.engine.RESOURCE_LOADING_FAILURE_EVENT
 import com.bytelegend.client.app.engine.ResourceLoadingFailureEventListener
+import com.bytelegend.client.app.ui.jsStyle
+import com.bytelegend.client.app.ui.setState
 import common.widget.ProgressBar
-import react.RBuilder
-import react.RComponent
+import kotlinext.js.jso
+import react.ChildrenBuilder
+import react.Component
+import react.Fragment
 import react.Props
+import react.ReactNode
 import react.State
-import react.dom.br
-import react.dom.div
-import react.dom.img
-import react.dom.jsStyle
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.br
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.img
+import react.react
 
 interface LoadingPageProps : Props, EventBusAware
 
@@ -35,7 +40,7 @@ interface LoadingPageState : State {
     var errorMessages: MutableList<String>
 }
 
-class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
+class LoadingPage : Component<LoadingPageProps, LoadingPageState>() {
     private val resourceLoadingFailureListener: ResourceLoadingFailureEventListener = {
         setState {
             errorMessages.add(it.message)
@@ -44,21 +49,20 @@ class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
 
     init {
         game.eventBus.on(RESOURCE_LOADING_FAILURE_EVENT, resourceLoadingFailureListener)
+        state = jso { errorMessages = mutableListOf() }
     }
 
-    override fun LoadingPageState.init() {
-        errorMessages = mutableListOf()
+    override fun render(): ReactNode {
+        return Fragment.create {
+            logoDiv()
+            progressBarDiv()
+        }
     }
 
-    override fun RBuilder.render() {
-        logoDiv()
-        progressBarDiv()
-    }
-
-    private fun RBuilder.logoDiv() {
+    private fun ChildrenBuilder.logoDiv() {
         // Must be inlined styles, because CSS might not be loaded at this point.
         div {
-            attrs.jsStyle {
+            jsStyle {
                 width = "100vw"
                 height = "30vh"
                 display = "flex"
@@ -67,11 +71,11 @@ class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
                 backgroundColor = "black"
             }
             img {
-                attrs.src = "${GAME_INIT_DATA.rrbd}/img/logo/logo.png"
+                src = "${GAME_INIT_DATA.rrbd}/img/logo/logo.png"
             }
         }
         div {
-            attrs.jsStyle {
+            jsStyle {
                 width = "100vw"
                 height = "20vh"
                 display = "flex"
@@ -86,9 +90,9 @@ class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
         }
     }
 
-    private fun RBuilder.progressBarDiv() {
+    private fun ChildrenBuilder.progressBarDiv() {
         div {
-            attrs.jsStyle {
+            jsStyle {
                 width = "100vw"
                 height = "10vh"
                 display = "flex"
@@ -97,18 +101,18 @@ class LoadingPage : RComponent<LoadingPageProps, LoadingPageState>() {
                 backgroundColor = "black"
             }
             div {
-                attrs.jsStyle {
+                jsStyle {
                     width = "80vw"
                     height = "10vh"
                 }
-                child(ProgressBar::class) {
-                    attrs.eventBus = props.eventBus
-                }
+                child(ProgressBar::class.react, jso {
+                    eventBus = props.eventBus
+                })
             }
         }
 
         div {
-            attrs.jsStyle {
+            jsStyle {
                 width = "100vw"
                 height = "40vh"
                 display = "flex"

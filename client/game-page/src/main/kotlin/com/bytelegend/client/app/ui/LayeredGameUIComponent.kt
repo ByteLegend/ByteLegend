@@ -15,16 +15,16 @@
  */
 package com.bytelegend.client.app.ui
 
-import kotlinx.html.id
-import react.RBuilder
+import react.Fragment
 import react.State
+import react.create
 
 interface GameContainerProps : GameProps
 
 class GameContainer : GameUIComponent<GameContainerProps, State>() {
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         containerFillingDiv {
-            attrs.id = "game-container-layer"
+            it.id = "game-container-layer"
             props.children()
         }
     }

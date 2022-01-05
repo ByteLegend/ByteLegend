@@ -22,14 +22,12 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.client.app.engine.GAME_CLOCK_1S_EVENT
 import com.bytelegend.client.utils.JSArrayBackedList
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
-import react.RBuilder
+import kotlinext.js.jso
+import react.Fragment
 import react.State
-import react.dom.b
-import react.dom.div
-import react.dom.jsStyle
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.b
+import react.dom.html.ReactHTML.div
 
 const val BANNER_UPDATE_EVENT = "banner.update.event"
 
@@ -61,9 +59,11 @@ val Banner.isAutoClosable
     get() = autoCloseSeconds > 0
 
 class BannerUIComponent : GameUIComponent<GameProps, GameBannersState>() {
-    override fun GameBannersState.init() {
-        banners = JSArrayBackedList()
-        bannerLeftSeconds = JSArrayBackedList()
+    init {
+        state = jso {
+            banners = JSArrayBackedList()
+            bannerLeftSeconds = JSArrayBackedList()
+        }
     }
 
     private val bannerUpdateEventListener: EventListener<Banner> = {
@@ -96,11 +96,11 @@ class BannerUIComponent : GameUIComponent<GameProps, GameBannersState>() {
     }
 
     @Suppress("UnsafeCastFromDynamic")
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         if (state.banners.isNotEmpty()) {
             div {
-                attrs.classes = jsObjectBackedSetOf("fixed-top")
-                attrs.jsStyle {
+                className = "fixed-top"
+                jsStyle {
                     zIndex = BANNER_Z_INDEX
                     margin = "auto"
                     maxWidth = "${gameContainerWidth / 2}px"
@@ -110,19 +110,19 @@ class BannerUIComponent : GameUIComponent<GameProps, GameBannersState>() {
                     val banner = state.banners[index]
                     val secondsLeft = state.bannerLeftSeconds[index]
                     BootstrapAlert {
-                        attrs.variant = banner.variant
-                        attrs.dismissible = true
-                        attrs.onClose = {
+                        variant = banner.variant
+                        dismissible = true
+                        onClose = {
                             setState {
                                 banners = banners.apply { remove(banner) }
                             }
                         }
-                        attrs.className = "top-banner"
+                        className = "top-banner"
                         unsafeSpan(banner.contentHtml)
 
                         if (banner.isAutoClosable) {
                             b {
-                                attrs.classes = jsObjectBackedSetOf("closed-in-span")
+                                className = "closed-in-span"
                                 +" ${i("BannerClosedIn")} ${formatSecond(secondsLeft)}"
                             }
                         }

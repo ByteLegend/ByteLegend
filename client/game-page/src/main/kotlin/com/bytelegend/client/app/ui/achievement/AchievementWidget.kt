@@ -24,30 +24,29 @@ import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.client.app.engine.getIconUrl
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onMouseOutFunction
-import kotlinx.html.js.onMouseOverFunction
-import react.RBuilder
+import com.bytelegend.client.app.ui.setState
+import kotlinext.js.jso
+import react.ChildrenBuilder
+import react.Fragment
 import react.State
-import react.dom.div
-import react.dom.img
-import react.dom.p
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.img
+import react.dom.html.ReactHTML.p
+import react.react
 
 interface AchievementWidgetProps : GameProps
 
 class AchievementWidget : GameUIComponent<AchievementWidgetProps, State>() {
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         BootstrapListGroupItem {
             div {
-                attrs.classes = jsObjectBackedSetOf("map-title-text")
-                attrs.onClickFunction = {
+                className = "map-title-text"
+                onClick = {
                     game.modalController.show {
-                        child(AchievementModal::class) {
-                            attrs.game = game
-                        }
+                        child(AchievementModal::class.react, jso {
+                            this.game = props.game
+                        })
                     }
                 }
                 if (game.locale == Locale.EN) {
@@ -65,13 +64,13 @@ interface AchievementModalState : State {
 }
 
 class AchievementModal : GameUIComponent<GameProps, AchievementModalState>() {
-    override fun AchievementModalState.init() {
-        hoveredAchievementId = null
+    init {
+        state = jso { hoveredAchievementId = null }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         BootstrapModalHeader {
-            attrs.closeButton = true
+            closeButton = true
             BootstrapModalTitle {
                 +i("MyAchievement")
             }
@@ -79,17 +78,17 @@ class AchievementModal : GameUIComponent<GameProps, AchievementModalState>() {
 
         BootstrapModalBody {
             div {
-                attrs.classes = jsObjectBackedSetOf("achievement-modal")
+                className = "achievement-modal"
 
                 game.heroPlayer.achievements.forEach { renderOneAchievement(it) }
 
-                attrs.onMouseOutFunction = {
+                onMouseOut = {
                     setState { hoveredAchievementId = null }
                 }
 
                 p {
                     if (state.hoveredAchievementId == null) {
-                        attrs.classes = jsObjectBackedSetOf("transparent-text")
+                        className = "transparent-text"
                         +"Yay! You found an easter egg!"
                     } else {
                         +i(state.hoveredAchievementId!!)
@@ -99,17 +98,17 @@ class AchievementModal : GameUIComponent<GameProps, AchievementModalState>() {
         }
     }
 
-    private fun RBuilder.renderOneAchievement(achievementId: String) {
+    private fun ChildrenBuilder.renderOneAchievement(achievementId: String) {
         div {
-            attrs.classes = jsObjectBackedSetOf("achievement-item", "flex-center")
-            attrs.onMouseOverFunction = {
+            className = "achievement-item flex-center"
+            onMouseOver = {
                 setState { hoveredAchievementId = achievementId }
             }
-            attrs.onMouseOutFunction = {
+            onMouseOut = {
                 setState { hoveredAchievementId = null }
             }
             img {
-                attrs.src = game.getIconUrl(achievementId)
+                src = game.getIconUrl(achievementId)
             }
         }
     }

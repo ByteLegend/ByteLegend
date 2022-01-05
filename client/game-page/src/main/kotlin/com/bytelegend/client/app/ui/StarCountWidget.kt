@@ -16,13 +16,11 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.shared.protocol.NumberChange
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.DIV
-import kotlinx.html.classes
-import kotlinx.html.id
+import org.w3c.dom.HTMLDivElement
+import react.ChildrenBuilder
 import react.State
-import react.dom.RDOMBuilder
-import react.dom.span
+import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.span
 
 interface StarCountWidgetProps : GameProps
 interface StarCountWidgetState : State
@@ -31,10 +29,10 @@ const val STAR_INCREMENT_EVENT = "star.increment"
 
 class StarCountWidget : AbstractIncrementAnimatableWidget<StarCountWidgetProps, StarCountWidgetState>("star-icon") {
     override val eventName: String = STAR_INCREMENT_EVENT
-    override fun RDOMBuilder<DIV>.renderDiv() {
-        attrs.id = "star-count"
+    override fun <T> T.renderDiv() where T : HTMLAttributes<HTMLDivElement>, T : ChildrenBuilder {
+        id = "star-count"
         span {
-            attrs.classes = jsObjectBackedSetOf("map-title-text")
+            className = "map-title-text"
             +game.heroPlayer.star.toString()
         }
         renderIcon()

@@ -23,14 +23,11 @@ import com.bytelegend.client.app.engine.MAP_SCROLL_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
-import kotlinx.html.id
-import react.RBuilder
+import kotlinext.js.jso
+import react.Fragment
 import react.State
-import react.dom.jsStyle
-import react.dom.span
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.span
 
 const val COORDINATE_BORDER_FLICKER = "coordinate.border.flicker.end"
 
@@ -75,8 +72,8 @@ class MapCoordinateTitleWidget : GameUIComponent<GameProps, MapCoordinateWidgetS
         setState { flickering = it }
     }
 
-    override fun MapCoordinateWidgetState.init() {
-        flickering = false
+    init {
+        state = jso { flickering = false }
     }
 
     override fun componentDidMount() {
@@ -95,17 +92,17 @@ class MapCoordinateTitleWidget : GameUIComponent<GameProps, MapCoordinateWidgetS
         props.game.eventBus.remove(COORDINATE_BORDER_FLICKER, onBorderFlickerEventListener)
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         span {
-            attrs.id = "map-coordinate"
+            id = "map-coordinate"
             if (!state.flickering || (counter / 5) % 2 == 0) {
-                attrs.classes = jsObjectBackedSetOf("map-title-widget", "map-title-text", "map-coordinate")
+                className = "map-title-widget map-title-text map-coordinate"
             } else {
-                attrs.classes = jsObjectBackedSetOf("map-title-widget", "map-title-text", "bordered-map-coordinate")
+                className = "map-title-widget map-title-text bordered-map-coordinate"
             }
 
             val z = Layer.MapTitle.zIndex().toString()
-            attrs.jsStyle {
+            jsStyle {
                 zIndex = z
             }
 

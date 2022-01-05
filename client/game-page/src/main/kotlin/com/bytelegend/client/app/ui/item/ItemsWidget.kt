@@ -20,18 +20,19 @@ import com.bytelegend.client.app.engine.getIconUrl
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.HistoryModal
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
-import kotlinx.html.js.onClickFunction
-import react.RBuilder
+import kotlinext.js.jso
+import react.ChildrenBuilder
+import react.Fragment
 import react.State
-import react.dom.div
-import react.dom.img
+import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.img
+import react.react
 
 interface ItemWidgetProps : GameProps
 
 class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         BootstrapListGroupItem {
             val items = game.heroPlayer.items
             if (items.isNotEmpty()) {
@@ -43,21 +44,21 @@ class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
         }
     }
 
-    private fun RBuilder.renderOne(item: String) {
+    private fun ChildrenBuilder.renderOne(item: String) {
         img {
-            attrs.src = game.getIconUrl(item)
-            attrs.classes = jsObjectBackedSetOf("inline-icon-16", "item-$item")
+            src = game.getIconUrl(item)
+            className = "inline-icon-16 item-$item"
         }
     }
 
-    private fun RBuilder.renderText(text: String) {
+    private fun ChildrenBuilder.renderText(text: String) {
         div {
-            attrs.classes = jsObjectBackedSetOf("map-title-text", "items-widget")
-            attrs.onClickFunction = {
+            className = "map-title-text items-widget"
+            onClick = {
                 game.modalController.show {
-                    child(HistoryModal::class) {
-                        attrs.game = game
-                    }
+                    child(HistoryModal::class.react, jso {
+                        this.game = props.game
+                    })
                 }
             }
             +text

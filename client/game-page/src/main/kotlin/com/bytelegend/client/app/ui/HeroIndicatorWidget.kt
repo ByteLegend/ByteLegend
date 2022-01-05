@@ -24,13 +24,11 @@ import com.bytelegend.app.shared.Direction.UP
 import com.bytelegend.app.shared.math.imageBlockOnCanvas
 import com.bytelegend.app.shared.math.outOfCanvas
 import com.bytelegend.client.app.engine.GAME_CLOCK_100MS_EVENT
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.js.onClickFunction
-import react.RBuilder
+import kotlinext.js.jso
+import react.Fragment
 import react.State
-import react.dom.img
-import react.dom.jsStyle
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.img
 import kotlin.math.PI
 import kotlin.math.atan
 
@@ -52,6 +50,10 @@ interface HeroIndicatorWidgetState : State {
 }
 
 class HeroIndicatorWidget : GameUIComponent<GameProps, HeroIndicatorWidgetState>() {
+    init {
+        state = jso()
+    }
+
     val eventListener: EventListener<Nothing> = {
         onClock()
     }
@@ -235,32 +237,33 @@ class HeroIndicatorWidget : GameUIComponent<GameProps, HeroIndicatorWidgetState>
         return heroDirectionToCanvas
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         if (!shouldDisplayHeroIndicator() || state.left == undefined) {
-            return
+            return@create
         }
         absoluteDiv(
             left = state.left!!,
             top = state.top!!,
-            classes = jsObjectBackedSetOf("hero-indicator"),
+            className = "hero-indicator",
             width = HERO_INDICATOR_DIV_WIDTH,
             height = HERO_INDICATOR_DIV_HEIGHT,
             zIndex = Layer.HeroIndicator.zIndex() + 1
         ) {
-            img(src = HERO_ICON) {
-                attrs.jsStyle {
+            img {
+                src = HERO_ICON
+                jsStyle {
                     position = "absolute"
-                    width = "${HERO_LOGO_WIDTH}px"
-                    height = "${HERO_LOGO_HEIGHT}px"
+                    this.width = "${HERO_LOGO_WIDTH}px"
+                    this.height = "${HERO_LOGO_HEIGHT}px"
                     top = "${HERO_LOGO_TOP}px"
                     left = "${HERO_LOGO_LEFT}px"
                 }
             }
-            attrs.jsStyle {
+            it.jsStyle {
                 cursor = "pointer"
                 userSelect = "none"
             }
-            attrs.onClickFunction = {
+            it.onClick = {
                 val heroScene = game._hero!!.gameScene
                 if (heroScene.isActive) {
                     game.activeScene.canvasState.moveTo(game.hero!!.pixelCoordinate.offset(-canvasPixelSize.width / 2, -canvasPixelSize.height / 2))

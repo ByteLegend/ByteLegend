@@ -16,10 +16,10 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.shared.Direction
-import react.RBuilder
+import react.Fragment
 import react.State
-import react.dom.div
-import react.dom.jsStyle
+import react.create
+import react.dom.html.ReactHTML.div
 
 /**
  * MapTitleWidget is a transparent widget on top-left side of map canvas, displaying important information, e.g:
@@ -36,10 +36,10 @@ interface MapTitleWidgetsProps : GameProps {
 }
 
 class MapTitleWidgets : GameUIComponent<MapTitleWidgetsProps, State>() {
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         div {
             val z = Layer.MapTitle.zIndex()
-            attrs.jsStyle {
+            jsStyle {
                 zIndex = z
                 position = "absolute"
                 if (props.direction.name == "LEFT") {

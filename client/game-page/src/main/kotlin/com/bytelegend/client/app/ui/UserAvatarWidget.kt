@@ -15,30 +15,22 @@
  */
 package com.bytelegend.client.app.ui
 
-// package common.ui
-
 import BootstrapDropdownDivider
 import BootstrapDropdownItem
 import BootstrapDropdownMenu
 import BootstrapDropdownToggle
 import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdown
 import com.bytelegend.client.app.web.LOGIN_LINK_CLICKED_EVENT
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.html.classes
-import kotlinx.html.id
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onMouseMoveFunction
-import kotlinx.html.js.onMouseOutFunction
-import kotlinx.html.title
 import org.w3c.dom.events.Event
-import react.RBuilder
+import react.Fragment
 import react.State
-import react.dom.a
-import react.dom.img
-import react.dom.span
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.a
+import react.dom.html.ReactHTML.img
+import react.dom.html.ReactHTML.span
 
 const val AVATAR_WIDTH = 64
 const val AVATAR_HEIGHT = 64
@@ -50,35 +42,37 @@ interface UserAvatarWidgetState : State {
 }
 
 class UserAvatarWidget : GameUIComponent<GameProps, UserAvatarWidgetState>() {
-    override fun UserAvatarWidgetState.init() {
-        showDropdownArrow = false
-        showDropdownMenu = false
+    init {
+        state = jso {
+            showDropdownArrow = false
+            showDropdownMenu = false
+        }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         absoluteDiv(
             top = uiContainerCoordinateInGameContainer.y,
             right = uiContainerCoordinateInGameContainer.x,
             width = AVATAR_WIDTH,
             height = AVATAR_HEIGHT,
             zIndex = Layer.UserAvatarWidget.zIndex(),
-            classes = jsObjectBackedSetOf("picture-frame-border")
+            className = "picture-frame-border"
         ) {
-            attrs.id = "avatar-div"
+            it.id = "avatar-div"
             if (game.heroPlayer.isAnonymous) {
-                attrs.title = i("Login")
+                it.title = i("Login")
 
                 img {
-                    attrs.classes = jsObjectBackedSetOf("avatar-img")
-                    attrs.src = game.resolve("/img/ui/login.png")
+                    className = "avatar-img"
+                    src = game.resolve("/img/ui/login.png")
                 }
 
                 span {
-                    attrs.classes = jsObjectBackedSetOf("avatar-login-span")
+                    className = "avatar-login-span"
                     a {
-                        attrs.id = "login-link"
-                        attrs.href = "/game/login?redirect=/"
-                        attrs.onClickFunction = {
+                        id = "login-link"
+                        href = "/game/login?redirect=/"
+                        onClick = {
                             props.game.eventBus.emit(LOGIN_LINK_CLICKED_EVENT, null)
                         }
                         +i("Login")
@@ -86,16 +80,16 @@ class UserAvatarWidget : GameUIComponent<GameProps, UserAvatarWidgetState>() {
                 }
             } else {
                 img {
-                    attrs.classes = jsObjectBackedSetOf("avatar-img")
-                    attrs.src = game.heroPlayer.avatarUrl ?: ""
+                    className = "avatar-img"
+                    src = game.heroPlayer.avatarUrl ?: ""
                 }
-                attrs.onMouseMoveFunction = {
+                it.onMouseMove = {
                     setState { showDropdownArrow = true }
                 }
-                attrs.onMouseOutFunction = {
+                it.onMouseOut = {
                     setState { showDropdownArrow = false }
                 }
-                attrs.onClickFunction = {
+                it.onClick = {
                     setState { showDropdownMenu = !showDropdownMenu }
                 }
             }
@@ -107,25 +101,25 @@ class UserAvatarWidget : GameUIComponent<GameProps, UserAvatarWidgetState>() {
                 left = gameContainerWidth - uiContainerCoordinateInGameContainer.x,
                 zIndex = Layer.UserAvatarWidget.zIndex()
             ) {
-                attrs.id = "avatar-dropdown"
+                it.id = "avatar-dropdown"
                 BootstrapDropdown {
-                    attrs.show = state.showDropdownMenu
+                    show = state.showDropdownMenu
                     BootstrapDropdownToggle {
-                        attrs.id = "avatar-dropdown-toggle"
-                        attrs.variant = "primary"
-                        attrs.size = "sm"
+                        id = "avatar-dropdown-toggle"
+                        variant = "primary"
+                        size = "sm"
                     }
                     BootstrapDropdownMenu {
                         BootstrapDropdownItem {
                             +game.heroPlayer.nickname
-                            attrs.onClick = {
+                            onClick = {
                                 window.open("https://github.com/${game.heroPlayer.username}", "_blank")
                             }
                         }
                         BootstrapDropdownDivider {}
                         BootstrapDropdownItem {
                             +i("Logout")
-                            attrs.href = "/game/logout?redirect=/"
+                            href = "/game/logout?redirect=/"
                         }
                     }
                 }

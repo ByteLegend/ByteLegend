@@ -17,21 +17,17 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.client.app.obj.onMouseEnterFunction
-import com.bytelegend.client.app.obj.onMouseLeaveFunction
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinext.js.assign
+import kotlinext.js.jso
 import kotlinx.browser.window
-import kotlinx.html.classes
-import kotlinx.html.js.onClickFunction
+import react.Component
+import react.Fragment
 import react.Props
-import react.RBuilder
-import react.RComponent
 import react.State
-import react.dom.div
-import react.dom.jsStyle
-import react.dom.span
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.span
+import react.react
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -74,28 +70,28 @@ interface PieMenuCloseButtonProps : Props {
     var onCloseButtonClicked: UnitFunction
 }
 
-class PieMenuCloseButton : RComponent<PieMenuCloseButtonProps, PieMenuButtonState>() {
-    override fun PieMenuButtonState.init() {
-        hovered = false
+class PieMenuCloseButton : Component<PieMenuCloseButtonProps, PieMenuButtonState>() {
+    init {
+        state = jso { hovered = false }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         val size = if (state.hovered) MENU_CLOSE_BUTTON_PX * 1.5 else MENU_CLOSE_BUTTON_PX
         div {
-            attrs.classes = jsObjectBackedSetOf("pie-menu-white-close-button")
-            attrs.jsStyle {
+            className = "pie-menu-white-close-button"
+            jsStyle {
                 zIndex = props.zIndex.toString()
                 width = "${size}px"
                 height = "${size}px"
                 transform = "translate(-50%, -50%) rotate(${props.angle}deg)"
             }
-            attrs.onMouseEnterFunction = {
+            onMouseEnter = {
                 setState { hovered = true }
             }
-            attrs.onMouseLeaveFunction = {
+            onMouseLeave = {
                 setState { hovered = false }
             }
-            attrs.onClickFunction = {
+            onClick = {
                 props.onCloseButtonClicked()
             }
         }
@@ -117,9 +113,9 @@ interface PieMenuButtonState : State {
     var hovered: Boolean
 }
 
-class PieMenuButton : RComponent<PieMenuButtonProps, PieMenuButtonState>() {
-    override fun PieMenuButtonState.init() {
-        hovered = false
+class PieMenuButton : Component<PieMenuButtonProps, PieMenuButtonState>() {
+    init {
+        state = jso { hovered = false }
     }
 
     // Based on current radius and angle, calculate a
@@ -129,10 +125,10 @@ class PieMenuButton : RComponent<PieMenuButtonProps, PieMenuButtonState>() {
         return PixelCoordinate(x.toInt(), y.toInt())
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         val size = if (state.hovered) props.size * 1.2 else props.size
         val center = calculateCoordinate(props.radius)
-        val commonStyle: dynamic = kotlinext.js.jsObject {
+        val commonStyle: dynamic = jso {
             position = "absolute"
             width = "${size}px"
             height = "${size}px"
@@ -145,28 +141,28 @@ class PieMenuButton : RComponent<PieMenuButtonProps, PieMenuButtonState>() {
         }
 
         div {
-            attrs.jsStyle = assign(commonStyle) {
+            setJsStyle(assign(commonStyle) {
                 zIndex = (props.zIndex + 1).toString()
                 backgroundColor = "rgba(0,0,0,0.7)"
                 if (state.hovered) {
                     border = "2px solid white"
                 }
-            }
+            })
         }
         div {
-            attrs.classes = jsObjectBackedSetOf(props.item.iconClass)
-            attrs.jsStyle = assign(commonStyle) {
+            className = props.item.iconClass
+            setJsStyle(assign(commonStyle) {
                 zIndex = (props.zIndex + 2).toString()
                 backgroundSize = "100% 100%"
                 cursor = "pointer"
-            }
-            attrs.onMouseEnterFunction = {
+            })
+            onMouseEnter = {
                 setState { hovered = true }
             }
-            attrs.onMouseLeaveFunction = {
+            onMouseLeave = {
                 setState { hovered = false }
             }
-            attrs.onClickFunction = {
+            onClick = {
                 props.item.onClick()
             }
         }
@@ -174,7 +170,7 @@ class PieMenuButton : RComponent<PieMenuButtonProps, PieMenuButtonState>() {
         if (state.hovered) {
             val titleCenter = calculateCoordinate(MENU_BUTTON_TITLE_DISTANCE)
             span {
-                attrs.jsStyle {
+                jsStyle {
                     position = "absolute"
                     zIndex = (props.zIndex + 3).toString()
                     backgroundColor = "rgba(0,0,0,0.7)"
@@ -192,33 +188,35 @@ class PieMenuButton : RComponent<PieMenuButtonProps, PieMenuButtonState>() {
     }
 }
 
-class PieMenu : RComponent<PieMenuProps, PieMenuState>() {
-    override fun PieMenuState.init() {
-        ratio = 0.0
-        timerId = window.setInterval({
-            var newRatio = state.ratio + 1.0 / (ANIMATION_DURATION_MS / ANIMATION_INTERVAL)
-            if (newRatio >= 1.0) {
-                newRatio = 1.0
-                window.clearInterval(timerId)
-            }
-            setState {
-                ratio = newRatio
-            }
-        }, ANIMATION_INTERVAL)
+class PieMenu : Component<PieMenuProps, PieMenuState>() {
+    init {
+        state = jso {
+            ratio = 0.0
+            timerId = window.setInterval({
+                var newRatio = state.ratio + 1.0 / (ANIMATION_DURATION_MS / ANIMATION_INTERVAL)
+                if (newRatio >= 1.0) {
+                    newRatio = 1.0
+                    window.clearInterval(state.timerId)
+                }
+                setState {
+                    ratio = newRatio
+                }
+            }, ANIMATION_INTERVAL)
+        }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         div {
             // this is a virtual div used to locate the child elements
             // so that they can use origin (0,0)
-            attrs.jsStyle {
+            jsStyle {
                 position = "absolute"
                 left = "${props.centerPoint.x}px"
                 top = "${props.centerPoint.y}px"
             }
 
             div {
-                attrs.jsStyle {
+                jsStyle {
                     position = "absolute"
                     zIndex = props.zIndex.toString()
                     width = "${MENU_RADIUS_PX * state.ratio}px"
@@ -228,21 +226,21 @@ class PieMenu : RComponent<PieMenuProps, PieMenuState>() {
                     transform = "translate(-50%, -50%)"
                 }
             }
-            child(PieMenuCloseButton::class) {
-                attrs.zIndex = props.zIndex + 1
-                attrs.angle = (-45 + state.ratio * 45).toInt()
-                attrs.onCloseButtonClicked = props.onClose
-            }
+            child(PieMenuCloseButton::class.react, jso {
+                zIndex = props.zIndex + 1
+                angle = (-45 + state.ratio * 45).toInt()
+                onCloseButtonClicked = props.onClose
+            })
 
             val anglePerButton = 360 / props.items.size
             props.items.forEachIndexed { index, item ->
-                child(PieMenuButton::class) {
-                    attrs.zIndex = props.zIndex + 1
-                    attrs.item = item
-                    attrs.size = MENU_ITEM_BUTTON_PX
-                    attrs.angle = index * anglePerButton
-                    attrs.radius = (state.ratio * MENU_BUTTON_DISTANCE).toInt()
-                }
+                child(PieMenuButton::class.react, jso {
+                    zIndex = props.zIndex + 1
+                    this.item = item
+                    size = MENU_ITEM_BUTTON_PX
+                    angle = index * anglePerButton
+                    radius = (state.ratio * MENU_BUTTON_DISTANCE).toInt()
+                })
             }
         }
     }

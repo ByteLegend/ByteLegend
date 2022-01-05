@@ -31,15 +31,16 @@ import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.toGameMouseEvent
 import com.bytelegend.client.app.engine.toGridCoordinate
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.DIV
+import org.w3c.dom.Element
+import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.Event
+import react.ChildrenBuilder
+import react.Component
 import react.PropsWithChildren
-import react.RBuilder
-import react.RComponent
 import react.State
-import react.dom.RDOMBuilder
-import react.setState
+import react.dom.events.MouseEvent
+import react.dom.events.NativeMouseEvent
+import react.dom.html.HTMLAttributes
 
 interface GameProps : PropsWithChildren {
     var game: Game
@@ -48,7 +49,7 @@ interface GameProps : PropsWithChildren {
 /**
  * A special component which responds to game.ui.update event and update itself correspondingly.
  */
-abstract class GameUIComponent<P : GameProps, S : State> : RComponent<P, S> {
+abstract class GameUIComponent<P : GameProps, S : State> : Component<P, S> {
     constructor() : super()
 
     constructor(props: P) : super(props)
@@ -109,8 +110,8 @@ abstract class GameUIComponent<P : GameProps, S : State> : RComponent<P, S> {
         props.game.eventBus.remove(GAME_UI_UPDATE_EVENT, gameUiUpdateEventListener)
     }
 
-    protected fun toGridCoordinate(event: Event) = props.game.toGridCoordinate(event)
-    protected fun toGameMouseEvent(event: Event) = props.game.toGameMouseEvent(event)
+    protected fun <T : Element, E : NativeMouseEvent> toGridCoordinate(event: MouseEvent<T, E>) = props.game.toGridCoordinate(event)
+    protected fun <T : Element, E : NativeMouseEvent> toGameMouseEvent(event: MouseEvent<T, E>) = props.game.toGameMouseEvent(event)
     protected fun i(textId: String, vararg args: String) = props.game.i(textId, *args)
 
     protected fun stateUpdatingEventHandler(fn: (Event) -> Unit): (Event) -> Unit {
@@ -122,20 +123,22 @@ abstract class GameUIComponent<P : GameProps, S : State> : RComponent<P, S> {
 
     protected fun gameControlAwareEventHandler(fn: (Event) -> Unit): (Event) -> Unit {
         return {
-//            if (game.gameControl.mapMouseClickEnabled) {
             fn(it)
-//            }
         }
     }
 
-    fun RBuilder.containerFillingDiv(zIndex: Int? = null, classes: Set<String> = jsObjectBackedSetOf(), block: RDOMBuilder<DIV>.() -> Unit = {}) {
+    fun ChildrenBuilder.containerFillingDiv(
+        zIndex: Int? = null,
+        className: String = "",
+        block: ChildrenBuilder.(HTMLAttributes<HTMLDivElement>) -> Unit = {}
+    ) {
         absoluteDiv(
             left = 0,
             top = 0,
             width = gameContainerWidth,
             height = gameContainerHeight,
             zIndex = zIndex,
-            classes = classes,
+            className = className,
             block = block
         )
     }

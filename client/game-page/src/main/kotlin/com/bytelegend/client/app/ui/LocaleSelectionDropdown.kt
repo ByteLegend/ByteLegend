@@ -23,17 +23,15 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.PREFERRED_LOCALE_COOKIE_NAME
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
-import kotlinx.html.classes
-import react.RBuilder
+import react.Fragment
 import react.State
-import react.dom.div
-import react.dom.img
-import react.dom.jsStyle
-import react.dom.span
+import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.img
+import react.dom.html.ReactHTML.span
 
 interface LocaleSelectionDropdownProps : GameProps
 
@@ -45,20 +43,20 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, St
     }
 
     @Suppress("UnsafeCastFromDynamic")
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         div {
-            attrs.classes = jsObjectBackedSetOf("locale-selection-widget", "map-title-widget")
+            className = "locale-selection-widget map-title-widget"
             BootstrapDropdownButton {
-                attrs.id = "locale-selection"
-                attrs.title = game.locale.displayName
+                id = "locale-selection"
+                title = game.locale.displayName
 
                 Locale.values().filter { it != Locale.ALL }.forEach { locale ->
                     BootstrapDropdownItem {
                         span {
-                            attrs.classes = jsObjectBackedSetOf("locale-selection-dropdown-item-span")
+                            className = "locale-selection-dropdown-item-span"
                             +locale.displayName
                         }
-                        attrs.onClick = stateUpdatingEventHandler {
+                        onClick = stateUpdatingEventHandler {
                             onSwitchLocale(locale)
                         }
                     }
@@ -68,20 +66,20 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, St
 
                 BootstrapDropdownItem {
                     span {
-                        attrs.classes = jsObjectBackedSetOf("locale-selection-dropdown-item-span")
+                        className = "locale-selection-dropdown-item-span"
                         +i("AddANewLanguage")
                     }
-                    attrs.onClick = {
+                    onClick = {
                         showHelpUsImproveModal()
                     }
                 }
 
                 BootstrapDropdownItem {
                     span {
-                        attrs.classes = jsObjectBackedSetOf("locale-selection-dropdown-item-span")
+                        className = "locale-selection-dropdown-item-span"
                         +i("HelpUsImproveTheTranslationQuality")
                     }
-                    attrs.onClick = {
+                    onClick = {
                         showHelpUsImproveModal()
                     }
                 }
@@ -92,7 +90,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, St
     private fun showHelpUsImproveModal() {
         game.modalController.show {
             BootstrapModalHeader {
-                attrs.closeButton = true
+                closeButton = true
                 BootstrapModalTitle {
                     +i("HelpUsImproveTheTranslationQuality")
                 }
@@ -104,9 +102,9 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, St
                 }
 
                 img {
-                    attrs.src = game.resolve("/img/attribution/google-translate.png")
-                    attrs.jsStyle {
-                        height = "16px"
+                    src = game.resolve("/img/attribution/google-translate.png")
+                    jsStyle {
+                        this.height = "16px"
                     }
                 }
             }

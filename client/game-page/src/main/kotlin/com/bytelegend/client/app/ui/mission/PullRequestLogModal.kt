@@ -27,12 +27,15 @@ import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.client.app.engine.GAME_CLOCK_1S_EVENT
 import com.bytelegend.client.app.external.codeBlock
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
-import react.RBuilder
-import react.RComponent
+import kotlinext.js.jso
+import react.ChildrenBuilder
+import react.Component
+import react.Fragment
 import react.State
-import react.dom.p
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.p
 
 interface PullRequestLogModalProps : GameProps {
     var answer: PullRequestAnswer
@@ -42,25 +45,25 @@ interface PullRequestLogModalState : State {
     var activeTabIndex: Int
 }
 
-class PullRequestLogModal : RComponent<PullRequestLogModalProps, PullRequestLogModalState>() {
+class PullRequestLogModal : Component<PullRequestLogModalProps, PullRequestLogModalState>() {
     private val refreshTimerEventListener: EventListener<String> = {
         setState { }
     }
 
-    override fun PullRequestLogModalState.init() {
-        activeTabIndex = 0
+    init {
+        state = jso { activeTabIndex = 0 }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         if (props.answer.checkRuns.size > 1) {
             BootstrapNav {
-                attrs.variant = "tabs"
+                variant = "tabs"
                 props.answer.checkRuns.forEachIndexed { index: Int, checkRun: PullRequestCheckRun ->
                     BootstrapNavItem {
                         BootstrapNavLink {
-                            attrs.active = index == state.activeTabIndex
-                            attrs.eventKey = "tab-$index"
-                            attrs.onSelect = {
+                            active = index == state.activeTabIndex
+                            eventKey = "tab-$index"
+                            onSelect = {
                                 setState {
                                     activeTabIndex = index
                                 }
@@ -74,7 +77,7 @@ class PullRequestLogModal : RComponent<PullRequestLogModalProps, PullRequestLogM
         renderTab()
     }
 
-    private fun RBuilder.renderTab() {
+    private fun ChildrenBuilder.renderTab() {
         val liveLog = props.game.activeScene.logs.getLiveLogsByAnswer(props.answer, props.answer.checkRuns[state.activeTabIndex].id)
         val downloadedLog = props.game.activeScene.logs.downloadLogByAnswerAsync(props.answer, props.answer.checkRuns[state.activeTabIndex])
 
@@ -90,26 +93,26 @@ class PullRequestLogModal : RComponent<PullRequestLogModalProps, PullRequestLogM
                     }
                 } else {
                     codeBlock {
-                        attrs.lines = listOf(downloadedLog.getCompleted())
-                        attrs.language = "log"
+                        lines = listOf(downloadedLog.getCompleted())
+                        language = "log"
                     }
                 }
             } else {
                 // if the log is being downloaded, let's show the live log for now.
                 if (liveLog.isNotEmpty()) {
                     codeBlock {
-                        attrs.lines = liveLog
-                        attrs.language = "log"
+                        lines = liveLog
+                        language = "log"
                     }
                 }
                 BootstrapSpinner {
-                    attrs.animation = "border"
+                    animation = "border"
                 }
             }
         } else {
             codeBlock {
-                attrs.lines = liveLog
-                attrs.language = "log"
+                lines = liveLog
+                language = "log"
             }
         }
     }

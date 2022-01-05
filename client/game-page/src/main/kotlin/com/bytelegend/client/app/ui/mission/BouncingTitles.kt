@@ -26,18 +26,15 @@ import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.USER_MOUSE_INTERACTION_LAYER_ID
 import com.bytelegend.client.app.ui.absoluteDiv
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.client.app.ui.setState
+import kotlinext.js.jso
 import kotlinx.browser.document
-import kotlinx.html.id
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onMouseMoveFunction
-import kotlinx.html.js.onMouseOutFunction
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.events.MouseEvent
-import react.RBuilder
+import react.ChildrenBuilder
+import react.Fragment
 import react.State
-import react.dom.attrs
-import react.setState
+import react.create
 
 interface BouncingTitlesState : State {
     // The title object ids to show
@@ -53,22 +50,26 @@ private const val TITLES_CONTAINER_ELEMENT_ID = "titles-container"
  * Displays bouncing titles on the map, like road signs for map entrance, or mission titles.
  */
 class BouncingTitles : GameUIComponent<GameProps, BouncingTitlesState>() {
+    init {
+        state = jso { }
+    }
+
     private val onAnimation: EventListener<Nothing> = this::onAnimation
     private val onHighlightMissionListener: EventListener<List<String>?> = this::onHighlightTitles
 
     private val divCoordinate: PixelCoordinate
         get() = canvasCoordinateInGameContainer - canvasCoordinateInMap
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         absoluteDiv(
             left = divCoordinate.x,
             top = divCoordinate.y,
             width = mapPixelSize.width,
             height = mapPixelSize.height,
             zIndex = Layer.BouncingTitle.zIndex(),
-            classes = jsObjectBackedSetOf("user-mouse-interaction-layer")
+            className = "user-mouse-interaction-layer"
         ) {
-            attrs.id = TITLES_CONTAINER_ELEMENT_ID
+            it.id = TITLES_CONTAINER_ELEMENT_ID
             if (state.objectIds == null) {
                 activeScene.objects.getByRole<GameObject>(GameObjectRole.HasBouncingTitle).forEach {
                     renderOne(it)
@@ -79,16 +80,14 @@ class BouncingTitles : GameUIComponent<GameProps, BouncingTitlesState>() {
                 }
             }
 
-            attrs {
-                onClickFunction = {
-                    document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("click", it.asDynamic()))
-                }
-                onMouseMoveFunction = {
-                    document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("mousemove", it.asDynamic()))
-                }
-                onMouseOutFunction = {
-                    document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("mouseout", it.asDynamic()))
-                }
+            it.onClick = {
+                document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("click", it.asDynamic()))
+            }
+            it.onMouseMove = {
+                document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("mousemove", it.asDynamic()))
+            }
+            it.onMouseOut = {
+                document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("mouseout", it.asDynamic()))
             }
         }
     }
@@ -108,7 +107,7 @@ class BouncingTitles : GameUIComponent<GameProps, BouncingTitlesState>() {
         }
     }
 
-    private fun RBuilder.renderOne(hasBouncingTitle: GameObject) {
+    private fun ChildrenBuilder.renderOne(hasBouncingTitle: GameObject) {
         val obj = hasBouncingTitle.unsafeCast<HasBouncingTitle>()
         if (obj.bouncingTitleEnabled) {
             obj.renderBouncingTitle(this)

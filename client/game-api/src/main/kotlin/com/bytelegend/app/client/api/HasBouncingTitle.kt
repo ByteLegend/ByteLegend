@@ -16,9 +16,9 @@
 
 package com.bytelegend.app.client.api
 
-import react.RBuilder
+import react.ChildrenBuilder
 
 interface HasBouncingTitle {
     var bouncingTitleEnabled: Boolean
-    fun renderBouncingTitle(builder: RBuilder)
+    fun renderBouncingTitle(builder: ChildrenBuilder)
 }

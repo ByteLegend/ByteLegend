@@ -43,12 +43,12 @@ import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.script.effect.showArrowGif
 import com.bytelegend.client.app.ui.COORDINATE_BORDER_FLICKER
 import com.bytelegend.client.app.ui.GameProps
-import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
 import com.bytelegend.client.app.ui.mission.HIGHTLIGHT_TITLES_EVENT
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
 import com.bytelegend.client.app.web.WebSocketClient
+import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
@@ -57,8 +57,8 @@ import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
 import org.w3c.dom.HTMLElement
-import react.RHandler
-import kotlin.reflect.KClass
+import react.ElementType
+import react.react
 
 interface GameScript {
     /**
@@ -204,19 +204,19 @@ class DefaultGameDirector(
 
         scripts.add(
             DisplayWidgetScript(
-                SpeechBubbleWidget::class,
-                {
-                    attrs.game = gameScene.gameRuntime.asDynamic()
-                    attrs.speakerId = builder.speakerId
-                    attrs.speakerCoordinate = builder.speakerCoordinate
-                    attrs.contentHtml = gameScene.gameRuntime.i(builder.contentHtmlId!!, *builder.args)
-                    attrs.arrow = builder.arrow
-                    attrs.showYesNo = builder.showYesNo
-                    attrs.onYes = {
+                SpeechBubbleWidget::class.react,
+                jso {
+                    game = gameScene.gameRuntime.asDynamic()
+                    speakerId = builder.speakerId
+                    speakerCoordinate = builder.speakerCoordinate
+                    contentHtml = gameScene.gameRuntime.i(builder.contentHtmlId!!, *builder.args)
+                    arrow = builder.arrow
+                    showYesNo = builder.showYesNo
+                    onYes = {
                         builder.onYes()
                         next()
                     }
-                    attrs.onNo = { next() }
+                    onNo = { next() }
                 },
                 builder.contentHtmlId,
                 builder.dismissMs
@@ -323,15 +323,15 @@ class DefaultGameDirector(
     }
 
     inner class DisplayWidgetScript<P : GameProps>(
-        private val klass: KClass<out GameUIComponent<P, *>>,
-        private val handler: RHandler<P>,
+        private val type: ElementType<P>,
+        private val props: P,
         private val stringRepresentation: String?,
         private val dismissMs: Int = 0
     ) : GameScript {
         private val id = "${gameScene.map.id}-ScriptWidget-$channel-${getAndIncrement()}"
         override fun start() {
             respondToClick(true)
-            gameScene.scriptWidgets[id] = Widget(klass, handler)
+            gameScene.scriptWidgets[id] = Widget(type, props)
             eventBus.emit(GAME_UI_UPDATE_EVENT, null)
 
             if (dismissMs != 0) {

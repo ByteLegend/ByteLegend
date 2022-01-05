@@ -19,20 +19,20 @@ import BootstrapDropdownDivider
 import BootstrapDropdownItem
 import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdownButton
 import kotlinx.browser.document
-import react.RBuilder
-import react.RElementBuilder
+import react.ChildrenBuilder
+import react.Fragment
 import react.State
-import react.dom.img
-import react.dom.jsStyle
+import react.create
+import react.dom.html.ReactHTML.img
 
 interface MapSelectionDropdownProps : GameProps
 
 class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, State>() {
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         BootstrapDropdownButton {
-            attrs.className = "map-name-selection map-title-text"
-            attrs.id = "map-selection"
-            attrs.title = document.createElement("span").apply {
+            className = "map-name-selection map-title-text"
+            id = "map-selection"
+            title = document.createElement("span").apply {
                 innerHTML = i(gameMap.id)
             }.textContent ?: ""
 
@@ -51,7 +51,7 @@ class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, State>()
         }
     }
 
-    private fun RElementBuilder<*>.dropdownItem(mapId: String, submap: Boolean) {
+    private fun ChildrenBuilder.dropdownItem(mapId: String, submap: Boolean) {
         BootstrapDropdownItem {
             if (submap) {
                 unsafeSpan(i(mapId), "submap-name")
@@ -60,19 +60,18 @@ class MapSelectionDropdown : GameUIComponent<MapSelectionDropdownProps, State>()
             }
             heroIcon(mapId)
             // disable map selection when game script is running
-            attrs.onClick = {
+            onClick = {
                 game.sceneContainer.loadScene(mapId)
             }
         }
     }
 
-    private fun RElementBuilder<*>.heroIcon(mapId: String) {
+    private fun ChildrenBuilder.heroIcon(mapId: String) {
         if (game._hero?.gameScene?.map?.id == mapId) {
-            img(src = HERO_ICON) {
-                attrs.jsStyle {
-                    width = "16px"
-                    height = "16px"
-                }
+            img {
+                src = HERO_ICON
+                width = 16.0
+                height = 16.0
             }
         }
     }

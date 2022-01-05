@@ -25,17 +25,15 @@ import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
 import com.bytelegend.client.app.engine.showSpeechBubble
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import kotlinext.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.html.classes
-import kotlinx.html.id
-import kotlinx.html.js.onClickFunction
-import react.RBuilder
+import react.ChildrenBuilder
+import react.Fragment
 import react.State
-import react.dom.div
-import react.dom.jsStyle
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.div
+import react.react
 
 interface HeroControlButtonState : State {
     var showPointer: Boolean
@@ -48,7 +46,12 @@ class HeroControlButton : GameUIComponent<GameProps, HeroControlButtonState>() {
         setState { }
     }
 
-    override fun HeroControlButtonState.init() {
+    init {
+        state = jso { }
+        state.init()
+    }
+
+    fun HeroControlButtonState.init() {
         showPointer = false
         showPieMenu = false
         showSpeakMenu = false
@@ -80,9 +83,9 @@ class HeroControlButton : GameUIComponent<GameProps, HeroControlButtonState>() {
         props.game.eventBus.remove(GAME_CLOCK_20MS_EVENT, on50HzClockListener)
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         if (game.heroPlayer.isAnonymous || game.hero!!.isMoving()) {
-            return
+            return@create
         }
 
         if (state.showPointer) {
@@ -92,12 +95,12 @@ class HeroControlButton : GameUIComponent<GameProps, HeroControlButtonState>() {
         }
     }
 
-    private fun RBuilder.renderPointer() {
+    private fun ChildrenBuilder.renderPointer() {
         val center = game.hero!!.pixelCoordinate - canvasCoordinateInMap + canvasCoordinateInGameContainer + tileSize / 2
         val z = Layer.HeroControlButton.zIndex().toString()
         div {
-            attrs.id = "hero-control-button"
-            attrs.jsStyle {
+            id = "hero-control-button"
+            jsStyle {
                 position = "absolute"
                 zIndex = z
                 width = "32px"
@@ -107,7 +110,7 @@ class HeroControlButton : GameUIComponent<GameProps, HeroControlButtonState>() {
                 transform = "translate(-50%, -50%)"
                 cursor = "pointer"
             }
-            attrs.onClickFunction = {
+            onClick = {
                 setState {
                     showPieMenu = true
                     showPointer = false
@@ -116,12 +119,12 @@ class HeroControlButton : GameUIComponent<GameProps, HeroControlButtonState>() {
         }
     }
 
-    private fun RBuilder.renderPieMenu() {
+    private fun ChildrenBuilder.renderPieMenu() {
         val center = game.hero!!.pixelCoordinate - canvasCoordinateInMap + canvasCoordinateInGameContainer + tileSize / 2
-        child(PieMenu::class) {
-            attrs.centerPoint = center
-            attrs.zIndex = Layer.HeroControlButton.zIndex()
-            attrs.items = listOf(
+        child(PieMenu::class.react, jso {
+            centerPoint = center
+            zIndex = Layer.HeroControlButton.zIndex()
+            items = listOf(
                 PieMenuItem(
                     i("Speak"),
                     "pie-menu-speak-icon"
@@ -131,19 +134,19 @@ class HeroControlButton : GameUIComponent<GameProps, HeroControlButtonState>() {
                     }
                 }
             )
-            attrs.onClose = {
+            onClose = {
                 setState {
                     showPieMenu = false
                     showSpeakMenu = false
                 }
             }
-        }
+        })
 
         if (state.showSpeakMenu) {
             val z = Layer.HeroControlButton.zIndex() + 4
             div {
-                attrs.classes = jsObjectBackedSetOf("dropdown-menu")
-                attrs.jsStyle {
+                className = "dropdown-menu"
+                jsStyle {
                     display = "block"
                     position = "absolute"
                     left = "${center.x}px"
@@ -152,12 +155,12 @@ class HeroControlButton : GameUIComponent<GameProps, HeroControlButtonState>() {
                 }
                 sentences.forEach { sentenceId ->
                     div {
-                        attrs.classes = jsObjectBackedSetOf("dropdown-item")
-                        attrs.jsStyle {
+                        className = "dropdown-item"
+                        jsStyle {
                             cursor = "pointer"
                         }
                         unsafeSpan(i(sentenceId))
-                        attrs.onClickFunction = {
+                        onClick = {
                             GlobalScope.launch {
                                 game.webSocketClient.speak(sentenceId)
                             }

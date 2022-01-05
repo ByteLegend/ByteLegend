@@ -19,14 +19,13 @@ import com.bytelegend.app.client.misc.playAudio
 import com.bytelegend.app.shared.protocol.COIN_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.CoinUpdateEventData
 import com.bytelegend.app.shared.protocol.NumberChange
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.DIV
-import kotlinx.html.classes
-import kotlinx.html.id
-import kotlinx.html.js.onClickFunction
+import kotlinext.js.jso
+import org.w3c.dom.HTMLDivElement
+import react.ChildrenBuilder
 import react.State
-import react.dom.RDOMBuilder
-import react.dom.span
+import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.span
+import react.react
 
 interface CoinCountWidgetProps : GameProps
 interface CoinCountWidgetState : State
@@ -34,18 +33,18 @@ interface CoinCountWidgetState : State
 class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, CoinCountWidgetState>("coin-icon") {
     override val eventName: String = COIN_UPDATE_EVENT
 
-    override fun RDOMBuilder<DIV>.renderDiv() {
+    override fun <T> T.renderDiv() where T : HTMLAttributes<HTMLDivElement>, T : ChildrenBuilder {
         span {
-            attrs.id = "coin-count"
-            attrs.classes = jsObjectBackedSetOf("map-title-text")
+            id = "coin-count"
+            className = "map-title-text"
             +game.heroPlayer.coin.toString()
         }
         renderIcon()
-        attrs.onClickFunction = {
+        onClick = {
             game.modalController.show {
-                child(HistoryModal::class) {
-                    attrs.game = game
-                }
+                child(HistoryModal::class.react, jso {
+                    this.game = props.game
+                })
             }
         }
     }

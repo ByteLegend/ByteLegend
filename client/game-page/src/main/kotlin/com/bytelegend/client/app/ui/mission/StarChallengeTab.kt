@@ -17,9 +17,12 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.client.app.ui.GameProps
-import react.RBuilder
-import react.RComponent
+import kotlinext.js.jso
+import react.Component
+import react.Fragment
 import react.State
+import react.create
+import react.react
 
 interface StarChallengeTabProps : GameProps {
     var contentHtml: String
@@ -27,12 +30,12 @@ interface StarChallengeTabProps : GameProps {
     var challengeSpec: ChallengeSpec
 }
 
-class StarChallengeTab : RComponent<StarChallengeTabProps, State>() {
-    override fun RBuilder.render() {
-        child(WebEditor::class) {
-            attrs.game = props.game
-            attrs.missionId = props.missionId
-            attrs.challengeSpec = props.challengeSpec
-        }
+class StarChallengeTab : Component<StarChallengeTabProps, State>() {
+    override fun render() = Fragment.create {
+        child(WebEditor::class.react, jso {
+            game = props.game
+            missionId = props.missionId
+            challengeSpec = props.challengeSpec
+        })
     }
 }

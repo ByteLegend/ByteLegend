@@ -27,23 +27,25 @@ import com.bytelegend.app.shared.entities.mission.ChallengeType
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.logStreamEvent
+import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.minimap.mapToNativeJsArray
 import com.bytelegend.client.app.ui.minimap.nativeJsArrayOf
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
 import kotlinext.js.jsObject
+import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
-import kotlinx.html.currentTimeMillis
-import kotlinx.html.id
-import kotlinx.html.js.onLoadFunction
 import org.w3c.dom.HTMLIFrameElement
-import react.RBuilder
-import react.RComponent
+import react.Component
+import react.Fragment
 import react.State
-import react.dom.div
-import react.dom.iframe
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.iframe
+import react.react
 
 private const val IFRAME_WEBEDITOR_INIT_COMPLETED = "webeditor.init.completed"
 
@@ -62,7 +64,7 @@ interface WebEditorProps : GameProps {
     var whitelist: List<String>?
 }
 
-class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
+class WebEditor : Component<WebEditorProps, WebEditorState>() {
     private val webEditorIframeId = "webeditor-${com.bytelegend.client.app.obj.uuid()}"
 
     private val missionRepaintEventListener: EventListener<ChallengeUpdateEventData> = this::onChallengeAnswersUpdate
@@ -77,24 +79,27 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
     // Otherwise, if `render()` method is called twice, the page may flickr.
     private var timestamp: Long = currentTimeMillis()
 
-    override fun WebEditorState.init() {
-        showSubmitAnswerButton = false
+    init {
+        state = jso { showSubmitAnswerButton = false }
     }
 
-    override fun RBuilder.render() {
-        div("webeditor-wrapper") {
+    override fun render() = Fragment.create {
+        div {
+            className = "webeditor-wrapper"
             if (props.game.heroPlayer.isAnonymous) {
                 BootstrapAlert {
-                    attrs.show = true
-                    attrs.variant = "warning"
+                    show = true
+                    variant = "warning"
                     unsafeSpan(props.game.i("ToSubmitAnswerClickHereToLogin"))
                 }
             }
             iframe {
-                attrs.id = webEditorIframeId
-                attrs.src = determineWebEditorUrl()
-                attrs.attributes["frameBorder"] = "0"
-                attrs.onLoadFunction = {
+                id = webEditorIframeId
+                src = determineWebEditorUrl()
+                jsStyle {
+                    border = "none"
+                }
+                onLoad = {
                     postMessageToWebEditorIframe(jsObject<dynamic> {
                         bytelegendInitData = determineWebEditorInitData()
                     })
@@ -102,17 +107,17 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
             }
 
             if (state.showSubmitAnswerButton && isPullRequestChallenge && !props.game.heroPlayer.isAnonymous) {
-                child(SubmitAnswerButton::class) {
-                    attrs.game = props.game
-                    attrs.challengeId = props.challengeSpec.id
-                    attrs.onClick = {
+                child(SubmitAnswerButton::class.react, jso {
+                    game = props.game
+                    challengeId = props.challengeSpec.id
+                    onClick = {
                         val arg = nativeJsArrayOf()
                         postMessageToWebEditorIframe(jsObject<dynamic> {
                             forwardCommand = "bytelegend.submitAnswer"
                             forwardCommandArgs = arg
                         })
                     }
-                }
+                })
             }
         }
     }
@@ -141,7 +146,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
         val whitelist = props.whitelist?.toTypedArray() ?: emptyArray()
         val apiServer = if (window.location.hostname == "localhost") "http://${window.location.host}" else "https://bytelegend.com"
         val githubApiBaseUrl = if (props.game.heroPlayer.isAnonymous) "${window.location.protocol}/${window.location.host}/ghapi" else "https://ghapi.bytelegend.com"
-        val ret = jsObject<dynamic> {
+        val ret = jso<dynamic> {
             missionId = props.missionId
             challengeId = props.challengeSpec.id
             this.apiServer = apiServer
@@ -177,7 +182,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
             .map {
                 val checkRunId = it.latestCheckRun!!.id
                 val checkRunLogs = props.game.activeScene.logs.getLiveLogsByAnswer(it, checkRunId).toTypedArray()
-                jsObject<dynamic> {
+                jso<dynamic> {
                     id = checkRunId
                     logs = checkRunLogs
                 }
@@ -221,7 +226,7 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
     private fun onLiveLogStream(logStreamEventData: LogStreamEventData) {
         if (logStreamEventData.challengeId == props.challengeSpec.id) {
             val args = nativeJsArrayOf(logStreamEventData.checkRunId, logStreamEventData.lines.toTypedArray())
-            postMessageToWebEditorIframe(jsObject<dynamic> {
+            postMessageToWebEditorIframe(jso<dynamic> {
                 forwardCommand = "bytelegend.appendLog"
                 forwardCommandArgs = args
             })
@@ -232,14 +237,14 @@ class WebEditor : RComponent<WebEditorProps, WebEditorState>() {
         if (eventData.newValue.challengeId == props.challengeSpec.id) {
             val prAnswers = props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(props.challengeSpec.id)
             if (!prAnswers.anyCheckRunning()) {
-                props.game.eventBus.emit(ANSWER_BUTTON_CONTROL_EVENT, jsObject<dynamic> {
+                props.game.eventBus.emit(ANSWER_BUTTON_CONTROL_EVENT, jso<dynamic> {
                     spinning = false
                     textId = "SubmitAnswer"
                 })
             }
 
             val args = nativeJsArrayOf(prAnswers.toJsArray())
-            postMessageToWebEditorIframe(jsObject<dynamic> {
+            postMessageToWebEditorIframe(jso<dynamic> {
                 forwardCommand = "bytelegend.updateAnswers"
                 forwardCommandArgs = args
             })

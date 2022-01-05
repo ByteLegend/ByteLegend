@@ -20,12 +20,14 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapProgressBar
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.page.game
+import com.bytelegend.client.app.ui.setState
+import kotlinext.js.jso
 import kotlinx.browser.window
-import react.RBuilder
-import react.RComponent
+import react.Component
 import react.Props
+import react.ReactNode
 import react.State
-import react.setState
+import react.createElement
 
 /**
  * A progress bar for displaying loading progress of resources.
@@ -50,8 +52,13 @@ enum class ProgressBarVariant {
     DANGER
 }
 
-class ProgressBar : RComponent<ProgressBarProps, ProgressBarState>() {
+class ProgressBar : Component<ProgressBarProps, ProgressBarState>() {
     var timerId: Int = 0
+
+    init {
+        state = jso { now = 0 }
+    }
+
     private val onProgressBarUpdate: EventListener<Nothing> = {
         val progress = game.resourceLoader.currentProgress()
 
@@ -79,10 +86,6 @@ class ProgressBar : RComponent<ProgressBarProps, ProgressBarState>() {
         }
     }
 
-    override fun ProgressBarState.init() {
-        now = 0
-    }
-
     override fun componentWillUnmount() {
         window.clearInterval(timerId)
         props.eventBus.remove(GAME_UI_UPDATE_EVENT, onProgressBarUpdate)
@@ -93,11 +96,11 @@ class ProgressBar : RComponent<ProgressBarProps, ProgressBarState>() {
         props.eventBus.on(GAME_UI_UPDATE_EVENT, onProgressBarUpdate)
     }
 
-    override fun RBuilder.render() {
-        BootstrapProgressBar {
-            attrs.now = state.now
-            attrs.variant = ProgressBarVariant.WARNING.name.lowercase()
-            attrs.animated = true
-        }
+    override fun render(): ReactNode {
+        return createElement(BootstrapProgressBar, jso {
+            now = state.now
+            variant = ProgressBarVariant.WARNING.name.lowercase()
+            animated = true
+        })
     }
 }

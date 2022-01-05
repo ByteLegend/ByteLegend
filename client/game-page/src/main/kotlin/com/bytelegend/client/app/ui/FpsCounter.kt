@@ -18,14 +18,11 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
-import kotlinx.html.id
-import react.RBuilder
+import kotlinext.js.jso
+import react.Fragment
 import react.State
-import react.dom.jsStyle
-import react.dom.span
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.span
 
 interface FpsCounterState : State {
     var fps: Int
@@ -51,8 +48,8 @@ class FpsCounter : GameUIComponent<GameProps, FpsCounterState>() {
         }
     }
 
-    override fun FpsCounterState.init() {
-        fps = 0
+    init {
+        state = jso { fps = 0 }
     }
 
     override fun componentDidMount() {
@@ -66,12 +63,12 @@ class FpsCounter : GameUIComponent<GameProps, FpsCounterState>() {
     }
 
     @Suppress("UnsafeCastFromDynamic")
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         val z = Layer.MapTitle.zIndex()
         span {
-            attrs.id = "fps-counter"
-            attrs.classes = jsObjectBackedSetOf("map-title-widget", "map-title-text")
-            attrs.jsStyle {
+            id = "fps-counter"
+            className = "map-title-widget map-title-text"
+            jsStyle {
                 zIndex = z
             }
 

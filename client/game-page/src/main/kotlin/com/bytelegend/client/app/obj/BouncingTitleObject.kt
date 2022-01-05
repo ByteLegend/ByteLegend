@@ -23,7 +23,9 @@ import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.ui.mission.BouncingTitleWidget
 import com.bytelegend.client.utils.jsObjectBackedSetOf
-import react.RBuilder
+import kotlinext.js.jso
+import react.ChildrenBuilder
+import react.react
 
 class BouncingTitleObject(
     override val id: String,
@@ -37,14 +39,14 @@ class BouncingTitleObject(
     override val layer: Int = 0
     override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.HasBouncingTitle.toString())
     override var bouncingTitleEnabled: Boolean = true
-    override fun renderBouncingTitle(builder: RBuilder) {
-        builder.child(BouncingTitleWidget::class) {
-            attrs.pixelCoordinate = pixelCoordinate
-            attrs.onClickFunction = onClickFunction
-            attrs.title = titleText
-            attrs.gameScene = gameScene
-            attrs.backgroundColor = backgroundColor
-            attrs.color = color
-        }
+    override fun renderBouncingTitle(builder: ChildrenBuilder) {
+        builder.child(BouncingTitleWidget::class.react, jso {
+            pixelCoordinate = this@BouncingTitleObject.pixelCoordinate
+            onClickFunction = this@BouncingTitleObject.onClickFunction
+            title = titleText
+            gameScene = this@BouncingTitleObject.gameScene
+            backgroundColor = this@BouncingTitleObject.backgroundColor
+            color = this@BouncingTitleObject.color
+        })
     }
 }

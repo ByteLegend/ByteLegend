@@ -25,18 +25,12 @@ import com.bytelegend.app.shared.Direction.RIGHT
 import com.bytelegend.app.shared.Direction.RIGHT_DOWN
 import com.bytelegend.app.shared.Direction.RIGHT_UP
 import com.bytelegend.app.shared.Direction.UP
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.js.onBlurFunction
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onFocusFunction
-import kotlinx.html.js.onMouseMoveFunction
-import kotlinx.html.js.onMouseOutFunction
-import kotlinx.html.js.onMouseOverFunction
-import org.w3c.dom.events.Event
-import react.RBuilder
+import kotlinext.js.jso
+import react.ChildrenBuilder
+import react.Fragment
 import react.State
-import react.dom.attrs
-import react.setState
+import react.create
+import react.dom.events.EventHandler
 
 /*
   ----------------------------------------------------------------------------------------------------------------------------
@@ -111,13 +105,13 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
     private val horizontalButtonHeight
         get() = canvasCoordinateInGameContainer.y
 
-    override fun ScrollButtonsState.init() {
-        direction = NONE
+    init {
+        state = jso { direction = NONE }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         if (mapCoveredByCanvas) {
-            return
+            return@create
         }
 
         // No div here because we're on top of user mouse interaction layer
@@ -135,30 +129,30 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
         absoluteDiv(
             left = 0, top = 0,
             width = gameContainerWidth, height = horizontalButtonHeight,
-            classes = jsObjectBackedSetOf("black-background"),
+            className = "black-background",
             zIndex = Layer.MapCanvas.zIndex() + 1
         )
         absoluteDiv(
             left = 0, top = 0,
             width = verticalButtonWidth, height = gameContainerHeight,
-            classes = jsObjectBackedSetOf("black-background"),
+            className = "black-background",
             zIndex = Layer.MapCanvas.zIndex() + 1
         )
         absoluteDiv(
             left = gameContainerWidth - verticalButtonWidth, top = 0,
             width = verticalButtonWidth, height = gameContainerHeight,
-            classes = jsObjectBackedSetOf("black-background"),
+            className = "black-background",
             zIndex = Layer.MapCanvas.zIndex() + 1
         )
         absoluteDiv(
             left = 0, top = gameContainerHeight - horizontalButtonHeight,
             width = gameContainerWidth, height = horizontalButtonHeight,
-            classes = jsObjectBackedSetOf("black-background"),
+            className = "black-background",
             zIndex = Layer.MapCanvas.zIndex() + 1
         )
     }
 
-    private fun RBuilder.bottomLeftCorner() {
+    private fun ChildrenBuilder.bottomLeftCorner() {
         scrollButton(
             0, gameContainerHeight * 3 / 4,
             verticalButtonWidth, gameContainerWidth / 4, LEFT_DOWN
@@ -170,7 +164,7 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
         )
     }
 
-    private fun RBuilder.bottomRightCorner() {
+    private fun ChildrenBuilder.bottomRightCorner() {
         scrollButton(
             gameContainerWidth - verticalButtonWidth,
             gameContainerHeight * 3 / 4,
@@ -187,7 +181,7 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
         )
     }
 
-    private fun RBuilder.topRightCorner() {
+    private fun ChildrenBuilder.topRightCorner() {
         scrollButton(
             gameContainerWidth * 3 / 4, 0, props.game.gameContainerSize.width / 4,
             horizontalButtonHeight, RIGHT_UP
@@ -198,12 +192,12 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
         )
     }
 
-    private fun RBuilder.topLeftCorner() {
+    private fun ChildrenBuilder.topLeftCorner() {
         scrollButton(0, 0, gameContainerWidth / 4, horizontalButtonHeight, LEFT_UP)
         scrollButton(0, 0, verticalButtonWidth, gameContainerHeight / 4, LEFT_UP)
     }
 
-    private fun RBuilder.down() {
+    private fun ChildrenBuilder.down() {
         scrollButton(
             gameContainerWidth / 4,
             gameContainerHeight - horizontalButtonHeight,
@@ -213,14 +207,14 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
         )
     }
 
-    private fun RBuilder.left() {
+    private fun ChildrenBuilder.left() {
         scrollButton(
             0, gameContainerHeight / 4,
             verticalButtonWidth, gameContainerHeight / 2, LEFT
         )
     }
 
-    private fun RBuilder.right() {
+    private fun ChildrenBuilder.right() {
         scrollButton(
             gameContainerWidth - verticalButtonWidth,
             gameContainerHeight / 4,
@@ -230,14 +224,14 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
         )
     }
 
-    private fun RBuilder.up() {
+    private fun ChildrenBuilder.up() {
         scrollButton(
             gameContainerWidth / 4, 0, gameContainerWidth / 2,
             horizontalButtonHeight, UP
         )
     }
 
-    private fun scrollEventListener(direction: Direction): (Event) -> Unit = {
+    private fun <T> scrollEventListener(direction: Direction): EventHandler<T> = {
         if (direction != state.direction) {
             setState {
                 this.direction = direction
@@ -247,7 +241,7 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
         game.eventBus.emit(MAP_SCROLL_EVENT, direction)
     }
 
-    private fun RBuilder.scrollButton(left: Int, top: Int, width: Int, height: Int, direction: Direction) {
+    private fun ChildrenBuilder.scrollButton(left: Int, top: Int, width: Int, height: Int, direction: Direction) {
         if (props.includeDirections != undefined && !props.includeDirections.contains(direction)) {
             return
         }
@@ -258,17 +252,15 @@ class ScrollButtonsLayer : GameUIComponent<ScrollButtonsProps, ScrollButtonsStat
             width = width,
             height = height,
             zIndex = Layer.ScrollButtons.zIndex(),
-            classes = jsObjectBackedSetOf(direction.cursorCssClass()),
+            className = direction.cursorCssClass(),
             block = {
-                attrs {
-                    onMouseMoveFunction = scrollEventListener(direction)
-                    onMouseOverFunction = scrollEventListener(direction)
-                    onFocusFunction = scrollEventListener(direction)
-                    onClickFunction = scrollEventListener(direction)
+                it.onMouseMove = scrollEventListener(direction)
+                it.onMouseOver = scrollEventListener(direction)
+                it.onFocus = scrollEventListener(direction)
+                it.onClick = scrollEventListener(direction)
 
-                    onMouseOutFunction = scrollEventListener(NONE)
-                    onBlurFunction = scrollEventListener(NONE)
-                }
+                it.onMouseOut = scrollEventListener(NONE)
+                it.onBlur = scrollEventListener(NONE)
             }
         )
     }

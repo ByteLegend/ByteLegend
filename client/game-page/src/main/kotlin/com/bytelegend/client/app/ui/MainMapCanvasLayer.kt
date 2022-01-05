@@ -21,20 +21,17 @@ import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.misc.getImageElement
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.CANVAS
-import kotlinx.html.classes
-import kotlinx.html.id
+import kotlinext.js.jso
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
-import react.RBuilder
+import react.ChildrenBuilder
+import react.Fragment
 import react.RefObject
 import react.State
+import react.create
 import react.createRef
-import react.dom.RDOMBuilder
-import react.dom.attrs
-import react.dom.canvas
-import react.dom.jsStyle
+import react.dom.html.CanvasHTMLAttributes
+import react.dom.html.ReactHTML.canvas
 
 // https://codepen.io/vasilly/pen/NRKyWL
 interface MapCanvasProps : GameProps {
@@ -80,7 +77,7 @@ abstract class AbstractMapCanvas<S : State> : GameUIComponent<MapCanvasProps, S>
 
     protected abstract fun onPaint(lastAnimationTime: Timestamp)
 
-    protected fun RBuilder.mapCanvas(canvasConfig: RDOMBuilder<CANVAS>.() -> Unit) {
+    protected fun ChildrenBuilder.mapCanvas(canvasConfig: CanvasHTMLAttributes<HTMLCanvasElement>.() -> Unit) {
         canvas {
             canvasConfig()
 
@@ -145,24 +142,22 @@ class MainMapCanvasLayer : GameUIComponent<GameProps, State>() {
         game.mainMapCanvasRenderer.onAnimation()
     }
 
-    private fun RDOMBuilder<CANVAS>.canvasAttr(canvasId: String, canvasZIndex: Int) {
-        attrs {
-            id = canvasId
-            if (!mapCoveredByCanvas) {
-                classes = jsObjectBackedSetOf("canvas-border")
-            }
-            width = canvasPixelSize.width.toString()
-            height = canvasPixelSize.height.toString()
-            jsStyle {
-                zIndex = canvasZIndex
-                position = "absolute"
-                left = "${canvasCoordinateInGameContainer.x}px"
-                top = "${canvasCoordinateInGameContainer.y}px"
-            }
+    private fun CanvasHTMLAttributes<HTMLCanvasElement>.canvasAttr(canvasId: String, canvasZIndex: Int) {
+        id = canvasId
+        if (!mapCoveredByCanvas) {
+            className = "canvas-border"
+        }
+        width = canvasPixelSize.width.toDouble()
+        height = canvasPixelSize.height.toDouble()
+        style = jso<dynamic> {
+            zIndex = canvasZIndex
+            position = "absolute"
+            left = "${canvasCoordinateInGameContainer.x}px"
+            top = "${canvasCoordinateInGameContainer.y}px"
         }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         absoluteDiv(
             left = canvasCoordinateInGameContainer.x,
             top = canvasCoordinateInGameContainer.y,
@@ -170,7 +165,7 @@ class MainMapCanvasLayer : GameUIComponent<GameProps, State>() {
             height = canvasPixelSize.height,
             zIndex = Layer.MapCanvas.zIndex()
         ) {
-            attrs.id = "background-canvas-layer"
+            it.id = "background-canvas-layer"
         }
         canvas {
             canvasAttr("objects-canvas-layer", Layer.MapCanvas.zIndex() + 2)

@@ -28,4 +28,5 @@ external val BootstrapModalTitle: ElementType<BootstrapModalTitleProps>
 external interface BootstrapModalTitleProps : Props {
     var `as`: Any
     var bsPrefix: String
+    var id: String
 }

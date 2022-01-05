@@ -22,17 +22,14 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
+import com.bytelegend.client.app.ui.jsStyle
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onMouseMoveFunction
-import kotlinx.html.js.onMouseOutFunction
-import react.RBuilder
-import react.RComponent
+import kotlinext.js.jso
+import react.ChildrenBuilder
+import react.Component
 import react.Props
 import react.State
-import react.dom.jsStyle
-import react.setState
 
 interface BouncingTitleProps : Props {
     var title: String
@@ -49,17 +46,17 @@ interface BouncingTitleState : State {
     var hovered: Boolean
 }
 
-abstract class AbstractBouncingTitleWidget<R : BouncingTitleProps, S : BouncingTitleState>(props: R) : RComponent<R, S>(props) {
+abstract class AbstractBouncingTitleWidget<R : BouncingTitleProps, S : BouncingTitleState>(props: R) : Component<R, S>(props) {
     private val mouseOutOfMapListener: EventListener<Any> = {
         setState { hovered = false }
     }
 
-    override fun S.init(props: R) {
-        hovered = false
+    init {
+        state = jso { hovered = false }
     }
 
-    protected fun RBuilder.renderTitle(
-        block: RBuilder.() -> Unit
+    protected fun ChildrenBuilder.renderTitle(
+        block: ChildrenBuilder.() -> Unit
     ) {
         val backgroundColor = props.backgroundColor
         val color = props.color
@@ -68,25 +65,25 @@ abstract class AbstractBouncingTitleWidget<R : BouncingTitleProps, S : BouncingT
             left = props.pixelCoordinate.x,
             bottom = props.gameScene.map.pixelSize.height - props.pixelCoordinate.y + 4, // extra 4px to avoid misclicking
             zIndex = Layer.BouncingTitle.zIndex() + if (state.hovered) 1 else 0,
-            classes = jsObjectBackedSetOf("bouncing-title")
+            className = "bouncing-title"
         ) {
             unsafeSpan(props.title)
-            attrs.onClickFunction = {
+            it.onClick = {
                 if (props.onClickFunction != null) {
                     props.onClickFunction!!()
                 }
                 it.stopPropagation()
             }
-            attrs.onMouseOutFunction = {
+            it.onMouseOut = {
                 setState { hovered = false }
                 it.stopPropagation()
             }
-            attrs.onMouseMoveFunction = {
+            it.onMouseMove = {
                 setState { hovered = true }
                 it.stopPropagation()
             }
 
-            attrs.jsStyle {
+            it.jsStyle {
                 this.color = color
                 this.backgroundColor = backgroundColor
                 borderLeft = borderStyle
@@ -95,7 +92,7 @@ abstract class AbstractBouncingTitleWidget<R : BouncingTitleProps, S : BouncingT
             }
 
             if (state.hovered) {
-                attrs.jsStyle {
+                it.jsStyle {
                     boxShadow = "0 0 20px white"
                     this.color = color
                     this.backgroundColor = backgroundColor
@@ -104,7 +101,7 @@ abstract class AbstractBouncingTitleWidget<R : BouncingTitleProps, S : BouncingT
                     borderTop = borderStyle
                 }
             } else {
-                attrs.jsStyle {
+                it.jsStyle {
                     this.color = color
                     this.backgroundColor = backgroundColor
                     borderLeft = borderStyle
@@ -114,33 +111,33 @@ abstract class AbstractBouncingTitleWidget<R : BouncingTitleProps, S : BouncingT
             }
             absoluteDiv(
                 zIndex = Layer.BouncingTitle.zIndex(),
-                classes = jsObjectBackedSetOf("bouncing-title-bottom-border", "bouncing-title-bottom-border-left")
+                className = "bouncing-title-bottom-border bouncing-title-bottom-border-left"
             ) {
-                attrs.jsStyle {
+                it.jsStyle {
                     borderBottom = borderStyle
                 }
             }
             absoluteDiv(
                 zIndex = Layer.BouncingTitle.zIndex(),
-                classes = jsObjectBackedSetOf("bouncing-title-bottom-border", "bouncing-title-bottom-border-right")
+                className = "bouncing-title-bottom-border bouncing-title-bottom-border-right"
             ) {
-                attrs.jsStyle {
+                it.jsStyle {
                     borderBottom = borderStyle
                 }
             }
 
             absoluteDiv(
                 zIndex = Layer.BouncingTitle.zIndex() + 2,
-                classes = jsObjectBackedSetOf("bouncing-title-triangle-container")
+                className = "bouncing-title-triangle-container"
             ) {
                 absoluteDiv(
                     left = 0,
                     top = 0,
                     width = 0,
                     height = 0,
-                    classes = jsObjectBackedSetOf("bouncing-title-triangle")
+                    className = "bouncing-title-triangle"
                 ) {
-                    attrs.jsStyle {
+                    it.jsStyle {
                         borderBottom = "8px solid $backgroundColor"
                     }
                 }

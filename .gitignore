@@ -8,3 +8,4 @@ out/
 *.log
 *.tiled-session
 *.tiled-project
+kotlin-js-store/

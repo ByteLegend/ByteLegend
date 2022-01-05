@@ -20,12 +20,12 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.client.app.external.ReactSelect
 import com.bytelegend.client.app.external.ReactSelectProps
 import kotlinext.js.clone
-import kotlinext.js.jsObject
-import react.RBuilder
-import react.RComponent
+import kotlinext.js.jso
+import react.Component
+import react.Fragment
 import react.Props
 import react.State
-import react.setState
+import react.create
 
 data class Option(
     /**
@@ -39,7 +39,7 @@ data class Option(
 ) {
     constructor(jsObj: dynamic) : this(jsObj.value, jsObj.label)
 
-    fun toJsObject(): dynamic = jsObject {
+    fun toJsObject(): dynamic = jso {
         this.value = this@Option.value
         this.label = this@Option.label
     }
@@ -62,34 +62,34 @@ interface MultiSelectState : State {
     var selectedOptions: List<Option>
 }
 
-class MultiSelect(props: MultiSelectProps) : RComponent<MultiSelectProps, MultiSelectState>(props) {
-    override fun MultiSelectState.init(props: MultiSelectProps) {
-        selectedOptions = props.initOptions
+class MultiSelect(props: MultiSelectProps) : Component<MultiSelectProps, MultiSelectState>(props) {
+    init {
+        state = jso { selectedOptions = props.initOptions }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         ReactSelect {
             if (props.configuration != undefined) {
-                props.configuration.invoke(attrs)
+                props.configuration.invoke(this)
             }
             if (props.id != undefined) {
-                attrs.id = props.id
+                id = props.id
             }
-            attrs.className = "${props.className ?: ""} mission-modal-tutorial-filter"
-            attrs.options = props.allOptions.map { it.toJsObject() }.toTypedArray()
-            attrs.value = state.selectedOptions.map { it.toJsObject() }.toTypedArray()
+            className = "${props.className ?: ""} mission-modal-tutorial-filter"
+            options = props.allOptions.map { it.toJsObject() }.toTypedArray()
+            value = state.selectedOptions.map { it.toJsObject() }.toTypedArray()
 
-            attrs.onChange = { it: Array<dynamic> ->
+            onChange = { it: Array<dynamic> ->
                 setState { selectedOptions = it.map { Option(it) }.distinct() }
             }
-            attrs.isMulti = true
-            attrs.closeMenuOnSelect = false
-            attrs.onMenuClose = {
+            isMulti = true
+            closeMenuOnSelect = false
+            onMenuClose = {
                 setState {
                     selectedOptions = props.onSelectComplete(state.selectedOptions.map { Option(it) })
                 }
             }
-            attrs.styles = jsObject<dynamic> {
+            styles = jso<dynamic> {
                 container = { provided: dynamic, _: dynamic ->
                     val ret: dynamic = clone(provided)
                     ret.width = "${(this@MultiSelect.state.selectedOptions.size + 1) * 100}px"

@@ -16,13 +16,13 @@
 package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.client.app.ui.icon
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import kotlinx.html.classes
+import react.Component
+import react.Fragment
 import react.Props
-import react.RBuilder
-import react.RComponent
+import react.ReactNode
 import react.State
-import react.dom.span
+import react.create
+import react.dom.html.ReactHTML.span
 
 interface TitleStarCounterProps : Props {
     var total: Int
@@ -30,20 +30,22 @@ interface TitleStarCounterProps : Props {
     var starSize: Int
 }
 
-class TitleStarCounter : RComponent<TitleStarCounterProps, State>() {
-    override fun RBuilder.render() {
-        if (props.total > 5) {
-            span {
-                attrs.classes = jsObjectBackedSetOf("map-title-text")
-                +"${props.current}/${props.total}"
-            }
-            icon(props.starSize, jsObjectBackedSetOf("mission-star-icon"))
-        } else {
-            repeat(props.current) {
-                icon(props.starSize, jsObjectBackedSetOf("mission-star-icon"))
-            }
-            repeat(props.total - props.current) {
-                icon(props.starSize, jsObjectBackedSetOf("mission-hollow-star-icon"))
+class TitleStarCounter : Component<TitleStarCounterProps, State>() {
+    override fun render(): ReactNode {
+        return Fragment.create {
+            if (props.total > 5) {
+                span {
+                    className = "map-title-text"
+                    +"${props.current}/${props.total}"
+                }
+                icon(props.starSize, "mission-star-icon")
+            } else {
+                repeat(props.current) {
+                    icon(props.starSize, "mission-star-icon")
+                }
+                repeat(props.total - props.current) {
+                    icon(props.starSize, "mission-hollow-star-icon")
+                }
             }
         }
     }

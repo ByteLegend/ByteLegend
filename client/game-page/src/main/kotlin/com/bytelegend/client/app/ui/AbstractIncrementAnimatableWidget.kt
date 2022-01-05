@@ -21,21 +21,19 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
 import com.bytelegend.app.shared.protocol.NumberChange
 import com.bytelegend.client.app.script.effect.numberIncrementEffect
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.html.DIV
-import kotlinx.html.classes
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.Node
-import react.RBuilder
+import react.ChildrenBuilder
+import react.Fragment
 import react.RefObject
 import react.State
+import react.create
 import react.createRef
-import react.dom.RDOMBuilder
-import react.dom.div
-import react.setState
+import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.div
 
 /**
  * A special widget which can show a "+X" animation when updated.
@@ -48,23 +46,23 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
 
     private val numberChangeEventListener: EventListener<NumberChange> = ::onNumberChange
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         BootstrapListGroupItem {
             div {
-                attrs.classes = jsObjectBackedSetOf("text-align-right")
+                className = "text-align-right"
                 renderDiv()
                 ref = div
             }
         }
     }
 
-    abstract fun RDOMBuilder<DIV>.renderDiv()
+    abstract fun <T> T.renderDiv() where T : HTMLAttributes<HTMLDivElement>, T : ChildrenBuilder
 
     protected abstract fun onNumberChange(numberChange: NumberChange)
 
-    protected fun RBuilder.renderIcon() {
+    protected fun ChildrenBuilder.renderIcon() {
         div {
-            attrs.classes = jsObjectBackedSetOf(iconClassName, "inline-icon-16")
+            className = "$iconClassName inline-icon-16"
         }
     }
 

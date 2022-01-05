@@ -17,11 +17,12 @@ package com.bytelegend.client.app.ui.item
 
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
-import react.RBuilder
+import react.Fragment
 import react.State
+import react.create
 
 class ItemModal : GameUIComponent<GameProps, State>() {
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         TODO("Not yet implemented")
     }
 }

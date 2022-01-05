@@ -53,15 +53,16 @@ import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.MAIN_CHANNEL
 import com.bytelegend.client.app.ui.DefaultModalController
-import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.invitationcode.InvitationCodeModal
 import com.bytelegend.client.app.ui.mission.DefaultPullRequestLogContainer
 import com.bytelegend.client.app.ui.script.Widget
 import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.JSObjectBackedMap
+import kotlinext.js.jso
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
+import react.react
 
 class DefaultGameScene(
     override val di: DI,
@@ -91,7 +92,7 @@ class DefaultGameScene(
     val mainChannelDirector by lazy {
         getDirectorOfChannel(MAIN_CHANNEL)
     }
-    val scriptWidgets: MutableMap<String, Widget<out GameProps>> = JSObjectBackedMap()
+    val scriptWidgets: MutableMap<String, Widget<*>> = JSObjectBackedMap()
 
     lateinit var players: PlayerContainer
 
@@ -238,9 +239,9 @@ class DefaultGameScene(
             ).apply {
                 onClickFunction = {
                     gameRuntime.modalController.unsafeCast<DefaultModalController>().show {
-                        child(InvitationCodeModal::class) {
-                            attrs.game = gameRuntime.unsafeCast<Game>()
-                        }
+                        child(InvitationCodeModal::class.react, jso {
+                            game = gameRuntime.unsafeCast<Game>()
+                        })
                     }
                 }
             }

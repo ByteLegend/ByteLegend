@@ -16,16 +16,19 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.client.app.engine.DefaultGameScene
-import react.RBuilder
+import com.bytelegend.client.app.ui.script.Widget
+import react.Fragment
 import react.State
+import react.create
 
 interface GameScriptWidgetDisplayLayerProps : GameProps
 
 class GameScriptWidgetDisplayLayer : GameUIComponent<GameScriptWidgetDisplayLayerProps, State>() {
     @Suppress("UnsafeCastFromDynamic")
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         game.activeScene.unsafeCast<DefaultGameScene>().scriptWidgets.entries.forEach {
-            child(it.value.klass.asDynamic(), it.value.handler)
+            val widget: Widget<GameProps> = it.value.unsafeCast<Widget<GameProps>>()
+            child(widget.type, widget.props)
         }
     }
 }

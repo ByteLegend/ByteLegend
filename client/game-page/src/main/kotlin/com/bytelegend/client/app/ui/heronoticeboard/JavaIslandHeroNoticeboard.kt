@@ -30,31 +30,27 @@ import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTile
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.mission.WebEditor
+import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.get
-import com.bytelegend.client.utils.jsObjectBackedSetOf
 import com.bytelegend.client.utils.toHeroNoticeboardTilesData
+import kotlinext.js.jso
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.html.classes
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onLoadFunction
-import kotlinx.html.js.onMouseMoveFunction
-import kotlinx.html.js.onMouseOutFunction
-import org.w3c.dom.events.Event
-import org.w3c.dom.events.MouseEvent
-import react.RBuilder
-import react.RComponent
+import react.ChildrenBuilder
+import react.Component
+import react.Fragment
 import react.State
-import react.dom.b
-import react.dom.div
-import react.dom.h2
-import react.dom.img
-import react.dom.jsStyle
-import react.dom.span
-import react.setState
+import react.create
+import react.dom.html.ReactHTML.b
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.h2
+import react.dom.html.ReactHTML.img
+import react.dom.html.ReactHTML.span
+import react.react
 
 fun heroesJsonUrl(page: Int, timestamp: Long) = "/proxy/heroes-$page.json?timestamp=$timestamp"
 fun heroesImgUrl(page: Int, timestamp: Long) = "/proxy/heroes-$page.png?timestamp=$timestamp"
@@ -89,7 +85,7 @@ interface JavaIslandHeroNoticeboardState : State {
 }
 
 class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
-    RComponent<JavaIslandHeroNoticeboardProps, JavaIslandHeroNoticeboardState>(props) {
+    Component<JavaIslandHeroNoticeboardProps, JavaIslandHeroNoticeboardState>(props) {
     private val onChallengeRepaintListener: EventListener<ChallengeUpdateEventData> = this::onMissionRepaint
 
     private fun onMissionRepaint(eventData: ChallengeUpdateEventData) {
@@ -99,12 +95,14 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
         }
     }
 
-    override fun JavaIslandHeroNoticeboardState.init(props: JavaIslandHeroNoticeboardProps) {
-        currentPage = props.totalPage
-        tiles = props.initTiles
-        jsonIsLoading = false
-        imageIsLoading = true
-        timestamp = currentTimeMillis()
+    init {
+        state = jso {
+            currentPage = props.totalPage
+            tiles = props.initTiles
+            jsonIsLoading = false
+            imageIsLoading = true
+            timestamp = currentTimeMillis()
+        }
     }
 
     private fun onClickPage(number: Int) {
@@ -129,27 +127,31 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
         }
     }
 
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         BootstrapModalBody {
             h2 {
-                attrs.jsStyle.textAlign = "center"
+                jsStyle {
+                    textAlign = "center"
+                }
                 b {
                     +props.game.i("HeroNoticeboard")
                 }
             }
             div {
-                attrs.jsStyle.textAlign = "center"
+                jsStyle {
+                    textAlign = "center"
+                }
                 unsafeSpan(props.game.i("BravePeopleDedication"))
             }
 
             div {
-                attrs.classes = jsObjectBackedSetOf("noticeboard-avatars-div")
+                className = "noticeboard-avatars-div"
 
                 if (state.imageIsLoading || state.jsonIsLoading) {
                     div {
-                        attrs.classes = jsObjectBackedSetOf("center-of-parent")
+                        className = "center-of-parent"
                         BootstrapSpinner {
-                            attrs.animation = "border"
+                            animation = "border"
                         }
                     }
                 }
@@ -160,35 +162,35 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
             }
             paginationButtons()
             span {
-                attrs.jsStyle {
+                jsStyle {
                     margin = "0 auto"
                     display = "table"
                 }
                 if (state.hoveredTileCoordinate != null) {
                     +"(${state.hoveredTileCoordinate!!.x}, ${state.hoveredTileCoordinate!!.y})"
                 } else {
-                    attrs.classes = jsObjectBackedSetOf("transparent-text")
+                    className = "transparent-text"
                     +"Yay! You found an easter egg!"
                 }
             }
 
-            child(WebEditor::class) {
-                attrs.game = props.game
-                attrs.whitelist = props.whitelist
-                attrs.missionId = props.missionId
-                attrs.challengeSpec = props.challengeSpec
-            }
+            child(WebEditor::class.react, jso {
+                game = props.game
+                whitelist = props.whitelist
+                missionId = props.missionId
+                challengeSpec = props.challengeSpec
+            })
         }
     }
 
-    private fun RBuilder.paginationButtons() {
+    private fun ChildrenBuilder.paginationButtons() {
         if (props.totalPage > 1) {
             BootstrapPagination {
                 repeat(props.totalPage) { page ->
                     BootstrapPaginationItem {
                         +(page + 1).toString()
-                        attrs.active = page + 1 == state.currentPage
-                        attrs.onClick = {
+                        active = page + 1 == state.currentPage
+                        onClick = {
                             onClickPage(page + 1)
                         }
                     }
@@ -197,35 +199,35 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
         }
     }
 
-    private fun RBuilder.leftButton() {
+    private fun ChildrenBuilder.leftButton() {
         if (state.currentPage > 1) {
             BootstrapButton {
-                attrs.className = "noticeboard-button noticeboard-left-button"
+                className = "noticeboard-button noticeboard-left-button"
                 +"<"
-                attrs.onClick = {
+                onClick = {
                     onClickPage(state.currentPage - 1)
                 }
             }
         }
     }
 
-    private fun RBuilder.rightButton() {
+    private fun ChildrenBuilder.rightButton() {
         if (state.currentPage < props.totalPage) {
             BootstrapButton {
-                attrs.className = "noticeboard-button noticeboard-right-button"
+                className = "noticeboard-button noticeboard-right-button"
                 +">"
-                attrs.onClick = {
+                onClick = {
                     onClickPage(state.currentPage + 1)
                 }
             }
         }
     }
 
-    private fun findTileByMouseCoordinate(event: Event): HeroNoticeboardTile? {
+    private fun findTileByMouseCoordinate(event: react.dom.events.MouseEvent<*, *>): HeroNoticeboardTile? {
         if (state.jsonIsLoading) {
             return null
         }
-        val e = event.asDynamic().nativeEvent as MouseEvent
+        val e = event.nativeEvent
         val hoveredTileX = e.offsetX.toInt() / AVATAR_TILE_SIZE
         val hoveredTileY = e.offsetY.toInt() / AVATAR_TILE_SIZE
         for (tile in state.tiles) {
@@ -236,30 +238,30 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
         return null
     }
 
-    private fun toCoordinate(event: Event): GridCoordinate {
-        val e = event.asDynamic().nativeEvent as MouseEvent
+    private fun toCoordinate(event: react.dom.events.MouseEvent<*, *>): GridCoordinate {
+        val e = event.nativeEvent
         return GridCoordinate(
             e.offsetX.toInt() / AVATAR_TILE_SIZE,
             e.offsetY.toInt() / AVATAR_TILE_SIZE
         )
     }
 
-    private fun RBuilder.avatarImg() {
+    private fun ChildrenBuilder.avatarImg() {
         div {
-            attrs.classes = jsObjectBackedSetOf("noticeboard-avatars-img")
+            className = "noticeboard-avatars-img"
             img {
-                attrs.src = heroesImgUrl(state.currentPage, state.timestamp)
-                attrs.onLoadFunction = {
+                src = heroesImgUrl(state.currentPage, state.timestamp)
+                onLoad = {
                     setState {
                         imageIsLoading = false
                     }
                 }
-                attrs.onClickFunction = {
+                onClick = {
                     findTileByMouseCoordinate(it)?.apply {
                         window.open("https://github.com/$username", "_blank")
                     }
                 }
-                attrs.onMouseMoveFunction = {
+                onMouseMove = {
                     val coordinate: GridCoordinate = toCoordinate(it)
                     val hoveredTile: HeroNoticeboardTile? = findTileByMouseCoordinate(it)
 
@@ -274,7 +276,7 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
                         }
                     }
                 }
-                attrs.onMouseOutFunction = {
+                onMouseOut = {
                     setState {
                         hoveredTile = null
                         hoveredTileCoordinate = null
@@ -288,12 +290,12 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
         }
     }
 
-    private fun RBuilder.avatarTooltip() {
-        child(AvatarTooltip::class) {
-            attrs.game = props.game
-            attrs.joinedAtI18n = props.game.i("JoinedAt")
-            attrs.tile = state.hoveredTile!!
-        }
+    private fun ChildrenBuilder.avatarTooltip() {
+        child(AvatarTooltip::class.react, jso {
+            game = props.game
+            joinedAtI18n = props.game.i("JoinedAt")
+            tile = state.hoveredTile!!
+        })
     }
 
     override fun componentDidMount() {

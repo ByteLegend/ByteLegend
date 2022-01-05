@@ -18,9 +18,9 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroup
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import react.RBuilder
+import react.Fragment
 import react.State
+import react.create
 
 interface RightSideBarProps : GameProps
 
@@ -36,15 +36,15 @@ fun GameCanvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer(
     }
 
 class RightSideBar : GameUIComponent<RightSideBarProps, State>() {
-    override fun RBuilder.render() {
+    override fun render() = Fragment.create {
         if (game.heroPlayer.isAnonymous) {
-            return
+            return@create
         }
         absoluteDiv(
             right = gameCanvasState.determineRightSideBarCoordinateInGameContainerRightTop().x,
             top = gameCanvasState.determineRightSideBarCoordinateInGameContainerRightTop().y,
             zIndex = Layer.RightSideBar.zIndex(),
-            classes = jsObjectBackedSetOf("right-sidebar")
+            className = "right-sidebar"
         ) {
             BootstrapListGroup {
                 props.children()

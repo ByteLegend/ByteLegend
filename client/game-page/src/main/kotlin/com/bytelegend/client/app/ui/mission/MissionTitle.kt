@@ -21,10 +21,13 @@ import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.client.app.engine.DefaultGameMission
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
-import com.bytelegend.client.utils.jsObjectBackedSetOf
-import react.RBuilder
-import react.dom.div
-import react.setState
+import com.bytelegend.client.app.ui.setState
+import kotlinext.js.jso
+import react.Fragment
+import react.ReactNode
+import react.create
+import react.dom.html.ReactHTML.div
+import react.react
 
 interface MissionTitleProps : BouncingTitleProps {
     var totalStar: Int
@@ -45,22 +48,26 @@ class MissionTitle(props: MissionTitleProps) : AbstractBouncingTitleWidget<Missi
         }
     }
 
-    override fun MissionTitleState.init(props: MissionTitleProps) {
-        hovered = false
-        currentStar = props.gameScene.challengeAnswers.missionStar(props.mission.id)
+    init {
+        state = jso {
+            hovered = false
+            currentStar = props.gameScene.challengeAnswers.missionStar(props.mission.id)
+        }
     }
 
-    override fun RBuilder.render() {
-        renderTitle {
-            absoluteDiv(
-                zIndex = Layer.BouncingTitle.zIndex() + 3,
-                classes = jsObjectBackedSetOf("title-star-answer-box")
-            ) {
-                div {
-                    child(TitleStarCounter::class) {
-                        attrs.total = props.totalStar
-                        attrs.current = state.currentStar
-                        attrs.starSize = 24
+    override fun render(): ReactNode {
+        return Fragment.create {
+            renderTitle {
+                absoluteDiv(
+                    zIndex = Layer.BouncingTitle.zIndex() + 3,
+                    className = "title-star-answer-box"
+                ) {
+                    div {
+                        child(TitleStarCounter::class.react, jso {
+                            total = props.totalStar
+                            current = state.currentStar
+                            starSize = 24
+                        })
                     }
                 }
             }
