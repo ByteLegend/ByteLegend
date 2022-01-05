@@ -34,7 +34,6 @@ import com.bytelegend.client.app.ui.minimap.mapToNativeJsArray
 import com.bytelegend.client.app.ui.minimap.nativeJsArrayOf
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
-import kotlinext.js.jsObject
 import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -100,7 +99,7 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
                     border = "none"
                 }
                 onLoad = {
-                    postMessageToWebEditorIframe(jsObject<dynamic> {
+                    postMessageToWebEditorIframe(jso<dynamic> {
                         bytelegendInitData = determineWebEditorInitData()
                     })
                 }
@@ -112,7 +111,7 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
                     challengeId = props.challengeSpec.id
                     onClick = {
                         val arg = nativeJsArrayOf()
-                        postMessageToWebEditorIframe(jsObject<dynamic> {
+                        postMessageToWebEditorIframe(jso<dynamic> {
                             forwardCommand = "bytelegend.submitAnswer"
                             forwardCommandArgs = arg
                         })

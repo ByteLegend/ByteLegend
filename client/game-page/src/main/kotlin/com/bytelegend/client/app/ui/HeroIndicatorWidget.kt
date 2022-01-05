@@ -196,6 +196,7 @@ class HeroIndicatorWidget : GameUIComponent<GameProps, HeroIndicatorWidgetState>
                     this.triangleRad = triangleRad
                 }
             }
+            else -> throw IllegalStateException("Should not be here")
         }
     }
 

@@ -87,7 +87,7 @@ class DefaultGameCanvasState(
          */
         val hash = window.location.hash.substringAfter("#")
         val center = when {
-            hash.matches("[A-Z]+\\d+") ->
+            hash.matches("[A-Z]+\\d+".toRegex()) ->
                 HumanReadableCoordinate(hash.replace("\\d+".toRegex(), ""), hash.replace("[A-Z]+".toRegex(), "").toInt())
                     .toGridCoordinate()
             !game.heroPlayer.isAnonymous && game.heroPlayer.map == gameMap.id -> GridCoordinate(game.heroPlayer.x, game.heroPlayer.y)

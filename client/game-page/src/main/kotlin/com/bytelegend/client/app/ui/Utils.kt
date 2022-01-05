@@ -32,10 +32,10 @@ import react.dom.html.ReactHTML.h3
 import react.dom.html.ReactHTML.h4
 import react.dom.html.ReactHTML.span
 
-inline fun <T : Any> jsObject(builder1: T.() -> Unit, builder2: T.() -> Unit): T =
-    kotlinext.js.jsObject<T>().apply(builder1).apply(builder2)
+inline fun <T : Any> jso(builder1: T.() -> Unit, builder2: T.() -> Unit): T =
+     jso<T>().apply(builder1).apply(builder2)
 
-fun js(builder1: dynamic.() -> Unit, builder2: dynamic.() -> Unit): dynamic = jsObject(builder1, builder2)
+fun js(builder1: dynamic.() -> Unit, builder2: dynamic.() -> Unit): dynamic = jso(builder1, builder2)
 
 fun ChildrenBuilder.icon(
     size: Int = 16,

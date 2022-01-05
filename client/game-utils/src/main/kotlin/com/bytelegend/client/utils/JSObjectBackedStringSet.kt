@@ -16,7 +16,7 @@
 package com.bytelegend.client.utils
 
 import kotlinext.js.Object
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 
 fun jsObjectBackedSetOf(vararg elements: Any): MutableSet<String> {
     val ret = JSObjectBackedStringSet()
@@ -29,7 +29,7 @@ fun jsObjectBackedSetOf(vararg elements: Any): MutableSet<String> {
 class JSObjectBackedStringSet(
     private val delegate: dynamic
 ) : MutableSet<String> {
-    constructor() : this(jsObject())
+    constructor() : this(jso())
 
     override val size: Int
         get() = Object.keys(delegate).size

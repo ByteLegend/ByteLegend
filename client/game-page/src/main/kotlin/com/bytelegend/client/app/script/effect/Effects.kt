@@ -26,7 +26,7 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.app.external.confetti
 import com.bytelegend.client.app.ui.Layer
 import kotlinext.js.assign
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.Document
@@ -66,7 +66,7 @@ fun showConfetti(canvasState: GameCanvasState, originPointOnMap: GridCoordinate)
     if (originX < 0 || originY < 0) {
         return
     }
-    val origin = jsObject<dynamic> {
+    val origin = jso<dynamic> {
         x = originX
         y = originY
     }
@@ -77,29 +77,29 @@ fun showConfetti(canvasState: GameCanvasState, originPointOnMap: GridCoordinate)
     playAudio("tada")
 
     // https://www.kirilv.com/canvas-confetti/#realistic
-    fire(0.25, origin, jsObject {
+    fire(0.25, origin, jso {
         this.angle = angle
         spread = 26
         startVelocity = 55
     })
-    fire(0.2, origin, jsObject {
+    fire(0.2, origin, jso {
         this.angle = angle
         spread = 60
     })
-    fire(0.35, origin, jsObject {
+    fire(0.35, origin, jso {
         this.angle = angle
         spread = 100
         decay = 0.91
         scalar = 0.8
     })
-    fire(0.1, origin, jsObject {
+    fire(0.1, origin, jso {
         this.angle = angle
         spread = 120
         startVelocity = 25
         decay = 0.92
         scalar = 1.2
     })
-    fire(0.1, origin, jsObject {
+    fire(0.1, origin, jso {
         this.angle = angle
         spread = 120
         startVelocity = 45
@@ -114,10 +114,10 @@ suspend fun fadeInEffect(gameContainerSize: PixelSize): Unit = suspendCoroutine 
     }
     gsap.fromTo(
         "#$id",
-        jsObject {
+        jso {
             autoAlpha = 1
         },
-        jsObject {
+        jso {
             duration = 1
             autoAlpha = 0
             onComplete = {
@@ -161,12 +161,12 @@ suspend fun numberIncrementEffect(
 
     gsap.fromTo(
         "#$divId",
-        jsObject {
+        jso {
             autoAlpha = 1
             x = left
             y = top
         },
-        jsObject {
+        jso {
             duration = 2
             autoAlpha = 0
             x = left
@@ -236,7 +236,7 @@ suspend fun itemPopupEffect(
     }
     gsap.timeline().to(
         "#$itemId",
-        jsObject {
+        jso {
             scale = 5
         }
     )
@@ -251,11 +251,11 @@ private fun itemFlyTo(
 ) {
     gsap.fromTo(
         "#$itemId",
-        jsObject {
+        jso {
             x = start.x
             y = start.y
         },
-        jsObject {
+        jso {
             x = end.x
             y = end.y
             duration = durationSecond
@@ -284,10 +284,10 @@ private fun itemScale(
     }
     gsap.fromTo(
         "#$itemId",
-        jsObject {
+        jso {
             scale = 5
         },
-        jsObject {
+        jso {
             scale = 2
             duration = totalDurationSecond / 3
             onComplete = onCompleteFunction
@@ -348,13 +348,13 @@ fun disconnectionEffect(gameContainerSize: PixelSize) {
     }
     window.asDynamic().gsap.fromTo(
         "#$id",
-        jsObject {
+        jso {
             x = gameContainerSize.width / 2
             y = gameContainerSize.height / 2
             width = 0
             height = 0
         },
-        jsObject {
+        jso {
             x = 0
             y = 0
             width = gameContainerSize.width

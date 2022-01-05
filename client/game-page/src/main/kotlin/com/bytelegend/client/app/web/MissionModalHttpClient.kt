@@ -24,7 +24,7 @@ import com.bytelegend.client.utils.toChallengeUpdateEventData
 import com.bytelegend.client.utils.toMissionModalData
 import com.bytelegend.client.utils.toPagination
 import com.bytelegend.client.utils.toTutorial
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.fetch.Response
@@ -47,9 +47,9 @@ suspend fun get(uri: String): String {
 suspend fun post(uri: String, body: String): String {
     return window.fetch(
         uri,
-        jsObject {
+        jso {
             method = "POST"
-            this.headers = jsObject {
+            this.headers = jso {
                 this["Content-Type"] = "application/json"
                 this["Accept"] = "application/json"
             }
@@ -65,7 +65,7 @@ suspend fun post(uri: String, body: String): String {
 }
 
 fun Map<String, String>.toDynamic(): dynamic {
-    val ret = jsObject<dynamic>()
+    val ret = jso<dynamic>()
     forEach {
         ret[it.key] = it.value
     }

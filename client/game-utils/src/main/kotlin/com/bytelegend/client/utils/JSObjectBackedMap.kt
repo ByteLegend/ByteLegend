@@ -16,7 +16,7 @@
 package com.bytelegend.client.utils
 
 import kotlinext.js.Object
-import kotlinext.js.jsObject
+import kotlinext.js.jso
 
 external fun delete(p: dynamic): Boolean = definedExternally
 
@@ -24,7 +24,7 @@ external fun delete(p: dynamic): Boolean = definedExternally
 class JSObjectBackedMap<V>(
     val delegate: dynamic
 ) : MutableMap<String, V> {
-    constructor() : this(jsObject())
+    constructor() : this(jso())
 
     override val size: Int
         get() = keys.size
