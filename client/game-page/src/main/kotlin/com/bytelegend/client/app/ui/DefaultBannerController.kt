@@ -68,8 +68,8 @@ class BannerUIComponent : GameUIComponent<GameProps, GameBannersState>() {
 
     private val bannerUpdateEventListener: EventListener<Banner> = {
         setState {
-            banners = banners.apply { add(it) }
-            bannerLeftSeconds = bannerLeftSeconds.apply { add(it.autoCloseSeconds) }
+            banners = state.banners.apply { add(it) }
+            bannerLeftSeconds = state.bannerLeftSeconds.apply { add(it.autoCloseSeconds) }
         }
     }
     private val checkRestSecondEverySecond: EventListener<Nothing> = {
