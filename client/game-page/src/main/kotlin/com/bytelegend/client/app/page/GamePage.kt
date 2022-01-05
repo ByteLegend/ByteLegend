@@ -130,7 +130,7 @@ interface GamePageState : State {
     var sceneLoading: Boolean
 }
 
-class GamePage() : Component<Props, GamePageState>() {
+class GamePage : Component<Props, GamePageState>() {
     init {
         state = jso {
             sceneLoading = true

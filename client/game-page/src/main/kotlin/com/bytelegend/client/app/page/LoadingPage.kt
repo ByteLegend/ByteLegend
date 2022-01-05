@@ -43,7 +43,7 @@ interface LoadingPageState : State {
 class LoadingPage : Component<LoadingPageProps, LoadingPageState>() {
     private val resourceLoadingFailureListener: ResourceLoadingFailureEventListener = {
         setState {
-            errorMessages.add(it.message)
+            errorMessages = state.errorMessages.apply { add(it.message) }
         }
     }
 
