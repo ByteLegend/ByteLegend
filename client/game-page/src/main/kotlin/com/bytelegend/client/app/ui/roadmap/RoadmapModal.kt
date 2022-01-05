@@ -89,7 +89,7 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
             mapLeftTop = PixelCoordinate(0, 0)
             // TODO change this if map is not square. Currently all map is square
             modalSize = determineRoadmapSize().let { PixelSize(it, it) }
-            zoom = 1.0 * state.modalSize.width / props.game.activeScene.map.pixelSize.width
+            zoom = 1.0 * modalSize.width / props.game.activeScene.map.pixelSize.width
             showPromptBanner = localStorage.getItem(DONT_SHOW_ROADMAP_BANNER) == null
             showMissionTitles = false
         }
