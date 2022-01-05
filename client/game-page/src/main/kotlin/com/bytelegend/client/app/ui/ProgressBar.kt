@@ -81,7 +81,7 @@ class ProgressBar : Component<ProgressBarProps, ProgressBarState>() {
             }
         } else if (state.now < 99) {
             setState {
-                now = state.now + 1
+                now += 1
             }
         }
     }
