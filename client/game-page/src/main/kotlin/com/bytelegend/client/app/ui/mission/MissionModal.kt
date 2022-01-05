@@ -167,7 +167,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
 
     private fun ChildrenBuilder.renderStarChallenge(tab: ChallengeTabData) {
         child(StarChallengeTab::class.react, jso {
-            contentHtml = game.i(tab.data.readme)
+            contentHtml = props.game.i(tab.data.readme)
             this.game = props.game
             missionId = props.missionId
             challengeSpec = tab.data
@@ -176,7 +176,6 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
 
     private fun ChildrenBuilder.renderQuestionChallenge(tabData: ChallengeTabData) {
         child(QuestionChallengeTab::class.react, jso {
-//            className = "mission-tab-content"
             this.game = props.game
             missionId = props.missionId
             challengeSpec = tabData.data

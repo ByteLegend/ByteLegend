@@ -81,69 +81,72 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
     }
 
     override fun render() = Fragment.create {
-        if (!game.heroPlayer.isAnonymous && isDisabled()) {
-            BootstrapAlert {
-                show = true
-                variant = "warning"
-                +props.game.i("YouMustBeAdjacentToTheMission")
-            }
-        }
-        renderTldr()
-
-        h4 {
-            +i("YourAnswer")
-        }
-        BootstrapFormRow {
-            BootstrapCol {
-                xs = 10
-                TextareaAutosize {
-                    disabled = state.loading || props.game.heroPlayer.isAnonymous || isDisabled()
-                    minRows = 2
-                    maxRows = 5
-                    ref = { it: dynamic ->
-                        textarea = it
-                    }
+        div {
+            className = "mission-tab-content"
+            if (!game.heroPlayer.isAnonymous && isDisabled()) {
+                BootstrapAlert {
+                    show = true
+                    variant = "warning"
+                    +props.game.i("YouMustBeAdjacentToTheMission")
                 }
             }
-            BootstrapCol {
-                xs = 2
+            renderTldr()
 
-                if (state.loading) {
-                    BootstrapButton {
-                        disabled = true
-                        span {
-                            className = "spinner-border spinner-border-sm"
+            h4 {
+                +i("YourAnswer")
+            }
+            BootstrapFormRow {
+                BootstrapCol {
+                    xs = 10
+                    TextareaAutosize {
+                        disabled = state.loading || props.game.heroPlayer.isAnonymous || isDisabled()
+                        minRows = 2
+                        maxRows = 5
+                        ref = { it: dynamic ->
+                            textarea = it
                         }
-                        +("Checking...")
                     }
-                } else {
-                    BootstrapButton {
-                        +i("Submit")
-                        disabled = props.game.heroPlayer.isAnonymous || isDisabled()
-                        className = "modal-submit-answer-button"
-                        onClick = {
-                            GlobalScope.launch {
-                                onClickSubmitAnswer()
+                }
+                BootstrapCol {
+                    xs = 2
+
+                    if (state.loading) {
+                        BootstrapButton {
+                            disabled = true
+                            span {
+                                className = "spinner-border spinner-border-sm"
+                            }
+                            +("Checking...")
+                        }
+                    } else {
+                        BootstrapButton {
+                            +i("Submit")
+                            disabled = props.game.heroPlayer.isAnonymous || isDisabled()
+                            className = "modal-submit-answer-button"
+                            onClick = {
+                                GlobalScope.launch {
+                                    onClickSubmitAnswer()
+                                }
                             }
                         }
                     }
                 }
             }
+            br { }
+
+            val answers: List<ChallengeAnswer> = game.activeScene.challengeAnswers.getChallengeAnswersByMissionId(props.missionId)
+                .flatMap { answersOfChallenge ->
+                    answersOfChallenge.answers.values.map { it.last().unsafeCast<ChallengeAnswer>() }
+                }
+
+            renderQuestionAnswers(answers)
+
+            child(WebEditor::class.react, jso {
+                game = props.game
+                missionId = props.missionId
+                challengeSpec = props.challengeSpec
+            })
         }
-        br { }
-
-        val answers: List<ChallengeAnswer> = game.activeScene.challengeAnswers.getChallengeAnswersByMissionId(props.missionId)
-            .flatMap { answersOfChallenge ->
-                answersOfChallenge.answers.values.map { it.last().unsafeCast<ChallengeAnswer>() }
-            }
-
-        renderQuestionAnswers(answers)
-
-        child(WebEditor::class.react, jso {
-            game = props.game
-            missionId = props.missionId
-            challengeSpec = props.challengeSpec
-        })
     }
 
     private fun ChildrenBuilder.renderTldr() {
