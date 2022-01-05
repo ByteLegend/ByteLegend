@@ -16,6 +16,7 @@
 package com.bytelegend.client.app.ui
 
 import csstype.px
+import kotlinext.js.assign
 import kotlinext.js.jso
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -23,7 +24,6 @@ import react.ChildrenBuilder
 import react.Component
 import react.ComponentClass
 import react.Fragment
-import react.Props
 import react.State
 import react.create
 import react.dom.html.HTMLAttributes
@@ -52,10 +52,8 @@ fun ChildrenBuilder.icon(
     }
 }
 
-fun <P : Props, S : State> Component<P, S>.setState(handler: S.() -> Unit) {
-    val state = jso<S>()
-    state.handler()
-    setState(state)
+fun <S : State> Component<*, S>.setState(buildState: S.() -> Unit) {
+    setState({ assign(it, buildState) })
 }
 
 fun <T : HTMLElement> HTMLAttributes<T>.jsStyle(block: dynamic.() -> Unit) {
