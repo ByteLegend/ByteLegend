@@ -166,7 +166,7 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : Component<SubmitAnswe
                         setState { glow = true }
                     }
                 }
-                onClick = { props.onClick() }
+                onClick = { this@SubmitAnswerButton.onClick() }
             }
             div {
                 className = "submit-answer-button-animation"
