@@ -342,82 +342,6 @@ body {
     cursor: url('data:image/png;base64,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'), auto;
 }
 
-.mission-modal-tutorial-filter {
-    display: inline-block;
-    width: 200px;
-    max-width: 400px;
-    min-width: 200px;
-}
-
-.mission-modal-tutorial-tab {
-    display: flex;
-    flex-flow: column;
-    height: calc(100% - 64px);
-}
-
-.mission-modal-tutorial-filters {
-    display: flex;
-    flex: 0 1 auto;
-}
-
-.mission-modal-tutorial-filter-name {
-    margin-left: 16px;
-    margin-right: 8px;
-}
-
-.mission-modal-tutorial-filter-refresh-button {
-    margin-left: auto
-}
-
-.mission-modal-tutorial-content {
-    flex: 1 1 auto;
-    margin-top: 16px;
-    display: inline-flex;
-    flex-flow: row;
-    /*
-    https://stackoverflow.com/questions/21515042/scrolling-a-flexbox-with-overflowing-content
-    to make a flexbox cell scrollable,
-    you have to make all its parents overflow: hidden;,
-    or it will just ignore your overflow settings and make the parent larger instead */
-    overflow: hidden;
-}
-
-.mission-modal-tutorial-content-left {
-    width: 30%;
-    margin-right: 16px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.mission-modal-tutorial-content-left-tutorials {
-    overflow-y: auto;
-    /* pagination */
-    height: calc(100% - 32px);
-}
-
-.mission-modal-tutorial-content-left-pagination {
-}
-
-.mission-modal-tutorial-content-right {
-    width: 70%;
-    overflow-y: auto;
-    position: relative;
-    min-height: 600px;
-}
-
-.tutorial-video-player {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-/*.mission-modal-tutorial-content-row {*/
-/*    height: 100%;*/
-/*}*/
-
 .item-enter {
     opacity: 0;
 }
@@ -806,27 +730,6 @@ div.speech-bubble::after {
 
 .transparent-text {
     color: transparent;
-}
-
-blockquote {
-    color: #666;
-    margin: 0;
-    padding-left: 1em;
-    border-left: 0.5em darkgray solid;
-}
-
-.markdown-body pre {
-    background-color: #f6f8fa;
-}
-
-.markdown-body pre code {
-    background-color: #f6f8fa;
-}
-
-.markdown-body code {
-    background-color: rgba(175, 184, 193, 0.2);
-    border-radius: 5px;
-    padding: 0 .2em
 }
 
 #starfly-canvas {
