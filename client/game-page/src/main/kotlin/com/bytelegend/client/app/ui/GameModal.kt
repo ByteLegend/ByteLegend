@@ -27,7 +27,6 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.client.app.engine.GAME_SCRIPT_NEXT
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
-import kotlinext.js.jso
 import org.kodein.di.DI
 import org.kodein.di.instance
 import react.ChildrenBuilder
@@ -60,12 +59,12 @@ class DefaultModalController(
     override fun showModal(content: String, title: String?) {
         show {
             if (title != null) {
-                child(BootstrapModalHeader, jso {
+                BootstrapModalHeader {
                     closeButton = true
                     BootstrapModalTitle {
                         unsafeSpan(title)
                     }
-                })
+                }
             }
 
             BootstrapModalBody {
