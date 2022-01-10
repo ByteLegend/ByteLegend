@@ -36,7 +36,7 @@ import org.w3c.dom.CanvasRenderingContext2D
  */
 class DefaultDynamicSprite(
     override val id: String,
-    final override val gameScene: GameScene,
+    override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
     override val mapDynamicSprite: GameMapDynamicSprite,
 ) : DynamicSprite, AbstractStaticLocationSprite(
