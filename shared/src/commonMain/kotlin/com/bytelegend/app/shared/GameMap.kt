@@ -280,7 +280,7 @@ enum class ConstantPoolType(
 // https://kotlin.github.io/kotlinx.serialization/kotlinx-serialization-json/kotlinx-serialization-json/kotlinx.serialization.json/-json-content-polymorphic-serializer/index.html
 object CompressedGameMapObjectSerializer : JsonContentPolymorphicSerializer<CompressedGameMapObject>(CompressedGameMapObject::class) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out CompressedGameMapObject> {
-        return when (val type = GameMapObjectType.fromIndex(element.jsonObject["type"].toString().toInt())) {
+        return when (GameMapObjectType.fromIndex(element.jsonObject["type"].toString().toInt())) {
             GameMapObjectType.GameMapText -> CompressedGameMapText.serializer()
             GameMapObjectType.GameMapRegion -> CompressedGameMapRegion.serializer()
             GameMapObjectType.GameMapPoint -> CompressedGameMapPoint.serializer()
@@ -289,7 +289,6 @@ object CompressedGameMapObjectSerializer : JsonContentPolymorphicSerializer<Comp
             GameMapObjectType.GameMapMission -> CompressedGameMapMission.serializer()
             GameMapObjectType.GameMapEntrancePoint -> CompressedGameMapEntrancePoint.serializer()
             GameMapObjectType.GameMapEntranceDestinationPoint -> CompressedGameMapEntrancePoint.serializer()
-            else -> throw IllegalStateException("Unsupported type: $type")
         }
     }
 }
