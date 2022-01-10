@@ -118,9 +118,13 @@ class OpenSourceSoftwareTable : AsyncLoadingTable<AsyncLoadingTableState>() {
             }
         }
         td {
-            a {
-                href = rowData.licenseUrl.toString()
-                target = AnchorTarget._blank
+            if (rowData.licenseUrl) {
+                a {
+                    href = rowData.licenseUrl.toString()
+                    target = AnchorTarget._blank
+                    +(rowData.license.toString())
+                }
+            } else {
                 +(rowData.license.toString())
             }
         }
