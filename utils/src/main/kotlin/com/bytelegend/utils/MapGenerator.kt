@@ -647,25 +647,6 @@ class ImageReader {
         return img.getRGBA(x, y)
     }
 
-    private fun BufferedImage.getRGBA(x: Int, y: Int): RGBA {
-        return getRGB(x, y).let {
-            if (type == BufferedImage.TYPE_BYTE_BINARY)
-                RGBA(
-                    ((it and 0xff0000) ushr 16),
-                    ((it and 0xff00) ushr 8),
-                    (it and 0xff),
-                    0xff
-                )
-            else
-                RGBA(
-                    ((it and 0xff0000) ushr 16),
-                    ((it and 0xff00) ushr 8),
-                    (it and 0xff),
-                    ((it.toLong() and 0xff000000) ushr 24).toInt()
-                )
-        }
-    }
-
     fun read(image: File): List<List<RGBA>> {
         val img = getImage(image)
         val ret = ArrayList<List<RGBA>>()

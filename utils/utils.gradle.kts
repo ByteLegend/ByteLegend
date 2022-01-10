@@ -49,41 +49,32 @@ dependencies {
     implementation(libs("batik-swing"))
     implementation(libs("commonmark"))
     implementation(libs("commonmark-ext-task-list-items"))
+    implementation("com.madgag:animated-gif-lib:1.4")
 
     testImplementation(libs("junit-jupiter-api"))
     testImplementation(libs("junit-jupiter-engine"))
     testImplementation(libs("junit-jupiter-params"))
 }
 
-fun registerJavaExecInRootProject(name: String, mainClassName: String, action: JavaExec.() -> Unit): TaskProvider<JavaExec> = tasks.register<JavaExec>(name) {
-    classpath = project.sourceSets["main"].runtimeClasspath
-    workingDir = rootProject.rootDir
-    mainClass.set(mainClassName)
-    action()
-}
-
-registerJavaExecInRootProject("createNewMap", "com.bytelegend.utils.CreateNewMapKt") {
-    doFirst {
-        jvmArgs(
-            "-DmapId=${System.getProperty("mapId") ?: throw IllegalArgumentException("No mapId!")}",
-            "-DmapGridWidth=${System.getProperty("mapGridWidth") ?: throw IllegalArgumentException("No mapGridWidth!")}",
-            "-DmapGridHeight=${System.getProperty("mapGridHeight") ?: throw IllegalArgumentException("No mapGridHeight!")}",
-            "-Dapple.awt.UIElement=true"
-        )
+fun registerJavaExecInRootProject(name: String, mainClassName: String, systemPropertiesToRedirect: List<String> = emptyList(), action: JavaExec.() -> Unit = {}): TaskProvider<JavaExec> =
+    tasks.register<JavaExec>(name) {
+        doFirst {
+            systemPropertiesToRedirect.forEach {
+                jvmArgs("-D${it}=${System.getProperty(it) ?: throw IllegalArgumentException("No system property $it!")}")
+            }
+        }
+        jvmArgs("-Dapple.awt.UIElement=true")
+        classpath = project.sourceSets["main"].runtimeClasspath
+        workingDir = rootProject.rootDir
+        mainClass.set(mainClassName)
+        action()
     }
-}
 
-registerJavaExecInRootProject("createEmptyMissionYamls", "com.bytelegend.utils.CreateEmptyMissionYamlsKt") {
-    doFirst {
-        jvmArgs(
-            "-DmapId=${System.getProperty("mapId") ?: throw IllegalArgumentException("No mapId!")}",
-            "-Dapple.awt.UIElement=true"
-        )
-    }
-}
-
-val checkLicenses = registerJavaExecInRootProject("checkLicenses", "com.bytelegend.utils.CheckLicensesKt") {}
-registerJavaExecInRootProject("addLicenses", "com.bytelegend.utils.AddLicensesKt") {}
+registerJavaExecInRootProject("createNewMap", "com.bytelegend.utils.CreateNewMapKt", listOf("mapId", "mapGridWidth", "mapGridHeight"))
+registerJavaExecInRootProject("createEmptyMissionYamls", "com.bytelegend.utils.CreateEmptyMissionYamlsKt", listOf("mapId"))
+registerJavaExecInRootProject("extractGifFrames", "com.bytelegend.utils.GifFramesExtractorKt", listOf("inputGif"))
+val checkLicenses = registerJavaExecInRootProject("checkLicenses", "com.bytelegend.utils.CheckLicensesKt")
+registerJavaExecInRootProject("addLicenses", "com.bytelegend.utils.AddLicensesKt")
 
 tasks.named("check") {
     dependsOn(checkLicenses)
