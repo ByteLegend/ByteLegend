@@ -52,6 +52,7 @@ data class OpenSourceLibrary(
 }
 
 enum class OpenSourceLicense(val url: String) {
+    Free(""),
     GPL("https://www.gnu.org/licenses/gpl-3.0.en.html"),
     BSD("https://en.wikipedia.org/wiki/BSD_licenses"),
     BSD2Clause("https://opensource.org/licenses/BSD-2-Clause"),
@@ -61,5 +62,5 @@ enum class OpenSourceLicense(val url: String) {
     EDL("https://www.eclipse.org/org/documents/edl-v10.php"),
     ISC("https://en.wikipedia.org/wiki/ISC_license"),
     WTFPL("https://en.wikipedia.org/wiki/WTFPL"),
-    GreenSockStanardLicense("https://greensock.com/standard-license/")
+    GreenSockStandardLicense("https://greensock.com/standard-license/")
 }
