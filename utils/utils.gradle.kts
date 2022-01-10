@@ -49,7 +49,7 @@ dependencies {
     implementation(libs("batik-swing"))
     implementation(libs("commonmark"))
     implementation(libs("commonmark-ext-task-list-items"))
-    implementation("com.madgag:animated-gif-lib:1.4")
+    implementation(libs("animated-gif-lib-for-java"))
 
     testImplementation(libs("junit-jupiter-api"))
     testImplementation(libs("junit-jupiter-engine"))

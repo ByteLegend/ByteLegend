@@ -17,11 +17,12 @@ import com.bytelegend.buildsupport.OpenSourceLibrary
 import com.bytelegend.buildsupport.OpenSourceLicense.Apache2
 import com.bytelegend.buildsupport.OpenSourceLicense.BSD2Clause
 import com.bytelegend.buildsupport.OpenSourceLicense.EDL
-import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStanardLicense
+import com.bytelegend.buildsupport.OpenSourceLicense.GreenSockStandardLicense
 import com.bytelegend.buildsupport.OpenSourceLicense.ISC
+import com.bytelegend.buildsupport.OpenSourceLicense.LGPL
 import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
-import com.bytelegend.buildsupport.OpenSourceLicense.LGPL
+import com.bytelegend.buildsupport.OpenSourceLicense.Free
 
 val forestVersion = "0.3.16-SNAPSHOT"
 val vertxVersion = "4.1.2"
@@ -91,6 +92,7 @@ val unifiedDiffParserVersion = "1.4"
 val jgitVersion = "5.13.0.202109080827-r"
 val checkstyleVersion = "8.32"
 val hub4jGitHubApiVersion = "1.301"
+val animatedGifLibVersion = "1.4"
 
 val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("core-kotlin", "io.forestframework:core-kotlin", forestVersion),
@@ -200,7 +202,7 @@ val dependencies: List<OpenSourceLibrary> = listOf(
     OpenSourceLibrary("org.testcontainers:junit-jupiter:$testContainersVersion"),
     OpenSourceLibrary("org.kodein.di:kodein-di:$kodeinVersion"),
 
-    OpenSourceLibrary("GSAP", "https://greensock.com/", GreenSockStanardLicense),
+    OpenSourceLibrary("GSAP", "https://greensock.com/", GreenSockStandardLicense),
     OpenSourceLibrary("fireworks-canvas", "https://github.com/tswaters/fireworks", WTFPL),
 
     OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-react:$kotlinReactVersion"),
@@ -346,7 +348,8 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         creditName = "jgit",
         url = "https://www.eclipse.org/jgit/",
         license = EDL
-    ), OpenSourceLibrary(
+    ),
+    OpenSourceLibrary(
         name = "checkstyle",
         groupArtifactId = "com.puppycrawl.tools:checkstyle",
         version = checkstyleVersion,
@@ -381,7 +384,15 @@ val dependencies: List<OpenSourceLibrary> = listOf(
         creditName = "remark-gfm",
         url = "https://github.com/remarkjs/remark-gfm",
         license = MIT
-    )
+    ),
+    OpenSourceLibrary(
+        name = "animated-gif-lib-for-java",
+        groupArtifactId = "com.madgag:animated-gif-lib",
+        version = animatedGifLibVersion,
+        creditName = "animated-gif-lib-for-java",
+        url = "https://github.com/rtyley/animated-gif-lib-for-java",
+        license = Free
+    ),
 )
 
 val nameToLib = mutableMapOf<String, OpenSourceLibrary>()
