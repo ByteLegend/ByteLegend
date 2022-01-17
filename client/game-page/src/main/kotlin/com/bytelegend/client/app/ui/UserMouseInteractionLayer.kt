@@ -69,8 +69,6 @@ import react.create
   Note that you don't need to respond to window.onresize event, Game.viewport responds to that event.
  */
 
-const val USER_MOUSE_INTERACTION_LAYER_ID = "user-mouse-interaction-layer"
-
 class UserMouseInteractionLayer : GameUIComponent<GameProps, State>() {
     override fun render() = Fragment.create {
         absoluteDiv(
@@ -81,7 +79,6 @@ class UserMouseInteractionLayer : GameUIComponent<GameProps, State>() {
             zIndex = Layer.UserMouseInteraction.zIndex(),
             className = "user-mouse-interaction-layer"
         ) {
-            it.id = USER_MOUSE_INTERACTION_LAYER_ID
             it.onClick = {
                 game.eventBus.emit(MOUSE_CLICK_EVENT, toGameMouseEvent(it))
             }
