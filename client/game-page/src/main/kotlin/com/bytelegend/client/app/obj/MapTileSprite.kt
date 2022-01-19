@@ -34,23 +34,23 @@ fun RawGameMapTileLayer.toSprite(
     gameScene: GameScene,
     coordinate: GridCoordinate,
     tileset: HTMLImageElement
-): BackgroundSpriteLayer =
+): BackgroundLayer =
     if (this is RawStaticImageLayer) {
-        StaticImageBlockSprite(gameScene, coordinate, tileset, this)
+        StaticImageBlockBackgroundLayer(gameScene, coordinate, tileset, this)
     } else {
-        AnimationSprite(gameScene, coordinate, tileset, this as RawAnimationLayer)
+        AnimationBlockBackgroundLayer(gameScene, coordinate, tileset, this as RawAnimationLayer)
     }
 
-interface BackgroundSpriteLayer : Sprite {
+interface BackgroundLayer : Sprite {
     fun prerenderFrame(frameIndex: Int, canvas: CanvasRenderingContext2D)
 }
 
-class StaticImageBlockSprite(
+class StaticImageBlockBackgroundLayer(
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
     private val tileset: HTMLImageElement,
     private val imageLayer: RawStaticImageLayer
-) : BackgroundSpriteLayer, CoordinateAware {
+) : BackgroundLayer, CoordinateAware {
     override val id: String = "${gridCoordinate.x}-${gridCoordinate.y}-${imageLayer.layer}"
     override val layer: Int = imageLayer.layer
     override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite, GameObjectRole.CoordinateAware)
@@ -89,12 +89,12 @@ class StaticImageBlockSprite(
     }
 }
 
-class AnimationSprite(
+class AnimationBlockBackgroundLayer(
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
     private val tileset: HTMLImageElement,
     private val animationLayer: RawAnimationLayer
-) : BackgroundSpriteLayer, CoordinateAware {
+) : BackgroundLayer, CoordinateAware {
     override val id: String = "${gridCoordinate.x}-${gridCoordinate.y}-${animationLayer.layer}"
     override val layer: Int = animationLayer.layer
     override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite.toString(), GameObjectRole.CoordinateAware.toString())

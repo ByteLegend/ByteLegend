@@ -27,4 +27,6 @@ data class RGBA(
     val g: Int,
     val b: Int,
     val a: Int
-)
+) {
+    fun isOpaque() = a > 5
+}

@@ -21,6 +21,7 @@ import com.bytelegend.app.client.api.GameContainerSizeAware
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneContainer
+import com.bytelegend.app.client.api.ItemManager
 import com.bytelegend.app.client.api.Logger
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.Timestamp
@@ -69,6 +70,7 @@ fun init(gameInitData: GameInitData): Game {
         bind<GameRuntime>() with eagerSingleton { Game(di, gameInitData) }
         bind<GameControl>() with singleton { GameControl(di) }
         bind<WebSocketClient>() with singleton { WebSocketClient(di) }
+        bind<ItemManager>() with singleton { DefaultItemManager(di) }
     }
     val runtime by di.instance<GameRuntime>()
     return runtime as Game
@@ -92,6 +94,7 @@ class Game(
     override val locale: Locale by di.instance()
     override val eventBus: EventBus by di.instance()
     override val sceneContainer: GameSceneContainer by di.instance()
+    override val itemManager: ItemManager by di.instance()
     override val elapsedTimeSinceStart: Long
         get() = startTime.elapsedTimeMs()
     override var gameContainerSize: PixelSize

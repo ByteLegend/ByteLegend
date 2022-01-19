@@ -26,6 +26,7 @@ import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.client.api.configureBookSprite
+import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GIT_ISLAND
@@ -34,6 +35,8 @@ import com.bytelegend.app.shared.INVITER_ID_STATE
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.mapEntranceId
@@ -41,6 +44,9 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.Element
 import org.w3c.dom.get
+import kotlin.math.PI
+import kotlin.math.atan
+import kotlin.math.sqrt
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
 const val NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE = "OldManGotCoffee"
@@ -203,6 +209,7 @@ fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
 fun GameScene.configureMissionTowers() {
     val helpers = GameScriptHelpers(this@configureMissionTowers)
 
+    val teslaCoils = mutableListOf<CoordinateAware>()
     objects.getByRole<DynamicSprite>(GameObjectRole.Mission).forEach { mission ->
         if (mission.mapDynamicSprite.id == "MissionTower") {
             helpers.configureAnimation(mission, 2)
@@ -210,7 +217,18 @@ fun GameScene.configureMissionTowers() {
                 helpers.configureAnimation(mission, 2)
             }
         }
+        if (mission.mapDynamicSprite.id == "TeslaCoil") {
+            teslaCoils.add(mission)
+            helpers.configureAnimation(mission, 6, 200)
+            helpers.addMissionRepaintCallback(mission) {
+                helpers.configureAnimation(mission, 6, 200)
+            }
+        }
     }
+
+//    window.setInterval({
+//        thunderCurrentAnimation(teslaCoils[Random.nextInt(teslaCoils.size)], objects.getById<GameMission>("JavaBasicStructure"))
+//    }, 10_000)
 }
 
 fun GameScene.configureStarByteLegendBook() {
@@ -299,6 +317,44 @@ fun GameScene.billboard() = objects {
             for (y in 0 until 2) {
                 tileCoordinates.add(billboard + GridCoordinate(x, y))
             }
+        }
+    }
+}
+
+fun GameScene.thunderCurrentAnimation(startMission: CoordinateAware, endObject: CoordinateAware) {
+    scripts("thunder-current-${uuid()}") {
+        animation {
+            animationId = "ThunderCurrent"
+            audioId = "ThunderCurrentAudio"
+            frameDurationMs = 200
+            loop = 1
+            onDraw = { canvas, frameIndex ->
+                val start = startMission.pixelCoordinate + PixelSize(16, 0)
+                val end = endObject.pixelCoordinate + PixelSize(16, 16)
+
+                val startPointOnCanvas = start - canvasState.getCanvasCoordinateInMap()
+                val endPointOnCanvas = end - canvasState.getCanvasCoordinateInMap()
+
+                canvas.translate(startPointOnCanvas.x.toDouble(), startPointOnCanvas.y.toDouble())
+                canvas.rotate(PI - atan(1.0 * (endPointOnCanvas.x - startPointOnCanvas.x) / (endPointOnCanvas.y - startPointOnCanvas.y)))
+
+                val distance =
+                    sqrt(1.0 * (endPointOnCanvas.y - startPointOnCanvas.y) * (endPointOnCanvas.y - startPointOnCanvas.y) + (endPointOnCanvas.x - startPointOnCanvas.x) * (endPointOnCanvas.x - startPointOnCanvas.x))
+                val frameSize = gameMapAnimation.frameSize
+                canvas.drawImage(
+                    image.htmlElement, frameSize.width.toDouble() * frameIndex, 0.0, frameSize.width.toDouble(), frameSize.height.toDouble(),
+                    -45.0, 0.0, frameSize.width.toDouble(), distance + 32
+                )
+            }
+        }
+        animation("e-shock", 200, 1) { canvas, frameIndex ->
+            val frameSize = gameMapAnimation.frameSize
+            val end = endObject.pixelCoordinate - PixelSize(8, 8)
+            val endPointOnCanvas = end - canvasState.getCanvasCoordinateInMap()
+            canvas.drawImage(
+                image.htmlElement, frameSize.width.toDouble() * frameIndex, 0.0, frameSize.width.toDouble(), frameSize.height.toDouble(),
+                endPointOnCanvas.x.toDouble(), endPointOnCanvas.y.toDouble(), 48.0, 48.0
+            )
         }
     }
 }

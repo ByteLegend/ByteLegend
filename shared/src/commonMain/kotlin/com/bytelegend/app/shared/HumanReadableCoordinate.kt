@@ -126,6 +126,7 @@ data class PixelCoordinate(val x: Int, val y: Int) {
     fun alignToTileBorder(tileSize: PixelSize) = this / tileSize * tileSize
     fun compress(): List<Int> = listOf(x, y)
     operator fun plus(tileSize: PixelSize) = PixelCoordinate(x + tileSize.width, y + tileSize.height)
+    operator fun minus(tileSize: PixelSize) = PixelCoordinate(x - tileSize.width, y - tileSize.height)
 }
 
 data class Ratio(val horizontal: Double, val vertical: Double)

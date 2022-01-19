@@ -49,11 +49,11 @@ class GameScriptHelpers(val gameScene: GameScene) {
         gameScene.gameRuntime.eventBus.on(closeMissionModalEvent(mission.id), callback)
     }
 
-    fun configureAnimation(sprite: DynamicSprite, animationFrameNumber: Int) {
+    fun configureAnimation(sprite: DynamicSprite, animationFrameNumber: Int, animationFrameDurationMs: Int = 500) {
         if (gameScene.challengeAnswers.missionAccomplished(sprite.id)) {
             sprite.animation = StaticFrame(animationFrameNumber)
         } else {
-            sprite.animation = sprite.mapDynamicSprite.animationWithFixedInterval(500, animationFrameNumber)
+            sprite.animation = sprite.mapDynamicSprite.animationWithFixedInterval(animationFrameDurationMs, animationFrameNumber)
         }
     }
 

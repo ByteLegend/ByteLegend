@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package com.bytelegend.app.client.api
+package com.bytelegend.client.app.engine
+
+import com.bytelegend.app.client.api.ItemManager
+import org.kodein.di.DI
 
 /**
- * We need to update a mission, like update the star count.
+ * Manage the items.
  */
-fun missionRepaintEvent(missionId: String) = "mission.repaint.$missionId"
 
-/**
- * When hero approaches or leaves a mission tower, we emit this event and repaint mission item buttons around the hero.
- */
-fun missionItemsButtonRepaintEvent(missionId: String) = "mission.item.button.repaint.$missionId"
+class DefaultItemManager(private val di: DI) : ItemManager {
+    override fun getItemForMission(missionId: String): List<String> {
+        return emptyList()
+    }
+}

@@ -56,11 +56,20 @@ dependencies {
     testImplementation(libs("junit-jupiter-params"))
 }
 
-fun registerJavaExecInRootProject(name: String, mainClassName: String, systemPropertiesToRedirect: List<String> = emptyList(), action: JavaExec.() -> Unit = {}): TaskProvider<JavaExec> =
+fun registerJavaExecInRootProject(
+    name: String,
+    mainClassName: String,
+    mandatorySystemProperties: List<String> = emptyList(),
+    optionalSystemProperties: List<String> = emptyList(),
+    action: JavaExec.() -> Unit = {}
+): TaskProvider<JavaExec> =
     tasks.register<JavaExec>(name) {
         doFirst {
-            systemPropertiesToRedirect.forEach {
+            mandatorySystemProperties.forEach {
                 jvmArgs("-D${it}=${System.getProperty(it) ?: throw IllegalArgumentException("No system property $it!")}")
+            }
+            optionalSystemProperties.filter { System.getProperty(it) != null }.forEach {
+                jvmArgs("-D${it}=${System.getProperty(it)}")
             }
         }
         jvmArgs("-Dapple.awt.UIElement=true")
@@ -72,7 +81,17 @@ fun registerJavaExecInRootProject(name: String, mainClassName: String, systemPro
 
 registerJavaExecInRootProject("createNewMap", "com.bytelegend.utils.CreateNewMapKt", listOf("mapId", "mapGridWidth", "mapGridHeight"))
 registerJavaExecInRootProject("createEmptyMissionYamls", "com.bytelegend.utils.CreateEmptyMissionYamlsKt", listOf("mapId"))
-registerJavaExecInRootProject("extractGifFrames", "com.bytelegend.utils.GifFramesExtractorKt", listOf("inputGif"))
+registerJavaExecInRootProject(
+    "generateTileset", "com.bytelegend.utils.GenerateTilesetKt",
+    listOf("inputFiles", "tilesetName", "groupType"), listOf("outputFrameWidth", "backgroundColor")
+)
+registerJavaExecInRootProject(
+    "addTilesetToMap", "com.bytelegend.utils.AddTilesetToMapKt",
+    listOf("tilesetName", "groupType"), listOf("mapId")
+) {
+    mustRunAfter("generateTileset")
+}
+
 val checkLicenses = registerJavaExecInRootProject("checkLicenses", "com.bytelegend.utils.CheckLicensesKt")
 registerJavaExecInRootProject("addLicenses", "com.bytelegend.utils.AddLicensesKt")
 

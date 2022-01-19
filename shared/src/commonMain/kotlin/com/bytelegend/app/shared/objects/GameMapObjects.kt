@@ -64,9 +64,10 @@ enum class GameMapObjectType(
     GameMapCurve(4),
 
     /**
-     * A special layer in "DynamicSprite" group layer.
+     * A special layer in "DynamicSprites" group layer.
      */
     GameMapDynamicSprite(5),
+
     GameMapMission(6),
 
     /**
@@ -74,7 +75,12 @@ enum class GameMapObjectType(
      * across different maps. The name must be "{mapX}-{mapY}-entrance-point"
      */
     GameMapEntrancePoint(7),
-    GameMapEntranceDestinationPoint(8);
+    GameMapEntranceDestinationPoint(8),
+
+    /**
+     * A special layer in "Animations" group layer.
+     */
+    GameMapAnimation(9);
 
     companion object {
         fun fromIndex(index: Int): GameMapObjectType = values()[index - 1]

@@ -58,6 +58,7 @@ import com.bytelegend.client.app.ui.MapSelectionDropdownProps
 import com.bytelegend.client.app.ui.MapTitleWidgets
 import com.bytelegend.client.app.ui.MapTitleWidgetsProps
 import com.bytelegend.client.app.ui.MiniMap
+import com.bytelegend.client.app.ui.MissionItemButtons
 import com.bytelegend.client.app.ui.OnlineCounter
 import com.bytelegend.client.app.ui.OnlineCounterProps
 import com.bytelegend.client.app.ui.PlayerNames
@@ -230,6 +231,7 @@ class GamePage() : Component<Props, GamePageState>() {
                     }
                     livestreamIndicators(this)
                     bouncingTitleWidgets(this)
+                    missionItemButtons(this)
                     tileCursorWidget(this)
                     heroControlButton(this)
                     spriteNameWidget(this)
@@ -384,6 +386,13 @@ class GamePage() : Component<Props, GamePageState>() {
         block: GameProps.() -> Unit = {}
     ) {
         gameChild(parentProps, BouncingTitles::class.react, block)
+    }
+
+    private fun missionItemButtons(
+        parentProps: GameContainerProps,
+        block: GameProps.() -> Unit = {}
+    ) {
+        gameChild(parentProps, MissionItemButtons::class.react, block)
     }
 
     private fun spriteNameWidget(

@@ -23,6 +23,7 @@ import com.bytelegend.app.shared.ConstantPoolType.BlockerGameTile
 import com.bytelegend.app.shared.ConstantPoolType.NonBlockerGameTile
 import com.bytelegend.app.shared.ConstantPoolType.StaticImageLayer
 import com.bytelegend.app.shared.annotations.JsonIgnore
+import com.bytelegend.app.shared.objects.CompressedGameMapAnimation
 import com.bytelegend.app.shared.objects.CompressedGameMapCurve
 import com.bytelegend.app.shared.objects.CompressedGameMapDynamicObject
 import com.bytelegend.app.shared.objects.CompressedGameMapEntrancePoint
@@ -33,6 +34,7 @@ import com.bytelegend.app.shared.objects.CompressedGameMapRegion
 import com.bytelegend.app.shared.objects.CompressedGameMapText
 import com.bytelegend.app.shared.objects.GameMapObject
 import com.bytelegend.app.shared.objects.GameMapObjectType
+import com.bytelegend.app.shared.objects.GameMapObjectType.*
 import com.bytelegend.app.shared.util.HashBiMap
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.InternalSerializationApi
@@ -281,14 +283,15 @@ enum class ConstantPoolType(
 object CompressedGameMapObjectSerializer : JsonContentPolymorphicSerializer<CompressedGameMapObject>(CompressedGameMapObject::class) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out CompressedGameMapObject> {
         return when (GameMapObjectType.fromIndex(element.jsonObject["type"].toString().toInt())) {
-            GameMapObjectType.GameMapText -> CompressedGameMapText.serializer()
-            GameMapObjectType.GameMapRegion -> CompressedGameMapRegion.serializer()
-            GameMapObjectType.GameMapPoint -> CompressedGameMapPoint.serializer()
-            GameMapObjectType.GameMapCurve -> CompressedGameMapCurve.serializer()
-            GameMapObjectType.GameMapDynamicSprite -> CompressedGameMapDynamicObject.serializer()
-            GameMapObjectType.GameMapMission -> CompressedGameMapMission.serializer()
-            GameMapObjectType.GameMapEntrancePoint -> CompressedGameMapEntrancePoint.serializer()
-            GameMapObjectType.GameMapEntranceDestinationPoint -> CompressedGameMapEntrancePoint.serializer()
+            GameMapText -> CompressedGameMapText.serializer()
+            GameMapRegion -> CompressedGameMapRegion.serializer()
+            GameMapPoint -> CompressedGameMapPoint.serializer()
+            GameMapCurve -> CompressedGameMapCurve.serializer()
+            GameMapDynamicSprite -> CompressedGameMapDynamicObject.serializer()
+            GameMapMission -> CompressedGameMapMission.serializer()
+            GameMapEntrancePoint -> CompressedGameMapEntrancePoint.serializer()
+            GameMapEntranceDestinationPoint -> CompressedGameMapEntrancePoint.serializer()
+            GameMapAnimation -> CompressedGameMapAnimation.serializer()
         }
     }
 }

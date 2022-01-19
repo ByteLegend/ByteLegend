@@ -2,12 +2,36 @@
 <html lang="{LANG}">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.8, maximum-scale=0.8, minimum-scale=0.8, user-scalable=no" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=0.8, maximum-scale=0.8, minimum-scale=0.8, user-scalable=no"/>
     <title>{TITLE}</title>
     <link rel="icon" href="{RRBD}/img/icon/favicon.ico">
     <link rel="stylesheet" href="{RRBD}/lib/bootstrap/4.6.0/bootstrap.min.css">
     <link rel="stylesheet" href="{RRBD}/css/common.css">
     <link rel="stylesheet" href="{RRBD}/lib/prism/prism.css">
+    <style>
+        .mission-item-button {
+            background-image: url('{RRBD}/img/ui/item-btn.png');
+        }
+
+        .mission-item-button-disabled {
+            background-image: url('{RRBD}/img/ui/item-btn-pressed.png');
+        }
+
+        .mission-item-button-animation {
+            animation: changeBg 0.5s infinite;
+        }
+
+        @keyframes changeBg {
+            0%, 100% {
+                background-image: url('{RRBD}/img/ui/item-btn-pressed.png');
+            }
+            50% {
+                background-image: url('{RRBD}/img/ui/item-btn.png');
+            }
+        }
+
+    </style>
 </head>
 <body>
 <div id="app"></div>

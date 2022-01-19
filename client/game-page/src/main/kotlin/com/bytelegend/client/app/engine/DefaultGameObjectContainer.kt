@@ -23,7 +23,7 @@ import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.GridCoordinateAware
-import com.bytelegend.client.app.obj.BackgroundSpriteLayer
+import com.bytelegend.client.app.obj.BackgroundLayer
 import com.bytelegend.client.app.obj.toSprite
 import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.JSObjectBackedMap
@@ -36,8 +36,8 @@ class DefaultGameObjectContainer(
 
     // {"y" -> { "x" ->  {id1:obj1, id2:obj2} }}
     private val objectsByCoordinate: MutableMap<String, MutableMap<String, IdGameObjectContainer>> = JSObjectBackedMap()
-    val background: Array<Array<List<BackgroundSpriteLayer>>> = gameScene.map.rawTiles.mapToArrayWithIndex { it, coordinate ->
-        val list = JSArrayBackedList<BackgroundSpriteLayer>()
+    val background: Array<Array<List<BackgroundLayer>>> = gameScene.map.rawTiles.mapToArrayWithIndex { it, coordinate ->
+        val list = JSArrayBackedList<BackgroundLayer>()
         it.layers.forEach {
             list.add(it.toSprite(gameScene, coordinate, gameScene.tileset.htmlElement))
         }

@@ -768,7 +768,7 @@ div.speech-bubble::after {
     height: 128px;
 }
 
-.submit-answer-button-button>span {
+.submit-answer-button-button > span {
     flex: 0 0 80px;
 }
 
@@ -816,3 +816,32 @@ div.speech-bubble::after {
     pointer-events: none;
 }
 
+.mission-item-button:hover {
+    filter: drop-shadow(0 0 20px #fdec6e);
+    transition: all 0.2s ease-in;
+}
+
+.mission-title-buttons-layer {
+    pointer-events: none;
+}
+
+.mission-item-button {
+    user-select: none;
+    pointer-events: auto;
+    cursor: pointer;
+    background-size: 100% 100%;
+}
+
+.mission-item-button > .spinner-border {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+}
+
+.mission-item-button > img {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 40px;
+    height: 40px;
+}

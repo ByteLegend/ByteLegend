@@ -20,6 +20,7 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.missionRepaintEvent
+import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
@@ -64,7 +65,7 @@ interface WebEditorProps : GameProps {
 }
 
 class WebEditor : Component<WebEditorProps, WebEditorState>() {
-    private val webEditorIframeId = "webeditor-${com.bytelegend.client.app.obj.uuid()}"
+    private val webEditorIframeId = "webeditor-${uuid()}"
 
     private val missionRepaintEventListener: EventListener<ChallengeUpdateEventData> = this::onChallengeAnswersUpdate
     private val liveLogStreamEventListener: EventListener<LogStreamEventData> = this::onLiveLogStream

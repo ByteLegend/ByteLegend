@@ -20,7 +20,7 @@ import com.bytelegend.app.client.api.Sprite
 import com.bytelegend.app.shared.PLAYER_LAYER
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.obj.BackgroundSpriteLayer
+import com.bytelegend.client.app.obj.BackgroundLayer
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.utils.JSArrayBackedList
 import com.bytelegend.client.utils.JSObjectBackedMap
@@ -193,8 +193,8 @@ class MainMapCanvasRenderer(
          }
      */
     @Suppress("ReplaceManualRangeWithIndicesCalls")
-    private fun layersAbovePlayerLayer(layers: List<BackgroundSpriteLayer>): List<BackgroundSpriteLayer> {
-        val ret = JSArrayBackedList<BackgroundSpriteLayer>()
+    private fun layersAbovePlayerLayer(layers: List<BackgroundLayer>): List<BackgroundLayer> {
+        val ret = JSArrayBackedList<BackgroundLayer>()
 
         for (i in 0 until layers.size) {
             if (layers[i].layer > PLAYER_LAYER) {

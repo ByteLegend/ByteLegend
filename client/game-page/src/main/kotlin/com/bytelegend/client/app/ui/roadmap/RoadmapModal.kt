@@ -17,6 +17,7 @@
 
 package com.bytelegend.client.app.ui.roadmap
 
+import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAlertLink
 import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
@@ -27,7 +28,6 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.obj.downloadURI
-import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.absoluteDiv

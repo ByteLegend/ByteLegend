@@ -21,7 +21,7 @@ enum class Layer {
     PlayerNames,
     UserMouseInteraction,
     BouncingTitle,
-    MissionTitlePullRequestAnswerButton,
+    MissionItemButton,
     ScrollButtons,
     HeroControlButton,
     MiniMapCanvas,

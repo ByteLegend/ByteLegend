@@ -30,6 +30,7 @@ import com.bytelegend.app.shared.RawGameMapTileLayer
 import com.bytelegend.app.shared.RawStaticImageLayer
 import com.bytelegend.app.shared.RawTileAnimationFrame
 import com.bytelegend.app.shared.map
+import com.bytelegend.app.shared.objects.GameMapAnimation
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.github.utils.generated.TiledMap
 import com.bytelegend.github.utils.generated.TiledTileset
@@ -110,6 +111,9 @@ class MapGenerator(
         val image = tilesetFile.parentFile.resolve(tileset.image)
         TilesetAndImage(tileset, image, it.firstgid.toInt())
     }
+    private val nameToTilesetMap: Map<String, TilesetAndImage> by lazy {
+        tilesets.associateBy { it.tileset.name }
+    }
 
     private val imageReader: ImageReader = ImageReader()
     private val tilesetWriter: TilesetImageWriter = TilesetImageWriter(outputDir.resolve("tileset.png"))
@@ -142,6 +146,7 @@ class MapGenerator(
         when {
             layer.name == BLOCKERS_LAYER_NAME -> emptyList()
             layer.name == DYNAMIC_SPRITES_GROUP_NAME -> emptyList()
+            layer.name == ANIMATION_LAYER_GROUP_NAME -> emptyList()
             !layer.visible -> emptyList()
             layer.type == TILE_LAYER_TYPE -> listOf(layer)
             layer.type == "group" -> layer.layers.filter { it.visible }.map {
@@ -213,7 +218,7 @@ class MapGenerator(
         // validate the mission points on map.
         // it's required that all of them should be 0, because game scripts will put blockers on these points.
         tiledObjectReader.missions.forEach { missioin ->
-            require(dynamicSpriteReader.dynamicSprites.containsKey(missioin.sprite)) { "Mission ${missioin.id}'s spriate ${missioin.sprite} not found!" }
+            require(dynamicSpriteReader.dynamicSprites.containsKey(missioin.sprite)) { "Mission ${missioin.id}'s sprite ${missioin.sprite} not found!" }
             val ds: GameMapDynamicSprite = dynamicSpriteReader.dynamicSprites.getValue(missioin.sprite)
             for (y in 0 until ds.size.height) {
                 for (x in 0 until ds.size.width) {
@@ -246,7 +251,7 @@ class MapGenerator(
             GridSize(tiledMap.width.toInt(), tiledMap.height.toInt()),
             tiledMap.getTileSize(),
             destTiles as List<List<RawGameMapTile>>,
-            tiledObjectReader.readRawObjects() + dynamicSpriteReader.dynamicSprites.values
+            tiledObjectReader.readRawObjects() + dynamicSpriteReader.dynamicSprites.values + readAnimations()
         )
         val compressedMap = rawMap.compress()
         require(compressedMap.decompress().compress() == compressedMap)
@@ -256,6 +261,14 @@ class MapGenerator(
         }
 
         outputCompressedMapJson.writeText(uglyObjectMapper.writeValueAsString(compressedMap))
+    }
+
+    private fun readAnimations(): List<GameMapAnimation> {
+        return tiledMap.layers.firstOrNull { it.name == ANIMATION_LAYER_GROUP_NAME }
+            ?.layers?.map {
+                val tileset = nameToTilesetMap.getValue(it.name).tileset
+                GameMapAnimation(it.name, PixelSize((tileset.imagewidth / tileset.tilecount).toInt(), tileset.imageheight.toInt()), tileset.tilecount.toInt())
+            } ?: emptyList()
     }
 
     private fun initDestTilesetImage() {
@@ -551,8 +564,8 @@ class MapGenerator(
             // the sprite can cross multiple tiles.
             val firstTileIndex = data.indexOfFirst { it != 0L }
             val lastTileIndex = data.indexOfLast { it != 0L }
-            val firstTileCoordinate = GridCoordinate(firstTileIndex % tiledMap.width.toInt(), firstTileIndex / tiledMap.width.toInt())
-            val lastTileCoordinate = GridCoordinate(lastTileIndex % tiledMap.width.toInt(), lastTileIndex / tiledMap.width.toInt())
+            val firstTileCoordinate = GridCoordinate(firstTileIndex % width.toInt(), firstTileIndex / width.toInt())
+            val lastTileCoordinate = GridCoordinate(lastTileIndex % width.toInt(), lastTileIndex / width.toInt())
 
             val subArrayWidth = abs(lastTileCoordinate.x - firstTileCoordinate.x + 1)
             val subArrayHeight = abs(lastTileCoordinate.y - firstTileCoordinate.y + 1)
@@ -567,7 +580,7 @@ class MapGenerator(
                 for (x in 0 until subArrayWidth) {
                     val realX = x + firstTileCoordinate.x
                     val realY = y + firstTileCoordinate.y
-                    val tileLayer: TileLayer = resolveTile(data[realY * tiledMap.width.toInt() + realX].toInt(), 0 /* dummy */)
+                    val tileLayer: TileLayer = resolveTile(data[realY * width.toInt() + realX].toInt(), 0 /* dummy */)
                     val blocks =
                         if (tileLayer is StaticTileImageLayer)
                             listOf(tileLayer.tile)

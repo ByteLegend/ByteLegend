@@ -15,8 +15,8 @@
  */
 package com.bytelegend.client.app.external
 
+import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.client.app.engine.logger
-import com.bytelegend.client.app.obj.uuid
 import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
