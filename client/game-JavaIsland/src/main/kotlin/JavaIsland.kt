@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.bytelegend.app.client.api.AnimationBuilder
 import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.FramePlayingAnimation
@@ -25,6 +26,7 @@ import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.StaticFrame
+import com.bytelegend.app.client.api.animationWithFixedInterval
 import com.bytelegend.app.client.api.configureBookSprite
 import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.shared.COFFEE
@@ -37,6 +39,7 @@ import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.CoordinateAware
+import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.mapEntranceId
@@ -196,7 +199,7 @@ fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
                         AnimationFrame(2, 500),
                         AnimationFrame(3, 500)
                     ),
-                    repeating = false
+                    repetitive = false
                 )
                 window.setTimeout({
                     mission.animation = StaticFrame(3)
@@ -321,13 +324,24 @@ fun GameScene.billboard() = objects {
     }
 }
 
-fun GameScene.thunderCurrentAnimation(startMission: CoordinateAware, endObject: CoordinateAware) {
+fun GameScene.thunderCurrentAnimation(startMission: GameMission, endObject: CoordinateAware) {
     scripts("thunder-current-${uuid()}") {
-        animation {
+        val sprite = objects.getById<GameMapDynamicSprite>("TeslaCoilAttack")
+        startMission.mapDynamicSprite = sprite
+        startMission.animation = sprite.animationWithFixedInterval(100, 0, false)
+        val frameNumber = sprite.frames[0][0].size
+
+        val attackAnimationDuration = frameNumber * 100L
+
+        compositeAnimation(AnimationBuilder().apply {
             animationId = "ThunderCurrent"
             audioId = "ThunderCurrentAudio"
-            frameDurationMs = 200
-            loop = 1
+            frameDurationMs = 100
+            initDelayMs = attackAnimationDuration
+            onStart = {
+                startMission.mapDynamicSprite = objects.getById("TeslaCoil")
+                startMission.animation = startMission.mapDynamicSprite.animationWithFixedInterval(200, 0, true)
+            }
             onDraw = { canvas, frameIndex ->
                 val start = startMission.pixelCoordinate + PixelSize(16, 0)
                 val end = endObject.pixelCoordinate + PixelSize(16, 16)
@@ -346,16 +360,20 @@ fun GameScene.thunderCurrentAnimation(startMission: CoordinateAware, endObject: 
                     -45.0, 0.0, frameSize.width.toDouble(), distance + 32
                 )
             }
-        }
-        animation("e-shock", 200, 1) { canvas, frameIndex ->
-            val frameSize = gameMapAnimation.frameSize
-            val end = endObject.pixelCoordinate - PixelSize(8, 8)
-            val endPointOnCanvas = end - canvasState.getCanvasCoordinateInMap()
-            canvas.drawImage(
-                image.htmlElement, frameSize.width.toDouble() * frameIndex, 0.0, frameSize.width.toDouble(), frameSize.height.toDouble(),
-                endPointOnCanvas.x.toDouble(), endPointOnCanvas.y.toDouble(), 48.0, 48.0
-            )
-        }
+        }, AnimationBuilder().apply {
+            animationId = "e-shock"
+            frameDurationMs = 100
+            initDelayMs = attackAnimationDuration + 300
+            onDraw = { canvas, frameIndex ->
+                val frameSize = gameMapAnimation.frameSize
+                val end = endObject.pixelCoordinate - PixelSize(8, 8)
+                val endPointOnCanvas = end - canvasState.getCanvasCoordinateInMap()
+                canvas.drawImage(
+                    image.htmlElement, frameSize.width.toDouble() * frameIndex, 0.0, frameSize.width.toDouble(), frameSize.height.toDouble(),
+                    endPointOnCanvas.x.toDouble(), endPointOnCanvas.y.toDouble(), 48.0, 48.0
+                )
+            }
+        })
     }
 }
 

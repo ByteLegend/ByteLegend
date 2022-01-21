@@ -18,7 +18,6 @@
 package com.bytelegend.client.app.script
 
 import com.bytelegend.app.client.api.AnimationBuilder
-import com.bytelegend.app.client.api.AnimationSprite
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.HERO_ID
@@ -57,11 +56,11 @@ import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
-import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLElement
 import react.ElementType
 import react.react
@@ -305,30 +304,65 @@ class DefaultGameDirector(
         scripts.add(RemoveItemScript(item, targetCoordinate))
     }
 
-    override fun animation(animationId: String, frameDurationMs: Int, loop: Int, onDraw: AnimationSprite.(CanvasRenderingContext2D, Int) -> Unit) {
-        animation {
-            this.animationId = animationId
-            this.frameDurationMs = frameDurationMs
-            this.loop = loop
-            this.onDraw = onDraw
-        }
-    }
-
     override fun animation(action: AnimationBuilder.() -> Unit) {
         val builder = AnimationBuilder()
         builder.action()
-        require(!isMainChannel || builder.loop != 0) { "Infinite animation loop in main channel is not allowed!" }
-        require(!builder.animationId.isNullOrEmpty()) { "Animation is empty!" }
+        compositeAnimation(builder)
+    }
+
+    override fun compositeAnimation(vararg builders: AnimationBuilder) {
+        builders.forEach {
+            require(!isMainChannel || it.loop != 0) { "Infinite animation loop in main channel is not allowed!" }
+            require(!it.animationId.isNullOrEmpty()) { "Animation is empty!" }
+        }
 
         scripts.add(RunSuspendFunctionScript(false) {
-            val audioDataAsync = builder.audioId?.let { game.resourceLoader.loadAsync(AudioResource(it, game.resolve("/audio/${builder.audioId!!}.mp3")), false) }
-            val imageData = game.resourceLoader.loadAsync(ImageResource(builder.animationId!!, game.resolve("/img/animations/${builder.animationId!!}.png")), false).await()
-            audioDataAsync?.await()?.apply { playAudio(builder.audioId!!) }
+            (builders.filter { it.audioId != null }
+                .map {
+                    game.resourceLoader.loadAsync(
+                        AudioResource(it.audioId!!, game.resolve("/audio/${it.audioId!!}.mp3")),
+                        false
+                    )
+                } + builders.map { game.resourceLoader.loadAsync(ImageResource(it.animationId!!, game.resolve("/img/animations/${it.animationId!!}.png")), false) }).awaitAll()
 
-            DefaultAnimationSprite(gameScene, imageData, gameScene.objects.getById(builder.animationId!!), builder.frameDurationMs, builder.loop, builder.onDraw) {
-                next()
-            }.init()
+            var runningAnimationNumber = builders.size
+
+            builders.forEach {
+                if (it.audioId != null) {
+                    window.setTimeout({ playAudio(it.audioId!!) }, it.initDelayMs.toInt())
+                }
+                DefaultAnimationSprite(
+                    gameScene,
+                    game.resourceLoader.getLoadedResource(it.animationId!!),
+                    gameScene.objects.getById(it.animationId!!),
+                    it.frameDurationMs,
+                    it.loop,
+                    it.initDelayMs,
+                    onDraw = it.onDraw,
+                    onClose = {
+                        it.onEnd()
+                        if (--runningAnimationNumber == 0) {
+                            next()
+                        }
+                    }
+                ).init()
+                if (it.initDelayMs == 0L) {
+                    it.onStart()
+                } else {
+                    window.setTimeout(it.onStart, it.initDelayMs.toInt())
+                }
+            }
         })
+    }
+
+    override fun sleep(ms: Long) {
+        scripts.add(RunSuspendFunctionScript(true) {
+            delay(ms)
+        })
+    }
+
+    override fun runSuspend(fn: suspend () -> Unit) {
+        scripts.add(RunSuspendFunctionScript(true, fn))
     }
 
     inner class BeginnerGuideScript : GameScript {

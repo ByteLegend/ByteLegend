@@ -38,7 +38,7 @@ class DefaultDynamicSprite(
     override val id: String,
     override val gameScene: GameScene,
     override val gridCoordinate: GridCoordinate,
-    override val mapDynamicSprite: GameMapDynamicSprite,
+    override var mapDynamicSprite: GameMapDynamicSprite,
 ) : DynamicSprite, AbstractStaticLocationSprite(
     gridCoordinate,
     gridCoordinate * gameScene.map.tileSize

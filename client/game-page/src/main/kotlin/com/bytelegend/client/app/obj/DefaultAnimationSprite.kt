@@ -31,17 +31,18 @@ class DefaultAnimationSprite(
     override val gameScene: GameScene,
     override val image: ImageResourceData,
     override val gameMapAnimation: GameMapAnimation,
-    private val frameDurationMs: Int,
+    private val frameDurationMs: Long,
     /**
      * How many times it should be looped. 0 means infinite loop
      */
-    private val loop: Int,
+    private val loop: Int = 1,
+    private val initDelayMs: Long = 0,
     private val onDraw: AnimationSprite.(CanvasRenderingContext2D, Int) -> Unit,
     private val onClose: () -> Unit = {}
 ) : AnimationSprite {
     override val id: String = "${gameMapAnimation.id}-${uuid()}"
     override val layer: Int = gameMapAnimation.layer
-    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite)
+    override val roles: Set<String> = jsObjectBackedSetOf(GameObjectRole.Sprite.toString(), GameObjectRole.Animation.toString())
     private var startTimeMs: Long = 0
 
     fun init() {
@@ -52,26 +53,28 @@ class DefaultAnimationSprite(
     override fun outOfCanvas(): Boolean = false
 
     private fun close() {
-        this.onClose()
+        onClose()
         gameScene.objects.remove<GameObject>(this.id)
     }
 
     override fun draw(canvas: CanvasRenderingContext2D) {
-        val frame = determineFrame()
-        if (frame == -1) {
-            close()
-        } else {
-            canvas.save()
-            onDraw(canvas, frame)
-            canvas.restore()
+        val elapsedTimeMs = currentTimeMillis() - startTimeMs
+        if (elapsedTimeMs >= initDelayMs) {
+            val frame = determineFrame(elapsedTimeMs - initDelayMs)
+            if (frame == -1) {
+                close()
+            } else {
+                canvas.save()
+                onDraw(canvas, frame)
+                canvas.restore()
+            }
         }
     }
 
     /**
      * Returns current frame to draw. Returns -1 if the animation is over.
      */
-    private fun determineFrame(): Int {
-        val elapsedTimeMs = currentTimeMillis() - startTimeMs
+    private fun determineFrame(elapsedTimeMs: Long): Int {
         if (loop == 0 || elapsedTimeMs < frameDurationMs * gameMapAnimation.frameCount * loop) {
             return ((elapsedTimeMs / frameDurationMs).toInt()) % gameMapAnimation.frameCount
         } else {

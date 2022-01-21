@@ -40,7 +40,7 @@ interface Sprite : GameObject {
 }
 
 interface DynamicSprite : CoordinateAware, Sprite {
-    val mapDynamicSprite: GameMapDynamicSprite
+    var mapDynamicSprite: GameMapDynamicSprite
 
     var animation: Animation
     var onClickFunction: UnitFunction?

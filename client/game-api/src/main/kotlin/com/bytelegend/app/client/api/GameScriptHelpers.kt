@@ -24,6 +24,7 @@ import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import kotlinx.browser.window
 
+// TODO this should not in `game-api` module
 /**
  * We have to use instance method due to the defect of current module loading mechanism
  */
@@ -78,7 +79,7 @@ class GameScriptHelpers(val gameScene: GameScene) {
                         AnimationFrame(2, 300),
                         AnimationFrame(3, 300)
                     ),
-                    repeating = false
+                    repetitive = false
                 )
                 window.setTimeout({
                     mission.animation = StaticFrame(3)

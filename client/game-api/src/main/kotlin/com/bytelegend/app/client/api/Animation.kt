@@ -42,7 +42,7 @@ class AnimationFrame(
  */
 class FramePlayingAnimation(
     private val frames: Array<AnimationFrame>,
-    private val repeating: Boolean = true
+    private val repetitive: Boolean = true
 ) : Animation {
     override val isStatic: Boolean = false
     private val startTime = Timestamp.now()
@@ -55,7 +55,7 @@ class FramePlayingAnimation(
     // Note this is the index of `frames`, not the original `GameMapDynamicSprite.frames`
     override fun getNextFrameIndex(): Int {
         var elapsedTimeMs = startTime.elapsedTimeMs()
-        if (!repeating && elapsedTimeMs >= totalTime) {
+        if (!repetitive && elapsedTimeMs >= totalTime) {
             return frames.last().index
         }
         elapsedTimeMs %= totalTime
@@ -66,7 +66,7 @@ class FramePlayingAnimation(
             }
             elapsedTimeMs -= frames[currentIndex].durationMs
             if (currentIndex == frames.size - 1) {
-                if (repeating) {
+                if (repetitive) {
                     currentIndex = 0
                 } else {
                     return frames[currentIndex].index

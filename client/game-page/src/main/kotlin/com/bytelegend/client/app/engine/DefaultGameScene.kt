@@ -146,7 +146,6 @@ class DefaultGameScene(
         val bottom = min(gridCoordinate.y + range, map.size.height - 1)
         for (x in left..right) {
             for (y in top..bottom) {
-                console.log("Checking: $x $y")
                 objects.getByCoordinate(GridCoordinate(x, y))
                     .filter { it.roles.contains(GameObjectRole.Mission.toString()) }
                     .forEach { ret.add(it.unsafeCast<GameMission>()) }

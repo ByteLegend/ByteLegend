@@ -21,6 +21,7 @@ import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.misc.getAudioElementOrNull
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
+import com.bytelegend.app.shared.objects.GameObjectRole.UnableToBeSetAsDestination
 import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.browser.document
@@ -77,7 +78,11 @@ class GameControl(
         val scene = gameSceneContainer.activeScene!!.unsafeCast<DefaultGameScene>()
         val gameObjects = scene.objects.getByCoordinate(coordinate)
 
-        gameObjects.forEach { it.onClick() }
+        var canBeSetAsDestination = true
+        gameObjects.forEach {
+            canBeSetAsDestination = !it.roles.contains(UnableToBeSetAsDestination.toString())
+            it.onClick()
+        }
 
         if (!online) {
             gameRuntime.toastController.addToast(
@@ -88,6 +93,7 @@ class GameControl(
         }
 
         if (online &&
+            canBeSetAsDestination &&
             game._hero != null &&
             gameRuntime.activeScene == game._hero!!.gameScene &&
             gameRuntime.activeScene.blockers[coordinate.y][coordinate.x] == NON_BLOCKER

@@ -62,9 +62,12 @@ class SpeechBuilder {
 class AnimationBuilder {
     var animationId: String? = null
     var audioId: String? = null
-    var frameDurationMs: Int = 200
+    var initDelayMs: Long = 0
+    var frameDurationMs: Long = 200
     var loop: Int = 1
+    var onStart: () -> Unit = {}
     var onDraw: AnimationSprite.(CanvasRenderingContext2D, Int) -> Unit = { _, _ -> }
+    var onEnd: () -> Unit = {}
 }
 
 interface ScriptsBuilder {
@@ -113,12 +116,8 @@ interface ScriptsBuilder {
      * specify the destination coordinate on map.
      */
     fun removeItem(item: String, targetCoordinate: GridCoordinate? = null)
-    fun animation(
-        animationId: String,
-        frameDurationMs: Int,
-        loop: Int,
-        onDraw: AnimationSprite.(CanvasRenderingContext2D, Int) -> Unit
-    )
-
     fun animation(action: AnimationBuilder.() -> Unit)
+    fun compositeAnimation(vararg builders: AnimationBuilder)
+    fun sleep(ms: Long)
+    fun runSuspend(fn: suspend () -> Unit)
 }
