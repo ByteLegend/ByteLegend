@@ -17,6 +17,7 @@
 
 package com.bytelegend.client.app.script
 
+import com.bytelegend.app.client.api.AnimationBuilder
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.HERO_ID
@@ -37,6 +38,9 @@ import com.bytelegend.client.app.engine.GameMouseEvent
 import com.bytelegend.client.app.engine.calculateCoordinateInGameContainer
 import com.bytelegend.client.app.engine.getIconUrl
 import com.bytelegend.client.app.engine.logger
+import com.bytelegend.client.app.engine.resource.AudioResource
+import com.bytelegend.client.app.engine.resource.ImageResource
+import com.bytelegend.client.app.obj.DefaultAnimationSprite
 import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.obj.character.NPC
 import com.bytelegend.client.app.script.effect.itemPopupEffect
@@ -52,6 +56,7 @@ import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
@@ -225,7 +230,7 @@ class DefaultGameDirector(
     }
 
     fun suspendAnimation(fn: SuspendUnitFunction) {
-        scripts.add(RunSuspendFunctionScript(fn))
+        scripts.add(RunSuspendFunctionScript(fn = fn))
     }
 
     override fun characterMove(characterId: String, destMapCoordinate: GridCoordinate, onArrival: UnitFunction) {
@@ -297,6 +302,67 @@ class DefaultGameDirector(
 
     override fun removeItem(item: String, targetCoordinate: GridCoordinate?) {
         scripts.add(RemoveItemScript(item, targetCoordinate))
+    }
+
+    override fun animation(action: AnimationBuilder.() -> Unit) {
+        val builder = AnimationBuilder()
+        builder.action()
+        compositeAnimation(builder)
+    }
+
+    override fun compositeAnimation(vararg builders: AnimationBuilder) {
+        builders.forEach {
+            require(!isMainChannel || it.loop != 0) { "Infinite animation loop in main channel is not allowed!" }
+            require(!it.animationId.isNullOrEmpty()) { "Animation is empty!" }
+        }
+
+        scripts.add(RunSuspendFunctionScript(false) {
+            (builders.filter { it.audioId != null }
+                .map {
+                    game.resourceLoader.loadAsync(
+                        AudioResource(it.audioId!!, game.resolve("/audio/${it.audioId!!}.mp3")),
+                        false
+                    )
+                } + builders.map { game.resourceLoader.loadAsync(ImageResource(it.animationId!!, game.resolve("/img/animations/${it.animationId!!}.png")), false) }).awaitAll()
+
+            var runningAnimationNumber = builders.size
+
+            builders.forEach {
+                if (it.audioId != null) {
+                    window.setTimeout({ playAudio(it.audioId!!) }, it.initDelayMs.toInt())
+                }
+                DefaultAnimationSprite(
+                    gameScene,
+                    game.resourceLoader.getLoadedResource(it.animationId!!),
+                    gameScene.objects.getById(it.animationId!!),
+                    it.frameDurationMs,
+                    it.loop,
+                    it.initDelayMs,
+                    onDraw = it.onDraw,
+                    onClose = {
+                        it.onEnd()
+                        if (--runningAnimationNumber == 0) {
+                            next()
+                        }
+                    }
+                ).init()
+                if (it.initDelayMs == 0L) {
+                    it.onStart()
+                } else {
+                    window.setTimeout(it.onStart, it.initDelayMs.toInt())
+                }
+            }
+        })
+    }
+
+    override fun sleep(ms: Long) {
+        scripts.add(RunSuspendFunctionScript(true) {
+            delay(ms)
+        })
+    }
+
+    override fun runSuspend(fn: suspend () -> Unit) {
+        scripts.add(RunSuspendFunctionScript(true, fn))
     }
 
     inner class BeginnerGuideScript : GameScript {
@@ -391,7 +457,7 @@ class DefaultGameDirector(
             }
         }
 
-        fun itemDisappearAnimation() {
+        private fun itemDisappearAnimation() {
             GlobalScope.launch {
                 gameRuntime.heroPlayer.items.remove(item)
                 gameRuntime.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
@@ -401,12 +467,15 @@ class DefaultGameDirector(
     }
 
     inner class RunSuspendFunctionScript(
+        private val autoNext: Boolean = true,
         private val fn: suspend () -> Unit
     ) : GameScript {
         override fun start() {
             GlobalScope.launch {
                 fn()
-                next()
+                if (autoNext) {
+                    next()
+                }
             }
         }
     }

@@ -24,7 +24,8 @@ import kotlinx.serialization.Serializable
 
 /**
  * Dynamic objects aren't displayed on the map directly, but added by game script
- * dynamically. It might have outer glow effect, switch animation frames on demand, etc.
+ * dynamically. A dynamic sprite's frames are stored in map global tileset,
+ * so it must have same tile size as the map (32x32)
  */
 class GameMapDynamicSprite(
     override val id: String,
@@ -33,6 +34,7 @@ class GameMapDynamicSprite(
     override val layer: Int = PLAYER_LAYER + 1
     override val roles: Set<String> = setOf()
     override val type: GameMapObjectType = GameMapObjectType.GameMapDynamicSprite
+
     // 3 dimension:
     // first/second dimension: the y/x of tiles because a sprite can cross multiple tiles.
     // third dimension: the frame coordinate of tile in tileset
@@ -55,8 +57,9 @@ data class CompressedGameMapDynamicObject(
     override val id: String,
     val frames: List<List<List<List<Int>>>>
 ) : CompressedGameMapObject {
+    @get:JsonIgnore
     override val layer: Int = PLAYER_LAYER + 1
-        @JsonIgnore get
+
     override val type: Int = GameMapObjectType.GameMapDynamicSprite.index
 
     override fun decompress() = GameMapDynamicSprite(

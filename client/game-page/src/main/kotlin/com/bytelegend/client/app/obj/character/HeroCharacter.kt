@@ -20,10 +20,12 @@ package com.bytelegend.client.app.obj.character
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.client.api.missionItemsButtonRepaintEvent
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.objects.GameObjectRole
+import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
@@ -39,6 +41,7 @@ class HeroCharacter(
         GameObjectRole.Sprite,
         GameObjectRole.Hero
     )
+    private val eventBus = gameScene.gameRuntime.eventBus
 
     override fun enterTile(gridCoordinate: GridCoordinate) {
         super.enterTile(gridCoordinate)
@@ -49,6 +52,16 @@ class HeroCharacter(
             it.id != this.id
         }.forEach {
             it.onTouch(this)
+        }
+        gameScene.unsafeCast<DefaultGameScene>().findMissionsAround(gridCoordinate).forEach {
+            eventBus.emit(missionItemsButtonRepaintEvent(it.id), null)
+        }
+    }
+
+    override fun leaveTile(gridCoordinate: GridCoordinate) {
+        super.leaveTile(gridCoordinate)
+        gameScene.unsafeCast<DefaultGameScene>().findMissionsAround(gridCoordinate).forEach {
+            eventBus.emit(missionItemsButtonRepaintEvent(it.id), null)
         }
     }
 

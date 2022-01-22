@@ -21,6 +21,7 @@ import com.bytelegend.app.client.api.Banner
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.GameRuntime
+import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.protocol.DEFAULT_REPLY_TIMEOUT_SECONDS
 import com.bytelegend.app.shared.protocol.ENTER_SCENE
@@ -49,7 +50,6 @@ import com.bytelegend.app.shared.protocol.WebSocketMessageType.UNSUBSCRIBE
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.obj.isFirefox
-import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.utils.JSObjectBackedMap
 import com.bytelegend.client.utils.parseServerEvent
 import com.bytelegend.client.utils.toSceneInitData

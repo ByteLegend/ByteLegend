@@ -73,6 +73,7 @@ enum class GameObjectRole {
     MapPoint,
     MapCurve,
     Sprite,
+    Animation,
     Hero,
     Player,
     Character,

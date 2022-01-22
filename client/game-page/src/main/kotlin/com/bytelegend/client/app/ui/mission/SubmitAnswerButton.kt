@@ -18,9 +18,9 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.client.app.engine.GAME_CLOCK_20MS_EVENT
-import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.setState

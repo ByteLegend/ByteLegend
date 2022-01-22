@@ -17,7 +17,10 @@ package com.bytelegend.app.client.api
 
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import kotlinx.browser.window
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
+// TODO this should not in `game-api` module
 fun closeMissionModalEvent(id: String) = "close.mission.modal.$id"
 fun openMissionModalEvent(id: String) = "open.mission.modal.$id"
 
@@ -40,14 +43,39 @@ fun DynamicSprite.configureBookSprite() {
     }
 }
 
+suspend fun DynamicSprite.runAnimationWithFixedInterval(spriteId: String, ms: Long, startFrameIndex: Int = 0): Int {
+    val sprite = gameScene.objects.getById<GameMapDynamicSprite>(spriteId)
+    animation = sprite.animationWithFixedInterval(ms, startFrameIndex, false)
+    val frameNumber = if (startFrameIndex == 0) sprite.frames[0][0].size else startFrameIndex
+    /*
+    Don't use delay here
+    "ClassCastException: Illegal cast
+    at Object.captureStack (webpack-internal:///./kotlin-dce-dev/kotlin.js:38600:15)
+    at ClassCastException.Exception [as constructor] (webpack-internal:///./kotlin-dce-dev/kotlin.js:38933:14)
+    at ClassCastException.RuntimeException [as constructor] (webpack-internal:///./kotlin-dce-dev/kotlin.js:38959:17)
+    at RuntimeException_init_0 (webpack-internal:///./kotlin-dce-dev/kotlin.js:38970:24)
+    at new ClassCastException (webpack-internal:///./kotlin-dce-dev/kotlin.js:39089:7)
+    at throwCCE_0 (webpack-internal:///./kotlin-dce-dev/kotlin.js:42807:13)
+    at get_DefaultDelay (webpack-internal:///./kotlin-dce-dev/kotlinx-coroutines-core.js:31316:84)
+    at get_delay (webpack-internal:///./kotlin-dce-dev/kotlinx-coroutines-core.js:2393:136)
+    at eval (webpack-internal:///./kotlin-dce-dev/kotlinx-coroutines-core.js:2378:5)
+    at eval (webpack-internal:///./kotlin-dce-dev/kotlinx-coroutines-core.js:2345:3)"
+     */
+    return suspendCoroutine { continuation ->
+        window.setTimeout({
+            continuation.resume(0)
+        }, (frameNumber * ms).toInt())
+    }
+}
+
 /**
- * Create an animation with `ms` interval, and the beginning `frameNum` frames. `frameNum=0` means all frames.
+ * Create an animation with `ms` interval, and the beginning `startFrameIndex` frames. `frameNum=0` means all frames.
  */
-fun GameMapDynamicSprite.animationWithFixedInterval(ms: Int, frameNum: Int = 0): FramePlayingAnimation {
-    val size = if (frameNum == 0) frames[0][0].size else frameNum
+fun GameMapDynamicSprite.animationWithFixedInterval(ms: Number, startFrameIndex: Int = 0, repetitive: Boolean = true): FramePlayingAnimation {
+    val size = if (startFrameIndex == 0) frames[0][0].size else startFrameIndex
     val array = emptyArray<AnimationFrame>()
     repeat(size) {
-        array[it] = (AnimationFrame(it, ms))
+        array[it] = (AnimationFrame(it, ms.toInt()))
     }
-    return FramePlayingAnimation(array)
+    return FramePlayingAnimation(array, repetitive)
 }

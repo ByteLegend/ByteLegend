@@ -18,6 +18,7 @@ package com.bytelegend.app.client.api
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.objects.CoordinateAware
+import com.bytelegend.app.shared.objects.GameMapAnimation
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import org.w3c.dom.CanvasRenderingContext2D
@@ -39,7 +40,7 @@ interface Sprite : GameObject {
 }
 
 interface DynamicSprite : CoordinateAware, Sprite {
-    val mapDynamicSprite: GameMapDynamicSprite
+    var mapDynamicSprite: GameMapDynamicSprite
 
     var animation: Animation
     var onClickFunction: UnitFunction?
@@ -47,4 +48,9 @@ interface DynamicSprite : CoordinateAware, Sprite {
 
     val pixelSize: PixelSize
         get() = mapDynamicSprite.size * gameScene.map.tileSize
+}
+
+interface AnimationSprite : Sprite {
+    val image: ImageResourceData
+    val gameMapAnimation: GameMapAnimation
 }

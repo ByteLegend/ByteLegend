@@ -62,7 +62,7 @@ fun GameScene.configureCoffeeMachine() {
                     AnimationFrame(1, 300),
                     AnimationFrame(2, 300),
                 ),
-                repeating = false
+                repetitive = false
             )
             window.setTimeout({
                 gameRuntime.eventBus.emit(openMissionModalEvent(id), null)

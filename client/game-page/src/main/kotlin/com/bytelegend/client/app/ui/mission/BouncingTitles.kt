@@ -24,13 +24,11 @@ import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
-import com.bytelegend.client.app.ui.USER_MOUSE_INTERACTION_LAYER_ID
 import com.bytelegend.client.app.ui.absoluteDiv
 import com.bytelegend.client.app.ui.setState
 import kotlinext.js.jso
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.events.MouseEvent
 import react.ChildrenBuilder
 import react.Fragment
 import react.State
@@ -67,7 +65,7 @@ class BouncingTitles : GameUIComponent<GameProps, BouncingTitlesState>() {
             width = mapPixelSize.width,
             height = mapPixelSize.height,
             zIndex = Layer.BouncingTitle.zIndex(),
-            className = "user-mouse-interaction-layer"
+            className = "bouncing-title-layer"
         ) {
             it.id = TITLES_CONTAINER_ELEMENT_ID
             if (state.objectIds == null) {
@@ -78,16 +76,6 @@ class BouncingTitles : GameUIComponent<GameProps, BouncingTitlesState>() {
                 state.objectIds!!.forEach {
                     renderOne(activeScene.objects.getById(it))
                 }
-            }
-
-            it.onClick = {
-                document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("click", it.asDynamic()))
-            }
-            it.onMouseMove = {
-                document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("mousemove", it.asDynamic()))
-            }
-            it.onMouseOut = {
-                document.getElementById(USER_MOUSE_INTERACTION_LAYER_ID)?.dispatchEvent(MouseEvent("mouseout", it.asDynamic()))
             }
         }
     }

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "tilecount",
     "tiledversion",
     "tileheight",
+    "objectalignment",
     "tiles",
     "tilewidth",
     "type",
@@ -53,6 +54,8 @@ public class TiledTileset {
     private String tiledversion;
     @JsonProperty("tileheight")
     private Long tileheight;
+    @JsonProperty("objectalignment")
+    private String objectalignment;
     @JsonProperty("tiles")
     private List<TiledTileset.Tile> tiles = new ArrayList<TiledTileset.Tile>();
     @JsonProperty("tilewidth")
@@ -60,7 +63,7 @@ public class TiledTileset {
     @JsonProperty("type")
     private String type;
     @JsonProperty("version")
-    private Double version;
+    private String version;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -86,9 +89,10 @@ public class TiledTileset {
      * @param tiles
      * @param spacing
      * @param name
+     * @param objectalignment
      * @param tilecount
      */
-    public TiledTileset(Long columns, String image, Long imageheight, Long imagewidth, Long margin, String name, Long spacing, Long tilecount, String tiledversion, Long tileheight, List<TiledTileset.Tile> tiles, Long tilewidth, String type, Double version) {
+    public TiledTileset(Long columns, String image, Long imageheight, Long imagewidth, Long margin, String name, Long spacing, Long tilecount, String tiledversion, Long tileheight, String objectalignment, List<TiledTileset.Tile> tiles, Long tilewidth, String type, String version) {
         super();
         this.columns = columns;
         this.image = image;
@@ -100,6 +104,7 @@ public class TiledTileset {
         this.tilecount = tilecount;
         this.tiledversion = tiledversion;
         this.tileheight = tileheight;
+        this.objectalignment = objectalignment;
         this.tiles = tiles;
         this.tilewidth = tilewidth;
         this.type = type;
@@ -206,6 +211,16 @@ public class TiledTileset {
         this.tileheight = tileheight;
     }
 
+    @JsonProperty("objectalignment")
+    public String getObjectalignment() {
+        return objectalignment;
+    }
+
+    @JsonProperty("objectalignment")
+    public void setObjectalignment(String objectalignment) {
+        this.objectalignment = objectalignment;
+    }
+
     @JsonProperty("tiles")
     public List<TiledTileset.Tile> getTiles() {
         return tiles;
@@ -237,12 +252,12 @@ public class TiledTileset {
     }
 
     @JsonProperty("version")
-    public Double getVersion() {
+    public String getVersion() {
         return version;
     }
 
     @JsonProperty("version")
-    public void setVersion(Double version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 
@@ -300,6 +315,10 @@ public class TiledTileset {
         sb.append('=');
         sb.append(((this.tileheight == null)?"<null>":this.tileheight));
         sb.append(',');
+        sb.append("objectalignment");
+        sb.append('=');
+        sb.append(((this.objectalignment == null)?"<null>":this.objectalignment));
+        sb.append(',');
         sb.append("tiles");
         sb.append('=');
         sb.append(((this.tiles == null)?"<null>":this.tiles));
@@ -345,6 +364,7 @@ public class TiledTileset {
         result = ((result* 31)+((this.spacing == null)? 0 :this.spacing.hashCode()));
         result = ((result* 31)+((this.name == null)? 0 :this.name.hashCode()));
         result = ((result* 31)+((this.additionalProperties == null)? 0 :this.additionalProperties.hashCode()));
+        result = ((result* 31)+((this.objectalignment == null)? 0 :this.objectalignment.hashCode()));
         result = ((result* 31)+((this.tilecount == null)? 0 :this.tilecount.hashCode()));
         return result;
     }
@@ -358,7 +378,7 @@ public class TiledTileset {
             return false;
         }
         TiledTileset rhs = ((TiledTileset) other);
-        return ((((((((((((((((this.image == rhs.image)||((this.image!= null)&&this.image.equals(rhs.image)))&&((this.margin == rhs.margin)||((this.margin!= null)&&this.margin.equals(rhs.margin))))&&((this.imageheight == rhs.imageheight)||((this.imageheight!= null)&&this.imageheight.equals(rhs.imageheight))))&&((this.imagewidth == rhs.imagewidth)||((this.imagewidth!= null)&&this.imagewidth.equals(rhs.imagewidth))))&&((this.columns == rhs.columns)||((this.columns!= null)&&this.columns.equals(rhs.columns))))&&((this.type == rhs.type)||((this.type!= null)&&this.type.equals(rhs.type))))&&((this.version == rhs.version)||((this.version!= null)&&this.version.equals(rhs.version))))&&((this.tilewidth == rhs.tilewidth)||((this.tilewidth!= null)&&this.tilewidth.equals(rhs.tilewidth))))&&((this.tiledversion == rhs.tiledversion)||((this.tiledversion!= null)&&this.tiledversion.equals(rhs.tiledversion))))&&((this.tileheight == rhs.tileheight)||((this.tileheight!= null)&&this.tileheight.equals(rhs.tileheight))))&&((this.tiles == rhs.tiles)||((this.tiles!= null)&&this.tiles.equals(rhs.tiles))))&&((this.spacing == rhs.spacing)||((this.spacing!= null)&&this.spacing.equals(rhs.spacing))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.tilecount == rhs.tilecount)||((this.tilecount!= null)&&this.tilecount.equals(rhs.tilecount))));
+        return (((((((((((((((((this.image == rhs.image)||((this.image!= null)&&this.image.equals(rhs.image)))&&((this.margin == rhs.margin)||((this.margin!= null)&&this.margin.equals(rhs.margin))))&&((this.imageheight == rhs.imageheight)||((this.imageheight!= null)&&this.imageheight.equals(rhs.imageheight))))&&((this.imagewidth == rhs.imagewidth)||((this.imagewidth!= null)&&this.imagewidth.equals(rhs.imagewidth))))&&((this.columns == rhs.columns)||((this.columns!= null)&&this.columns.equals(rhs.columns))))&&((this.type == rhs.type)||((this.type!= null)&&this.type.equals(rhs.type))))&&((this.version == rhs.version)||((this.version!= null)&&this.version.equals(rhs.version))))&&((this.tilewidth == rhs.tilewidth)||((this.tilewidth!= null)&&this.tilewidth.equals(rhs.tilewidth))))&&((this.tiledversion == rhs.tiledversion)||((this.tiledversion!= null)&&this.tiledversion.equals(rhs.tiledversion))))&&((this.tileheight == rhs.tileheight)||((this.tileheight!= null)&&this.tileheight.equals(rhs.tileheight))))&&((this.tiles == rhs.tiles)||((this.tiles!= null)&&this.tiles.equals(rhs.tiles))))&&((this.spacing == rhs.spacing)||((this.spacing!= null)&&this.spacing.equals(rhs.spacing))))&&((this.name == rhs.name)||((this.name!= null)&&this.name.equals(rhs.name))))&&((this.additionalProperties == rhs.additionalProperties)||((this.additionalProperties!= null)&&this.additionalProperties.equals(rhs.additionalProperties))))&&((this.objectalignment == rhs.objectalignment)||((this.objectalignment!= null)&&this.objectalignment.equals(rhs.objectalignment))))&&((this.tilecount == rhs.tilecount)||((this.tilecount!= null)&&this.tilecount.equals(rhs.tilecount))));
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

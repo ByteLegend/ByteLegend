@@ -65,6 +65,10 @@ interface Logger {
     fun error(message: String)
 }
 
+interface ItemManager {
+    fun getItemForMission(missionId: String): List<String>
+}
+
 interface GameRuntime {
     val hero: Character?
     val heroPlayer: Player
@@ -77,6 +81,7 @@ interface GameRuntime {
     val modalController: ModalController
     val bannerController: BannerController
     val toastController: ToastController
+    val itemManager: ItemManager
 
     fun i(textId: String, vararg args: String): String
     fun putText(textId: String, text: String)
@@ -237,8 +242,22 @@ interface GameScene : GameContainerSizeAware, GameRuntimeAware {
     val challengeAnswers: ChallengeAnswersContainer
     val logs: PullRequestLogContainer
 
+    /**
+     * Create and add a GameObject with objects DSL.
+     */
     fun objects(block: ObjectsBuilder.() -> Unit)
     fun scripts(block: ScriptsBuilder.() -> Unit)
+
+    /**
+     * Add a "script" into specific channel. Each channel can have
+     * a list of scripts, which run in sequence. By default, the script
+     * goes into "main" channel, which blocks the player interaction
+     * (e.g. speech box, players have to click the speech box before doing anything else).
+     * Scripts in other channels are executed in background, like playing an animation.
+     *
+     * The scripts are created by scripts DSL.
+     */
+    fun scripts(channel: String, block: ScriptsBuilder.() -> Unit)
 
     /**
      * Search a path in the scene, using the predicate to determine wall point.

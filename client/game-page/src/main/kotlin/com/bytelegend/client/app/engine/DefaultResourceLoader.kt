@@ -66,7 +66,7 @@ class DefaultResourceLoader(override val di: DI) : ResourceLoader, DIAware {
     override fun <T> loadAsync(resource: ExpensiveResource<out T>, blockingScene: Boolean): Deferred<T> {
         val loaded = allLoadedResources[resource.id]
         if (loaded != null) {
-            return CompletableDeferred(loaded.asDynamic())
+            return CompletableDeferred<T>(null).apply { complete(loaded.asDynamic()) }
         }
         val loading = allLoadingResources[resource.id]
         if (loading != null) {

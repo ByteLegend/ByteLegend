@@ -25,6 +25,7 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.RawGameMap
 import com.bytelegend.app.shared.mapToList
 import com.bytelegend.app.shared.mapToList4
+import com.bytelegend.app.shared.objects.CompressedGameMapAnimation
 import com.bytelegend.app.shared.objects.CompressedGameMapCurve
 import com.bytelegend.app.shared.objects.CompressedGameMapDynamicObject
 import com.bytelegend.app.shared.objects.CompressedGameMapEntrancePoint
@@ -112,6 +113,11 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
                 it.destMap,
                 it.type
             )
+        GameMapObjectType.GameMapAnimation -> CompressedGameMapAnimation(
+            it.id,
+            (it.size as Array<Int>).toList(),
+            it.count
+        )
         else -> throw IllegalStateException("Unrecognized type: ${it.type}")
     }
 }

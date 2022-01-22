@@ -16,4 +16,12 @@
 
 package com.bytelegend.app.client.api
 
+/**
+ * We need to update a mission, like update the star count.
+ */
 fun missionRepaintEvent(missionId: String) = "mission.repaint.$missionId"
+
+/**
+ * When hero approaches or leaves a mission tower, we emit this event and repaint mission item buttons around the hero.
+ */
+fun missionItemsButtonRepaintEvent(missionId: String) = "mission.item.button.repaint.$missionId"

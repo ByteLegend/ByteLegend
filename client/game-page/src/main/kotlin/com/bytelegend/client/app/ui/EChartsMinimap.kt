@@ -17,9 +17,9 @@
 
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.logger
-import com.bytelegend.client.app.obj.uuid
 import com.bytelegend.client.app.ui.minimap.getMinimapEChartsOptions
 import com.bytelegend.client.app.ui.minimap.getMinimapMapFeatures
 import kotlinext.js.jso

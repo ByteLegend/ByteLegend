@@ -19,6 +19,7 @@ import com.bytelegend.app.client.api.dsl.EMPTY_FUNCTION
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
+import org.w3c.dom.CanvasRenderingContext2D
 
 class SpeechBuilder {
     /**
@@ -56,6 +57,17 @@ class SpeechBuilder {
 
     var showYesNo: Boolean = false
     var onYes: UnitFunction = EMPTY_FUNCTION
+}
+
+class AnimationBuilder {
+    var animationId: String? = null
+    var audioId: String? = null
+    var initDelayMs: Long = 0
+    var frameDurationMs: Long = 200
+    var loop: Int = 1
+    var onStart: () -> Unit = {}
+    var onDraw: AnimationSprite.(CanvasRenderingContext2D, Int) -> Unit = { _, _ -> }
+    var onEnd: () -> Unit = {}
 }
 
 interface ScriptsBuilder {
@@ -104,4 +116,8 @@ interface ScriptsBuilder {
      * specify the destination coordinate on map.
      */
     fun removeItem(item: String, targetCoordinate: GridCoordinate? = null)
+    fun animation(action: AnimationBuilder.() -> Unit)
+    fun compositeAnimation(vararg builders: AnimationBuilder)
+    fun sleep(ms: Long)
+    fun runSuspend(fn: suspend () -> Unit)
 }

@@ -78,6 +78,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
         processResourcesTasks.add(project.createGenerateOssJsonTask())
         processResourcesTasks.add(project.createGenerateI18nJsonTask())
         processResourcesTasks.add(project.createGeneratePlayerAnimationSetTask())
+        processResourcesTasks.add(project.createCopyAnimationsTask())
 
         allMapIds.forEach {
             project.createMapGeneratorTask(it, processResourcesTasks)
@@ -295,6 +296,13 @@ class BuildGameResourcesPlugin : Plugin<Project> {
             include("hierarchy.yml")
 
             into(intermediateRRBD.resolve("map"))
+        }
+
+    private fun Project.createCopyAnimationsTask() =
+        tasks.register("copyAnimations", Copy::class.java) {
+            from(rootProject.file("resources/raw/animations"))
+
+            into(intermediateRRBD.resolve("img/animations"))
         }
 
     private fun Project.createGeneratePlayerAnimationSetTask(): TaskProvider<JavaExec> {

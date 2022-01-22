@@ -46,7 +46,7 @@ import react.react
 class DefaultGameMission(
     override val gameScene: GameScene,
     override val gameMapMission: GameMapMission,
-    override val mapDynamicSprite: GameMapDynamicSprite
+    override var mapDynamicSprite: GameMapDynamicSprite
 ) : AbstractStaticLocationSprite(
     gameMapMission.gridCoordinate,
     gameMapMission.gridCoordinate * gameScene.map.tileSize

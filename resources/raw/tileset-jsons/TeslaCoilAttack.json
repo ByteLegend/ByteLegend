@@ -1,0 +1,82 @@
+{
+  "columns" : 10,
+  "image" : "../tilesets/TeslaCoilAttack.png",
+  "imageheight" : 64,
+  "imagewidth" : 320,
+  "margin" : 0,
+  "name" : "TeslaCoilAttack",
+  "tilecount" : 20,
+  "tiledversion" : "1.7.2",
+  "tileheight" : 32,
+  "objectalignment" : "topleft",
+  "tiles" : [ {
+    "animation" : [ {
+      "duration" : 500,
+      "tileid" : 0
+    }, {
+      "duration" : 500,
+      "tileid" : 1
+    }, {
+      "duration" : 500,
+      "tileid" : 2
+    }, {
+      "duration" : 500,
+      "tileid" : 3
+    }, {
+      "duration" : 500,
+      "tileid" : 4
+    }, {
+      "duration" : 500,
+      "tileid" : 5
+    }, {
+      "duration" : 500,
+      "tileid" : 6
+    }, {
+      "duration" : 500,
+      "tileid" : 7
+    }, {
+      "duration" : 500,
+      "tileid" : 8
+    }, {
+      "duration" : 500,
+      "tileid" : 9
+    } ],
+    "id" : 0
+  }, {
+    "animation" : [ {
+      "duration" : 500,
+      "tileid" : 10
+    }, {
+      "duration" : 500,
+      "tileid" : 11
+    }, {
+      "duration" : 500,
+      "tileid" : 12
+    }, {
+      "duration" : 500,
+      "tileid" : 13
+    }, {
+      "duration" : 500,
+      "tileid" : 14
+    }, {
+      "duration" : 500,
+      "tileid" : 15
+    }, {
+      "duration" : 500,
+      "tileid" : 16
+    }, {
+      "duration" : 500,
+      "tileid" : 17
+    }, {
+      "duration" : 500,
+      "tileid" : 18
+    }, {
+      "duration" : 500,
+      "tileid" : 19
+    } ],
+    "id" : 10
+  } ],
+  "tilewidth" : 32,
+  "type" : "tileset",
+  "version" : "1.6"
+}

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.bytelegend.app.client.api.AnimationBuilder
 import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.FramePlayingAnimation
@@ -25,7 +26,9 @@ import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.StaticFrame
+import com.bytelegend.app.client.api.animationWithFixedInterval
 import com.bytelegend.app.client.api.configureBookSprite
+import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GIT_ISLAND
@@ -34,6 +37,9 @@ import com.bytelegend.app.shared.INVITER_ID_STATE
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.objects.CoordinateAware
+import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.mapEntranceId
@@ -41,6 +47,9 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.Element
 import org.w3c.dom.get
+import kotlin.math.PI
+import kotlin.math.atan
+import kotlin.math.sqrt
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
 const val NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE = "OldManGotCoffee"
@@ -190,7 +199,7 @@ fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
                         AnimationFrame(2, 500),
                         AnimationFrame(3, 500)
                     ),
-                    repeating = false
+                    repetitive = false
                 )
                 window.setTimeout({
                     mission.animation = StaticFrame(3)
@@ -203,6 +212,7 @@ fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
 fun GameScene.configureMissionTowers() {
     val helpers = GameScriptHelpers(this@configureMissionTowers)
 
+    val teslaCoils = mutableListOf<CoordinateAware>()
     objects.getByRole<DynamicSprite>(GameObjectRole.Mission).forEach { mission ->
         if (mission.mapDynamicSprite.id == "MissionTower") {
             helpers.configureAnimation(mission, 2)
@@ -210,7 +220,18 @@ fun GameScene.configureMissionTowers() {
                 helpers.configureAnimation(mission, 2)
             }
         }
+        if (mission.mapDynamicSprite.id == "TeslaCoil") {
+            teslaCoils.add(mission)
+            helpers.configureAnimation(mission, 6, 200)
+            helpers.addMissionRepaintCallback(mission) {
+                helpers.configureAnimation(mission, 6, 200)
+            }
+        }
     }
+
+//    window.setInterval({
+//        thunderCurrentAnimation(teslaCoils[Random.nextInt(teslaCoils.size)], objects.getById<GameMission>("JavaBasicStructure"))
+//    }, 10_000)
 }
 
 fun GameScene.configureStarByteLegendBook() {
@@ -300,6 +321,59 @@ fun GameScene.billboard() = objects {
                 tileCoordinates.add(billboard + GridCoordinate(x, y))
             }
         }
+    }
+}
+
+fun GameScene.thunderCurrentAnimation(startMission: GameMission, endObject: CoordinateAware) {
+    scripts("thunder-current-${uuid()}") {
+        val sprite = objects.getById<GameMapDynamicSprite>("TeslaCoilAttack")
+        startMission.mapDynamicSprite = sprite
+        startMission.animation = sprite.animationWithFixedInterval(100, 0, false)
+        val frameNumber = sprite.frames[0][0].size
+
+        val attackAnimationDuration = frameNumber * 100L
+
+        compositeAnimation(AnimationBuilder().apply {
+            animationId = "ThunderCurrent"
+            audioId = "ThunderCurrentAudio"
+            frameDurationMs = 100
+            initDelayMs = attackAnimationDuration
+            onStart = {
+                startMission.mapDynamicSprite = objects.getById("TeslaCoil")
+                startMission.animation = startMission.mapDynamicSprite.animationWithFixedInterval(200, 0, true)
+            }
+            onDraw = { canvas, frameIndex ->
+                val start = startMission.pixelCoordinate + PixelSize(16, 0)
+                val end = endObject.pixelCoordinate + PixelSize(16, 16)
+
+                val startPointOnCanvas = start - canvasState.getCanvasCoordinateInMap()
+                val endPointOnCanvas = end - canvasState.getCanvasCoordinateInMap()
+
+                canvas.translate(startPointOnCanvas.x.toDouble(), startPointOnCanvas.y.toDouble())
+                canvas.rotate(PI - atan(1.0 * (endPointOnCanvas.x - startPointOnCanvas.x) / (endPointOnCanvas.y - startPointOnCanvas.y)))
+
+                val distance =
+                    sqrt(1.0 * (endPointOnCanvas.y - startPointOnCanvas.y) * (endPointOnCanvas.y - startPointOnCanvas.y) + (endPointOnCanvas.x - startPointOnCanvas.x) * (endPointOnCanvas.x - startPointOnCanvas.x))
+                val frameSize = gameMapAnimation.frameSize
+                canvas.drawImage(
+                    image.htmlElement, frameSize.width.toDouble() * frameIndex, 0.0, frameSize.width.toDouble(), frameSize.height.toDouble(),
+                    -45.0, 0.0, frameSize.width.toDouble(), distance + 32
+                )
+            }
+        }, AnimationBuilder().apply {
+            animationId = "e-shock"
+            frameDurationMs = 100
+            initDelayMs = attackAnimationDuration + 300
+            onDraw = { canvas, frameIndex ->
+                val frameSize = gameMapAnimation.frameSize
+                val end = endObject.pixelCoordinate - PixelSize(8, 8)
+                val endPointOnCanvas = end - canvasState.getCanvasCoordinateInMap()
+                canvas.drawImage(
+                    image.htmlElement, frameSize.width.toDouble() * frameIndex, 0.0, frameSize.width.toDouble(), frameSize.height.toDouble(),
+                    endPointOnCanvas.x.toDouble(), endPointOnCanvas.y.toDouble(), 48.0, 48.0
+                )
+            }
+        })
     }
 }
 
