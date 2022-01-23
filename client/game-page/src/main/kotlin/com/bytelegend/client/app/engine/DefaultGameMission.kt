@@ -34,7 +34,7 @@ import com.bytelegend.client.app.obj.AbstractStaticLocationSprite
 import com.bytelegend.client.app.obj.draw
 import com.bytelegend.client.app.ui.mission.MissionModal
 import com.bytelegend.client.app.ui.mission.MissionTitle
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import kotlinext.js.jso
 import org.w3c.dom.CanvasRenderingContext2D
 import react.ChildrenBuilder

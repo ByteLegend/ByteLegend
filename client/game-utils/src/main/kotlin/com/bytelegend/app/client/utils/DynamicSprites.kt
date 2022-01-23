@@ -13,16 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bytelegend.app.client.api
+package com.bytelegend.app.client.utils
 
+import com.bytelegend.app.client.api.AnimationFrame
+import com.bytelegend.app.client.api.DynamicSprite
+import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.FramePlayingAnimation
+import com.bytelegend.app.client.api.Static
+import com.bytelegend.app.client.api.closeMissionModalEvent
+import com.bytelegend.app.client.api.openMissionModalEvent
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import kotlinx.browser.window
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 // TODO this should not in `game-api` module
-fun closeMissionModalEvent(id: String) = "close.mission.modal.$id"
-fun openMissionModalEvent(id: String) = "open.mission.modal.$id"
 
 fun DynamicSprite.configureBookSprite() {
     onClickFunction = {

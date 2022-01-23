@@ -26,7 +26,7 @@ import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.client.app.engine.DefaultGameMission
 import com.bytelegend.client.app.obj.htmlToText
 import com.bytelegend.client.app.ui.minimapGraphSeries
-import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSArrayBackedList
 import kotlinext.js.assign
 import kotlinext.js.jso
 

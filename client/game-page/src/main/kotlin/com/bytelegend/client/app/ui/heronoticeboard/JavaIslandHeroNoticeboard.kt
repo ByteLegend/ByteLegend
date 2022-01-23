@@ -35,7 +35,7 @@ import com.bytelegend.client.app.ui.mission.WebEditor
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.get
-import com.bytelegend.client.utils.toHeroNoticeboardTilesData
+import com.bytelegend.app.client.utils.toHeroNoticeboardTilesData
 import kotlinext.js.jso
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope

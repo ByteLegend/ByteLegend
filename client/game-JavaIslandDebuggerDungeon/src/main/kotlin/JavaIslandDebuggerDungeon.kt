@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 import com.bytelegend.app.client.api.GameRuntime
-import com.bytelegend.app.client.api.GameScriptHelpers
+import com.bytelegend.app.client.utils.GameScriptHelpers
 import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_DEBUGGER_DUNGEON

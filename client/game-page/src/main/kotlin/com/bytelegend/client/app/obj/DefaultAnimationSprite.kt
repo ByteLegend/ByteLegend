@@ -24,7 +24,7 @@ import com.bytelegend.app.shared.objects.GameMapAnimation
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.util.currentTimeMillis
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
 
 class DefaultAnimationSprite(

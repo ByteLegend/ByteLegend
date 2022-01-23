@@ -20,8 +20,8 @@ package com.bytelegend.client.app.engine
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.client.app.web.getMissionModalData
-import com.bytelegend.client.utils.JSObjectBackedMap
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI

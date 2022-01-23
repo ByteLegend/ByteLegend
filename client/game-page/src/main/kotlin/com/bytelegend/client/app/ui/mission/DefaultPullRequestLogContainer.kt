@@ -26,8 +26,8 @@ import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.logStreamEvent
 import com.bytelegend.client.app.engine.DefaultGameMission
 import com.bytelegend.client.app.web.get
-import com.bytelegend.client.utils.JSArrayBackedList
-import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async

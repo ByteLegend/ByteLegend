@@ -27,7 +27,7 @@ import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.Game
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

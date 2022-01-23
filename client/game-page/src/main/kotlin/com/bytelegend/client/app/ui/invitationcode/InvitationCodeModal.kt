@@ -40,7 +40,7 @@ import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.HttpRequestException
 import com.bytelegend.client.app.web.get
 import com.bytelegend.client.app.web.post
-import com.bytelegend.client.utils.toInvitationInformation
+import com.bytelegend.app.client.utils.toInvitationInformation
 import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope

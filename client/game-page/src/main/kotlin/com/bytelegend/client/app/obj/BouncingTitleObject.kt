@@ -22,7 +22,7 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.ui.mission.BouncingTitleWidget
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import kotlinext.js.jso
 import react.ChildrenBuilder
 import react.react

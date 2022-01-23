@@ -20,7 +20,7 @@ import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.misc.getOrCreateAudioElement
 import com.bytelegend.app.client.misc.getOrCreateImageElement
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.dom.HTMLAudioElement

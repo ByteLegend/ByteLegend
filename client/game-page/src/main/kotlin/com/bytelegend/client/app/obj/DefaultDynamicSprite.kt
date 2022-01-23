@@ -27,7 +27,7 @@ import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.atTileBorder
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
 
 /**

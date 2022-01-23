@@ -45,8 +45,8 @@ import com.bytelegend.client.app.script.effect.starFlyEffect
 import com.bytelegend.client.app.ui.STAR_INCREMENT_EVENT
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
 import com.bytelegend.client.app.ui.menu.determineMenuCoordinateInGameContainer
-import com.bytelegend.client.utils.JSArrayBackedList
-import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI

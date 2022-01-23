@@ -30,7 +30,7 @@ import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI

@@ -20,10 +20,10 @@ import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
-import com.bytelegend.client.utils.toChallengeUpdateEventData
-import com.bytelegend.client.utils.toMissionModalData
-import com.bytelegend.client.utils.toPagination
-import com.bytelegend.client.utils.toTutorial
+import com.bytelegend.app.client.utils.toChallengeUpdateEventData
+import com.bytelegend.app.client.utils.toMissionModalData
+import com.bytelegend.app.client.utils.toPagination
+import com.bytelegend.app.client.utils.toTutorial
 import kotlinext.js.jso
 import kotlinx.browser.window
 import kotlinx.coroutines.await

@@ -21,13 +21,10 @@ import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.StaticFrame
-import com.bytelegend.app.client.api.animationWithFixedInterval
-import com.bytelegend.app.client.api.configureBookSprite
 import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
@@ -43,6 +40,9 @@ import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.mapEntranceId
+import com.bytelegend.app.client.utils.GameScriptHelpers
+import com.bytelegend.app.client.utils.animationWithFixedInterval
+import com.bytelegend.app.client.utils.configureBookSprite
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.Element
@@ -228,10 +228,6 @@ fun GameScene.configureMissionTowers() {
             }
         }
     }
-
-//    window.setInterval({
-//        thunderCurrentAnimation(teslaCoils[Random.nextInt(teslaCoils.size)], objects.getById<GameMission>("JavaBasicStructure"))
-//    }, 10_000)
 }
 
 fun GameScene.configureStarByteLegendBook() {

@@ -30,7 +30,7 @@ import com.bytelegend.client.app.engine.DefaultGameSceneContainer
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.ui.mission.BouncingTitleWidget
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import kotlinext.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

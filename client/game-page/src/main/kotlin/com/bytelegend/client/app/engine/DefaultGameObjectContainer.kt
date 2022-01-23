@@ -25,8 +25,8 @@ import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.client.app.obj.BackgroundLayer
 import com.bytelegend.client.app.obj.toSprite
-import com.bytelegend.client.utils.JSArrayBackedList
-import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 
 class DefaultGameObjectContainer(
     private val gameScene: GameScene

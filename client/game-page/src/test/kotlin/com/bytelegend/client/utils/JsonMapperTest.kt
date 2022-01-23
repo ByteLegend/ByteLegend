@@ -13,14 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bytelegend.app.client.ui.icons
+package com.bytelegend.app.client.utils
 
-import react.Props
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-interface IconProps : Props {
-    var onClick: Any
-    var style: dynamic
-    var size: Int
-    var className: String
-    var title: String
+class JsonMapperTest {
+    @Test
+    fun testToMissionAnswer() {
+        val answer1 = toChallengeAnswer(
+            JSON.parse(
+                """
+            {"star": 0, "answer": "ThisIsAnswer", "accomplished": true, "time": "2021-10-25T10:11:17.323Z", "data": {}}
+        """.trimIndent()
+            )
+        )
+        assertEquals(0, answer1.star)
+        assertEquals("ThisIsAnswer", answer1.answer)
+        assertTrue(answer1.accomplished)
+        assertEquals("2021-10-25T10:11:17.323Z", answer1.time)
+    }
 }

@@ -24,8 +24,8 @@ import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.obj.outOfCanvas
-import com.bytelegend.client.utils.JSArrayBackedList
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CENTER
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.CanvasTextAlign

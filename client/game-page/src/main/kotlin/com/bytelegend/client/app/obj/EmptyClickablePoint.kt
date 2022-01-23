@@ -23,7 +23,7 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 
 class EmptyClickablePoint(
     override val id: String,

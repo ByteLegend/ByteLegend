@@ -28,9 +28,9 @@ import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.engine.uiContainerCoordinateInGameContainer
 import com.bytelegend.client.app.engine.uiContainerSize
 import com.bytelegend.client.app.web.get
-import com.bytelegend.client.utils.JSArrayBackedList
-import com.bytelegend.client.utils.JSObjectBackedStringSet
-import com.bytelegend.client.utils.toLivestreams
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSObjectBackedStringSet
+import com.bytelegend.app.client.utils.toLivestreams
 import kotlinext.js.jso
 import kotlinx.browser.localStorage
 import kotlinx.coroutines.GlobalScope

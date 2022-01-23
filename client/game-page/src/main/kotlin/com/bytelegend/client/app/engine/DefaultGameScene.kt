@@ -59,8 +59,8 @@ import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.invitationcode.InvitationCodeModal
 import com.bytelegend.client.app.ui.mission.DefaultPullRequestLogContainer
 import com.bytelegend.client.app.ui.script.Widget
-import com.bytelegend.client.utils.JSArrayBackedList
-import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinext.js.jso
 import org.kodein.di.DI
 import org.kodein.di.DIAware

@@ -15,7 +15,7 @@
  */
 @file:Suppress("UnsafeCastFromDynamic")
 
-package com.bytelegend.client.utils
+package com.bytelegend.app.client.utils
 
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition

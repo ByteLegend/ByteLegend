@@ -84,7 +84,7 @@ import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
 import com.bytelegend.client.app.ui.mission.BouncingTitles
 import com.bytelegend.client.app.ui.setState
-import com.bytelegend.client.utils.toGameInitData
+import com.bytelegend.app.client.utils.toGameInitData
 import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window

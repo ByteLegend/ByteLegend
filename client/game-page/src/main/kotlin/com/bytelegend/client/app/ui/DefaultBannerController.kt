@@ -21,7 +21,7 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.client.app.engine.GAME_CLOCK_1S_EVENT
-import com.bytelegend.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSArrayBackedList
 import kotlinext.js.jso
 import react.Fragment
 import react.State

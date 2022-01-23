@@ -49,8 +49,6 @@ dependencies {
     api(npm("react-bootstrap", libVersions("react-bootstrap")))
     api(npm("bootstrap-switch-button-react", libVersions("bootstrap-switch-button-react")))
 
-    api(npm("react-icons", libVersions("react-icons")))
-
     testImplementation(kotlin("test-js"))
 }
 

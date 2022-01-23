@@ -35,7 +35,7 @@ import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.obj.character.HeroCharacter
 import com.bytelegend.client.app.script.effect.fadeInEffect
 import com.bytelegend.client.app.web.GameSceneInitResource
-import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI

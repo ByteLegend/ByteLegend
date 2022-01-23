@@ -50,9 +50,9 @@ import com.bytelegend.app.shared.protocol.WebSocketMessageType.UNSUBSCRIBE
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.obj.isFirefox
-import com.bytelegend.client.utils.JSObjectBackedMap
-import com.bytelegend.client.utils.parseServerEvent
-import com.bytelegend.client.utils.toSceneInitData
+import com.bytelegend.app.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.parseServerEvent
+import com.bytelegend.app.client.utils.toSceneInitData
 import kotlinext.js.js
 import kotlinx.browser.window
 import kotlinx.coroutines.Deferred

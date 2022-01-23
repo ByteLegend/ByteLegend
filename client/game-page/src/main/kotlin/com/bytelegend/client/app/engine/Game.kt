@@ -40,7 +40,7 @@ import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.DefaultToastController
 import com.bytelegend.client.app.ui.ModalControllerInternal
 import com.bytelegend.client.app.web.WebSocketClient
-import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinext.js.jso
 import kotlinx.browser.localStorage
 import kotlinx.browser.window

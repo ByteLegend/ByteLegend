@@ -20,7 +20,7 @@ package com.bytelegend.client.app.engine
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.ResourceLoader
-import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope

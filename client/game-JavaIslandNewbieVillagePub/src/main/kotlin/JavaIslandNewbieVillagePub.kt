@@ -19,7 +19,7 @@ import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.GameScriptHelpers
+import com.bytelegend.app.client.utils.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.openMissionModalEvent

@@ -34,8 +34,8 @@ import com.bytelegend.client.app.obj.character.AnimationSet
 import com.bytelegend.client.app.obj.character.PlayerSprite
 import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.web.WebSocketClient
-import com.bytelegend.client.utils.JSArrayBackedList
-import com.bytelegend.client.utils.JSObjectBackedMap
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 
 /**
  * Container of all players OTHER THAN hero

@@ -17,11 +17,11 @@
 import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.api.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.shared.GIT_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND
+import com.bytelegend.app.client.utils.GameScriptHelpers
 import kotlinx.browser.window
 
 fun main() {

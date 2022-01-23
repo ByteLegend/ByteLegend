@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bytelegend.client.utils
+package com.bytelegend.app.client.utils
 
 import kotlinext.js.Object
 import kotlinext.js.jso

@@ -25,7 +25,7 @@ import com.bytelegend.app.shared.math.imageBlockOnCanvas
 import com.bytelegend.app.shared.math.outOfCanvas
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 
 fun PixelBlock.outOfCanvas(gameScene: GameScene): Boolean {
     return x > gameScene.canvasState.getCanvasPixelSize().width ||
