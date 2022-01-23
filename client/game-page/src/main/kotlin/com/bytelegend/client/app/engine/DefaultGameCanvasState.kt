@@ -17,6 +17,7 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameCanvasState
+import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.shared.Direction
@@ -30,7 +31,6 @@ import com.bytelegend.app.shared.math.adjustCanvasCoordinateIfNecessary
 import com.bytelegend.app.shared.math.calculateCanvasCoordinateInMapFromCenterPoint
 import com.bytelegend.app.shared.math.limitIn
 import com.bytelegend.app.shared.objects.GameMapPoint
-import com.bytelegend.client.app.page.game
 import kotlinx.browser.window
 import org.kodein.di.DI
 import org.kodein.di.DIAware
@@ -59,6 +59,8 @@ class DefaultGameCanvasState(
 ) : GameCanvasState, DIAware, GameMap by gameMap {
     private val sceneContainer: GameSceneContainer by di.instance()
     private val eventBus: EventBus by di.instance()
+    private val _game: GameRuntime by di.instance()
+    private val game: Game by lazy { _game.unsafeCast<Game>() }
     private val isActiveScene: Boolean
         get() = sceneContainer.activeScene?.map?.id == gameMap.id
 

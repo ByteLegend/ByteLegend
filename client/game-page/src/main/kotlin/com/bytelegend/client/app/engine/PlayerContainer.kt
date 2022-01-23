@@ -21,6 +21,8 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ResourceLoader
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.playerAnimationSetResourceId
@@ -32,10 +34,7 @@ import com.bytelegend.app.shared.protocol.playerSpeechEvent
 import com.bytelegend.client.app.engine.resource.ImageResource
 import com.bytelegend.client.app.obj.character.AnimationSet
 import com.bytelegend.client.app.obj.character.PlayerSprite
-import com.bytelegend.client.app.page.game
 import com.bytelegend.client.app.web.WebSocketClient
-import com.bytelegend.app.client.utils.JSArrayBackedList
-import com.bytelegend.app.client.utils.JSObjectBackedMap
 
 /**
  * Container of all players OTHER THAN hero
@@ -48,6 +47,9 @@ class PlayerContainer(
     private val players: List<BasePlayer>
 ) {
     lateinit var gameScene: GameScene
+    private val game: Game by lazy {
+        gameScene.gameRuntime.unsafeCast<Game>()
+    }
     private val idToPlayer: MutableMap<String, BasePlayer> = JSObjectBackedMap<BasePlayer>().apply {
         players.forEach {
             put(it.id, it)

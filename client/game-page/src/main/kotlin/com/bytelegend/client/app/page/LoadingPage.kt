@@ -18,6 +18,7 @@ package com.bytelegend.client.app.page
 import com.bytelegend.app.client.api.EventBusAware
 import com.bytelegend.client.app.engine.RESOURCE_LOADING_FAILURE_EVENT
 import com.bytelegend.client.app.engine.ResourceLoadingFailureEventListener
+import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.setState
 import common.widget.ProgressBar
@@ -25,7 +26,6 @@ import kotlinext.js.jso
 import react.ChildrenBuilder
 import react.Component
 import react.Fragment
-import react.Props
 import react.ReactNode
 import react.State
 import react.create
@@ -34,13 +34,13 @@ import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.img
 import react.react
 
-interface LoadingPageProps : Props, EventBusAware
+interface LoadingPageProps : GameProps, EventBusAware
 
 interface LoadingPageState : State {
     var errorMessages: MutableList<String>
 }
 
-class LoadingPage : Component<LoadingPageProps, LoadingPageState>() {
+class LoadingPage(props: LoadingPageProps) : Component<LoadingPageProps, LoadingPageState>(props) {
     private val resourceLoadingFailureListener: ResourceLoadingFailureEventListener = {
         setState {
             errorMessages.add(it.message)
@@ -48,7 +48,7 @@ class LoadingPage : Component<LoadingPageProps, LoadingPageState>() {
     }
 
     init {
-        game.eventBus.on(RESOURCE_LOADING_FAILURE_EVENT, resourceLoadingFailureListener)
+        props.game.eventBus.on(RESOURCE_LOADING_FAILURE_EVENT, resourceLoadingFailureListener)
         state = jso { errorMessages = mutableListOf() }
     }
 
@@ -71,7 +71,7 @@ class LoadingPage : Component<LoadingPageProps, LoadingPageState>() {
                 backgroundColor = "black"
             }
             img {
-                src = "${GAME_INIT_DATA.rrbd}/img/logo/logo.png"
+                src = "${props.game.gameInitData.rrbd}/img/logo/logo.png"
             }
         }
         div {
@@ -86,7 +86,7 @@ class LoadingPage : Component<LoadingPageProps, LoadingPageState>() {
                 fontSize = "20px"
                 fontFamily = """"Courier 10 Pitch", "Courier New", Courier, monospace"""
             }
-            +GAME_INIT_DATA.enjoyProgrammingText
+            +props.game.gameInitData.enjoyProgrammingText
         }
     }
 
@@ -106,6 +106,7 @@ class LoadingPage : Component<LoadingPageProps, LoadingPageState>() {
                     height = "10vh"
                 }
                 child(ProgressBar::class.react, jso {
+                    this.game = props.game
                     eventBus = props.eventBus
                 })
             }

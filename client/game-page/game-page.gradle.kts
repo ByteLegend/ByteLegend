@@ -31,3 +31,16 @@ dependencies {
     implementation(npm("canvas-confetti", libVersions("canvas-confetti")))
     testImplementation(kotlin("test-js"))
 }
+
+kotlin {
+    js {
+        browser {
+            testTask {
+                useKarma {
+                    useChromeHeadless()
+                }
+            }
+        }
+    }
+}
+

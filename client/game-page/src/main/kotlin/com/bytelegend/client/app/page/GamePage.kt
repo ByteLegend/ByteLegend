@@ -19,6 +19,7 @@ package com.bytelegend.client.app.page
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.WindowBasedEventBus
+import com.bytelegend.app.client.utils.toGameInitData
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.PixelSize
@@ -84,14 +85,12 @@ import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
 import com.bytelegend.client.app.ui.mission.BouncingTitles
 import com.bytelegend.client.app.ui.setState
-import com.bytelegend.app.client.utils.toGameInitData
 import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import react.ChildrenBuilder
 import react.Component
 import react.Fragment
-import react.Props
 import react.ReactNode
 import react.State
 import react.create
@@ -99,14 +98,18 @@ import react.dom.html.ReactHTML.div
 import react.dom.render
 import react.react
 
-val GAME_INIT_DATA: GameInitData = toGameInitData(window.asDynamic().gameInitData)
 const val HERO_AVATAR_IMG_ID = "hero-avatar"
 
-val game = init(GAME_INIT_DATA).apply {
-    window.asDynamic().gameRuntime = this
-}
-
 fun main() {
+    if (window.asDynamic().gameInitData == null) {
+        // this is necessary for unit test
+        console.warn("Game init data not found, abort loading.")
+        return
+    }
+    val gameInitData: GameInitData = toGameInitData(window.asDynamic().gameInitData)
+    val game = init(gameInitData).apply {
+        window.asDynamic().gameRuntime = this
+    }
     window.onerror = { a: dynamic, b: String, c: Int, d: Int, e: Any? ->
         BrowserConsoleLogger.error("$a $b $c $d $e")
     }
@@ -124,14 +127,18 @@ fun main() {
         null
     }
 
-    render(Fragment.create { child(GamePage::class.react, jso { }) }, document.getElementById("app")!!)
+    render(Fragment.create {
+        child(GamePage::class.react, jso {
+            this.game = game
+        })
+    }, document.getElementById("app")!!)
 }
 
 interface GamePageState : State {
     var sceneLoading: Boolean
 }
 
-class GamePage() : Component<Props, GamePageState>() {
+class GamePage(props: GameProps) : Component<GameProps, GamePageState>(props) {
     init {
         state = jso {
             sceneLoading = true
@@ -139,6 +146,9 @@ class GamePage() : Component<Props, GamePageState>() {
         loadResourcesAndStart()
         window.onresize = { onWindowResize() }
     }
+
+    private val game: Game
+        get() = props.game
 
     private fun loadResourcesAndStart() {
         game.resourceLoader.loadAsync(
@@ -157,11 +167,11 @@ class GamePage() : Component<Props, GamePageState>() {
         game.webSocketClient.self = game.resourceLoader.loadAsync(game.webSocketClient)
 
         if (game.heroPlayer.isAnonymous) {
-            game.sceneContainer.loadScene(GAME_INIT_DATA.initMapId) { _, _ ->
+            game.sceneContainer.loadScene(game.gameInitData.initMapId) { _, _ ->
                 game.start()
             }
         } else {
-            val animationSetId = playerAnimationSetResourceId(GAME_INIT_DATA.player.characterId)
+            val animationSetId = playerAnimationSetResourceId(game.gameInitData.player.characterId)
             val animationSetDeferred = game.resourceLoader.loadAsync(
                 ImageResource(
                     animationSetId,
@@ -176,10 +186,10 @@ class GamePage() : Component<Props, GamePageState>() {
                 false
             )
 
-            game.sceneContainer.loadScene(GAME_INIT_DATA.player.map) { _, newScene ->
+            game.sceneContainer.loadScene(game.gameInitData.player.map) { _, newScene ->
                 animationSetDeferred.await()
 
-                game._hero = HeroCharacter(newScene, GAME_INIT_DATA.player).apply { init() }
+                game._hero = HeroCharacter(newScene, game.gameInitData.player).apply { init() }
                 game.start()
             }
         }
@@ -198,6 +208,7 @@ class GamePage() : Component<Props, GamePageState>() {
             // some global resources like `common-en.json` still requires to be loaded
             // GameScene.load() doesn't take this into consideration
             child(LoadingPage::class.react, jso {
+                this.game = props.game
                 eventBus = game.eventBus
             })
         } else {

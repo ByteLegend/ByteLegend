@@ -17,6 +17,7 @@ package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.RawAnimationLayer
@@ -25,8 +26,6 @@ import com.bytelegend.app.shared.RawStaticImageLayer
 import com.bytelegend.app.shared.RawTileAnimationFrame
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.page.game
-import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLImageElement
 
@@ -142,6 +141,6 @@ class AnimationBlockBackgroundLayer(
     }
 
     private fun getCurrentFrameIndex(frames: Array<RawTileAnimationFrame>, duration: Int): Int {
-        return ((game.elapsedTimeSinceStart / duration) % frames.size).toInt()
+        return ((gameScene.gameRuntime.elapsedTimeSinceStart / duration) % frames.size).toInt()
     }
 }

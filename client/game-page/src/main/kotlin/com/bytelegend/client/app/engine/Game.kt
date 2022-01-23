@@ -88,7 +88,7 @@ val logger: Logger = BrowserConsoleLogger
 
 class Game(
     override val di: DI,
-    gameInitData: GameInitData
+    val gameInitData: GameInitData
 ) : DIAware, GameRuntime, GameContainerSizeAware {
     override val RRBD: String by di.instance(tag = "RRBD")
     override val locale: Locale by di.instance()

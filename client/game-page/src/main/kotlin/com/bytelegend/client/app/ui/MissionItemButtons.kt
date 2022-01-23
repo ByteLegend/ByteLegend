@@ -114,6 +114,7 @@ class MissionItemButton(props: MissionItemButtonProps) : Component<MissionItemBu
         props.game.eventBus.remove(missionItemsButtonRepaintEvent(props.mission.id), onRepaint)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun onRepaint(n: Nothing) {
         setState {
             disabled = distanceToHero > 2

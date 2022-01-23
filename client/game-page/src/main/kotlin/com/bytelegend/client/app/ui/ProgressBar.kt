@@ -19,12 +19,11 @@ import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapProgressBar
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
-import com.bytelegend.client.app.page.game
+import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.setState
 import kotlinext.js.jso
 import kotlinx.browser.window
 import react.Component
-import react.Props
 import react.ReactNode
 import react.State
 import react.createElement
@@ -36,11 +35,11 @@ import react.createElement
  * 2. Upon ProgressBarUpdate event, update the current progress to target progress, but never go backward.
  */
 
-external interface ProgressBarState : State {
+interface ProgressBarState : State {
     var now: Int
 }
 
-external interface ProgressBarProps : Props {
+interface ProgressBarProps : GameProps {
     var eventBus: EventBus
 }
 
@@ -60,7 +59,7 @@ class ProgressBar : Component<ProgressBarProps, ProgressBarState>() {
     }
 
     private val onProgressBarUpdate: EventListener<Nothing> = {
-        val progress = game.resourceLoader.currentProgress()
+        val progress = props.game.resourceLoader.currentProgress()
 
         // When progress == 100 and RESOURCE_LOADING_SUCCESS_EVENT is emitted,
         // GamePage might respond to that event first and unmount this component,

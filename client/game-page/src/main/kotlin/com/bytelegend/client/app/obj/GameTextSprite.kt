@@ -17,13 +17,12 @@ package com.bytelegend.client.app.obj
 
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Sprite
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapText
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.page.game
-import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
 import kotlin.math.PI
 
@@ -49,7 +48,7 @@ class GameTextSprite(
         canvas.fillStyle = "white"
         canvas.rotate(obj.rotation.toDouble() * PI / 180)
         canvas.font = "bold ${obj.fontSize}px sans-serif"
-        canvas.fillText(game.i(obj.id), 0.0, 0.0)
+        canvas.fillText(gameScene.gameRuntime.i(obj.id), 0.0, 0.0)
         canvas.restore()
     }
 
