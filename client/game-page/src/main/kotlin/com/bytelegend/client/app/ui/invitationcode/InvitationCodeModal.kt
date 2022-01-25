@@ -27,20 +27,20 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapInputGroup
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
-import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
+import com.bytelegend.app.client.utils.toInvitationInformation
 import com.bytelegend.app.shared.COIN_REWARD_PER_CODE
 import com.bytelegend.app.shared.INVITER_ID_STATE
 import com.bytelegend.app.shared.InvitationInformation
 import com.bytelegend.app.shared.MAX_COIN_REWARD_PER_CODE
 import com.bytelegend.client.app.external.codeBlock
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.HttpRequestException
 import com.bytelegend.client.app.web.get
 import com.bytelegend.client.app.web.post
-import com.bytelegend.app.client.utils.toInvitationInformation
 import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
@@ -109,9 +109,7 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : Component<GameProps
                     unsafeSpan(props.game.i("ClickHereToLogin"))
                 }
             } else if (state.loading) {
-                BootstrapSpinner {
-                    animation = "border"
-                }
+                loadingSpinner()
             } else if (props.game.heroPlayer.states.containsKey(INVITER_ID_STATE)) {
                 if (state.invitationInformation != null) {
                     unsafeDiv(

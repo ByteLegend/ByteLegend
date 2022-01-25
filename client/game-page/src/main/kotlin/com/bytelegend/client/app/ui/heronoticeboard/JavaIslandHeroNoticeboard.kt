@@ -23,7 +23,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPagination
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationItem
-import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
+import com.bytelegend.app.client.utils.toHeroNoticeboardTilesData
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTile
@@ -31,11 +31,11 @@ import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.jsStyle
+import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.mission.WebEditor
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.get
-import com.bytelegend.app.client.utils.toHeroNoticeboardTilesData
 import kotlinext.js.jso
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
@@ -150,9 +150,7 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
                 if (state.imageIsLoading || state.jsonIsLoading) {
                     div {
                         className = "center-of-parent"
-                        BootstrapSpinner {
-                            animation = "border"
-                        }
+                        loadingSpinner()
                     }
                 }
 

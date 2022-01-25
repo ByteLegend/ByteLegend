@@ -21,12 +21,12 @@ import BootstrapNavItem
 import BootstrapNavLink
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
-import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.client.app.engine.GAME_CLOCK_1S_EVENT
 import com.bytelegend.client.app.external.codeBlock
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
 import kotlinext.js.jso
@@ -105,9 +105,7 @@ class PullRequestLogModal : Component<PullRequestLogModalProps, PullRequestLogMo
                         language = "log"
                     }
                 }
-                BootstrapSpinner {
-                    animation = "border"
-                }
+                loadingSpinner()
             }
         } else {
             codeBlock {

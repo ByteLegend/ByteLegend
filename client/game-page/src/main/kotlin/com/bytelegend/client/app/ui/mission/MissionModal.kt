@@ -23,7 +23,6 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
-import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.entities.ChallengeTabData
 import com.bytelegend.app.shared.entities.DiscussionsTabData
 import com.bytelegend.app.shared.entities.HeroNoticeboardTabData
@@ -35,6 +34,7 @@ import com.bytelegend.client.app.engine.MISSION_DATA_LOAD_FINISH
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.heronoticeboard.JavaIslandHeroNoticeboard
+import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
 import kotlinext.js.jso
@@ -79,9 +79,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
             className = "mission-modal-body"
             val missions = game.activeScene.unsafeCast<DefaultGameScene>().missions
             if (missions.isMissionModalDataLoading(props.missionId)) {
-                BootstrapSpinner {
-                    animation = "border"
-                }
+                loadingSpinner()
             } else {
                 val mission = missions.getMissionModalDataById(props.missionId)
                 if (mission.tabs.isEmpty()) {

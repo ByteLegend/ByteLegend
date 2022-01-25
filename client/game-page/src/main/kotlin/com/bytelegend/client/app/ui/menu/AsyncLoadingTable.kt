@@ -18,9 +18,9 @@
 package com.bytelegend.client.app.ui.menu
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
-import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.client.ui.bootstrap.BootstrapTable
 import com.bytelegend.client.app.ui.GameProps
+import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.get
@@ -57,9 +57,7 @@ abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : Component<GamePro
         textBeforeTable()
 
         if (state.data == undefined && loading) {
-            BootstrapSpinner {
-                animation = "border"
-            }
+            loadingSpinner()
         } else if (state.data == undefined) {
             GlobalScope.launch {
                 val json = get(url)

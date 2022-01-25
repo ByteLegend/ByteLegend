@@ -19,7 +19,6 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.missionItemsButtonRepaintEvent
-import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
@@ -144,9 +143,7 @@ class MissionItemButton(props: MissionItemButtonProps) : Component<MissionItemBu
                     src = props.game.resolve("/img/icon/$item.png")
                 }
                 if (state.loading) {
-                    BootstrapSpinner {
-                        animation = "border"
-                    }
+                    loadingSpinner()
                 }
                 div.onClick = {
                     if (state.disabled) {
