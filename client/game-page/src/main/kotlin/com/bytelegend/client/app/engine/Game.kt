@@ -142,13 +142,6 @@ class Game(
     var gfw: Boolean = true
 
     fun start() {
-        heroPlayer.items.addAll(listOf(
-            "key:JavaIsland:java-field",
-            "coffee-icon",
-            "iron-sword:JavaIsland:import-class",
-            "golden-sword:GitIsland:install-git"
-        ))
-
         gameControl.start()
         globalEventHandler.start()
         animate()

@@ -39,7 +39,7 @@ data class ItemMetadata(
 /**
  * An item may be able to applied to a specific mission,
  * for example, the key to open chest 1, the key to open chest 2, etc.
- * In this way, it's stored as "{itemId}:{mapId}:{missionId}", e.g. "key:JavaIsland:install-java-ide" or "golden-sword:JavaIsland:create-a-new-class"
+ * In this way, it's stored as "{itemId}:{mapId}:{missionId}", e.g. "key:JavaIsland:install-java-ide" or "gold-sword:JavaIsland:create-a-new-class"
  */
 data class Item(
     val metadata: ItemMetadata,

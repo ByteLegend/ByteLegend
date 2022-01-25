@@ -304,6 +304,7 @@ suspend fun starFlyEffect(
 ): Unit = suspendCoroutine { continuation ->
     val canvas = document.createAndAppend<HTMLCanvasElement>("canvas") {
         id = "starfly-canvas"
+        className = "no-pointer-events"
         style.zIndex = EFFECT_Z_INDEX.toString()
         style.position = "absolute"
         width = gameContainerSize.width

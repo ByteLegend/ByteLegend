@@ -18,27 +18,44 @@ package com.bytelegend.client.app.ui.item
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
+import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.Item
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
+import com.bytelegend.client.app.ui.unsafeP
 import kotlinext.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.w3c.dom.HTMLDivElement
 import react.Component
 import react.Fragment
 import react.Props
 import react.State
 import react.create
+import react.dom.events.MouseEvent
 import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.h5
 import react.dom.html.ReactHTML.img
 import react.react
 
 interface ItemModalState : State {
     var items: Map<String, Item>
     var loading: Boolean
-    var hoveredItemId: String?
+
+    /**
+     * Id of the currently selected item. Click once to select an item and click again to unselect it.
+     * If any item is selected, hover events on other items are disabled.
+     */
+    var selectedItem: Item?
+    var hoveredItem: Item?
+
+    /**
+     * The coordinate of item description div, relative to modal body.
+     */
+    var descCoordinate: PixelCoordinate?
 }
 
 @Suppress("EXPERIMENTAL_API_USAGE")
@@ -81,7 +98,69 @@ class ItemModal : GameUIComponent<GameProps, ItemModalState>() {
                                 name = game.i(item.metadata.nameTextId)
                                 desc = game.i(item.metadata.descTextId)
                                 missionTitle = if (item.mission == null) null else game.i(item.mission.title)
+
+                                onMouseClick = {
+                                    if (state.selectedItem?.metadata?.id == id) {
+                                        setState {
+                                            selectedItem = null
+                                            descCoordinate = null
+                                        }
+                                    } else {
+                                        setState {
+                                            selectedItem = item
+                                            descCoordinate = PixelCoordinate(
+                                                it.target.asDynamic().offsetLeft + it.nativeEvent.offsetX,
+                                                it.target.asDynamic().offsetTop + it.nativeEvent.offsetY,
+                                            )
+                                        }
+                                    }
+                                }
+
+                                onMouseMove = {
+                                    if (state.selectedItem == null) {
+                                        setState {
+                                            hoveredItem = item
+                                            descCoordinate = PixelCoordinate(
+                                                it.target.asDynamic().offsetLeft + it.nativeEvent.offsetX,
+                                                it.target.asDynamic().offsetTop + it.nativeEvent.offsetY,
+                                            )
+                                        }
+                                    }
+                                }
+
+                                onMouseOut = {
+                                    if (state.selectedItem == null) {
+                                        setState {
+                                            hoveredItem = null
+                                            descCoordinate = null
+                                        }
+                                    }
+                                }
                             })
+                        }
+
+                        if (state.descCoordinate != null) {
+                            val itemName = state.selectedItem?.metadata?.nameTextId ?: state.hoveredItem?.metadata?.nameTextId
+                            val itemDesc = state.selectedItem?.metadata?.descTextId ?: state.hoveredItem?.metadata?.descTextId
+                            val itemMission = state.selectedItem?.mission ?: state.hoveredItem?.mission
+                            div {
+                                className = "item-desc"
+                                jsStyle {
+                                    top = "${state.descCoordinate!!.y + 16}px"
+                                    left = "${state.descCoordinate!!.x + 16}px"
+                                    zIndex = "${ITEM_Z_INDEX + 1}"
+                                }
+
+                                h5 {
+                                    +game.i(itemName!!)
+                                }
+
+                                if (itemMission != null) {
+                                    unsafeP(game.i("ItemCanOnlyBeUsedOnMission", game.i(itemMission.title)))
+                                }
+
+                                unsafeP(game.i(itemDesc!!))
+                            }
                         }
                     }
                 }
@@ -96,25 +175,45 @@ interface ItemAchievementModalItemProps : Props {
     var name: String
     var desc: String
     var missionTitle: String?
+
+    var onMouseClick: (MouseEvent<HTMLDivElement, *>) -> Unit
+    var onMouseMove: (MouseEvent<HTMLDivElement, *>) -> Unit
+    var onMouseOut: () -> Unit
 }
+
+private const val ITEM_Z_INDEX = 1
 
 class ItemAchievementModalItem : Component<ItemAchievementModalItemProps, State>() {
     override fun render() = Fragment.create {
         div {
             className = "item-or-achievement"
+            jsStyle {
+                zIndex = ITEM_Z_INDEX
+            }
             div {
-                className = "item-title"
+                className = "item-title no-pointer-events"
                 +props.name
             }
             img {
+                className = "no-pointer-events"
                 src = props.iconUrl
             }
 
             if (props.missionTitle != null) {
                 div {
-                    className = "item-mission-title"
+                    className = "item-mission-title no-pointer-events"
                     +props.missionTitle!!
                 }
+            }
+
+            onMouseOut = {
+                props.onMouseOut()
+            }
+            onMouseMove = {
+                props.onMouseMove(it)
+            }
+            onClick = {
+                props.onMouseClick(it)
             }
         }
     }

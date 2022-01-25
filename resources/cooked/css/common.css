@@ -784,17 +784,33 @@ div.speech-bubble::after {
     user-select: none;
 }
 
+.item-desc {
+    background-color: rgb(0, 0, 0, 0.8);
+    color: white;
+    position: absolute;
+    width: 400px;
+    padding: 16px;
+    border-radius: 2px;
+}
+
+.item-desc > h5 {
+    border-bottom: 2px dashed white;
+}
+
+.item-desc > p {
+    margin-top: 8px;
+}
+
 .achievement-item img {
     max-width: 64px;
     max-height: 64px;
 }
 
-
 .transparent-text {
     color: transparent;
 }
 
-#starfly-canvas {
+.no-pointer-events {
     pointer-events: none;
 }
 

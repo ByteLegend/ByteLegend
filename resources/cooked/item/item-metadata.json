@@ -24,9 +24,9 @@
     "descTextId": "item-silver-sword-desc"
   },
   {
-    "id": "golden-sword",
-    "icon": "/img/item/golden-sword.png",
-    "nameTextId": "item-golden-sword-name",
-    "descTextId": "item-golden-sword-desc"
+    "id": "gold-sword",
+    "icon": "/img/item/gold-sword.png",
+    "nameTextId": "item-gold-sword-name",
+    "descTextId": "item-gold-sword-desc"
   }
 ]

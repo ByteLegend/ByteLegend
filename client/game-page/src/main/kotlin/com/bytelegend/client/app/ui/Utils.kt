@@ -31,6 +31,7 @@ import react.dom.html.HTMLAttributes
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.h3
 import react.dom.html.ReactHTML.h4
+import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.span
 
 inline fun <T : Any> jso(builder1: T.() -> Unit, builder2: T.() -> Unit): T =
@@ -131,6 +132,15 @@ fun <PARENT : GameProps, CHILD : GameProps> gameChild(
         props.children = arrayOf(newChild).asDynamic()
     } else {
         props.children.asDynamic().push(newChild)
+    }
+}
+
+fun ChildrenBuilder.unsafeP(html: String, className: String = "") {
+    p {
+        this.className = className
+        dangerouslySetInnerHTML = jso {
+            __html = html
+        }
     }
 }
 
