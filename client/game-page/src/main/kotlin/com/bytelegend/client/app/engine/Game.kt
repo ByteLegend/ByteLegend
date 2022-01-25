@@ -21,11 +21,11 @@ import com.bytelegend.app.client.api.GameContainerSizeAware
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneContainer
-import com.bytelegend.app.client.api.ItemManager
 import com.bytelegend.app.client.api.Logger
 import com.bytelegend.app.client.api.ResourceLoader
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.api.WindowBasedEventBus
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.PixelCoordinate
@@ -40,7 +40,6 @@ import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.DefaultToastController
 import com.bytelegend.client.app.ui.ModalControllerInternal
 import com.bytelegend.client.app.web.WebSocketClient
-import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinext.js.jso
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
@@ -94,7 +93,7 @@ class Game(
     override val locale: Locale by di.instance()
     override val eventBus: EventBus by di.instance()
     override val sceneContainer: GameSceneContainer by di.instance()
-    override val itemManager: ItemManager by di.instance()
+    val itemManager: ItemManager by di.instance()
     override val elapsedTimeSinceStart: Long
         get() = startTime.elapsedTimeMs()
     override var gameContainerSize: PixelSize
@@ -143,6 +142,13 @@ class Game(
     var gfw: Boolean = true
 
     fun start() {
+        heroPlayer.items.addAll(listOf(
+            "key:JavaIsland:java-field",
+            "coffee-icon",
+            "iron-sword:JavaIsland:import-class",
+            "golden-sword:GitIsland:install-git"
+        ))
+
         gameControl.start()
         globalEventHandler.start()
         animate()

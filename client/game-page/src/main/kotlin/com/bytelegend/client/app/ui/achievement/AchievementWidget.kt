@@ -40,15 +40,16 @@ interface AchievementWidgetProps : GameProps
 class AchievementWidget : GameUIComponent<AchievementWidgetProps, State>() {
     override fun render() = Fragment.create {
         BootstrapListGroupItem {
+            onClick = {
+                game.modalController.show {
+                    child(AchievementModal::class.react, jso {
+                        this.game = props.game
+                    })
+                }
+            }
             div {
                 className = "map-title-text"
-                onClick = {
-                    game.modalController.show {
-                        child(AchievementModal::class.react, jso {
-                            this.game = props.game
-                        })
-                    }
-                }
+
                 if (game.locale == Locale.EN) {
                     +"Achv"
                 } else {
@@ -72,13 +73,13 @@ class AchievementModal : GameUIComponent<GameProps, AchievementModalState>() {
         BootstrapModalHeader {
             closeButton = true
             BootstrapModalTitle {
-                +i("MyAchievement")
+                +i("MyAchievements")
             }
         }
 
         BootstrapModalBody {
             div {
-                className = "achievement-modal"
+                className = "item-modal"
 
                 game.heroPlayer.achievements.forEach { renderOneAchievement(it) }
 

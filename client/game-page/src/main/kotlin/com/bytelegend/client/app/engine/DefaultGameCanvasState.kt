@@ -59,8 +59,10 @@ class DefaultGameCanvasState(
 ) : GameCanvasState, DIAware, GameMap by gameMap {
     private val sceneContainer: GameSceneContainer by di.instance()
     private val eventBus: EventBus by di.instance()
-    private val _game: GameRuntime by di.instance()
-    private val game: Game by lazy { _game.unsafeCast<Game>() }
+    private val game: Game by lazy {
+        val gameRuntime: GameRuntime by di.instance()
+        gameRuntime.unsafeCast<Game>()
+    }
     private val isActiveScene: Boolean
         get() = sceneContainer.activeScene?.map?.id == gameMap.id
 
@@ -108,7 +110,7 @@ class DefaultGameCanvasState(
         uiContainerSize = calculateUIContainerSize(gameContainerSize, canvasPixelSize)
         uiContainerCoordinateInGameContainer = calculateUIContainerCoordinateInGameContainer(gameContainerSize, uiContainerSize)
         eventBus.emit(GAME_UI_UPDATE_EVENT, Timestamp.now())
-        logger.debug("After resizing, canvasCoordinateInMap: ${canvasCoordinateInMap.x},${canvasCoordinateInMap.y}")
+        logger.debug("After resizing, canvasCoordinateInMap: $canvasCoordinateInMap canvasCoordinateInGameContainer: $canvasCoordinateInGameContainer")
     }
 
     private fun calculateUIContainerSize(gameContainerSize: PixelSize, canvasPixelSize: PixelSize): PixelSize {

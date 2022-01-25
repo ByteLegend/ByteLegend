@@ -26,6 +26,9 @@ import kotlinx.serialization.Serializable
  */
 class GameMapMission(
     override val id: String,
+    /**
+     * The i18n id of the mission title
+     */
     val title: String,
     val totalStar: Int,
     val challenges: List<String>,

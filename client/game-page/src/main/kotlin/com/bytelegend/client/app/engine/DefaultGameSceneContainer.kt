@@ -23,6 +23,8 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.ResourceLoader
+import com.bytelegend.app.client.utils.JSObjectBackedMap
+import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.objects.mapEntranceDestinationId
@@ -35,7 +37,7 @@ import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.obj.character.HeroCharacter
 import com.bytelegend.client.app.script.effect.fadeInEffect
 import com.bytelegend.client.app.web.GameSceneInitResource
-import com.bytelegend.app.client.utils.JSObjectBackedMap
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
@@ -51,7 +53,7 @@ const val SCENE_LOADING_END_EVENT = "scene.loading.end"
 fun mapJsonResourceId(mapId: String) = "$mapId-map"
 fun mapTilesetResourceId(mapId: String) = "$mapId-tileset"
 fun mapScriptResourceId(mapId: String) = "$mapId-script"
-fun mapTextResourceId(mapId: String, locale: Locale) = "$mapId-${locale.lowercase()}"
+fun mapI18nResourceId(mapId: String, locale: Locale) = "$mapId-i18n-${locale.lowercase()}"
 
 class DefaultGameSceneContainer(
     override val di: DI,
@@ -118,15 +120,17 @@ class DefaultGameSceneContainer(
         }
     }
 
+    fun loadGameMap(mapId: String, blockingScene: Boolean): Deferred<GameMap> = resourceLoader.loadAsync(GameMapResource(mapJsonResourceId(mapId), "$RRBD/map/$mapId/map.json"), blockingScene)
+    fun loadI18nResource(mapId: String, blockingScene: Boolean): Deferred<Map<String, String>> =
+        resourceLoader.loadAsync(I18nTextResource(mapI18nResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.lowercase()}.json", game.i18nTextContainer), blockingScene)
+
     @Suppress("UnsafeCastFromDynamic")
     private suspend fun createThenSwitchScene(oldScene: GameScene?, mapId: String, switchAfterLoading: Boolean, action: suspend (GameScene?, GameScene) -> Unit) {
-        val map = resourceLoader.loadAsync(GameMapResource(mapJsonResourceId(mapId), "$RRBD/map/$mapId/map.json"))
+        val map = loadGameMap(mapId, true)
+        val i18nText = loadI18nResource(mapId, true)
         val tileset = resourceLoader.loadAsync(ImageResource(mapTilesetResourceId(mapId), "$RRBD/map/$mapId/tileset.png"))
         val mapScript = resourceLoader.loadAsync(TextAjaxResource(mapScriptResourceId(mapId), "$RRBD/js/game-$mapId.js"))
-        val i18nText = resourceLoader.loadAsync(I18nTextResource(mapTextResourceId(mapId, locale), "$RRBD/i18n/$mapId/${locale.lowercase()}.json", game.i18nTextContainer))
         val sceneInitData = resourceLoader.loadAsync(GameSceneInitResource(mapId, game.webSocketClient))
-
-        i18nContainer.putAll(i18nText.await())
 
         val scene = DefaultGameScene(di, map.await(), tileset.await(), gameContainerSize)
         val initData = sceneInitData.await()

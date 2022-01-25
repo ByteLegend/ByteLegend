@@ -65,10 +65,6 @@ interface Logger {
     fun error(message: String)
 }
 
-interface ItemManager {
-    fun getItemForMission(missionId: String): List<String>
-}
-
 interface GameRuntime {
     val hero: Character?
     val heroPlayer: Player
@@ -81,7 +77,6 @@ interface GameRuntime {
     val modalController: ModalController
     val bannerController: BannerController
     val toastController: ToastController
-    val itemManager: ItemManager
 
     fun i(textId: String, vararg args: String): String
     fun putText(textId: String, text: String)

@@ -94,7 +94,6 @@ import react.Fragment
 import react.ReactNode
 import react.State
 import react.create
-import react.dom.html.ReactHTML.div
 import react.dom.render
 import react.react
 
@@ -159,11 +158,14 @@ class GamePage(props: GameProps) : Component<GameProps, GamePageState>(props) {
             )
         )
         game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg")), false)
-        game.resourceLoader.loadAsync(AudioResource("coin", game.resolve("/audio/coin.mp3")), false)
-        game.resourceLoader.loadAsync(AudioResource("starfly", game.resolve("/audio/starfly.mp3")), false)
-        game.resourceLoader.loadAsync(AudioResource("popup", game.resolve("/audio/popup.mp3")), false)
-        game.resourceLoader.loadAsync(AudioResource("achievement", game.resolve("/audio/achievement.mp3")), false)
-        game.resourceLoader.loadAsync(AudioResource("tada", game.resolve("/audio/tada.mp3")), false)
+
+        if (!game.heroPlayer.isAnonymous) {
+            game.resourceLoader.loadAsync(AudioResource("coin", game.resolve("/audio/coin.mp3")), false)
+            game.resourceLoader.loadAsync(AudioResource("starfly", game.resolve("/audio/starfly.mp3")), false)
+            game.resourceLoader.loadAsync(AudioResource("popup", game.resolve("/audio/popup.mp3")), false)
+            game.resourceLoader.loadAsync(AudioResource("achievement", game.resolve("/audio/achievement.mp3")), false)
+            game.resourceLoader.loadAsync(AudioResource("tada", game.resolve("/audio/tada.mp3")), false)
+        }
         game.webSocketClient.self = game.resourceLoader.loadAsync(game.webSocketClient)
 
         if (game.heroPlayer.isAnonymous) {
@@ -212,45 +214,43 @@ class GamePage(props: GameProps) : Component<GameProps, GamePageState>(props) {
                 eventBus = game.eventBus
             })
         } else {
-            div {
-                gameContainer(game) {
-                    heroIndicator(this)
-                    modalController(this)
-                    bannerController(this)
-                    toastController(this)
-                    userAvatarWidget(this)
-                    icpServerLocationWidget(this)
-                    gameScriptWidgetDisplayLayer(this)
-                    scrollButtons(this)
-                    userMouseInteractionLayer(this)
-                    mapTitleWidgets(Direction.LEFT, this) {
-                        mapNameWidget(this)
-                        fpsCounter(this)
-                        onlineCounter(this)
-                        mapCoordinateTitleWidget(this)
-                    }
-                    mapTitleWidgets(Direction.RIGHT, this) {
-                        audioSwitch(this)
-                        localeSelectionDropdown(this)
-                    }
-                    rightSideBarWidgets(this) {
-                        starCountWidget(this)
-                        coinCountWidget(this)
-                        reputationCountWidget(this)
-                        itemWidget(this)
-                        achievementWidget(this)
-                    }
-                    livestreamIndicators(this)
-                    bouncingTitleWidgets(this)
-                    missionItemButtons(this)
-                    tileCursorWidget(this)
-                    heroControlButton(this)
-                    spriteNameWidget(this)
-                    miniMap(this)
-                    mapCanvas(this)
-
-                    menu(this)
+            gameContainer(game) {
+                heroIndicator(this)
+                modalController(this)
+                bannerController(this)
+                toastController(this)
+                userAvatarWidget(this)
+                icpServerLocationWidget(this)
+                gameScriptWidgetDisplayLayer(this)
+                scrollButtons(this)
+                userMouseInteractionLayer(this)
+                mapTitleWidgets(Direction.LEFT, this) {
+                    mapNameWidget(this)
+                    fpsCounter(this)
+                    onlineCounter(this)
+                    mapCoordinateTitleWidget(this)
                 }
+                mapTitleWidgets(Direction.RIGHT, this) {
+                    audioSwitch(this)
+                    localeSelectionDropdown(this)
+                }
+                rightSideBarWidgets(this) {
+                    starCountWidget(this)
+                    coinCountWidget(this)
+                    reputationCountWidget(this)
+                    itemWidget(this)
+                    achievementWidget(this)
+                }
+                livestreamIndicators(this)
+                bouncingTitleWidgets(this)
+                missionItemButtons(this)
+                tileCursorWidget(this)
+                heroControlButton(this)
+                spriteNameWidget(this)
+                miniMap(this)
+                mapCanvas(this)
+
+                menu(this)
             }
         }
     }

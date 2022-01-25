@@ -1,0 +1,32 @@
+[
+  {
+    "id": "key",
+    "icon": "/img/item/key.png",
+    "nameTextId": "item-key-name",
+    "descTextId": "item-key-desc"
+  },
+  {
+    "id": "coffee-icon",
+    "icon": "/img/item/coffee-icon.png",
+    "nameTextId": "item-coffee-name",
+    "descTextId": "item-coffee-desc"
+  },
+  {
+    "id": "iron-sword",
+    "icon": "/img/item/iron-sword.png",
+    "nameTextId": "item-iron-sword-name",
+    "descTextId": "item-iron-sword-desc"
+  },
+  {
+    "id": "silver-sword",
+    "icon": "/img/item/silver-sword.png",
+    "nameTextId": "item-silver-sword-name",
+    "descTextId": "item-silver-sword-desc"
+  },
+  {
+    "id": "golden-sword",
+    "icon": "/img/item/golden-sword.png",
+    "nameTextId": "item-golden-sword-name",
+    "descTextId": "item-golden-sword-desc"
+  }
+]

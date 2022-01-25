@@ -19,8 +19,9 @@ import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.misc.getOrCreateAudioElement
 import com.bytelegend.app.client.misc.getOrCreateImageElement
-import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.client.utils.JSObjectBackedMap
+import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.client.app.engine.ItemMetadata
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.dom.HTMLAudioElement
@@ -40,6 +41,18 @@ class I18nTextResource(
         return response.text().await().let {
             val result = JSObjectBackedMap<String>(JSON.parse(it))
             i18nContainer.putAll(result)
+            result
+        }
+    }
+}
+
+class ItemDefinitionResource(id: String, url: String) : AjaxResource<Map<String, ItemMetadata>>(id, url) {
+    override suspend fun decode(response: Response): Map<String, ItemMetadata> {
+        return response.json().await().unsafeCast<Array<dynamic>>().let {
+            val result = JSObjectBackedMap<ItemMetadata>()
+            it.forEach {
+                result[it.id] = it
+            }
             result
         }
     }

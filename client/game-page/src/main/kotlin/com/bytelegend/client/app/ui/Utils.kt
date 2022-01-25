@@ -15,6 +15,7 @@
  */
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
 import csstype.px
 import kotlinext.js.assign
 import kotlinext.js.jso
@@ -33,7 +34,7 @@ import react.dom.html.ReactHTML.h4
 import react.dom.html.ReactHTML.span
 
 inline fun <T : Any> jso(builder1: T.() -> Unit, builder2: T.() -> Unit): T =
-     jso<T>().apply(builder1).apply(builder2)
+    jso<T>().apply(builder1).apply(builder2)
 
 fun js(builder1: dynamic.() -> Unit, builder2: dynamic.() -> Unit): dynamic = jso(builder1, builder2)
 
@@ -164,5 +165,11 @@ fun ChildrenBuilder.unsafeH4(html: String) {
         dangerouslySetInnerHTML = jso {
             __html = html
         }
+    }
+}
+
+fun ChildrenBuilder.loadingSpinner() {
+    BootstrapSpinner {
+        animation = "border"
     }
 }

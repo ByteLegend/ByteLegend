@@ -16,17 +16,13 @@
 package com.bytelegend.client.app.ui.item
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
-import com.bytelegend.client.app.engine.getIconUrl
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
-import com.bytelegend.client.app.ui.HistoryModal
 import kotlinext.js.jso
-import react.ChildrenBuilder
 import react.Fragment
 import react.State
 import react.create
 import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.img
 import react.react
 
 interface ItemWidgetProps : GameProps
@@ -35,33 +31,17 @@ class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
     override fun render() = Fragment.create {
         BootstrapListGroupItem {
             val items = game.heroPlayer.items
-            if (items.isNotEmpty()) {
-                renderOne(items[0])
-                renderText("...")
-            } else {
-                renderText(i("Items"))
-            }
-        }
-    }
-
-    private fun ChildrenBuilder.renderOne(item: String) {
-        img {
-            src = game.getIconUrl(item)
-            className = "inline-icon-16 item-$item"
-        }
-    }
-
-    private fun ChildrenBuilder.renderText(text: String) {
-        div {
-            className = "map-title-text items-widget"
             onClick = {
                 game.modalController.show {
-                    child(HistoryModal::class.react, jso {
+                    child(ItemModal::class.react, jso {
                         this.game = props.game
                     })
                 }
             }
-            +text
+            div {
+                className = "map-title-text items-widget"
+                +"${i("Items")} (${items.size})"
+            }
         }
     }
 }

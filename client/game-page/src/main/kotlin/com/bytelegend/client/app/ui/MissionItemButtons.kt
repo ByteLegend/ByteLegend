@@ -151,7 +151,7 @@ class MissionItemButton(props: MissionItemButtonProps) : Component<MissionItemBu
                 div.onClick = {
                     if (state.disabled) {
                         val title = props.game.i("CantUseItem")
-                        val body = props.game.i("YouMustBeAdjacentToUseTheItem", item)
+                        val body = props.game.i("YouMustBeAdjacentToUseTheItem", props.game.i(item.metadata.nameTextId))
                         props.game.toastController.addToast(title, body, 5000)
                     }
                 }

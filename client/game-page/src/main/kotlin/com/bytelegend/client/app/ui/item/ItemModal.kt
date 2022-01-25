@@ -15,14 +15,107 @@
  */
 package com.bytelegend.client.app.ui.item
 
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
+import com.bytelegend.client.app.engine.Item
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
+import com.bytelegend.client.app.ui.loadingSpinner
+import com.bytelegend.client.app.ui.setState
+import kotlinext.js.jso
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import react.Component
 import react.Fragment
+import react.Props
 import react.State
 import react.create
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.img
+import react.react
 
-class ItemModal : GameUIComponent<GameProps, State>() {
+interface ItemModalState : State {
+    var items: Map<String, Item>
+    var loading: Boolean
+    var hoveredItemId: String?
+}
+
+@Suppress("EXPERIMENTAL_API_USAGE")
+class ItemModal : GameUIComponent<GameProps, ItemModalState>() {
+    init {
+        state = jso {
+            loading = true
+        }
+    }
+
     override fun render() = Fragment.create {
-        TODO("Not yet implemented")
+        BootstrapModalHeader {
+            closeButton = true
+            BootstrapModalTitle {
+                +i("MyItems")
+            }
+        }
+
+        BootstrapModalBody {
+            div {
+                className = "item-modal"
+
+                if (state.loading) {
+                    loadingSpinner()
+                    GlobalScope.launch {
+                        val items = game.itemManager.getItems()
+                        setState {
+                            loading = false
+                            this.items = items
+                        }
+                    }
+                } else {
+                    if (state.items.isEmpty()) {
+                        +i("YouDontHaveAnyItems")
+                    } else {
+                        state.items.forEach { (id, item) ->
+                            child(ItemAchievementModalItem::class.react, jso {
+                                this.id = id
+                                iconUrl = game.resolve(item.metadata.icon)
+                                name = game.i(item.metadata.nameTextId)
+                                desc = game.i(item.metadata.descTextId)
+                                missionTitle = if (item.mission == null) null else game.i(item.mission.title)
+                            })
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+interface ItemAchievementModalItemProps : Props {
+    var id: String
+    var iconUrl: String
+    var name: String
+    var desc: String
+    var missionTitle: String?
+}
+
+class ItemAchievementModalItem : Component<ItemAchievementModalItemProps, State>() {
+    override fun render() = Fragment.create {
+        div {
+            className = "item-or-achievement"
+            div {
+                className = "item-title"
+                +props.name
+            }
+            img {
+                src = props.iconUrl
+            }
+
+            if (props.missionTitle != null) {
+                div {
+                    className = "item-mission-title"
+                    +props.missionTitle!!
+                }
+            }
+        }
     }
 }
