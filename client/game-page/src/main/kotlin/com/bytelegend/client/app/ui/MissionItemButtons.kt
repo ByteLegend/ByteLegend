@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.missionItemsButtonRepaintEvent
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
+import com.bytelegend.client.app.engine.Item
 import kotlinext.js.jso
 import kotlinx.browser.document
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLDivElement
 import react.Component
 import react.Fragment
@@ -36,7 +40,22 @@ import kotlin.math.max
 
 private const val MISSION_TITLE_BUTTONS_LAYER = "mission-title-buttons-layer"
 
-class MissionItemButtons : GameUIComponent<GameProps, State>() {
+interface MissionItemButtonsState : State {
+    var items: List<Item>
+}
+
+class MissionItemButtons(props: GameProps) : GameUIComponent<GameProps, MissionItemButtonsState>(props) {
+    init {
+        state = jso { items = emptyList() }
+        GlobalScope.launch {
+            val items = props.game.itemManager.getItems()
+            val currentMap = props.game.activeScene.map.id
+            setState {
+                this.items = items.values.filter { it.mission?.map == currentMap }
+            }
+        }
+    }
+
     private val onAnimation: EventListener<Nothing> = this::onAnimation
 
     private val divCoordinate: PixelCoordinate
@@ -52,10 +71,11 @@ class MissionItemButtons : GameUIComponent<GameProps, State>() {
             className = MISSION_TITLE_BUTTONS_LAYER
         ) {
             it.id = MISSION_TITLE_BUTTONS_LAYER
-            activeScene.objects.getByRole<GameMission>(GameObjectRole.Mission).forEach {
+            state.items.forEach { item ->
                 child(MissionItemButton::class.react, jso {
                     this.game = props.game
-                    this.mission = it
+                    this.item = item
+                    this.mission = activeScene.objects.getById(item.mission!!.id)
                 })
             }
         }
@@ -82,11 +102,11 @@ class MissionItemButtons : GameUIComponent<GameProps, State>() {
 }
 
 interface MissionItemButtonProps : GameProps {
+    var item: Item
     var mission: GameMission
 }
 
 interface MissionItemButtonState : State {
-    var item: String?
     var disabled: Boolean
     var loading: Boolean
     var flickering: Boolean
@@ -122,35 +142,32 @@ class MissionItemButton(props: MissionItemButtonProps) : Component<MissionItemBu
     }
 
     override fun render() = Fragment.create {
-        val item = props.game.itemManager.getItemForMission(props.mission.id).firstOrNull()
-        if (item != null) {
-            var className = "mission-item-button" // mission-item-button-animation" else "mission-item-button"
-            if (state.flickering) {
-                className += " mission-item-button-animation"
+        var className = "mission-item-button"
+        if (state.flickering) {
+            className += " mission-item-button-animation"
+        }
+        if (state.disabled) {
+            className += " mission-item-button-disabled"
+        }
+        absoluteDiv(
+            left = props.mission.pixelCoordinate.x - 8,
+            top = props.mission.pixelCoordinate.y - 8,
+            width = 48,
+            height = 48,
+            className = className,
+            zIndex = Layer.MissionItemButton.zIndex(),
+        ) { div ->
+            img {
+                src = props.game.resolve(props.item.metadata.icon)
             }
-            if (state.disabled) {
-                className += " mission-item-button-disabled"
+            if (state.loading) {
+                loadingSpinner()
             }
-            absoluteDiv(
-                left = props.mission.pixelCoordinate.x - 16,
-                top = props.mission.pixelCoordinate.y - 16,
-                width = 64,
-                height = 64,
-                className = className,
-                zIndex = Layer.MissionItemButton.zIndex(),
-            ) { div ->
-                img {
-                    src = props.game.resolve("/img/icon/$item.png")
-                }
-                if (state.loading) {
-                    loadingSpinner()
-                }
-                div.onClick = {
-                    if (state.disabled) {
-                        val title = props.game.i("CantUseItem")
-                        val body = props.game.i("YouMustBeAdjacentToUseTheItem", props.game.i(item.metadata.nameTextId))
-                        props.game.toastController.addToast(title, body, 5000)
-                    }
+            div.onClick = {
+                if (state.disabled) {
+                    val title = props.game.i("CantUseItem")
+                    val body = props.game.i("YouMustBeAdjacentToUseTheItem", props.game.i(props.item.metadata.nameTextId))
+                    props.game.toastController.addToast(title, body, 5000)
                 }
             }
         }

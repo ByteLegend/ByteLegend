@@ -17,6 +17,7 @@
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.GameRuntime
+import com.bytelegend.app.client.utils.JSArrayBackedList
 import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.objects.GameMapMission
@@ -57,8 +58,7 @@ interface ItemManager {
      * Invoking this method will trigger loading GameMap and i18n text for that map.
      */
     suspend fun getItems(): Map<String, Item>
-    fun getItemForMission(missionId: String): List<Item>
-    fun getItemDefinitionById(itemId: String): ItemMetadata
+    suspend fun getItemForMission(missionId: String): List<Item>
 }
 
 /**
@@ -74,6 +74,7 @@ class DefaultItemManager(private val di: DI) : ItemManager {
     private val itemMetadata: MutableMap<String, ItemMetadata> = JSObjectBackedMap()
 
     private val items: MutableMap<String, Item> = JSObjectBackedMap()
+    private val missionIdToItems: MutableMap<String, MutableList<Item>> = JSObjectBackedMap()
 
     override suspend fun getItems(): Map<String, Item> {
         if (itemMetadata.isEmpty()) {
@@ -122,7 +123,9 @@ class DefaultItemManager(private val di: DI) : ItemManager {
                 mapId
             } else {
                 val missionId = itemMapMissionId[2]
-                items[itemWithMissionId] = Item(itemMetadata.getValue(itemMapMissionId[0]), gameMap.objects.first { it.id == missionId }.unsafeCast<GameMapMission>())
+                val item = Item(itemMetadata.getValue(itemMapMissionId[0]), gameMap.objects.first { it.id == missionId }.unsafeCast<GameMapMission>())
+                items[itemWithMissionId] = item
+                missionIdToItems.getOrPut(missionId) { JSArrayBackedList() }.add(item)
                 null
             }
         } else {
@@ -131,9 +134,8 @@ class DefaultItemManager(private val di: DI) : ItemManager {
         }
     }
 
-    override fun getItemForMission(missionId: String): List<Item> {
-        return emptyList()
+    override suspend fun getItemForMission(missionId: String): List<Item> {
+        getItems()
+        return missionIdToItems.get(missionId) ?: emptyList()
     }
-
-    override fun getItemDefinitionById(itemId: String): ItemMetadata = itemMetadata.getValue(itemId)
 }

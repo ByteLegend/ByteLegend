@@ -137,7 +137,7 @@ class DefaultGameScene(
         if (inCache != null) {
             return inCache
         }
-        val range = 2
+        val range = 3
 
         val ret: MutableList<GameMission> = JSArrayBackedList()
         val left = max(gridCoordinate.x - range, 0)

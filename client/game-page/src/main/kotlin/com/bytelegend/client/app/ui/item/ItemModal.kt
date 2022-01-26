@@ -26,6 +26,7 @@ import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeP
+import com.bytelegend.client.app.ui.unsafeSpan
 import kotlinext.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -202,7 +203,7 @@ class ItemAchievementModalItem : Component<ItemAchievementModalItemProps, State>
             if (props.missionTitle != null) {
                 div {
                     className = "item-mission-title no-pointer-events"
-                    +props.missionTitle!!
+                    unsafeSpan(props.missionTitle!!)
                 }
             }
 

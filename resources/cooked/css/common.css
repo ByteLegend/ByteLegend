@@ -160,6 +160,7 @@ body {
 
 .nickname-span {
     transform: translate(-50%, -50%);
+    user-select: none;
 }
 
 .icp-widget {
@@ -911,14 +912,14 @@ div.speech-bubble::after {
 
 .mission-item-button > .spinner-border {
     position: absolute;
-    top: 16px;
-    left: 16px;
+    top: 8px;
+    left: 8px;
 }
 
 .mission-item-button > img {
     position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 40px;
-    height: 40px;
+    top: 8px;
+    left: 8px;
+    width: 32px;
+    height: 32px;
 }

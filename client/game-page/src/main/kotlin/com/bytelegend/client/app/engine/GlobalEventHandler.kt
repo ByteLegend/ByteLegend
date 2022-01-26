@@ -46,7 +46,7 @@ class GlobalEventHandler(
     private val game: Game
 ) {
     private val gameControl: GameControl by di.instance()
-    private val eventBus: EventBus by di.instance<EventBus>()
+    private val eventBus: EventBus by di.instance()
 
     fun start() {
         eventBus.on(ITEMS_STATES_UPDATE_EVENT, this::onItemsStatesUpdateEvent)
