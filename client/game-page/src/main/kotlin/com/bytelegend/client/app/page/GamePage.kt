@@ -77,9 +77,7 @@ import com.bytelegend.client.app.ui.ToastUIComponent
 import com.bytelegend.client.app.ui.UserAvatarWidget
 import com.bytelegend.client.app.ui.UserMouseInteractionLayer
 import com.bytelegend.client.app.ui.achievement.AchievementWidget
-import com.bytelegend.client.app.ui.achievement.AchievementWidgetProps
 import com.bytelegend.client.app.ui.gameChild
-import com.bytelegend.client.app.ui.item.ItemWidgetProps
 import com.bytelegend.client.app.ui.item.ItemsWidget
 import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
@@ -359,14 +357,14 @@ class GamePage(props: GameProps) : Component<GameProps, GamePageState>(props) {
 
     private fun itemWidget(
         parentProps: RightSideBarProps,
-        block: ItemWidgetProps.() -> Unit = {}
+        block: GameProps.() -> Unit = {}
     ) {
         gameChild(parentProps, ItemsWidget::class.react, block)
     }
 
     private fun achievementWidget(
         parentProps: RightSideBarProps,
-        block: AchievementWidgetProps.() -> Unit = {}
+        block: GameProps.() -> Unit = {}
     ) {
         gameChild(parentProps, AchievementWidget::class.react, block)
     }

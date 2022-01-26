@@ -21,7 +21,7 @@ import com.bytelegend.app.client.misc.getOrCreateAudioElement
 import com.bytelegend.app.client.misc.getOrCreateImageElement
 import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.client.app.engine.ItemMetadata
+import com.bytelegend.client.app.engine.ItemOrAchievementMetadata
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.dom.HTMLAudioElement
@@ -46,10 +46,10 @@ class I18nTextResource(
     }
 }
 
-class ItemDefinitionResource(id: String, url: String) : AjaxResource<Map<String, ItemMetadata>>(id, url) {
-    override suspend fun decode(response: Response): Map<String, ItemMetadata> {
+class ItemAchievementMetadataResource(id: String, url: String) : AjaxResource<Map<String, ItemOrAchievementMetadata>>(id, url) {
+    override suspend fun decode(response: Response): Map<String, ItemOrAchievementMetadata> {
         return response.json().await().unsafeCast<Array<dynamic>>().let {
-            val result = JSObjectBackedMap<ItemMetadata>()
+            val result = JSObjectBackedMap<ItemOrAchievementMetadata>()
             it.forEach {
                 result[it.id] = it
             }

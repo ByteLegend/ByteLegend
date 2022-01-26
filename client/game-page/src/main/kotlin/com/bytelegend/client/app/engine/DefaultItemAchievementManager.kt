@@ -17,11 +17,10 @@
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.GameRuntime
-import com.bytelegend.app.client.utils.JSArrayBackedList
 import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.objects.GameMapMission
-import com.bytelegend.client.app.engine.resource.ItemDefinitionResource
+import com.bytelegend.client.app.engine.resource.ItemAchievementMetadataResource
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.awaitAll
 import org.kodein.di.DI
@@ -30,7 +29,7 @@ import org.kodein.di.instance
 /**
  * The metadata for the item.
  */
-data class ItemMetadata(
+data class ItemOrAchievementMetadata(
     val id: String,
     val icon: String,
     val nameTextId: String,
@@ -43,13 +42,13 @@ data class ItemMetadata(
  * In this way, it's stored as "{itemId}:{mapId}:{missionId}", e.g. "key:JavaIsland:install-java-ide" or "gold-sword:JavaIsland:create-a-new-class"
  */
 data class Item(
-    val metadata: ItemMetadata,
+    val metadata: ItemOrAchievementMetadata,
     val mission: GameMapMission? = null
 ) {
     override fun toString() = if (mission == null) metadata.id else "${metadata.id}:${mission.map}:${mission.id}"
 }
 
-interface ItemManager {
+interface ItemAchievementManager {
 
     /**
      * Because the mission referenced in item might not be loaded yet (in another scene),
@@ -58,30 +57,44 @@ interface ItemManager {
      * Invoking this method will trigger loading GameMap and i18n text for that map.
      */
     suspend fun getItems(): Map<String, Item>
-    suspend fun getItemForMission(missionId: String): List<Item>
+
+    suspend fun getAchievements(): Map<String, Item>
 }
 
 /**
  * Manage the items.
  */
-class DefaultItemManager(private val di: DI) : ItemManager {
+class DefaultItemAchievementManager(private val di: DI) : ItemAchievementManager {
     private val game: Game by lazy {
         val gameRuntime: GameRuntime by di.instance()
         gameRuntime.unsafeCast<Game>()
     }
     private val sceneContainer: DefaultGameSceneContainer = game.sceneContainer.unsafeCast<DefaultGameSceneContainer>()
 
-    private val itemMetadata: MutableMap<String, ItemMetadata> = JSObjectBackedMap()
-
+    private val itemMetadata: MutableMap<String, ItemOrAchievementMetadata> = JSObjectBackedMap()
+    private val achievementMetadata: MutableMap<String, ItemOrAchievementMetadata> = JSObjectBackedMap()
     private val items: MutableMap<String, Item> = JSObjectBackedMap()
-    private val missionIdToItems: MutableMap<String, MutableList<Item>> = JSObjectBackedMap()
+    private val achievements: MutableMap<String, Item> = JSObjectBackedMap()
+
+    override suspend fun getAchievements(): Map<String, Item> {
+        if (game.heroPlayer.achievements.size == achievements.size) {
+            return achievements
+        }
+        if (achievementMetadata.isEmpty()) {
+            achievementMetadata.putAll(game.resourceLoader.loadAsync(ItemAchievementMetadataResource("achievementMetadata", game.resolve("/misc/achievement-metadata.json")), false).await())
+        }
+        game.heroPlayer.achievements.forEach {
+            achievements[it] = Item(achievementMetadata.getValue(it))
+        }
+        return achievements
+    }
 
     override suspend fun getItems(): Map<String, Item> {
-        if (itemMetadata.isEmpty()) {
-            itemMetadata.putAll(game.resourceLoader.loadAsync(ItemDefinitionResource("itemMetadata", game.resolve("/item/item-metadata.json")), false).await())
-        }
         if (game.heroPlayer.items.size == items.size) {
             return items
+        }
+        if (itemMetadata.isEmpty()) {
+            itemMetadata.putAll(game.resourceLoader.loadAsync(ItemAchievementMetadataResource("itemMetadata", game.resolve("/misc/item-metadata.json")), false).await())
         }
         val loadingMaps = mutableListOf<Deferred<*>>()
         val unresolvedItems = mutableListOf<String>()
@@ -125,17 +138,11 @@ class DefaultItemManager(private val di: DI) : ItemManager {
                 val missionId = itemMapMissionId[2]
                 val item = Item(itemMetadata.getValue(itemMapMissionId[0]), gameMap.objects.first { it.id == missionId }.unsafeCast<GameMapMission>())
                 items[itemWithMissionId] = item
-                missionIdToItems.getOrPut(missionId) { JSArrayBackedList() }.add(item)
                 null
             }
         } else {
             console.warn("Unrecognized item: $itemWithMissionId")
             return null
         }
-    }
-
-    override suspend fun getItemForMission(missionId: String): List<Item> {
-        getItems()
-        return missionIdToItems.get(missionId) ?: emptyList()
     }
 }

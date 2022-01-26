@@ -48,7 +48,7 @@ class MissionItemButtons(props: GameProps) : GameUIComponent<GameProps, MissionI
     init {
         state = jso { items = emptyList() }
         GlobalScope.launch {
-            val items = props.game.itemManager.getItems()
+            val items = props.game.itemAchievementManager.getItems()
             val currentMap = props.game.activeScene.map.id
             setState {
                 this.items = items.values.filter { it.mission?.map == currentMap }

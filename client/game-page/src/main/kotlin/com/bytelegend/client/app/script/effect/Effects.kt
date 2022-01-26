@@ -20,6 +20,7 @@ package com.bytelegend.client.app.script.effect
 import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.misc.playAudio
+import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
@@ -57,6 +58,49 @@ private fun fire(particleRatio: Double, origin: dynamic, opts: dynamic) {
         this.zIndex = z
     }
     confetti(options)
+}
+
+fun showAchievement(canvasState: GameCanvasState, achievementIconUrl: String) {
+    val imgId = "achievement-img-${uuid()}"
+    val img = document.create<HTMLImageElement>("img") {
+        id = imgId
+        src = achievementIconUrl
+        width = 32
+        height = 32
+    }
+    val opaqueBackground = document.createAndAppend<HTMLDivElement>("div") {
+        className = "achievement-background no-pointer-events"
+        style.zIndex = EFFECT_Z_INDEX.toString()
+        style.width = "${canvasState.gameContainerSize.width}px"
+        style.height = "${canvasState.gameContainerSize.height}px"
+    }
+
+    val rotationDiv = document.createAndAppend<HTMLDivElement>("div") {
+        className = "achievement-radial-animation no-pointer-events"
+        style.zIndex = (EFFECT_Z_INDEX + 1).toString()
+        style.width = "${canvasState.gameContainerSize.width}px"
+        style.height = "${canvasState.gameContainerSize.height}px"
+    }
+    val imgWrapper = document.createAndAppend<HTMLDivElement>("div") {
+        className = "achievement-img-wrapper no-pointer-events"
+        style.zIndex = (EFFECT_Z_INDEX + 2).toString()
+        style.width = "${canvasState.gameContainerSize.width}px"
+        style.height = "${canvasState.gameContainerSize.height}px"
+        appendChild(img)
+    }
+    playAudio("achievement")
+    gsap.timeline().to(
+        "#$imgId",
+        jso {
+            duration = 1
+            scale = 5
+        }
+    )
+    window.setTimeout({
+        document.body?.removeChild(opaqueBackground)
+        document.body?.removeChild(rotationDiv)
+        document.body?.removeChild(imgWrapper)
+    }, 5000)
 }
 
 fun showConfetti(canvasState: GameCanvasState, originPointOnMap: GridCoordinate) {

@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.bytelegend.client.app.ui.item
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
@@ -37,12 +40,15 @@ import react.Props
 import react.State
 import react.create
 import react.dom.events.MouseEvent
-import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.h5
-import react.dom.html.ReactHTML.img
+import react.dom.html.ReactHTML
 import react.react
 
-interface ItemModalState : State {
+interface ItemOrAchievementModalProps : GameProps {
+    var title: String
+    var emptyText: String
+}
+
+interface ItemOrAchievementModalState : State {
     var items: Map<String, Item>
     var loading: Boolean
 
@@ -59,30 +65,31 @@ interface ItemModalState : State {
     var descCoordinate: PixelCoordinate?
 }
 
-@Suppress("EXPERIMENTAL_API_USAGE")
-class ItemModal : GameUIComponent<GameProps, ItemModalState>() {
+abstract class ItemOrAchievementModal : GameUIComponent<ItemOrAchievementModalProps, ItemOrAchievementModalState>() {
     init {
         state = jso {
             loading = true
         }
     }
 
+    abstract suspend fun loadItems(): Map<String, Item>
+
     override fun render() = Fragment.create {
         BootstrapModalHeader {
             closeButton = true
             BootstrapModalTitle {
-                +i("MyItems")
+                +i(props.title)
             }
         }
 
         BootstrapModalBody {
-            div {
-                className = "item-modal"
+            className = "item-or-achievement-modal"
 
+            ReactHTML.div {
                 if (state.loading) {
                     loadingSpinner()
                     GlobalScope.launch {
-                        val items = game.itemManager.getItems()
+                        val items = loadItems()
                         setState {
                             loading = false
                             this.items = items
@@ -90,7 +97,7 @@ class ItemModal : GameUIComponent<GameProps, ItemModalState>() {
                     }
                 } else {
                     if (state.items.isEmpty()) {
-                        +i("YouDontHaveAnyItems")
+                        +i(props.emptyText)
                     } else {
                         state.items.forEach { (id, item) ->
                             child(ItemAchievementModalItem::class.react, jso {
@@ -144,7 +151,7 @@ class ItemModal : GameUIComponent<GameProps, ItemModalState>() {
                             val itemName = state.selectedItem?.metadata?.nameTextId ?: state.hoveredItem?.metadata?.nameTextId
                             val itemDesc = state.selectedItem?.metadata?.descTextId ?: state.hoveredItem?.metadata?.descTextId
                             val itemMission = state.selectedItem?.mission ?: state.hoveredItem?.mission
-                            div {
+                            ReactHTML.div {
                                 className = "item-desc"
                                 jsStyle {
                                     top = "${state.descCoordinate!!.y + 16}px"
@@ -152,7 +159,7 @@ class ItemModal : GameUIComponent<GameProps, ItemModalState>() {
                                     zIndex = "${ITEM_Z_INDEX + 1}"
                                 }
 
-                                h5 {
+                                ReactHTML.h5 {
                                     +game.i(itemName!!)
                                 }
 
@@ -186,22 +193,22 @@ private const val ITEM_Z_INDEX = 1
 
 class ItemAchievementModalItem : Component<ItemAchievementModalItemProps, State>() {
     override fun render() = Fragment.create {
-        div {
+        ReactHTML.div {
             className = "item-or-achievement"
             jsStyle {
                 zIndex = ITEM_Z_INDEX
             }
-            div {
+            ReactHTML.div {
                 className = "item-title no-pointer-events"
                 +props.name
             }
-            img {
+            ReactHTML.img {
                 className = "no-pointer-events"
                 src = props.iconUrl
             }
 
             if (props.missionTitle != null) {
-                div {
+                ReactHTML.div {
                     className = "item-mission-title no-pointer-events"
                     unsafeSpan(props.missionTitle!!)
                 }

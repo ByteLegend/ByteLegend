@@ -387,7 +387,7 @@ fun GameScene.pubGuard() = objects {
                 !gameRuntime.heroPlayer.isAnonymous && !gameRuntime.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE) -> {
                     helpers.getCharacter(guardId).gridCoordinate = guardStartPoint
                     scripts {
-                        speech(guardId, "DoYouPreferToBeMediocre")
+                        speech(guardId, "DoYouWantToHaveADrink")
                         characterMove(HERO_ID, guardStartPoint + GridCoordinate(0, 1)) {
                             helpers.getCharacter(HERO_ID).direction = Direction.UP
                         }
@@ -653,7 +653,7 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
 }
 
 fun ScriptsBuilder.talkAboutFirstStar(guardId: String, objects: GameObjectContainer) {
-    speech(guardId, "StarCondition", arrayOf("1", "0"))
+    speech(guardId, "FirstStarMedalCondition")
     speech(HERO_ID, "WhereToFindStar")
     speech(
         guardId, "IDontKnowTakeALookAtStarBytelegend",

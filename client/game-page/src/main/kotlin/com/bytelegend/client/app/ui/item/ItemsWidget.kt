@@ -16,6 +16,7 @@
 package com.bytelegend.client.app.ui.item
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
+import com.bytelegend.client.app.engine.Item
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import kotlinext.js.jso
@@ -25,9 +26,7 @@ import react.create
 import react.dom.html.ReactHTML.div
 import react.react
 
-interface ItemWidgetProps : GameProps
-
-class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
+class ItemsWidget : GameUIComponent<GameProps, State>() {
     override fun render() = Fragment.create {
         BootstrapListGroupItem {
             val items = game.heroPlayer.items
@@ -35,6 +34,8 @@ class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
                 game.modalController.show {
                     child(ItemModal::class.react, jso {
                         this.game = props.game
+                        this.title = "MyItems"
+                        this.emptyText = "YouDontHaveAnyItems"
                     })
                 }
             }
@@ -44,4 +45,9 @@ class ItemsWidget : GameUIComponent<ItemWidgetProps, State>() {
             }
         }
     }
+}
+
+@Suppress("EXPERIMENTAL_API_USAGE")
+class ItemModal : ItemOrAchievementModal() {
+    override suspend fun loadItems(): Map<String, Item> = game.itemAchievementManager.getItems()
 }

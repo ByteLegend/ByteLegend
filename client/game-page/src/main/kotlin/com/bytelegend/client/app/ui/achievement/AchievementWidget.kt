@@ -17,100 +17,44 @@
 package com.bytelegend.client.app.ui.achievement
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
-import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
-import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
-import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.i18n.Locale
-import com.bytelegend.client.app.engine.getIconUrl
+import com.bytelegend.client.app.engine.Item
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
-import com.bytelegend.client.app.ui.setState
+import com.bytelegend.client.app.ui.item.ItemOrAchievementModal
 import kotlinext.js.jso
-import react.ChildrenBuilder
 import react.Fragment
 import react.State
 import react.create
 import react.dom.html.ReactHTML.div
-import react.dom.html.ReactHTML.img
-import react.dom.html.ReactHTML.p
 import react.react
 
-interface AchievementWidgetProps : GameProps
-
-class AchievementWidget : GameUIComponent<AchievementWidgetProps, State>() {
+class AchievementWidget : GameUIComponent<GameProps, State>() {
     override fun render() = Fragment.create {
         BootstrapListGroupItem {
             onClick = {
                 game.modalController.show {
                     child(AchievementModal::class.react, jso {
                         this.game = props.game
+                        this.title = "MyAchievements"
+                        this.emptyText = "YouDontHaveAnyAchievements"
                     })
                 }
             }
             div {
-                className = "map-title-text"
+                className = "map-title-text items-widget"
 
                 if (game.locale == Locale.EN) {
-                    +"Achv"
+                    +"Achv (${game.heroPlayer.achievements.size})"
                 } else {
-                    +i("Achievement")
+                    +"${i("Achievement")} (${game.heroPlayer.achievements.size})"
                 }
             }
         }
     }
 }
 
-interface AchievementModalState : State {
-    var hoveredAchievementId: String?
-}
-
-class AchievementModal : GameUIComponent<GameProps, AchievementModalState>() {
-    init {
-        state = jso { hoveredAchievementId = null }
-    }
-
-    override fun render() = Fragment.create {
-        BootstrapModalHeader {
-            closeButton = true
-            BootstrapModalTitle {
-                +i("MyAchievements")
-            }
-        }
-
-        BootstrapModalBody {
-            div {
-                className = "item-modal"
-
-                game.heroPlayer.achievements.forEach { renderOneAchievement(it) }
-
-                onMouseOut = {
-                    setState { hoveredAchievementId = null }
-                }
-
-                p {
-                    if (state.hoveredAchievementId == null) {
-                        className = "transparent-text"
-                        +"Yay! You found an easter egg!"
-                    } else {
-                        +i(state.hoveredAchievementId!!)
-                    }
-                }
-            }
-        }
-    }
-
-    private fun ChildrenBuilder.renderOneAchievement(achievementId: String) {
-        div {
-            className = "achievement-item flex-center"
-            onMouseOver = {
-                setState { hoveredAchievementId = achievementId }
-            }
-            onMouseOut = {
-                setState { hoveredAchievementId = null }
-            }
-            img {
-                src = game.getIconUrl(achievementId)
-            }
-        }
-    }
+@Suppress("EXPERIMENTAL_API_USAGE")
+class AchievementModal : ItemOrAchievementModal() {
+    override suspend fun loadItems(): Map<String, Item> = game.itemAchievementManager.getAchievements()
 }

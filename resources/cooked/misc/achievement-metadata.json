@@ -1,0 +1,26 @@
+[
+  {
+    "id": "bronze-git-medal",
+    "icon": "/img/achievement/bronze-git-medal.png",
+    "nameTextId": "bronze-git-medal-name",
+    "descTextId": "bronze-git-medal-desc"
+  },
+  {
+    "id": "silver-git-medal",
+    "icon": "/img/achievement/silver-git-medal.png",
+    "nameTextId": "silver-git-medal-name",
+    "descTextId": "silver-git-medal-desc"
+  },
+  {
+    "id": "gold-git-medal",
+    "icon": "/img/achievement/gold-git-medal.png",
+    "nameTextId": "gold-git-medal-name",
+    "descTextId": "gold-git-medal-desc"
+  },
+  {
+    "id": "first-star-medal",
+    "icon": "/img/achievement/first-star-medal.png",
+    "nameTextId": "first-star-medal-name",
+    "descTextId": "first-star-medal-desc"
+  }
+]

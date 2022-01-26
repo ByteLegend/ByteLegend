@@ -31,7 +31,6 @@ fun getImageElement(imageId: String): HTMLImageElement {
 }
 
 /**
- * TODO make this a suspend function
  * Note that this has potential risk that when two `play()` calls are too close,
  * there might be only one
  */
