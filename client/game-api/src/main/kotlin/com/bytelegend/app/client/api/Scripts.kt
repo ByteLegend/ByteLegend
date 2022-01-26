@@ -100,7 +100,6 @@ interface ScriptsBuilder {
     fun characterEnterVehicleAndMoveToMap(characterId: String, vehicleSpriteId: String, movingPath: List<GridCoordinate>, destMap: String)
     fun startBeginnerGuide()
     fun putState(key: String, value: String = "1")
-    fun removeState(key: String)
 
     /**
      * Enter another scene.

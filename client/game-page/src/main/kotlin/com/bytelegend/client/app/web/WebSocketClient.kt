@@ -34,7 +34,6 @@ import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PUT_STATE_EVENT
 import com.bytelegend.app.shared.protocol.PublishMessage
 import com.bytelegend.app.shared.protocol.REMOVE_ITEM_EVENT
-import com.bytelegend.app.shared.protocol.REMOVE_STATE_EVENT
 import com.bytelegend.app.shared.protocol.ReplyMessage
 import com.bytelegend.app.shared.protocol.SPEAK
 import com.bytelegend.app.shared.protocol.SendMessage
@@ -241,10 +240,6 @@ class WebSocketClient(
 
     override suspend fun putState(key: String, value: String) {
         send<Unit>(PUT_STATE_EVENT, key, value)
-    }
-
-    override suspend fun removeState(key: String) {
-        send<Unit>(REMOVE_STATE_EVENT, key)
     }
 
     override suspend fun removeItem(item: String) {

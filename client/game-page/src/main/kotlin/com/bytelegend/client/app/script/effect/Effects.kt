@@ -30,6 +30,7 @@ import kotlinext.js.assign
 import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.delay
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLCanvasElement
@@ -58,49 +59,6 @@ private fun fire(particleRatio: Double, origin: dynamic, opts: dynamic) {
         this.zIndex = z
     }
     confetti(options)
-}
-
-fun showAchievement(canvasState: GameCanvasState, achievementIconUrl: String) {
-    val imgId = "achievement-img-${uuid()}"
-    val img = document.create<HTMLImageElement>("img") {
-        id = imgId
-        src = achievementIconUrl
-        width = 32
-        height = 32
-    }
-    val opaqueBackground = document.createAndAppend<HTMLDivElement>("div") {
-        className = "achievement-background no-pointer-events"
-        style.zIndex = EFFECT_Z_INDEX.toString()
-        style.width = "${canvasState.gameContainerSize.width}px"
-        style.height = "${canvasState.gameContainerSize.height}px"
-    }
-
-    val rotationDiv = document.createAndAppend<HTMLDivElement>("div") {
-        className = "achievement-radial-animation no-pointer-events"
-        style.zIndex = (EFFECT_Z_INDEX + 1).toString()
-        style.width = "${canvasState.gameContainerSize.width}px"
-        style.height = "${canvasState.gameContainerSize.height}px"
-    }
-    val imgWrapper = document.createAndAppend<HTMLDivElement>("div") {
-        className = "achievement-img-wrapper no-pointer-events"
-        style.zIndex = (EFFECT_Z_INDEX + 2).toString()
-        style.width = "${canvasState.gameContainerSize.width}px"
-        style.height = "${canvasState.gameContainerSize.height}px"
-        appendChild(img)
-    }
-    playAudio("achievement")
-    gsap.timeline().to(
-        "#$imgId",
-        jso {
-            duration = 1
-            scale = 5
-        }
-    )
-    window.setTimeout({
-        document.body?.removeChild(opaqueBackground)
-        document.body?.removeChild(rotationDiv)
-        document.body?.removeChild(imgWrapper)
-    }, 5000)
 }
 
 fun showConfetti(canvasState: GameCanvasState, originPointOnMap: GridCoordinate) {
@@ -247,11 +205,74 @@ fun showArrowGif(
     return div
 }
 
+suspend fun showAchievementEffect(
+    canvasState: GameCanvasState,
+    achievementIconUrl: String,
+    endCoordinateInGameContainer: PixelCoordinate
+) {
+    val imgId = "achievement-img-${uuid()}"
+//    val img = document.create<HTMLImageElement>("img") {
+//        width = 32
+//        height = 32
+//    }
+    val opaqueBackground = document.createAndAppend<HTMLDivElement>("div") {
+        className = "achievement-background no-pointer-events"
+        style.zIndex = EFFECT_Z_INDEX.toString()
+        style.width = "${canvasState.gameContainerSize.width}px"
+        style.height = "${canvasState.gameContainerSize.height}px"
+    }
+
+    val rotationDiv = document.createAndAppend<HTMLDivElement>("div") {
+        className = "achievement-radial-animation no-pointer-events"
+        style.zIndex = (EFFECT_Z_INDEX + 1).toString()
+        style.width = "${canvasState.gameContainerSize.width}px"
+        style.height = "${canvasState.gameContainerSize.height}px"
+    }
+    val img = document.createAndAppend<HTMLImageElement>("img") {
+        id = imgId
+        src = achievementIconUrl
+        width = 32
+        height = 32
+        className = "achievement-img no-pointer-events"
+        style.zIndex = (EFFECT_Z_INDEX + 2).toString()
+    }
+    playAudio("achievement")
+
+    val center = PixelCoordinate(canvasState.gameContainerSize.width / 2, canvasState.gameContainerSize.height / 2)
+
+    val timeline = gsap.timeline()
+    timeline.to("#$imgId", jso {
+        x = center.x
+        y = center.y
+        duration = 0
+    })
+
+    timeline.to("#$imgId", jso {
+        x = center.x
+        y = center.y
+        duration = 1
+        scale = 5
+    })
+    timeline.to("#$imgId", jso {
+        x = center.x
+        y = center.y
+        duration = 1
+        scale = 3
+    })
+
+    delay(3000)
+    document.body?.removeChild(opaqueBackground)
+    document.body?.removeChild(rotationDiv)
+
+    itemFlyTo(imgId, PixelCoordinate(canvasState.gameContainerSize.width / 2, canvasState.gameContainerSize.height / 2), endCoordinateInGameContainer, 1.0) {
+        document.body?.removeChild(img)
+    }
+}
+
 /**
  * Fly to center of window, then fly to item box
  */
 suspend fun itemPopupEffect(
-    itemOrAchievement: String,
     imgUrl: String,
     gameContainerSize: PixelSize,
     startCoordinateInGameContainer: PixelCoordinate,
@@ -261,7 +282,8 @@ suspend fun itemPopupEffect(
     // 1/3 time to fly to center of screen
     // 1/3 time to scale
     // 1/3 time to fly to item box
-    val itemId = "item-$itemOrAchievement"
+    playAudio("popup")
+    val itemId = "item-popup-${uuid()}"
     document.createAndAppend<HTMLImageElement>("img") {
         id = itemId
         src = imgUrl
@@ -284,6 +306,7 @@ suspend fun itemPopupEffect(
             scale = 5
         }
     )
+    delay((durationSecond * 1000).toLong())
 }
 
 private fun itemFlyTo(
@@ -291,8 +314,9 @@ private fun itemFlyTo(
     start: PixelCoordinate,
     end: PixelCoordinate,
     durationSecond: Double,
-    onCompleteFunction: UnitFunction
+    onCompleteFunction: UnitFunction = {}
 ) {
+    console.log("Fly: $start $end")
     gsap.fromTo(
         "#$itemId",
         jso {

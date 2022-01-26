@@ -951,11 +951,12 @@ div.speech-bubble::after {
     }
 }
 
-.achievement-img-wrapper {
+.achievement-img {
     position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    transform: translate(-50%, -50%);
+    /*top: 0;*/
+    /*left: 0;*/
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
 }

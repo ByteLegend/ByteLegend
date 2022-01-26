@@ -209,8 +209,6 @@ private fun GameMapDefinition.putIntMap(map: MutableMap<String, GameMapDefinitio
     }
 }
 
-fun Game.getIconUrl(id: String) = transformGitHubUrl("https://raw.githubusercontent.com/ByteLegend/game-data/master/achievements/$id.png")
-
 val Game.gameContainerHeight: Int
     get() = gameContainerSize.height
 val Game.uiContainerCoordinateInGameContainer: PixelCoordinate

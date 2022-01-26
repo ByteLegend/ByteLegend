@@ -138,8 +138,7 @@ fun toOnFinishItemsChange(jsonObject: dynamic) = OnFinishItemsChange(
 )
 
 fun toOnFinishStatesChange(jsonObject: dynamic) = OnFinishStatesChange(
-    JSObjectBackedMap(delegate = jsonObject.put),
-    JSArrayBackedList(delegate = jsonObject.remove)
+    JSObjectBackedMap(delegate = jsonObject.put)
 )
 
 fun toCoinUpdateEventData(jsonObject: dynamic) = CoinUpdateEventData(

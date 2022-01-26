@@ -43,8 +43,7 @@ data class OnFinishItemsChange(
 
 data class OnFinishStatesChange(
     val put: Map<String, String> = emptyMap(),
-    val remove: List<String> = emptyList()
 ) {
     @JsonIgnore
-    fun isEmpty() = put.isEmpty() && remove.isEmpty()
+    fun isEmpty() = put.isEmpty()
 }

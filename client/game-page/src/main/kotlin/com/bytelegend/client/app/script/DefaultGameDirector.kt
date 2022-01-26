@@ -36,7 +36,6 @@ import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
 import com.bytelegend.client.app.engine.calculateCoordinateInGameContainer
-import com.bytelegend.client.app.engine.getIconUrl
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.engine.resource.AudioResource
 import com.bytelegend.client.app.engine.resource.ImageResource
@@ -279,15 +278,6 @@ class DefaultGameDirector(
         )
     }
 
-    override fun removeState(key: String) {
-        scripts.add(
-            RunSuspendFunctionScript {
-                webSocketClient.removeState(key)
-                gameRuntime.heroPlayer.states.remove(key)
-            }
-        )
-    }
-
     override fun enterScene(targetMapId: String, onSuccess: UnitFunction, onFail: UnitFunction) {
         scripts.add(RunSuspendFunctionScript {
             try {
@@ -439,17 +429,15 @@ class DefaultGameDirector(
             if (destination != null) {
                 itemDisappearAnimation()
                 GlobalScope.launch {
-                    playAudio("popup")
                     val canvasState = gameScene.canvasState
+                    val iconUrl = game.resolve(game.itemAchievementManager.getItems().getValue(item).metadata.icon)
                     itemPopupEffect(
-                        item,
-                        game.getIconUrl(item),
+                        iconUrl,
                         canvasState.gameContainerSize,
                         canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(0, 200), /* items box offset */
                         canvasState.calculateCoordinateInGameContainer(destination),
                         3.0
                     )
-                    delay(3000)
                     next()
                 }
             } else {

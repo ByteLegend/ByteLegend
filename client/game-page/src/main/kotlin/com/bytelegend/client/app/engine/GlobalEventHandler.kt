@@ -18,7 +18,7 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.Banner
 import com.bytelegend.app.client.api.EventBus
-import com.bytelegend.app.client.misc.playAudio
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.protocol.ACHIEVEMENT_UPDATE_EVENT
@@ -29,8 +29,8 @@ import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.script.DefaultGameDirector
 import com.bytelegend.client.app.script.effect.itemPopupEffect
+import com.bytelegend.client.app.script.effect.showAchievementEffect
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
-import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
@@ -74,9 +74,6 @@ class GlobalEventHandler(
             eventData.onFinishSpec.states.put.forEach {
                 game.heroPlayer.states[it.key] = it.value
             }
-            eventData.onFinishSpec.states.remove.forEach {
-                game.heroPlayer.states.remove(it)
-            }
         }
 
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)
@@ -84,7 +81,6 @@ class GlobalEventHandler(
 
     @Suppress("EXPERIMENTAL_API_USAGE")
     private fun onAchievementUpdateEvent(eventData: AchievementUpdateEventData) {
-        val startCoordinate = determineAnimationStartPointInGameContainer(eventData.map, eventData.missionId)
         val activeScene = game.activeScene.unsafeCast<DefaultGameScene>()
 
         val set = game.heroPlayer.achievements.toMutableSet()
@@ -95,12 +91,12 @@ class GlobalEventHandler(
         if (!gameControl.isWindowVisible) {
             activeScene.scripts(ASYNC_ANIMATION_CHANNEL, false) {
                 this.unsafeCast<DefaultGameDirector>().suspendAnimation {
-                    achievementPopup(eventData.achievementId, startCoordinate)
+                    achievementPopup(eventData.achievementId)
                 }
             }
         } else {
             GlobalScope.launch {
-                achievementPopup(eventData.achievementId, startCoordinate)
+                achievementPopup(eventData.achievementId)
             }
         }
     }
@@ -146,13 +142,13 @@ class GlobalEventHandler(
     private fun PixelCoordinate.isOutOfGameContainer(gameContainerSize: PixelSize) = x < 0 || y < 0 || x >= gameContainerSize.width || y >= gameContainerSize.height
 
     private suspend fun itemPopup(item: String, startPointInGameContainer: PixelCoordinate) {
+        val iconUrl = game.resolve(game.itemAchievementManager.getItems().getValue(item).metadata.icon)
+
         val text = game.i(item)
         val canvasState = game.activeScene.canvasState
         game.bannerController.showBanner(Banner(game.i("GetItem", text), "success", 5))
-        playAudio("popup")
         itemPopupEffect(
-            item,
-            game.getIconUrl(item),
+            iconUrl,
             canvasState.gameContainerSize,
             startPointInGameContainer,
             canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(
@@ -163,21 +159,19 @@ class GlobalEventHandler(
         )
     }
 
-    private suspend fun achievementPopup(achievementId: String, startPointInGameContainer: PixelCoordinate) {
-        val text = game.i(achievementId)
+    private suspend fun achievementPopup(achievementId: String) {
+        val achievementMetadata = game.itemAchievementManager.getAchievements().getValue(achievementId).metadata
+
+        val text = game.i(achievementMetadata.nameTextId)
         val canvasState = game.activeScene.canvasState
         game.bannerController.showBanner(Banner(game.i("GetAchievement", text), "success", 5))
-        playAudio("achievement")
-        itemPopupEffect(
-            achievementId,
-            game.getIconUrl(achievementId),
-            canvasState.gameContainerSize,
-            startPointInGameContainer,
+        showAchievementEffect(
+            canvasState,
+            game.resolve(achievementMetadata.icon),
             canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(
                 0,
                 250
-            ), /* items box offset */
-            5.0
+            )
         )
     }
 }

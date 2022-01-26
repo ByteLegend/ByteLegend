@@ -49,7 +49,6 @@ const val ACHIEVEMENT_UPDATE_EVENT = "protocol.achievement.update"
 fun challengeUpdateEvent(mapId: String) = "protocol.challenge.update.$mapId"
 val CHALLENGE_UPDATE_EVENT_PREFIX = challengeUpdateEvent("")
 val PLAYER_SPEECH_EVENT_PREFIX = playerSpeechEvent("")
-const val REMOVE_STATE_EVENT = "protocol.remove.state"
 const val PUT_STATE_EVENT = "protocol.put.state"
 const val REMOVE_ITEM_EVENT = "protocol.remove.item"
 const val PROTOCOL_PAY_AND_ENTER_SCENE = "protocol.pay.and.enter.scene"
@@ -69,7 +68,6 @@ interface GameServerProtocol {
 
     // TODO verify frontend input
     suspend fun putState(key: String, value: String)
-    suspend fun removeState(key: String)
     suspend fun removeItem(item: String)
     suspend fun switchScene(destMapId: String)
     suspend fun speak(sentenceId: String)

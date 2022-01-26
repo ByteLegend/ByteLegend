@@ -26,6 +26,9 @@ import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.client.misc.uuid
+import com.bytelegend.app.client.utils.GameScriptHelpers
+import com.bytelegend.app.client.utils.animationWithFixedInterval
+import com.bytelegend.app.client.utils.configureBookSprite
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GIT_ISLAND
@@ -40,9 +43,6 @@ import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.mapEntranceId
-import com.bytelegend.app.client.utils.GameScriptHelpers
-import com.bytelegend.app.client.utils.animationWithFixedInterval
-import com.bytelegend.app.client.utils.configureBookSprite
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.Element
@@ -55,7 +55,7 @@ const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
 const val NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE = "OldManGotCoffee"
 const val NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID = "remember-brave-people-challenge"
 const val STAR_BYTELEGEND_MISSION_ID = "star-bytelegend"
-const val STAR_BYTELEGEND_CHALLENGE_ID = "star-bytelegend-challenge"
+const val FIRST_STAR_MEDAL_ID = "first-star-medal"
 
 private const val SHOW_AD_MODAL = "show.ad.modal"
 
@@ -391,12 +391,12 @@ fun GameScene.pubGuard() = objects {
                         characterMove(HERO_ID, guardStartPoint + GridCoordinate(0, 1)) {
                             helpers.getCharacter(HERO_ID).direction = Direction.UP
                         }
-                        talkAboutFirstStar(guardId, objects)
+                        talkAboutFirstStar(guardId, gameRuntime.i("first-star-medal-name"), objects)
                         startBeginnerGuide()
                         putState(BEGINNER_GUIDE_FINISHED_STATE)
                     }
                 }
-                challengeAnswers.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
+                gameRuntime.heroPlayer.achievements.contains(FIRST_STAR_MEDAL_ID) -> {
                     helpers.getCharacter(guardId).gridCoordinate = guardMoveDestPoint
                 }
                 else -> {
@@ -408,7 +408,7 @@ fun GameScene.pubGuard() = objects {
         onClick = helpers.standardNpcSpeech(guardId) {
             if (helpers.getCharacter(guardId).gridCoordinate == guardStartPoint) {
                 when {
-                    !gameRuntime.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE) && challengeAnswers.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
+                    !gameRuntime.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE) && gameRuntime.heroPlayer.achievements.contains(FIRST_STAR_MEDAL_ID) -> {
                         // Player star first but hasn't finished beginner guide, show them
                         scripts {
                             startBeginnerGuide()
@@ -419,12 +419,12 @@ fun GameScene.pubGuard() = objects {
                     }
                     !gameRuntime.heroPlayer.states.containsKey(BEGINNER_GUIDE_FINISHED_STATE) -> {
                         scripts {
-                            talkAboutFirstStar(guardId, objects)
+                            talkAboutFirstStar(guardId, gameRuntime.i("first-star-medal-name"), objects)
                             startBeginnerGuide()
                             putState(BEGINNER_GUIDE_FINISHED_STATE)
                         }
                     }
-                    challengeAnswers.challengeAccomplished(STAR_BYTELEGEND_CHALLENGE_ID) -> {
+                    gameRuntime.heroPlayer.achievements.contains(FIRST_STAR_MEDAL_ID) -> {
                         // mission accomplished, let's celebrate!
                         scripts {
                             speech(guardId, "NiceJob", arrayOf("1", "0"))
@@ -433,7 +433,7 @@ fun GameScene.pubGuard() = objects {
                     }
                     else -> {
                         scripts {
-                            talkAboutFirstStar(guardId, objects)
+                            talkAboutFirstStar(guardId, gameRuntime.i("first-star-medal-name"), objects)
                             startBeginnerGuide()
                         }
                     }
@@ -652,11 +652,11 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
     }
 }
 
-fun ScriptsBuilder.talkAboutFirstStar(guardId: String, objects: GameObjectContainer) {
-    speech(guardId, "FirstStarMedalCondition")
+fun ScriptsBuilder.talkAboutFirstStar(guardId: String, medalName: String, objects: GameObjectContainer) {
+    speech(guardId, "FirstStarMedalCondition", arrayOf(medalName))
     speech(HERO_ID, "WhereToFindStar")
     speech(
-        guardId, "IDontKnowTakeALookAtStarBytelegend",
+        guardId, "TakeALookAtStarBytelegend",
         arrayOf(
             objects.getPointById(STAR_BYTELEGEND_MISSION_ID).toHumanReadableCoordinate().toString()
         )
