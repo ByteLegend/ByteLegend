@@ -53,6 +53,7 @@ const val PULL_REQUEST_PROBLEM = "PullRequestProblem"
 const val ACCOUNT_BINDING_SORT_KEY = "AccountBinding"
 const val INVITED_PEOPLE_SORT_KEY = "InvitedPeople"
 const val CHALLENGE_ANSWERS_SORT_KEY = "ChallengeAnswers"
+const val MAP_CHALLENGE_STATES_SORT_KEY = "MapChallengeStates"
 
 interface StoredInPlayerTable {
     val pk: String

@@ -23,6 +23,7 @@ import com.bytelegend.app.servershared.RRBDResourceProvider
 import com.bytelegend.app.servershared.dal.SESSION_COOKIE_NAME
 import com.bytelegend.app.servershared.mock.anonymousPlayer
 import com.bytelegend.app.servershared.mock.mockPlayer
+import com.bytelegend.app.shared.entities.MapChallengeStates
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.enums.ServerLocation
@@ -231,7 +232,7 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
                 GET_SCENE_INIT_DATA -> SceneInitData(
                     1,
                     emptyList(),
-                    emptyList()
+                    MapChallengeStates()
                 )
                 PUT_STATE_EVENT -> ""
                 else -> throw IllegalArgumentException("Unsupported message name: ${message.name}")

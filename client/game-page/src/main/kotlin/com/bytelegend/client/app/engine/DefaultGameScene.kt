@@ -97,7 +97,7 @@ class DefaultGameScene(
     /**
      * Sometimes we want to know missions "around" a coordinate, i.e. missions in up/down/left/right tile of a coordinate.
      * This caches the mapping of grid coordinate to "missions around".
-     * Key: GridCoodinate.toString()
+     * Key: GridCoordinate.toString()
      * Value: the missions around the coordinate
      */
     private val gridCoordinateToMissionsAroundCache: MutableMap<String, List<GameMission>> = JSObjectBackedMap()

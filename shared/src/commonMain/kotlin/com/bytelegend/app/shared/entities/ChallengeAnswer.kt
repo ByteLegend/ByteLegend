@@ -176,5 +176,5 @@ data class CheckRunAnswerData(
 class SceneInitData(
     val online: Int,
     val players: List<BasePlayer>,
-    val challengeAnswers: List<ChallengeAnswers>
+    val states: MapChallengeStates
 )

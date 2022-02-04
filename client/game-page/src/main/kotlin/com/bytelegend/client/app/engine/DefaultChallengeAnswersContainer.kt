@@ -25,11 +25,15 @@ import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.client.misc.playAudio
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
+import com.bytelegend.app.shared.entities.AccomplishmentState
 import com.bytelegend.app.shared.entities.ChallengeAnswer
 import com.bytelegend.app.shared.entities.ChallengeAnswers
+import com.bytelegend.app.shared.entities.MapChallengeStates
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.toPullRequestAnswers
 import com.bytelegend.app.shared.objects.GameObjectRole
@@ -45,8 +49,6 @@ import com.bytelegend.client.app.script.effect.starFlyEffect
 import com.bytelegend.client.app.ui.STAR_INCREMENT_EVENT
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
 import com.bytelegend.client.app.ui.menu.determineMenuCoordinateInGameContainer
-import com.bytelegend.app.client.utils.JSArrayBackedList
-import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
@@ -54,7 +56,7 @@ import org.kodein.di.instance
 
 class DefaultChallengeAnswersContainer(
     di: DI,
-    challengeAnswerList: List<ChallengeAnswers>
+    private val mapChallengeStates: MapChallengeStates
 ) : ChallengeAnswersContainer {
     private val eventBus: EventBus by di.instance()
     private val game: GameRuntime by di.instance()
@@ -63,13 +65,6 @@ class DefaultChallengeAnswersContainer(
     private val missionIdToChallenges: MutableMap<String, List<String>> = JSObjectBackedMap()
     private val challengeIdToPullRequestAnswers: MutableMap<String, List<PullRequestAnswer>> = JSObjectBackedMap()
     private val challengeIdToAnswers: MutableMap<String, ChallengeAnswers> = JSObjectBackedMap()
-
-    init {
-        challengeAnswerList.forEach { answerOfChallenge ->
-            challengeIdToAnswers[answerOfChallenge.challengeId] = answerOfChallenge
-            challengeIdToPullRequestAnswers[answerOfChallenge.challengeId] = answerOfChallenge.toPullRequestAnswers()
-        }
-    }
 
     private val starUpdateEventListener: EventListener<StarUpdateEventData> = this::onStarUpdate
     private val challengeUpdateEventListener: EventListener<ChallengeUpdateEventData> = this::onChallengeAnswersUpdate
@@ -84,7 +79,7 @@ class DefaultChallengeAnswersContainer(
     }
 
     override fun challengeAccomplished(challengeId: String): Boolean {
-        return challengeIdToAnswers[challengeId]?.accomplished == true
+        return mapChallengeStates.challenges[challengeId]?.accomplished == true
     }
 
     override fun missionAccomplished(missionId: String): Boolean {
@@ -98,7 +93,7 @@ class DefaultChallengeAnswersContainer(
     }
 
     override fun challengeStar(challengeId: String): Int {
-        return challengeIdToAnswers[challengeId]?.star ?: 0
+        return mapChallengeStates.challenges[challengeId]?.star ?: 0
     }
 
     override fun missionStar(missionId: String): Int {
@@ -121,11 +116,13 @@ class DefaultChallengeAnswersContainer(
         return challengeIdToPullRequestAnswers[challengeId] ?: emptyList()
     }
 
-    private fun putChallengeAnswers(challengeAnswers: ChallengeAnswers) {
+    fun putChallengeAnswers(challengeAnswers: ChallengeAnswers) {
         val challengeId = challengeAnswers.challengeId
-        val oldChallengeAnswers = this.challengeIdToAnswers[challengeId]
+
+        val oldChallengeAnswers = challengeIdToAnswers[challengeId]
         if (oldChallengeAnswers == null) {
-            this.challengeIdToAnswers[challengeId] = challengeAnswers
+            mapChallengeStates.challenges[challengeId] = AccomplishmentState(challengeAnswers.accomplished, challengeAnswers.star)
+            challengeIdToAnswers[challengeId] = challengeAnswers
             challengeIdToPullRequestAnswers[challengeId] = challengeAnswers.toPullRequestAnswers()
         } else {
             // When the answer events from server are misordered, it might be:
@@ -148,6 +145,7 @@ class DefaultChallengeAnswersContainer(
                 newAnswers.mapValues { it.value.toList() }
             )
 
+            mapChallengeStates.challenges[challengeId] = AccomplishmentState(newChallengeAnswers.accomplished, newChallengeAnswers.star)
             challengeIdToAnswers[challengeId] = newChallengeAnswers
             challengeIdToPullRequestAnswers[challengeId] = newChallengeAnswers.toPullRequestAnswers()
         }

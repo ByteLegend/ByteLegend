@@ -130,13 +130,13 @@ class DefaultGameSceneContainer(
         loadI18nResource(mapId, true)
         val tileset = resourceLoader.loadAsync(ImageResource(mapTilesetResourceId(mapId), "$RRBD/map/$mapId/tileset.png"))
         val mapScript = resourceLoader.loadAsync(TextAjaxResource(mapScriptResourceId(mapId), "$RRBD/js/game-$mapId.js"))
-        val sceneInitData = resourceLoader.loadAsync(GameSceneInitResource(mapId, game.webSocketClient))
+        val sceneInitData = resourceLoader.loadAsync(GameSceneInitResource(game.heroPlayer.id, mapId, game.webSocketClient))
 
         val scene = DefaultGameScene(di, map.await(), tileset.await(), gameContainerSize)
         val initData = sceneInitData.await()
 
         scene.players = PlayerContainer(mapId, eventBus, game.webSocketClient, resourceLoader, initData.players).apply { init(scene) }
-        scene.challengeAnswers = DefaultChallengeAnswersContainer(di, sceneInitData.await().challengeAnswers.asDynamic()).apply { init(scene) }
+        scene.challengeAnswers = DefaultChallengeAnswersContainer(di, sceneInitData.await().states).apply { init(scene) }
         scenes[mapId] = scene
         switchScene(oldScene, scene, switchAfterLoading, action)
 

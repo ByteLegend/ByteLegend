@@ -18,6 +18,7 @@
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.EventBus
+import com.bytelegend.app.client.api.GameSceneContainer
 import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.client.app.web.getMissionModalData
 import com.bytelegend.app.client.utils.JSObjectBackedMap
@@ -32,6 +33,7 @@ const val MISSION_DATA_LOAD_FINISH = "mission.data.load.finish"
 class MissionContainer(
     di: DI,
 ) {
+    private val sceneContainer: GameSceneContainer by di.instance()
     private val eventBus: EventBus by di.instance()
     private val loadingMissions: MutableSet<String> = jsObjectBackedSetOf()
     private val missionData: MutableMap<String, MissionModalData> = JSObjectBackedMap()
@@ -61,7 +63,15 @@ class MissionContainer(
     private fun load(missionId: String) {
         loadingMissions.add(missionId)
         GlobalScope.launch {
-            missionData[missionId] = getMissionModalData(missionId)
+            val modalData = getMissionModalData(missionId)
+            missionData[missionId] = modalData
+
+            modalData.challengeAnswers.forEach {
+                sceneContainer.activeScene!!
+                    .challengeAnswers.unsafeCast<DefaultChallengeAnswersContainer>()
+                    .putChallengeAnswers(it)
+            }
+
             loadingMissions.remove(missionId)
             eventBus.emit(MISSION_DATA_LOAD_FINISH, missionId)
         }

@@ -44,11 +44,15 @@ open class Player : BasePlayer() {
 
     /**
      * Note: items and states are updated asynchronously.
-     * This means that `save()` should avoid saving these two fields.
+     * This means that `save()` should avoid saving these ReadOnly-marked fields.
      */
     @get: ReadOnly
     // it's stored as dynamodb set
     var items: MutableList<String> = ArrayList()
+
+    @get: ReadOnly
+    // it's stored as dynamodb set
+    var usedItems: MutableList<String> = ArrayList()
 
     @get: ReadOnly
     // it's stored as dynamodb set

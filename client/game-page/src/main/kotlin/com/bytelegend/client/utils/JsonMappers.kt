@@ -20,6 +20,7 @@ package com.bytelegend.app.client.utils
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.InvitationInformation
+import com.bytelegend.app.shared.entities.AccomplishmentState
 import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.entities.ChallengeAnswer
 import com.bytelegend.app.shared.entities.ChallengeAnswers
@@ -27,6 +28,7 @@ import com.bytelegend.app.shared.entities.ChallengeTabData
 import com.bytelegend.app.shared.entities.DiscussionsTabData
 import com.bytelegend.app.shared.entities.HeroNoticeboardTabData
 import com.bytelegend.app.shared.entities.LivestreamData
+import com.bytelegend.app.shared.entities.MapChallengeStates
 import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.MissionTabData
 import com.bytelegend.app.shared.entities.MissionTabType.Discussions
@@ -217,11 +219,22 @@ fun <T> toTypedMap(jsonObject: dynamic, valueMapper: (dynamic) -> T): Map<String
 fun toSceneInitData(heroId: String, jsonObject: dynamic) = SceneInitData(
     jsonObject.online as Int,
     toTypedList(jsonObject.players, ::toBasePlayer).filter { it.id != heroId },
-    toTypedList(jsonObject.challengeAnswers, ::toChallengeAnswers)
+    toMapStates(jsonObject.states)
 )
 
+fun toMapStates(jsonObject: dynamic) = MapChallengeStates().apply {
+    challenges = toTypedMap(jsonObject.challenges, ::toAccomplishmentState).unsafeCast<MutableMap<String, AccomplishmentState>>()
+}
+
+fun toAccomplishmentState(jsonObject: dynamic) = jsonObject.unsafeCast<AccomplishmentState>()
+
+fun toItems(jsonObject: dynamic): List<String> {
+    return jsonObject.unsafeCast<Array<String>>().toList()
+}
+
 fun toMissionModalData(jsonObject: dynamic) = MissionModalData(
-    toTypedList(jsonObject.tabs, ::toMissionTabData)
+    toTypedList(jsonObject.tabs, ::toMissionTabData),
+    toTypedList(jsonObject.challengeAnswers, ::toChallengeAnswers)
 )
 
 fun toMissionTabData(jsonObject: dynamic): MissionTabData<*> {
