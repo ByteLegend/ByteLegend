@@ -45,3 +45,5 @@ class AccomplishmentState(
     var accomplished: Boolean = false,
     var star: Int = 0
 )
+
+fun ChallengeAnswers.toAccomplishmentState() = AccomplishmentState(accomplished, star)

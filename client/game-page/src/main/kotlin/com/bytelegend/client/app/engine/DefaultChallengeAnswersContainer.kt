@@ -35,6 +35,7 @@ import com.bytelegend.app.shared.entities.ChallengeAnswer
 import com.bytelegend.app.shared.entities.ChallengeAnswers
 import com.bytelegend.app.shared.entities.MapChallengeStates
 import com.bytelegend.app.shared.entities.PullRequestAnswer
+import com.bytelegend.app.shared.entities.toAccomplishmentState
 import com.bytelegend.app.shared.entities.toPullRequestAnswers
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
@@ -121,7 +122,7 @@ class DefaultChallengeAnswersContainer(
 
         val oldChallengeAnswers = challengeIdToAnswers[challengeId]
         if (oldChallengeAnswers == null) {
-            mapChallengeStates.challenges[challengeId] = AccomplishmentState(challengeAnswers.accomplished, challengeAnswers.star)
+            mapChallengeStates.challenges[challengeId] = challengeAnswers.toAccomplishmentState()
             challengeIdToAnswers[challengeId] = challengeAnswers
             challengeIdToPullRequestAnswers[challengeId] = challengeAnswers.toPullRequestAnswers()
         } else {
