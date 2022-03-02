@@ -272,6 +272,15 @@ body {
     margin-left: 10px;
 }
 
+.inline-icon-32 {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background-size: 100% 100%;
+    vertical-align: middle;
+    object-fit: contain;
+}
+
 .inline-icon-16 {
     margin-left: 5px;
     margin-right: 5px;
@@ -284,7 +293,7 @@ body {
 }
 
 .outer-glow {
-    filter: drop-shadow(0px 0px 5px white);
+    filter: drop-shadow(0px 0px 8px white);
 }
 
 .coin-icon {
@@ -959,4 +968,20 @@ div.speech-bubble::after {
     /*display: flex;*/
     /*justify-content: center;*/
     /*align-items: center;*/
+}
+
+.tile-cursor-green {
+    border: green 4px dashed;
+}
+
+.tile-cursor-red {
+    border: red 4px dashed;
+}
+
+.tile-cursor-blue {
+    border: #007bff 4px dashed;
+}
+
+.tile-cursor-white {
+    border: white 4px dashed;
 }

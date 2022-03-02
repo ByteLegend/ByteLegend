@@ -83,9 +83,9 @@ class TileCursorWidget : GameUIComponent<GameProps, TileCursorWidgetState>() {
     override fun render() = Fragment.create {
         if (state.cursorCoordinateOnMap != undefined && !state.cursorCoordinateOnMap!!.outOf(mapGridSize)) {
             val coordinateInCanvas = (state.cursorCoordinateOnMap!! * tileSize) - canvasCoordinateInMap + canvasCoordinateInGameContainer
-            val borderColor = determineBorderColor(state.cursorCoordinateOnMap!!)
+            val borderClass = determineBorderColor(state.cursorCoordinateOnMap!!)
 
-            if (state.animationFrameIndex != 0 || borderColor == "red") {
+            if (state.animationFrameIndex != 0 || borderClass.endsWith("red")) {
                 absoluteDiv(
                     left = coordinateInCanvas.x + 3,
                     top = coordinateInCanvas.y + 3,
@@ -93,9 +93,7 @@ class TileCursorWidget : GameUIComponent<GameProps, TileCursorWidgetState>() {
                     height = tileSize.height,
                     zIndex = Layer.CursorWidget.zIndex(),
                     opacity = 0.7,
-                    extraStyleBuilder = {
-                        border = "$borderColor 4px dashed"
-                    }
+                    className = borderClass
                 )
             } else {
                 absoluteDiv(
@@ -105,25 +103,23 @@ class TileCursorWidget : GameUIComponent<GameProps, TileCursorWidgetState>() {
                     height = tileSize.height - 4,
                     zIndex = Layer.CursorWidget.zIndex(),
                     opacity = 0.7,
-                    extraStyleBuilder = {
-                        border = "$borderColor 4px dashed"
-                    }
+                    className = borderClass
                 )
             }
         }
     }
 
     private fun determineBorderColor(cursorCoordinate: GridCoordinate): String = when {
-        game.hero != null && game.hero!!.gridCoordinate == cursorCoordinate -> "white"
-        isClickable(cursorCoordinate) -> "#007bff"
-        game.hero == null -> "white"
-        game.activeScene != game._hero!!.gameScene -> "white"
-        game.hero!!.searchPath(cursorCoordinate).isEmpty() -> "red"
-        else -> "green"
+        game.hero != null && game.hero!!.gridCoordinate == cursorCoordinate -> "tile-cursor-white"
+        isClickable(cursorCoordinate) -> "tile-cursor-blue"
+        game.hero == null -> "tile-cursor-white"
+        game.activeScene != game._hero!!.gameScene -> "tile-cursor-white"
+        game.hero!!.searchPath(cursorCoordinate).isEmpty() -> "tile-cursor-red"
+        else -> "tile-cursor-green"
     }
 
     private fun isClickable(cursorCoordinate: GridCoordinate) =
-        game.activeScene.objects.getByCoordinate(cursorCoordinate).any {
-            it.roles.contains(GameObjectRole.Clickable.toString())
+        game.activeScene.objects.getByCoordinate(cursorCoordinate).objects.any {
+            it.value.roles.contains(GameObjectRole.Clickable.toString())
         }
 }
