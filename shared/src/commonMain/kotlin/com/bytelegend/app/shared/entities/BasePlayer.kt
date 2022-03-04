@@ -67,6 +67,8 @@ open class BasePlayer : GridCoordinateAware {
      * Whether the player is currently keeping a connection to server.
      *
      * 0: the player is offline.
+     * -1: the player hasn't signed up yet, but we need to store some items/achievements.
+     *     In this case we create a "placeholder" player without names/emails/nicknames.
      * positive number: the id of the server which the player connects to.
      *
      */

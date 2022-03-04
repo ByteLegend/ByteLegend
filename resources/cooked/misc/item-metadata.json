@@ -1,32 +1,44 @@
 [
   {
-    "id": "key",
-    "icon": "/img/item/key.png",
+    "iconId": "key",
+    "iconUrl": "/img/item/key.png",
     "nameTextId": "item-key-name",
     "descTextId": "item-key-desc"
   },
   {
-    "id": "coffee-icon",
-    "icon": "/img/item/coffee-icon.png",
+    "iconId": "door-key",
+    "iconUrl": "/img/item/door-key.png",
+    "nameTextId": "item-door-key-name",
+    "descTextId": "item-door-key-desc"
+  },
+  {
+    "iconId": "coffee-icon",
+    "iconUrl": "/img/item/coffee-icon.png",
     "nameTextId": "item-coffee-name",
     "descTextId": "item-coffee-desc"
   },
   {
-    "id": "iron-sword",
-    "icon": "/img/item/iron-sword.png",
+    "iconId": "iron-sword",
+    "iconUrl": "/img/item/iron-sword.png",
     "nameTextId": "item-iron-sword-name",
     "descTextId": "item-iron-sword-desc"
   },
   {
-    "id": "silver-sword",
-    "icon": "/img/item/silver-sword.png",
+    "iconId": "silver-sword",
+    "iconUrl": "/img/item/silver-sword.png",
     "nameTextId": "item-silver-sword-name",
     "descTextId": "item-silver-sword-desc"
   },
   {
-    "id": "gold-sword",
-    "icon": "/img/item/gold-sword.png",
+    "iconId": "gold-sword",
+    "iconUrl": "/img/item/gold-sword.png",
     "nameTextId": "item-gold-sword-name",
     "descTextId": "item-gold-sword-desc"
+  },
+  {
+    "iconId": "dagger",
+    "iconUrl": "/img/item/dagger.png",
+    "nameTextId": "item-dagger-name",
+    "descTextId": "item-dagger-desc"
   }
 ]

@@ -19,7 +19,7 @@ package com.bytelegend.client.app.page
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.WindowBasedEventBus
-import com.bytelegend.app.client.utils.toGameInitData
+import com.bytelegend.client.utils.toGameInitData
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.PixelSize

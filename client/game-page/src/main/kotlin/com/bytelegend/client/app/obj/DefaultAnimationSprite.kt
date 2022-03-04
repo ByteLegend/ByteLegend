@@ -20,11 +20,11 @@ import com.bytelegend.app.client.api.AnimationSprite
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.client.misc.uuid
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import com.bytelegend.app.shared.objects.GameMapAnimation
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.util.currentTimeMillis
-import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
 
 class DefaultAnimationSprite(

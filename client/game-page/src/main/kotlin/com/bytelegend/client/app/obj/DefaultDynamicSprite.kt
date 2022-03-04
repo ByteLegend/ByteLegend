@@ -20,6 +20,7 @@ import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.Static
 import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelBlock
 import com.bytelegend.app.shared.PixelSize
@@ -27,7 +28,6 @@ import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.atTileBorder
-import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import org.w3c.dom.CanvasRenderingContext2D
 
 /**
@@ -80,6 +80,9 @@ fun CanvasRenderingContext2D.draw(dynamicSprite: DynamicSprite) {
     val mapDynamicSprite = dynamicSprite.mapDynamicSprite
     val gameScene = dynamicSprite.gameScene
     val nextFrame = dynamicSprite.animation.getNextFrameIndex()
+    if (nextFrame == -1) {
+        return
+    }
 
     for (y in 0 until mapDynamicSprite.size.height) {
         for (x in 0 until mapDynamicSprite.size.width) {

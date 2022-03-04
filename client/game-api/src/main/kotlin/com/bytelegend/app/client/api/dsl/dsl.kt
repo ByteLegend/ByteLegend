@@ -20,6 +20,7 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.objects.GameObject
 
 typealias UnitFunction = () -> Unit
+typealias GameObjectFunction = (GameObject) -> Unit
 typealias SuspendUnitFunction = suspend () -> Unit
 
 val EMPTY_FUNCTION: UnitFunction = {}
@@ -45,7 +46,7 @@ class NpcBuilder {
      */
     var sprite: String? = null
     var onInit: UnitFunction = {}
-    var onTouch: (GameObject) -> Unit = {}
+    var onTouch: GameObjectFunction = {}
     var onClick: UnitFunction = {}
 }
 
@@ -54,11 +55,21 @@ class DynamicSpriteBuilder {
 
     /**
      * The dynamic sprite id, see GameMapDynamicSprite.
-     * If null, it will be an "empty" point but clickable.
+     * If null, it will be an "empty" point.
      */
     var sprite: String? = null
     var gridCoordinate: GridCoordinate? = null
-    var onClick: UnitFunction = {}
+
+    /**
+     * If set, it will be "clickable" and "unable to be set as destination",
+     * otherwise, it is a walkable point.
+     */
+    var onClick: UnitFunction? = null
+
+    /**
+     * The function when the player steps into the tile.
+     */
+    var onTouch: GameObjectFunction? = null
 }
 
 interface ObjectsBuilder {

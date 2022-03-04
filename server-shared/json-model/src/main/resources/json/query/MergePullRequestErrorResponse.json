@@ -1,0 +1,20 @@
+{
+  "data": {
+    "mergePullRequest": null
+  },
+  "errors": [
+    {
+      "type": "UNPROCESSABLE",
+      "path": [
+        "mergePullRequest"
+      ],
+      "locations": [
+        {
+          "line": 2,
+          "column": 7
+        }
+      ],
+      "message": "Head branch was modified. Review and try the merge again."
+    }
+  ]
+}

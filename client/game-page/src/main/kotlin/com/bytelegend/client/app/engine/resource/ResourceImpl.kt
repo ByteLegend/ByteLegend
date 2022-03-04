@@ -22,6 +22,7 @@ import com.bytelegend.app.client.misc.getOrCreateImageElement
 import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.app.engine.ItemOrAchievementMetadata
+import com.bytelegend.client.app.web.checkStatusCode
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.dom.HTMLAudioElement
@@ -51,7 +52,7 @@ class ItemAchievementMetadataResource(id: String, url: String) : AjaxResource<Ma
         return response.json().await().unsafeCast<Array<dynamic>>().let {
             val result = JSObjectBackedMap<ItemOrAchievementMetadata>()
             it.forEach {
-                result[it.id] = it
+                result[it.iconId] = it
             }
             result
         }
@@ -111,9 +112,7 @@ abstract class AjaxResource<T>(
             window.fetch(url)
                 .await()
                 .apply {
-                    if (status < 200 || status > 400) {
-                        throw Exception("Got response status code $status when requesting $url")
-                    }
+                    checkStatusCode()
                 }
         )
     }

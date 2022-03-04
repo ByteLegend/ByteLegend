@@ -31,8 +31,10 @@ import java.awt.Polygon
 import com.bytelegend.github.utils.generated.TiledMap.Layer as TiledMapLayer
 import com.bytelegend.github.utils.generated.TiledMap.Object as TiledMapObject
 
-const val DYNAMIC_SPRITE_LAYER_GROUP_NAME = "DynamicSprites"
-const val ANIMATION_LAYER_GROUP_NAME = "Animations"
+enum class SpecialMapGroup(val tilesetImgDir: String, val tilesetJsonDir: String) {
+    DynamicSprites("tilesets", "tileset-jsons"),
+    Animations("animations", "animation-jsons")
+}
 
 /**
  * The "Type" property of an object on Tiled map.
@@ -198,7 +200,7 @@ class TiledObjectReader(
         val rawMissionObjects: List<TiledMapObject> = readObjects(TiledObjectType.GameMapMission) { _, obj -> obj }
         val tiledNumberIdToRawMissionObjects: Map<Long, TiledMapObject> = rawMissionObjects.associateBy { it.id }
 
-        val dynamicSpriteLayers: List<TiledMap.Layer2> = tiledMap.layers.find { it.type == "group" && it.name == DYNAMIC_SPRITE_LAYER_GROUP_NAME }?.layers
+        val dynamicSpriteLayers: List<TiledMap.Layer2> = tiledMap.layers.find { it.type == "group" && it.name == SpecialMapGroup.DynamicSprites.name }?.layers
             ?: emptyList()
         // key: the tile id (gid)
         // value: the dynamic sprite id

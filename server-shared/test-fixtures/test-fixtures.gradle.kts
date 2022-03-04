@@ -30,5 +30,6 @@ dependencies {
     api(libs("selenium-firefox-driver"))
     api(project(":shared"))
     api(project(":server-shared:common"))
+    api(project(":server-shared:json-model"))
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 }

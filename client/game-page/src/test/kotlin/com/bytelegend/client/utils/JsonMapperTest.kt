@@ -15,6 +15,7 @@
  */
 package com.bytelegend.app.client.utils
 
+import com.bytelegend.client.utils.toChallengeAnswer
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

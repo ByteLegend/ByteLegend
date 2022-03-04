@@ -20,12 +20,11 @@ import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.Static
+import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.client.api.closeMissionModalEvent
 import com.bytelegend.app.client.api.openMissionModalEvent
 import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import kotlinx.browser.window
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 // TODO this should not in `game-api` module
 
@@ -48,39 +47,38 @@ fun DynamicSprite.configureBookSprite() {
     }
 }
 
-suspend fun DynamicSprite.runAnimationWithFixedInterval(spriteId: String, ms: Long, startFrameIndex: Int = 0): Int {
-    val sprite = gameScene.objects.getById<GameMapDynamicSprite>(spriteId)
-    animation = sprite.animationWithFixedInterval(ms, startFrameIndex, false)
-    val frameNumber = if (startFrameIndex == 0) sprite.frames[0][0].size else startFrameIndex
-    /*
-    Don't use delay here
-    "ClassCastException: Illegal cast
-    at Object.captureStack (webpack-internal:///./kotlin-dce-dev/kotlin.js:38600:15)
-    at ClassCastException.Exception [as constructor] (webpack-internal:///./kotlin-dce-dev/kotlin.js:38933:14)
-    at ClassCastException.RuntimeException [as constructor] (webpack-internal:///./kotlin-dce-dev/kotlin.js:38959:17)
-    at RuntimeException_init_0 (webpack-internal:///./kotlin-dce-dev/kotlin.js:38970:24)
-    at new ClassCastException (webpack-internal:///./kotlin-dce-dev/kotlin.js:39089:7)
-    at throwCCE_0 (webpack-internal:///./kotlin-dce-dev/kotlin.js:42807:13)
-    at get_DefaultDelay (webpack-internal:///./kotlin-dce-dev/kotlinx-coroutines-core.js:31316:84)
-    at get_delay (webpack-internal:///./kotlin-dce-dev/kotlinx-coroutines-core.js:2393:136)
-    at eval (webpack-internal:///./kotlin-dce-dev/kotlinx-coroutines-core.js:2378:5)
-    at eval (webpack-internal:///./kotlin-dce-dev/kotlinx-coroutines-core.js:2345:3)"
-     */
-    return suspendCoroutine { continuation ->
-        window.setTimeout({
-            continuation.resume(0)
-        }, (frameNumber * ms).toInt())
+/**
+ * Create an animation with `ms` interval, beginning at `startFrameIndexInclusive`th frame, ending at `endFrameIndexExclusive-1`th frame.
+ */
+fun GameMapDynamicSprite.animationWithFixedInterval(
+    ms: Number,
+    startFrameIndexInclusive: Int = 0,
+    endFrameIndexExclusive: Int = -1, /* -1 means all frames */
+    repetitive: Boolean = true
+): FramePlayingAnimation {
+    val endFrameIndex = if (endFrameIndexExclusive == -1) frames[0][0].size else endFrameIndexExclusive
+    require(startFrameIndexInclusive < endFrameIndex)
+    val frames = (startFrameIndexInclusive until endFrameIndex).map {
+        AnimationFrame(it, ms.toInt())
+    }.toTypedArray()
+    return FramePlayingAnimation(frames, repetitive)
+}
+
+fun DynamicSprite.setAnimation(frameIntervalMs: Int, range: AnimationFrameRange) {
+    if (range.startIndexInclusive == range.endIndexExclusive) {
+        animation = StaticFrame(range.startIndexInclusive)
+    } else {
+        animation = mapDynamicSprite.animationWithFixedInterval(frameIntervalMs, range.startIndexInclusive, range.endIndexExclusive)
     }
 }
 
 /**
- * Create an animation with `ms` interval, and the beginning `startFrameIndex` frames. `frameNum=0` means all frames.
+ * Represents a list of animation frames.
+ *
+ * If startIndexInclusive == endIndexExclusive, it means a static frame (no animation).
+ * Otherwise, it means the animation should be created from index in [startIndexInclusive, endIndexExclusive)
  */
-fun GameMapDynamicSprite.animationWithFixedInterval(ms: Number, startFrameIndex: Int = 0, repetitive: Boolean = true): FramePlayingAnimation {
-    val size = if (startFrameIndex == 0) frames[0][0].size else startFrameIndex
-    val array = emptyArray<AnimationFrame>()
-    repeat(size) {
-        array[it] = (AnimationFrame(it, ms.toInt()))
-    }
-    return FramePlayingAnimation(array, repetitive)
-}
+data class AnimationFrameRange(
+    val startIndexInclusive: Int = 0,
+    val endIndexExclusive: Int = -1 /* -1 means all frames */
+)

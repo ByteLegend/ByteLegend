@@ -20,6 +20,14 @@ import com.bytelegend.app.client.api.ImageResourceData
 import com.bytelegend.app.shared.DOWN_MOVE
 import com.bytelegend.app.shared.DOWN_STILL
 import com.bytelegend.app.shared.Direction
+import com.bytelegend.app.shared.Direction.DOWN
+import com.bytelegend.app.shared.Direction.LEFT
+import com.bytelegend.app.shared.Direction.LEFT_DOWN
+import com.bytelegend.app.shared.Direction.LEFT_UP
+import com.bytelegend.app.shared.Direction.RIGHT
+import com.bytelegend.app.shared.Direction.RIGHT_DOWN
+import com.bytelegend.app.shared.Direction.RIGHT_UP
+import com.bytelegend.app.shared.Direction.UP
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.LEFT_MOVE
 import com.bytelegend.app.shared.LEFT_STILL
@@ -52,18 +60,18 @@ class TwelveTilesAnimationSet(
     override fun getFrame(still: Boolean, direction: Direction): Pair<HTMLImageElement, PixelBlock> {
         val coordinateIn12Set = if (still) {
             when (direction) {
-                Direction.UP -> UP_STILL
-                Direction.DOWN -> DOWN_STILL
-                Direction.LEFT -> LEFT_STILL
-                Direction.RIGHT -> RIGHT_STILL
+                UP -> UP_STILL
+                DOWN -> DOWN_STILL
+                LEFT -> LEFT_STILL
+                RIGHT -> RIGHT_STILL
                 else -> throw IllegalStateException()
             }
         } else {
             when (direction) {
-                Direction.UP -> animationFrameOf(gameScene, UP_MOVE)
-                Direction.DOWN -> animationFrameOf(gameScene, DOWN_MOVE)
-                Direction.LEFT -> animationFrameOf(gameScene, LEFT_MOVE)
-                Direction.RIGHT -> animationFrameOf(gameScene, RIGHT_MOVE)
+                UP -> animationFrameOf(gameScene, UP_MOVE)
+                DOWN -> animationFrameOf(gameScene, DOWN_MOVE)
+                LEFT -> animationFrameOf(gameScene, LEFT_MOVE)
+                RIGHT -> animationFrameOf(gameScene, RIGHT_MOVE)
                 else -> throw IllegalStateException()
             }
         }
@@ -95,18 +103,18 @@ class MapTilesetAnimationSet(
     override fun getFrame(still: Boolean, direction: Direction): Pair<HTMLImageElement, PixelBlock> {
         val coordinateInTileset = if (still) {
             when (direction) {
-                Direction.UP -> upStill
-                Direction.DOWN -> downStill
-                Direction.LEFT -> leftStill
-                Direction.RIGHT -> rightStill
+                UP, LEFT_UP, RIGHT_UP -> upStill
+                DOWN, LEFT_DOWN, RIGHT_DOWN -> downStill
+                LEFT -> leftStill
+                RIGHT -> rightStill
                 else -> throw IllegalStateException()
             }
         } else {
             when (direction) {
-                Direction.UP -> animationFrameOf(gameScene, upMove)
-                Direction.DOWN -> animationFrameOf(gameScene, downMove)
-                Direction.LEFT -> animationFrameOf(gameScene, leftMove)
-                Direction.RIGHT -> animationFrameOf(gameScene, rightMove)
+                UP, LEFT_UP, RIGHT_UP -> animationFrameOf(gameScene, upMove)
+                DOWN, LEFT_DOWN, RIGHT_DOWN -> animationFrameOf(gameScene, downMove)
+                LEFT -> animationFrameOf(gameScene, leftMove)
+                RIGHT -> animationFrameOf(gameScene, rightMove)
                 else -> throw IllegalStateException()
             }
         }

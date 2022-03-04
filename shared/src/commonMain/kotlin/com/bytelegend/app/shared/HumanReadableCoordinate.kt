@@ -17,6 +17,7 @@ package com.bytelegend.app.shared
 
 import kotlinx.serialization.Serializable
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.pow
 
 /**
@@ -34,6 +35,7 @@ data class HumanReadableCoordinate(val x: Int, val y: Int) {
     // BA26 -> (26,26)
     constructor(letterX: String, y: Int) : this(fromLetters(letterX), y)
     constructor(viewportCoordinate: GridCoordinate) : this(viewportCoordinate.x, viewportCoordinate.y)
+
     private val letters: String = toLetters(x)
 
     fun toGridCoordinate() = GridCoordinate(x, y)
@@ -151,3 +153,5 @@ data class GridCoordinate(val x: Int, val y: Int) {
     override fun toString() = "($x,$y)"
     fun toHumanReadableCoordinate() = HumanReadableCoordinate(this)
 }
+
+fun GridCoordinate.missionHeroDistance(anotherX: Int, anotherY: Int) = max(abs(x - anotherX), abs(y - anotherY))

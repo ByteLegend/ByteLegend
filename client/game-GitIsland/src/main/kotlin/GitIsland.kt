@@ -18,10 +18,10 @@ import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.HERO_ID
-import com.bytelegend.app.client.api.StaticFrame
+import com.bytelegend.app.client.utils.GameScriptHelpers
+import com.bytelegend.app.client.utils.configureChestOpenByKey
 import com.bytelegend.app.shared.GIT_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND
-import com.bytelegend.app.client.utils.GameScriptHelpers
 import kotlinx.browser.window
 
 fun main() {
@@ -29,27 +29,26 @@ fun main() {
     gameRuntime.sceneContainer.getSceneById(GIT_ISLAND).apply {
         dockSailor()
         installGitStone()
-        configureBronzeGitMedalMission()
+        configureTempBlocker()
+        // configureBronzeGitMedalMission()
+    }
+}
+
+fun GameScene.configureTempBlocker() = objects {
+    dynamicSprite {
+        id = "TempBlocker"
+        gridCoordinate = objects.getPointById("TempBlockerPoint")
+        sprite = "Stone"
+        onClick = {
+            scripts {
+                speech("TempBlocker", "GitIslandOnlyOpenHere", arrow = false)
+            }
+        }
     }
 }
 
 fun GameScene.installGitStone() = objects {
-    val installGitMission = objects.getById<DynamicSprite>("install-git")
-    val installGitChallenge = "install-git-challenge"
-    val helpers = GameScriptHelpers(this@installGitStone)
-    if (challengeAnswers.challengeAccomplished(installGitChallenge)) {
-        helpers.removeMissionBlocker(installGitMission)
-        installGitMission.animation = StaticFrame(1)
-    } else {
-        helpers.addCloseCallbackToMission(installGitMission) {
-            if (challengeAnswers.challengeAccomplished(installGitChallenge) &&
-                installGitMission.animation.unsafeCast<StaticFrame>().frameIndex != 1
-            ) {
-                helpers.removeMissionBlocker(installGitMission)
-                installGitMission.animation = StaticFrame(1)
-            }
-        }
-    }
+    configureChestOpenByKey("install-git")
 }
 
 fun GameScene.configureBronzeGitMedalMission() {

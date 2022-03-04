@@ -42,8 +42,7 @@ import javax.imageio.ImageIO
  */
 fun main() {
     val tilesetName = System.getProperty("tilesetName")!!
-    val groupType = System.getProperty("groupType")!!
-    require(groupType == DYNAMIC_SPRITE_LAYER_GROUP_NAME || groupType == ANIMATION_LAYER_GROUP_NAME)
+    val groupType = SpecialMapGroup.valueOf(System.getProperty("groupType")!!)
 
     val inputImages = determineInputImages().onEach { resetBackgroundColor(it) }
     val opaqueRegion = inputImages.findOpaqueRegion()
@@ -52,12 +51,12 @@ fun main() {
     val outputFrameWidth = System.getProperty("outputFrameWidth")?.toInt() ?: opaqueRegion.width
     val outputFrameHeight = (1.0 * opaqueRegion.height / opaqueRegion.width * outputFrameWidth).toInt()
 
-    val frameGridSize = if (groupType == ANIMATION_LAYER_GROUP_NAME)
+    val frameGridSize = if (groupType == SpecialMapGroup.Animations)
         GridSize(1, 1)
     else
         GridSize(outputFrameWidth / 32, if (outputFrameHeight % 32 == 0) outputFrameHeight / 32 else (outputFrameHeight / 32 + 1))
 
-    val tilesetSize = if (groupType == ANIMATION_LAYER_GROUP_NAME)
+    val tilesetSize = if (groupType == SpecialMapGroup.Animations)
         PixelSize(outputFrameWidth * inputImages.size, outputFrameHeight)
     else
         PixelSize(frameGridSize.width * 32 * inputImages.size, frameGridSize.height * 32)
@@ -79,8 +78,8 @@ fun main() {
         )
     }
 
-    val tilesetDir = File("resources/raw/tilesets").apply { require(isDirectory) }
-    val tilesetJsonDir = File("resources/raw/tileset-jsons").apply { require(isDirectory) }
+    val tilesetDir = File("resources/raw/${groupType.tilesetImgDir}").apply { require(isDirectory) }
+    val tilesetJsonDir = File("resources/raw/${groupType.tilesetJsonDir}").apply { require(isDirectory) }
 
     val animationTiles = mutableListOf<TiledTileset.Tile>()
     for (x in 0 until frameGridSize.width) {
@@ -96,7 +95,7 @@ fun main() {
         prettyObjectMapper.writeValueAsString(
             TiledTileset().apply {
                 columns = frameGridSize.width * inputImages.size.toLong()
-                image = "../tilesets/$tilesetName.png"
+                image = "../${groupType.tilesetImgDir}/$tilesetName.png"
                 imageheight = tilesetSize.height.toLong()
                 imagewidth = tilesetSize.width.toLong()
                 margin = 0

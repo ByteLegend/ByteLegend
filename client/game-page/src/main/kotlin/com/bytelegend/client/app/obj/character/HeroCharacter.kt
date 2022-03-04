@@ -21,13 +21,12 @@ import com.bytelegend.app.client.api.GameScene
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.api.missionItemsButtonRepaintEvent
+import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.objects.GameObjectRole
-import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.Game
-import com.bytelegend.app.client.utils.jsObjectBackedSetOf
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -48,19 +47,20 @@ class HeroCharacter(
 
         player.x = gridCoordinate.x
         player.y = gridCoordinate.y
-        gameScene.objects.getByCoordinate(gridCoordinate).filter {
-            it.id != this.id
-        }.forEach {
-            it.onTouch(this)
+        val objectsOnTile = gameScene.objects.getByCoordinate(gridCoordinate)
+        objectsOnTile.objects.forEach {
+            if (it.key != this.id) {
+                it.value.onTouch(this)
+            }
         }
-        gameScene.unsafeCast<DefaultGameScene>().findMissionsAround(gridCoordinate).forEach {
+        objectsOnTile.missionsAround.forEach {
             eventBus.emit(missionItemsButtonRepaintEvent(it.id), null)
         }
     }
 
     override fun leaveTile(gridCoordinate: GridCoordinate) {
         super.leaveTile(gridCoordinate)
-        gameScene.unsafeCast<DefaultGameScene>().findMissionsAround(gridCoordinate).forEach {
+        gameScene.objects.getByCoordinate(gridCoordinate).missionsAround.forEach {
             eventBus.emit(missionItemsButtonRepaintEvent(it.id), null)
         }
     }

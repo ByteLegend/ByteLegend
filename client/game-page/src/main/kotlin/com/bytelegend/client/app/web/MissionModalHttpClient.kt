@@ -20,13 +20,14 @@ import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
-import com.bytelegend.app.client.utils.toChallengeUpdateEventData
-import com.bytelegend.app.client.utils.toMissionModalData
-import com.bytelegend.app.client.utils.toPagination
-import com.bytelegend.app.client.utils.toTutorial
+import com.bytelegend.client.utils.toChallengeUpdateEventData
+import com.bytelegend.client.utils.toMissionModalData
+import com.bytelegend.client.utils.toPagination
+import com.bytelegend.client.utils.toTutorial
 import kotlinext.js.jso
 import kotlinx.browser.window
 import kotlinx.coroutines.await
+import org.w3c.fetch.RequestInit
 import org.w3c.fetch.Response
 
 class HttpRequestException(val statusCode: Int, override val message: String) : RuntimeException(message)
@@ -38,10 +39,19 @@ suspend fun Response.checkStatusCode(): Response {
     return this
 }
 
-suspend fun get(uri: String): String {
-    return window.fetch(uri).await().apply {
-        checkStatusCode()
-    }.text().await()
+suspend fun request(method: String, uri: String): Response {
+    return window.fetch(uri, RequestInit(method = method)).await()
+}
+
+suspend fun head(uri: String): Response = request("HEAD", uri)
+
+suspend fun delete(uri: String): Response = request("DELETE", uri)
+
+suspend fun get(uri: String): Response = request("GET", uri)
+
+suspend fun getText(uri: String): String = request("GET", uri).let {
+    it.checkStatusCode()
+    it.text().await()
 }
 
 suspend fun post(uri: String, body: String): String {
@@ -83,7 +93,7 @@ suspend fun submitChallengeAnswer(
 suspend fun getMissionModalData(
     missionId: String
 ): MissionModalData {
-    return toMissionModalData(JSON.parse(get("/game/api/mission/$missionId")))
+    return toMissionModalData(JSON.parse(getText("/game/api/mission/$missionId")))
 }
 
 suspend fun getMissionTutorial(
@@ -91,5 +101,5 @@ suspend fun getMissionTutorial(
     pageNumber: Int,
     locales: List<Locale>
 ): Pagination<Tutorial> {
-    return toPagination(JSON.parse(get("/game/api/tutorials?missionId=$missionId&locales=${locales.joinToString(",")}&pageNumber=$pageNumber&pageSize=20")), ::toTutorial)
+    return toPagination(JSON.parse(getText("/game/api/tutorials?missionId=$missionId&locales=${locales.joinToString(",")}&pageNumber=$pageNumber&pageSize=20")), ::toTutorial)
 }

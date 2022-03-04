@@ -15,8 +15,12 @@
  */
 package com.bytelegend.client.app.engine
 
+import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.GameObjectContainer
+import com.bytelegend.app.client.api.GameObjectsOnTile
 import com.bytelegend.app.client.api.GameScene
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.mapToArrayWithIndex
 import com.bytelegend.app.shared.objects.CoordinateAware
@@ -25,8 +29,14 @@ import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.client.app.obj.BackgroundLayer
 import com.bytelegend.client.app.obj.toSprite
-import com.bytelegend.app.client.utils.JSArrayBackedList
-import com.bytelegend.app.client.utils.JSObjectBackedMap
+import kotlin.math.max
+import kotlin.math.min
+
+class DefaultGameObjectsOnTile : GameObjectsOnTile {
+    override val objects: MutableMap<String, GameObject> = IdGameObjectContainer()
+    override var mission: GameMission? = null
+    override val missionsAround: MutableList<GameMission> = JSArrayBackedList()
+}
 
 class DefaultGameObjectContainer(
     private val gameScene: GameScene
@@ -34,8 +44,8 @@ class DefaultGameObjectContainer(
     private val objectsById: IdGameObjectContainer = IdGameObjectContainer()
     private val objectsByRole: MutableMap<String, IdGameObjectContainer> = JSObjectBackedMap()
 
-    // {"y" -> { "x" ->  {id1:obj1, id2:obj2} }}
-    private val objectsByCoordinate: MutableMap<String, MutableMap<String, IdGameObjectContainer>> = JSObjectBackedMap()
+    // "(x,y)" -> {objects, missions, missionsAround}
+    private val objectsByCoordinate: MutableMap<String, DefaultGameObjectsOnTile> = JSObjectBackedMap()
     val background: Array<Array<List<BackgroundLayer>>> = gameScene.map.rawTiles.mapToArrayWithIndex { it, coordinate ->
         val list = JSArrayBackedList<BackgroundLayer>()
         it.layers.forEach {
@@ -57,15 +67,33 @@ class DefaultGameObjectContainer(
     }
 
     override fun putIntoCoordinate(gameObject: GameObject, newCoordinate: GridCoordinate) {
-        objectsByCoordinate
-            .getNextLevelMap(newCoordinate.y)
-            .putGameObject(newCoordinate.x.toString(), gameObject)
+        val objectsOnTile = getByCoordinate(newCoordinate).unsafeCast<DefaultGameObjectsOnTile>()
+        objectsOnTile.objects[gameObject.id] = gameObject
+        if (gameObject.roles.contains(GameObjectRole.Mission.toString())) {
+            val mission = gameObject.unsafeCast<GameMission>()
+            val mapWidth = mission.gameScene.map.size.width
+            val mapHeight = mission.gameScene.map.size.height
+            objectsOnTile.mission = mission
+
+            val range = 3
+
+            val left = max(newCoordinate.x - range, 0)
+            val top = max(newCoordinate.y - range, 0)
+            val right = min(newCoordinate.x + range, mapWidth - 1)
+            val bottom = min(newCoordinate.y + range, mapHeight - 1)
+            for (x in left..right) {
+                for (y in top..bottom) {
+                    val around = getByCoordinate(GridCoordinate(x, y)).unsafeCast<DefaultGameObjectsOnTile>()
+                    around.missionsAround.add(mission)
+                }
+            }
+        }
     }
 
     override fun removeFromCoordinate(gameObject: GameObject, oldCoordinate: GridCoordinate) {
-        objectsByCoordinate
-            .getNextLevelMap(oldCoordinate.y)
-            .removeGameObject(oldCoordinate.x.toString(), gameObject.id)
+        val objectsOnTile = objectsByCoordinate.get(oldCoordinate.toString()) ?: return
+        // TODO not remove mission/missionsAround, but it's fine now.
+        objectsOnTile.objects.remove(gameObject.id)
     }
 
     override fun add(gameObject: GameObject) {
@@ -89,10 +117,8 @@ class DefaultGameObjectContainer(
         return obj?.unsafeCast<T>()
     }
 
-    override fun getByCoordinate(coordinate: GridCoordinate): List<GameObject> {
-        return objectsByCoordinate
-            .getNextLevelMap(coordinate.y)
-            .getGameObject(coordinate.x)
+    override fun getByCoordinate(coordinate: GridCoordinate): GameObjectsOnTile {
+        return objectsByCoordinate.getOrPut(coordinate.toString()) { DefaultGameObjectsOnTile() }
     }
 
     @Suppress("UnsafeCastFromDynamic")
@@ -100,8 +126,6 @@ class DefaultGameObjectContainer(
         return objectsByRole.getGameObject(role)
     }
 }
-
-fun MutableMap<String, MutableMap<String, IdGameObjectContainer>>.getNextLevelMap(key: Any) = getOrPut(key.toString()) { JSObjectBackedMap() }
 
 fun MutableMap<String, IdGameObjectContainer>.putGameObject(key: Any, gameObject: GameObject) {
     getOrPut(key.toString()) { IdGameObjectContainer() }[gameObject.id] = gameObject

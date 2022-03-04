@@ -1,0 +1,14 @@
+{
+  "token": "",
+  "expires_at": "2020-11-03T06:52:47Z",
+  "permissions": {
+    "actions": "write",
+    "checks": "write",
+    "contents": "write",
+    "deployments": "write",
+    "metadata": "read",
+    "pull_requests": "write",
+    "statuses": "write"
+  },
+  "repository_selection": "all"
+}

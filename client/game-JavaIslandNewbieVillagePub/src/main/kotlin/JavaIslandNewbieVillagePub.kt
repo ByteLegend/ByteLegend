@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.DynamicSprite
-import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
-import com.bytelegend.app.client.utils.GameScriptHelpers
 import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.openMissionModalEvent
+import com.bytelegend.app.client.utils.GameScriptHelpers
+import com.bytelegend.app.client.utils.animationWithFixedInterval
 import com.bytelegend.app.shared.COFFEE_MACHINE_MISSION
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
@@ -53,20 +52,17 @@ fun GameScene.configureCoffeeMachine() {
     val id = "install-java"
     val installJavaMission = objects.getById<DynamicSprite>(id)
     installJavaMission.onClickFunction = {
-        if (gameRuntime.heroPlayer.map == map.id &&
-            GameScriptHelpers(this).distanceOf(HERO_ID, id) <= 2
-        ) {
-            installJavaMission.animation = FramePlayingAnimation(
-                frames = arrayOf(
-                    AnimationFrame(0, 300),
-                    AnimationFrame(1, 300),
-                    AnimationFrame(2, 300),
-                ),
-                repetitive = false
-            )
-            window.setTimeout({
+        if (gameRuntime.heroPlayer.map == map.id) {
+            val dest = installJavaMission.gridCoordinate + GridCoordinate(-1, 1)
+            val movePath = gameRuntime.hero!!.searchPath(dest)
+            if (movePath.isEmpty()) {
                 gameRuntime.eventBus.emit(openMissionModalEvent(id), null)
-            }, 1000)
+            } else {
+                installJavaMission.animation = installJavaMission.mapDynamicSprite.animationWithFixedInterval(300, 0, 3, false)
+                gameRuntime.hero!!.moveAlong(movePath) {
+                    gameRuntime.eventBus.emit(openMissionModalEvent(id), null)
+                }
+            }
         } else {
             gameRuntime.eventBus.emit(openMissionModalEvent(id), null)
         }
@@ -106,12 +102,12 @@ fun GameScene.talkAboutCoffeeWithBartender(hero: Character, bartenderId: String)
     hero.direction = Direction.UP
     if (challengeAnswers.challengeAccomplished(COFFEE_MACHINE_MISSION)) {
         scripts {
-            speech(bartenderId, "DidYouEliminateAllBugs", arrow = false)
-            speech(HERO_ID, "NoIWillDoRightNow", arrow = false)
+            speech(bartenderId, "HaveYouSeenTheOracle", arrow = false)
+            speech(HERO_ID, "NoIWillGoToSeeTheOracleRightNow", arrow = false)
         }
     } else {
         scripts {
-            speech(HERO_ID, "DoYouHaveCoffee", arrow = false)
+            speech(HERO_ID, "CanIHaveACoffee", arrow = false)
             speech(bartenderId, "WeDontSellCoffee", arrow = false)
         }
     }
@@ -152,6 +148,7 @@ fun GameScene.pubEngineer() = objects {
 
 fun GameScene.pubGirl() = objects {
     val helpers = GameScriptHelpers(this@pubGirl)
+    val heroName = this@pubGirl.gameRuntime.heroPlayer.nickname
     npc {
         val girlId = "JavaIslandNewbieVillagePubGirl"
         val bartenderId = "JavaIslandNewbieVillagePubBartender"
@@ -163,20 +160,25 @@ fun GameScene.pubGirl() = objects {
         onClick = helpers.standardNpcSpeech(girlId) {
             if (challengeAnswers.challengeAccomplished(COFFEE_MACHINE_MISSION)) {
                 scripts {
-                    speech(HERO_ID, "WillYouGoOutWithMe")
+                    speech(HERO_ID, "WhyEveryoneIsTalkingAboutEndOfWorld")
+                    speech(girlId, "WhatsYourName")
+                    speech(HERO_ID, "YesMyNameIs", args = arrayOf(heroName))
+                    speech(girlId, "OhMyGod")
                     speech(bartenderId, "StayAwayFromMyDaughter")
-                    speech(girlId, "SorryMyFatherDoesntAllow")
-                    speech(HERO_ID, "Why")
-                    speech(girlId, "HugeBugsOnJavaIsland")
-                    speech(HERO_ID, "Bugs")
-                    speech(girlId, "ThatsWhyWeDontGoOutAfterDark")
-                    speech(HERO_ID, "IWillEliminateAllBugs")
-                    speech(girlId, "HmmmYes", arrow = false)
+                    speech(girlId, "NoHeIsTheOne", args = arrayOf(heroName))
+                    speech(HERO_ID, "WhatOracle")
+                    speech(bartenderId, "JavaIslandWasBeautifulIsland", args = arrayOf(heroName))
+                    speech(girlId, "TodayIsFullMoon")
+                    speech(HERO_ID, "HowShallIDo")
+                    speech(girlId, "GoToSeeOracle", arrow = false)
                 }
             } else {
                 scripts {
                     val point = HumanReadableCoordinate(objects.getById<GameObject>("install-java").unsafeCast<CoordinateAware>().gridCoordinate).toString()
-                    speech(girlId, "SeeTheCoffeeMachine", args = arrayOf(point), arrow = false)
+                    speech(HERO_ID, "CanIHaveACoffee")
+                    speech(girlId, "SeeTheCoffeeMachine", args = arrayOf(point))
+                    speech(HERO_ID, "WhatEndOfWorld")
+                    speech(girlId, "GoToMakeACoffeeAndIWillTellYou", arrow = false)
                 }
             }
         }

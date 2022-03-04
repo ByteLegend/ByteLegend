@@ -27,10 +27,10 @@ import com.bytelegend.client.app.engine.gameContainerHeight
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.engine.uiContainerCoordinateInGameContainer
 import com.bytelegend.client.app.engine.uiContainerSize
-import com.bytelegend.client.app.web.get
+import com.bytelegend.client.app.web.getText
 import com.bytelegend.app.client.utils.JSArrayBackedList
 import com.bytelegend.app.client.utils.JSObjectBackedStringSet
-import com.bytelegend.app.client.utils.toLivestreams
+import com.bytelegend.client.utils.toLivestreams
 import kotlinext.js.jso
 import kotlinx.browser.localStorage
 import kotlinx.coroutines.GlobalScope
@@ -104,7 +104,7 @@ class LivestreamIndicators : Component<GameProps, LivestreamIndicatorsState>() {
     init {
         GlobalScope.launch {
             try {
-                val livestreamData = toLivestreams(JSON.parse(get(LIVESTREAM_DATA_URL)))
+                val livestreamData = toLivestreams(JSON.parse(getText(LIVESTREAM_DATA_URL)))
                 setState({
                     it.livestreams = livestreamData
                     it

@@ -211,10 +211,6 @@ suspend fun showAchievementEffect(
     endCoordinateInGameContainer: PixelCoordinate
 ) {
     val imgId = "achievement-img-${uuid()}"
-//    val img = document.create<HTMLImageElement>("img") {
-//        width = 32
-//        height = 32
-//    }
     val opaqueBackground = document.createAndAppend<HTMLDivElement>("div") {
         className = "achievement-background no-pointer-events"
         style.zIndex = EFFECT_Z_INDEX.toString()
@@ -270,7 +266,7 @@ suspend fun showAchievementEffect(
 }
 
 /**
- * Fly to center of window, then fly to item box
+ * Fly to the start point, scale,then fly to the end point
  */
 suspend fun itemPopupEffect(
     imgUrl: String,
@@ -289,7 +285,7 @@ suspend fun itemPopupEffect(
         src = imgUrl
         style.zIndex = EFFECT_Z_INDEX.toString()
         style.position = "absolute"
-        className = "inline-icon-16 outer-glow"
+        className = "inline-icon-32 outer-glow"
     }
 
     itemFlyTo(
@@ -316,7 +312,6 @@ private fun itemFlyTo(
     durationSecond: Double,
     onCompleteFunction: UnitFunction = {}
 ) {
-    console.log("Fly: $start $end")
     gsap.fromTo(
         "#$itemId",
         jso {

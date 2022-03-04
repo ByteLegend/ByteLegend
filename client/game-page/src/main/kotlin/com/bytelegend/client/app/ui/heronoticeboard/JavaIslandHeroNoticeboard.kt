@@ -23,7 +23,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPagination
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationItem
-import com.bytelegend.app.client.utils.toHeroNoticeboardTilesData
+import com.bytelegend.client.utils.toHeroNoticeboardTilesData
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTile
@@ -35,7 +35,7 @@ import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.mission.WebEditor
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
-import com.bytelegend.client.app.web.get
+import com.bytelegend.client.app.web.getText
 import kotlinext.js.jso
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
@@ -118,7 +118,7 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
         }
 
         GlobalScope.launch {
-            val json = get(heroesJsonUrl(number, state.timestamp))
+            val json = getText(heroesJsonUrl(number, state.timestamp))
             val heroNoticeboardTilesData = toHeroNoticeboardTilesData(JSON.parse(json))
             setState {
                 jsonIsLoading = false

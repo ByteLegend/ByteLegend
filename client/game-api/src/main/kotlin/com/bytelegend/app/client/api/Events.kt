@@ -31,3 +31,8 @@ fun missionRepaintEvent(missionId: String) = "mission.repaint.$missionId"
  * When hero approaches or leaves a mission tower, we emit this event and repaint mission item buttons around the hero.
  */
 fun missionItemsButtonRepaintEvent(missionId: String) = "mission.item.button.repaint.$missionId"
+
+/**
+ * Emit when an item is used.
+ */
+fun missionItemUsedEvent(missionId: String) = "mission.item.used.$missionId"

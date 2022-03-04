@@ -15,6 +15,7 @@
  */
 package com.bytelegend.app.shared.objects
 
+import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelCoordinate
 
@@ -25,6 +26,21 @@ interface CoordinateMutable : CoordinateAware {
 
 interface CoordinateAware : GridCoordinateAware {
     val pixelCoordinate: PixelCoordinate
+
+    fun directionTo(other: CoordinateAware): Direction {
+        val otherCoordinate = other.gridCoordinate
+        return when {
+            gridCoordinate.x == otherCoordinate.x && gridCoordinate.y < otherCoordinate.y -> Direction.DOWN
+            gridCoordinate.x == otherCoordinate.x && gridCoordinate.y > otherCoordinate.y -> Direction.UP
+            gridCoordinate.y == otherCoordinate.y && gridCoordinate.x < otherCoordinate.x -> Direction.RIGHT
+            gridCoordinate.y == otherCoordinate.y && gridCoordinate.x > otherCoordinate.x -> Direction.LEFT
+            gridCoordinate.x < otherCoordinate.x && gridCoordinate.y < otherCoordinate.y -> Direction.DOWN
+            gridCoordinate.x > otherCoordinate.x && gridCoordinate.y < otherCoordinate.y -> Direction.DOWN
+            gridCoordinate.x < otherCoordinate.x && gridCoordinate.y > otherCoordinate.y -> Direction.UP
+            gridCoordinate.x > otherCoordinate.x && gridCoordinate.y > otherCoordinate.y -> Direction.UP
+            else -> Direction.DOWN
+        }
+    }
 }
 
 interface GridCoordinateAware {

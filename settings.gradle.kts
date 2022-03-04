@@ -60,12 +60,12 @@ include(":client:game-DataStructureIsland")
 include(":client:common")
 include(":server-shared:common")
 include(":server-shared:test-fixtures")
+include(":server-shared:json-model")
 
 include(":server-opensource")
 if (settingsDir.resolve("server/server.gradle.kts").isFile) {
     include(":server:app")
     include(":server:webeditor-browser-test")
-    include(":server:json-model")
     include(":server:dal-dynamodb")
     include(":server:dal-api")
     include(":server:deployment")

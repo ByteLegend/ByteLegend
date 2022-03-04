@@ -26,36 +26,101 @@ import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.client.api.closeMissionModalEvent
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.client.api.missionRepaintEvent
-import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GridCoordinate
-import com.bytelegend.app.shared.objects.CoordinateAware
 import com.bytelegend.app.shared.objects.GameMapCurve
 import com.bytelegend.app.shared.objects.GridCoordinateAware
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
 import kotlinx.browser.window
+
+/**
+ * Configure the animation for a sprite, based on the latest item usage state.
+ * For example, if a key is not used, the sprite should be a "closed chest",
+ * otherwise, if the chest is already an "open chest", do nothing,
+ * otherwise, display the animation and show the "open chest" frame eventually.
+ */
+fun GameScene.refreshAnimationForItem(
+    sprite: DynamicSprite,
+    itemId: String,
+    /* the frame to display if it's finished, e.g. an open chest. Nothe that we only support static frame for finished state. */
+    finishedStateFrameIndex: Int,
+    /* the animation to display if it's unfinished, e.g. a closed chest */
+    unfinishedStateAnimationFrameRange: AnimationFrameRange,
+    /* the animation to display if it's changed from unfinished to finished, e.g. the chest opening animation. null means no animation */
+    finishStateChangeAnimationFrameRange: AnimationFrameRange? = null,
+    animationFrameDurationMs: Int = 500,
+    removeBlocker: Boolean = true
+) {
+    if (!gameRuntime.heroPlayer.usedItems.contains(itemId)) {
+        // Not finished, show the unfinished state
+        sprite.setAnimation(animationFrameDurationMs, unfinishedStateAnimationFrameRange)
+    } else if (!sprite.animation.isStatic || sprite.animation.getNextFrameIndex() != finishedStateFrameIndex) {
+        if (removeBlocker) {
+            removeMissionBlocker(sprite)
+        }
+
+        if (finishStateChangeAnimationFrameRange == null) {
+            sprite.animation = StaticFrame(finishedStateFrameIndex)
+        } else {
+            val stateChangeAnimation = sprite.mapDynamicSprite.animationWithFixedInterval(
+                animationFrameDurationMs, finishStateChangeAnimationFrameRange.startIndexInclusive, finishStateChangeAnimationFrameRange.endIndexExclusive, false
+            )
+            sprite.animation = stateChangeAnimation
+            window.setTimeout({
+                sprite.animation = StaticFrame(finishedStateFrameIndex)
+            }, animationFrameDurationMs * (stateChangeAnimation.frames.size))
+        }
+    }
+}
+
+fun GameScene.refreshTeslaCoilAnimation(mission: DynamicSprite) {
+    val mapId = map.id
+    val frameIntervalMs = 200
+    val teslaCoilRunningAnimationRange = AnimationFrameRange(2, 11)
+    if (gameRuntime.heroPlayer.usedItems.contains("gold-sword:$mapId:${mission.id}")) {
+        refreshAnimationForItem(mission, "gold-sword:$mapId:${mission.id}", 11, teslaCoilRunningAnimationRange, animationFrameDurationMs = frameIntervalMs, removeBlocker = true)
+    } else if (gameRuntime.heroPlayer.usedItems.contains("silver-sword:$mapId:${mission.id}")) {
+        refreshAnimationForItem(mission, "silver-sword:$mapId:${mission.id}", 1, teslaCoilRunningAnimationRange, animationFrameDurationMs = frameIntervalMs, removeBlocker = false)
+    } else if (gameRuntime.heroPlayer.usedItems.contains("iron-sword:$mapId:${mission.id}")) {
+        refreshAnimationForItem(mission, "iron-sword:$mapId:${mission.id}", 0, teslaCoilRunningAnimationRange, animationFrameDurationMs = frameIntervalMs, removeBlocker = false)
+    } else {
+        mission.setAnimation(frameIntervalMs, teslaCoilRunningAnimationRange)
+    }
+}
+
+// Remove mission from the map so player can walk through it
+// For example, the mission is a blocker stone, people can walk through after finishing mission
+// the mission is an evil, after finishing the mission it becomes a dead body
+// See `GameMission.init`
+fun GameScene.removeMissionBlocker(mission: DynamicSprite) {
+    val dynamicSprite = mission.mapDynamicSprite
+    val missionX = mission.unsafeCast<GridCoordinateAware>().gridCoordinate.x
+    val missionY = mission.unsafeCast<GridCoordinateAware>().gridCoordinate.y
+
+    for (y in 0 until dynamicSprite.size.height) {
+        for (x in 0 until dynamicSprite.size.width) {
+            blockers[missionY + y][missionX + x]++
+            objects.removeFromCoordinate(mission, GridCoordinate(missionX + x, missionY + y))
+        }
+    }
+}
+
+fun GameScene.configureChestOpenByKey(missionId: String) {
+    refreshAnimationForItem(
+        objects.getById<DynamicSprite>(missionId),
+        "key:${map.id}:$missionId",
+        3,
+        AnimationFrameRange(0, 0),
+        AnimationFrameRange(),
+        500,
+        false
+    )
+}
 
 // TODO this should not in `game-api` module
 /**
  * We have to use instance method due to the defect of current module loading mechanism
  */
 class GameScriptHelpers(val gameScene: GameScene) {
-    // Remove mission from the map so player can walk through it
-    // For example, the mission is a blocker stone, people can walk through after finishing mission
-    // the mission is an evil, after finishing the mission it becomes a dead body
-    // See `GameMission.init`
-    fun removeMissionBlocker(mission: DynamicSprite) {
-        val dynamicSprite = mission.mapDynamicSprite
-        val missionX = mission.unsafeCast<GridCoordinateAware>().gridCoordinate.x
-        val missionY = mission.unsafeCast<GridCoordinateAware>().gridCoordinate.y
-
-        for (y in 0 until dynamicSprite.size.height) {
-            for (x in 0 until dynamicSprite.size.width) {
-                gameScene.blockers[missionY + y][missionX + x]++
-                gameScene.objects.removeFromCoordinate(mission, GridCoordinate(missionX + x, missionY + y))
-            }
-        }
-    }
-
     fun addCloseCallbackToMission(mission: DynamicSprite, callback: EventListener<Unit>) {
         gameScene.gameRuntime.eventBus.on(closeMissionModalEvent(mission.id), callback)
     }
@@ -133,18 +198,6 @@ class GameScriptHelpers(val gameScene: GameScene) {
 
     fun getCharacter(characterId: String) = gameScene.objects.getById<Character>(characterId)
 
-    fun faceDirectionOf(character1: CoordinateAware, character2: CoordinateAware): Direction {
-        val npcCoordinate = character1.gridCoordinate
-        val heroCoordinate = character2.gridCoordinate
-        return when {
-            npcCoordinate.x == heroCoordinate.x && npcCoordinate.y + 1 == heroCoordinate.y -> Direction.DOWN
-            npcCoordinate.x == heroCoordinate.x && npcCoordinate.y - 1 == heroCoordinate.y -> Direction.UP
-            npcCoordinate.y == heroCoordinate.y && npcCoordinate.x + 1 == heroCoordinate.x -> Direction.RIGHT
-            npcCoordinate.y == heroCoordinate.y && npcCoordinate.x - 1 == heroCoordinate.x -> Direction.LEFT
-            else -> throw IllegalStateException("Can't determine direction: $npcCoordinate, $heroCoordinate")
-        }
-    }
-
     /**
      * Standard NPC speech behaviour when clicked, including:
      *
@@ -198,8 +251,8 @@ class GameScriptHelpers(val gameScene: GameScene) {
     }
 
     private fun faceToFaceThenInteract(hero: Character, npc: Character, onInteraction: UnitFunction) {
-        npc.direction = faceDirectionOf(npc, hero)
-        hero.direction = faceDirectionOf(hero, npc)
+        npc.direction = npc.directionTo(hero)
+        hero.direction = hero.directionTo(npc)
         onInteraction()
     }
 }

@@ -18,7 +18,6 @@ package com.bytelegend.app.shared.protocol
 import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.entities.ChallengeAnswer
 import com.bytelegend.app.shared.entities.ChallengeAnswers
-import com.bytelegend.app.shared.entities.mission.OnFinishSpec
 
 interface UnicastEventData {
     val playerId: String
@@ -64,11 +63,22 @@ data class ChallengeUpdateEventData(
         get() = newValue.playerId
 }
 
-data class ItemsStatesUpdateEventData(
+/**
+ * Indicates items change.
+ */
+data class ItemUpdateEventData(
     override val playerId: String,
     val map: String,
     val missionId: String,
-    val onFinishSpec: OnFinishSpec,
+    /**
+     * The ids to be added into Player.items
+     */
+    val addedItemIds: List<String>,
+    /**
+     * The ids to be removed from Player.items
+     * Note: these ids are simply removed, NOT used.
+     */
+    val removedItemIds: List<String>,
 ) : UnicastEventData
 
 data class AchievementUpdateEventData(

@@ -17,8 +17,13 @@
 
 package com.bytelegend.app.testfixtures
 
+import com.bytelegend.app.jsonmodel.generated.event.PullRequestGitHubEvent
 import com.bytelegend.app.servershared.DefaultJsonMapper
+import com.bytelegend.app.servershared.RRBDResourceProvider
 import com.bytelegend.app.servershared.codechecker.INTERNAL_API_SECRET_HEADER_NAME
+import com.bytelegend.app.shared.entities.PullRequestEventAction
+import com.bytelegend.app.shared.entities.mission.ChallengeSpec
+import com.bytelegend.app.shared.entities.mission.ChallengeType
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -43,6 +48,8 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
+import java.time.Instant
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Supplier
 import java.util.logging.Level
 
@@ -54,6 +61,8 @@ fun BrowserWebDriverContainer<Nothing>.safeStop() {
     }
 }
 
+private val counter = AtomicInteger(0)
+
 abstract class AbstractByteLegendIntegrationTest {
     @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     abstract val gameServerPort: Int
@@ -62,6 +71,73 @@ abstract class AbstractByteLegendIntegrationTest {
         HttpClient.newBuilder()
             .followRedirects(HttpClient.Redirect.NEVER)
             .build()
+    }
+
+    private fun createMockPullRequestEvent(
+        playerId: String,
+        challengeSpec: ChallengeSpec,
+        prNumber: Int,
+        action: PullRequestEventAction
+    ) = PullRequestGitHubEvent().apply {
+        this.action = action.name.lowercase()
+        repository = PullRequestGitHubEvent.Repository()
+        repository.owner = PullRequestGitHubEvent.Owner3()
+        repository.owner.login = "ByteLegendQuest"
+        repository.fullName = challengeSpec.spec.substringAfter("/")
+
+        pullRequest = PullRequestGitHubEvent.PullRequest()
+        pullRequest.number = prNumber.toLong()
+        pullRequest.htmlUrl = "https://${challengeSpec.spec}/pull/${pullRequest.number}"
+        pullRequest.nodeId = "mockNodeId"
+        pullRequest.user = PullRequestGitHubEvent.User()
+        pullRequest.user.login = playerId.substringAfter("#")
+
+        pullRequest.state = if (action == PullRequestEventAction.OPENED) "open" else "merged"
+        pullRequest.merged = action != PullRequestEventAction.OPENED
+
+        pullRequest.head = PullRequestGitHubEvent.Head()
+        pullRequest.head.ref = "mockBranch"
+        pullRequest.head.sha = "shaOfPullRequest$prNumber"
+        pullRequest.head.repo = PullRequestGitHubEvent.Repo()
+        pullRequest.head.repo.fork = false
+        pullRequest.head.repo.fullName = challengeSpec.spec.substringAfter("github.com/")
+
+        pullRequest.base = PullRequestGitHubEvent.Base()
+        pullRequest.base.ref = "main"
+    }
+
+    protected fun RRBDResourceProvider.finishChallenge(playerId: String, challengeId: String, problemNumber: Int = 0) {
+        val (_, challengeSpec) = getMissionChallengeByChallengeId(challengeId)!!
+        require(challengeSpec.type == ChallengeType.PullRequest) { "$challengeId must be PR challenge!" }
+        val prOpenEvent: PullRequestGitHubEvent = createMockPullRequestEvent(playerId, challengeSpec, counter.incrementAndGet(), PullRequestEventAction.OPENED)
+        sendWebhookFromJsonObject("pull_request", prOpenEvent)
+
+        if (problemNumber != 0) {
+            // PullRequestProblems
+            val payload = mapOf(
+                "repoFullName" to challengeSpec.spec.substringAfter("/"),
+                "prAuthor" to playerId.substringAfter("#"),
+                "prNumber" to prOpenEvent.pullRequest.number,
+                "sha" to prOpenEvent.pullRequest.head.sha,
+                "updatedAt" to Instant.now().toString(),
+                "problems" to List(problemNumber) {
+                    // PullRequestProblem
+                    mapOf(
+                        "file" to "mockFile",
+                        "startLine" to 1,
+                        "fatal" to false,
+                        "message" to "mockMessage"
+                    )
+                }
+            )
+            post(
+                "http://localhost:$gameServerPort/internal-api/add-problems", defaultJsonMapper.toJson(payload),
+                mapOf("Content-Type" to "application/json", INTERNAL_API_SECRET_HEADER_NAME to "dummy")
+            ).assert2XXStatusCode()
+        }
+        Thread.sleep(100)
+
+        sendWebhookFromJsonObject("pull_request", createMockPullRequestEvent(playerId, challengeSpec, prOpenEvent.pullRequest.number.toInt(), PullRequestEventAction.CLOSED))
     }
 
     protected fun sendWebhookFromResource(event: String, resource: String, mutator: (String) -> String = { it }) {

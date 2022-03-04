@@ -1,0 +1,76 @@
+{
+  "columns" : 19,
+  "image" : "../animations/TeslaCoilDestroyed.png",
+  "imageheight" : 143,
+  "imagewidth" : 2280,
+  "margin" : 0,
+  "name" : "TeslaCoilDestroyed",
+  "tilecount" : 19,
+  "tiledversion" : "1.7.2",
+  "tileheight" : 143,
+  "objectalignment" : "topleft",
+  "tiles" : [ {
+    "animation" : [ {
+      "duration" : 500,
+      "tileid" : 0
+    }, {
+      "duration" : 500,
+      "tileid" : 1
+    }, {
+      "duration" : 500,
+      "tileid" : 2
+    }, {
+      "duration" : 500,
+      "tileid" : 3
+    }, {
+      "duration" : 500,
+      "tileid" : 4
+    }, {
+      "duration" : 500,
+      "tileid" : 5
+    }, {
+      "duration" : 500,
+      "tileid" : 6
+    }, {
+      "duration" : 500,
+      "tileid" : 7
+    }, {
+      "duration" : 500,
+      "tileid" : 8
+    }, {
+      "duration" : 500,
+      "tileid" : 9
+    }, {
+      "duration" : 500,
+      "tileid" : 10
+    }, {
+      "duration" : 500,
+      "tileid" : 11
+    }, {
+      "duration" : 500,
+      "tileid" : 12
+    }, {
+      "duration" : 500,
+      "tileid" : 13
+    }, {
+      "duration" : 500,
+      "tileid" : 14
+    }, {
+      "duration" : 500,
+      "tileid" : 15
+    }, {
+      "duration" : 500,
+      "tileid" : 16
+    }, {
+      "duration" : 500,
+      "tileid" : 17
+    }, {
+      "duration" : 500,
+      "tileid" : 18
+    } ],
+    "id" : 0
+  } ],
+  "tilewidth" : 120,
+  "type" : "tileset",
+  "version" : "1.6"
+}

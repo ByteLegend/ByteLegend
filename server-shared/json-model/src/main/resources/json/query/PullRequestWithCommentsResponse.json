@@ -1,0 +1,144 @@
+{
+  "data": {
+    "repository": {
+      "nameWithOwner": "gradle/gradle",
+      "pullRequest": {
+        "id": "MDExOlB1bGxSZXF1ZXN0NDAxOTA3ODc5",
+        "number": 12784,
+        "title": "",
+        "body": "Replace intermediate `FieldProblemReporter` by direct function call.\r\n",
+        "url": "https://github.com/gradle/gradle/pull/12784",
+        "author": {
+          "login": "bamboo"
+        },
+        "headRef": {
+          "target": {
+            "oid": "67a3eadd963d33ae385545ddf56827e78d6f93f6"
+          },
+          "repository": {
+            "isFork": false,
+            "owner": {
+              "login": "gradle"
+            },
+            "name": "gradle"
+          },
+          "name": "bamboo/review/eskatos/ie/report-deserialization-problems"
+        },
+        "baseRef": {
+          "target": {
+            "oid": "2a03901aa5d65311b48e9ea79dc142a6b71b829c"
+          },
+          "name": "master"
+        },
+        "baseRefOid": "2a03901aa5d65311b48e9ea79dc142a6b71b829c",
+        "comments": {
+          "nodes": [
+            {
+              "id": "MDEyOklzc3VlQ29tbWVudDcxOTExMDM0NA==",
+              "databaseId": 612027592,
+              "author": {
+                "login": "bamboo"
+              },
+              "authorAssociation": "MEMBER",
+              "body": "@bot-gradle test this"
+            }
+          ]
+        },
+        "reviews": {
+          "nodes": [
+            {
+              "databaseId": 391448984,
+              "author": {
+                "login": "eskatos"
+              },
+              "body": "👍 thanks!",
+              "state": "APPROVED"
+            }
+          ]
+        },
+        "commits": {
+          "nodes": [
+            {
+              "commit": {
+                "commitUrl": "https://github.com/gradle/gradle/commit/67a3eadd963d33ae385545ddf56827e78d6f93f6",
+                "committedDate": "2020-04-10T13:22:52Z",
+                "oid": "67a3eadd963d33ae385545ddf56827e78d6f93f6",
+                "status": {
+                  "state": "SUCCESS",
+                  "contexts": [
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557804&buildTypeId=Gradle_Check_BuildDistributions",
+                      "description": "TeamCity build finished",
+                      "context": "Build Distributions (Ready for Merge)"
+                    },
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557700&buildTypeId=Gradle_Check_CompileAll",
+                      "description": "TeamCity build finished",
+                      "context": "Compile All (Quick Feedback - Linux Only)"
+                    },
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557805&buildTypeId=Gradle_Check_Gradleception",
+                      "description": "TeamCity build finished",
+                      "context": "Gradleception - Java8 Linux (Ready for Merge)"
+                    },
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557809&buildTypeId=Gradle_Check_PerformanceTestCoordinator",
+                      "description": "TeamCity build finished",
+                      "context": "Performance Regression Test Coordinator - Linux (Ready for Merge)"
+                    },
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557803&buildTypeId=Gradle_Check_Stage_QuickFeedback_Trigger",
+                      "description": "TeamCity build finished",
+                      "context": "Quick Feedback (Trigger) (Check)"
+                    },
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557752&buildTypeId=Gradle_Check_Stage_QuickFeedbackLinuxOnly_Trigger",
+                      "description": "TeamCity build finished",
+                      "context": "Quick Feedback - Linux Only (Trigger) (Check)"
+                    },
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557960&buildTypeId=Gradle_Check_Stage_ReadyforMerge_Trigger",
+                      "description": "TeamCity build finished",
+                      "context": "Ready for Merge (Trigger) (Check)"
+                    },
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557701&buildTypeId=Gradle_Check_SanityCheck",
+                      "description": "TeamCity build finished",
+                      "context": "Sanity Check (Quick Feedback - Linux Only)"
+                    },
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557807&buildTypeId=Gradle_Check_InstantSmokeTestsJava14",
+                      "description": "TeamCity build finished",
+                      "context": "Smoke Tests with 3rd Party Plugins (instantSmokeTest) - Java14 Linux (Ready for Merge)"
+                    },
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557808&buildTypeId=Gradle_Check_InstantSmokeTestsJava8",
+                      "description": "TeamCity build finished",
+                      "context": "Smoke Tests with 3rd Party Plugins (instantSmokeTest) - Java8 Linux (Ready for Merge)"
+                    },
+                    {
+                      "state": "SUCCESS",
+                      "targetUrl": "https://builds.gradle.org/viewLog.html?buildId=33557806&buildTypeId=Gradle_Check_SmokeTestsJava14",
+                      "description": "TeamCity build finished",
+                      "context": "Smoke Tests with 3rd Party Plugins (smokeTest) - Java14 Linux (Ready for Merge)"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

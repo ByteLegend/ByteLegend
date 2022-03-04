@@ -34,13 +34,30 @@ import org.w3c.dom.HTMLImageElement
 
 val HERO_ID = "hero"
 
+interface GameObjectsOnTile {
+    /**
+     * All objects on this tile.
+     */
+    val objects: Map<String, GameObject>
+
+    /**
+     * This tile may have a mission.
+     */
+    val mission: GameMission?
+
+    /**
+     * The missions around the current tile.
+     */
+    val missionsAround: List<GameMission>
+}
+
 interface GameObjectContainer {
     fun <T : GameObject> getByIdOrNull(id: String): T?
     fun <T : GameObject> getById(id: String): T
     fun getPointById(id: String): GridCoordinate
     fun add(gameObject: GameObject)
     fun <T : GameObject> remove(id: String): T?
-    fun getByCoordinate(coordinate: GridCoordinate): List<GameObject>
+    fun getByCoordinate(coordinate: GridCoordinate): GameObjectsOnTile
     fun putIntoCoordinate(gameObject: GameObject, newCoordinate: GridCoordinate)
     fun removeFromCoordinate(gameObject: GameObject, oldCoordinate: GridCoordinate)
     fun <T : GameObject> getByRole(role: GameObjectRole): List<T>
@@ -207,6 +224,28 @@ data class ImageResourceData(
 
 interface GameMission : DynamicSprite {
     val gameMapMission: GameMapMission
+}
+
+interface GameSceneMatrixElement {
+    /**
+     * 0 means "nothing".
+     * >0 means "it's a blocker for everyone"
+     * <0 means "it's a blocker for everyone other than hero, like NPC,other players"
+     *
+     * So it's a bit tricky: when an NPC steps into a tile, this number decrements by 1,
+     * not increment.
+     */
+    val blocker: Int
+
+    /**
+     * This tile may have a mission.
+     */
+    val mission: GameMission?
+
+    /**
+     * The missions around the current tile.
+     */
+    val missionsAround: List<GameMission>
 }
 
 interface GameScene : GameContainerSizeAware, GameRuntimeAware {

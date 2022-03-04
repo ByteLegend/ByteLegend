@@ -114,9 +114,9 @@ interface ScriptsBuilder {
      * Remove item with an optional animation. The optional `targetCoordinate`
      * specify the destination coordinate on map.
      */
-    fun removeItem(item: String, targetCoordinate: GridCoordinate? = null)
+    fun useItem(item: String, targetCoordinate: GridCoordinate? = null)
     fun animation(action: AnimationBuilder.() -> Unit)
-    fun compositeAnimation(vararg builders: AnimationBuilder)
+    fun animation(vararg builders: AnimationBuilder)
     fun sleep(ms: Long)
     fun runSuspend(fn: suspend () -> Unit)
 }

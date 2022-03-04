@@ -17,7 +17,6 @@ package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.GameCanvasState
 import com.bytelegend.app.client.api.GameContainerSizeAware
-import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.api.GameScene
@@ -31,6 +30,8 @@ import com.bytelegend.app.client.api.dsl.NpcBuilder
 import com.bytelegend.app.client.api.dsl.ObjectsBuilder
 import com.bytelegend.app.client.misc.search
 import com.bytelegend.app.client.misc.uuid
+import com.bytelegend.app.client.utils.JSArrayBackedList
+import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.PixelSize
@@ -44,11 +45,10 @@ import com.bytelegend.app.shared.objects.GameMapObjectType
 import com.bytelegend.app.shared.objects.GameMapPoint
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.app.shared.objects.GameMapText
-import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.mapEntranceId
 import com.bytelegend.client.app.obj.BouncingTitleObject
 import com.bytelegend.client.app.obj.DefaultDynamicSprite
-import com.bytelegend.client.app.obj.EmptyClickablePoint
+import com.bytelegend.client.app.obj.EmptySprite
 import com.bytelegend.client.app.obj.GameCurveSprite
 import com.bytelegend.client.app.obj.GameMapEntrance
 import com.bytelegend.client.app.obj.GameTextSprite
@@ -59,15 +59,11 @@ import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.invitationcode.InvitationCodeModal
 import com.bytelegend.client.app.ui.mission.DefaultPullRequestLogContainer
 import com.bytelegend.client.app.ui.script.Widget
-import com.bytelegend.app.client.utils.JSArrayBackedList
-import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinext.js.jso
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance
 import react.react
-import kotlin.math.max
-import kotlin.math.min
 
 class DefaultGameScene(
     override val di: DI,
@@ -93,14 +89,6 @@ class DefaultGameScene(
 
     override val objects: GameObjectContainer = DefaultGameObjectContainer(this)
     private val channelToDirector: MutableMap<String, DefaultGameDirector> = JSObjectBackedMap()
-
-    /**
-     * Sometimes we want to know missions "around" a coordinate, i.e. missions in up/down/left/right tile of a coordinate.
-     * This caches the mapping of grid coordinate to "missions around".
-     * Key: GridCoordinate.toString()
-     * Value: the missions around the coordinate
-     */
-    private val gridCoordinateToMissionsAroundCache: MutableMap<String, List<GameMission>> = JSObjectBackedMap()
     val missions: MissionContainer = MissionContainer(di)
     val mainChannelDirector by lazy {
         getDirectorOfChannel(MAIN_CHANNEL)
@@ -129,31 +117,6 @@ class DefaultGameScene(
 
     fun scripts(channel: String, runImmediately: Boolean, block: ScriptsBuilder.() -> Unit) {
         getDirectorOfChannel(channel).scripts(runImmediately, block)
-    }
-
-    fun findMissionsAround(gridCoordinate: GridCoordinate): List<GameMission> {
-        val key = gridCoordinate.toString()
-        val inCache = gridCoordinateToMissionsAroundCache[key]
-        if (inCache != null) {
-            return inCache
-        }
-        val range = 3
-
-        val ret: MutableList<GameMission> = JSArrayBackedList()
-        val left = max(gridCoordinate.x - range, 0)
-        val top = max(gridCoordinate.y - range, 0)
-        val right = min(gridCoordinate.x + range, map.size.width - 1)
-        val bottom = min(gridCoordinate.y + range, map.size.height - 1)
-        for (x in left..right) {
-            for (y in top..bottom) {
-                objects.getByCoordinate(GridCoordinate(x, y))
-                    .filter { it.roles.contains(GameObjectRole.Mission.toString()) }
-                    .forEach { ret.add(it.unsafeCast<GameMission>()) }
-            }
-        }
-
-        gridCoordinateToMissionsAroundCache[key] = ret
-        return ret
     }
 
     private fun getDirectorOfChannel(channel: String): DefaultGameDirector {
@@ -251,11 +214,12 @@ class DefaultGameScene(
 
         if (builder.sprite == null) {
             objects.add(
-                EmptyClickablePoint(
+                EmptySprite(
                     id,
                     this,
                     gridCoordinate,
-                    onClickFunction = builder.onClick
+                    onClickFunction = builder.onClick,
+                    onTouchFunction = builder.onTouch
                 )
             )
         } else {

@@ -44,13 +44,12 @@ const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
 const val STAR_UPDATE_EVENT = "protocol.star.update"
 const val COIN_UPDATE_EVENT = "protocol.coin.update"
 const val REPUTATION_UPDATE_EVENT = "protocol.reputation.update"
-const val ITEMS_STATES_UPDATE_EVENT = "protocol.items.states.update"
+const val ITEM_UPDATE_EVENT = "protocol.item.update"
 const val ACHIEVEMENT_UPDATE_EVENT = "protocol.achievement.update"
 fun challengeUpdateEvent(mapId: String) = "protocol.challenge.update.$mapId"
 val CHALLENGE_UPDATE_EVENT_PREFIX = challengeUpdateEvent("")
 val PLAYER_SPEECH_EVENT_PREFIX = playerSpeechEvent("")
 const val PUT_STATE_EVENT = "protocol.put.state"
-const val REMOVE_ITEM_EVENT = "protocol.remove.item"
 const val PROTOCOL_PAY_AND_ENTER_SCENE = "protocol.pay.and.enter.scene"
 const val KICK_OFF_EVENT = "protocol.kick.off"
 
@@ -68,7 +67,6 @@ interface GameServerProtocol {
 
     // TODO verify frontend input
     suspend fun putState(key: String, value: String)
-    suspend fun removeItem(item: String)
     suspend fun switchScene(destMapId: String)
     suspend fun speak(sentenceId: String)
 }

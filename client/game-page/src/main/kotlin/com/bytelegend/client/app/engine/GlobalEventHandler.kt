@@ -23,12 +23,11 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.protocol.ACHIEVEMENT_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.AchievementUpdateEventData
-import com.bytelegend.app.shared.protocol.ITEMS_STATES_UPDATE_EVENT
-import com.bytelegend.app.shared.protocol.ItemsStatesUpdateEventData
+import com.bytelegend.app.shared.protocol.ITEM_UPDATE_EVENT
+import com.bytelegend.app.shared.protocol.ItemUpdateEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.script.DefaultGameDirector
-import com.bytelegend.client.app.script.effect.itemPopupEffect
 import com.bytelegend.client.app.script.effect.showAchievementEffect
 import com.bytelegend.client.app.ui.determineRightSideBarTopLeftCornerCoordinateInGameContainer
 import kotlinx.coroutines.GlobalScope
@@ -49,32 +48,21 @@ class GlobalEventHandler(
     private val eventBus: EventBus by di.instance()
 
     fun start() {
-        eventBus.on(ITEMS_STATES_UPDATE_EVENT, this::onItemsStatesUpdateEvent)
+        eventBus.on(ITEM_UPDATE_EVENT, this::onItemUpdateEvent)
         eventBus.on(ACHIEVEMENT_UPDATE_EVENT, this::onAchievementUpdateEvent)
         eventBus.on(ONLINE_COUNTER_UPDATE_EVENT) { number: Int ->
             game.onlineNumber = number
         }
     }
 
-    private fun onItemsStatesUpdateEvent(eventData: ItemsStatesUpdateEventData) {
-        if (!eventData.onFinishSpec.items.isEmpty()) {
-            val set = jsObjectBackedSetOf().apply { addAll(game.heroPlayer.items) }
-            eventData.onFinishSpec.items.add.forEach {
-                set.add(it)
-            }
-            eventData.onFinishSpec.items.remove.forEach {
-                set.remove(it)
-            }
-            game.heroPlayer.items.clear()
-            game.heroPlayer.items.addAll(set)
+    private fun onItemUpdateEvent(eventData: ItemUpdateEventData) {
+        val set = jsObjectBackedSetOf().apply { addAll(game.heroPlayer.items) }
+        set.addAll(eventData.addedItemIds)
+        eventData.removedItemIds.forEach(game.heroPlayer.items::remove)
+        game.heroPlayer.items.clear()
+        game.heroPlayer.items.addAll(set)
 
-            onItemsUpdate(eventData)
-        }
-        if (!eventData.onFinishSpec.states.isEmpty()) {
-            eventData.onFinishSpec.states.put.forEach {
-                game.heroPlayer.states[it.key] = it.value
-            }
-        }
+        showItemAddAnimation(eventData)
 
         eventBus.emit(GAME_UI_UPDATE_EVENT, null)
     }
@@ -118,22 +106,22 @@ class GlobalEventHandler(
     }
 
     @Suppress("EXPERIMENTAL_API_USAGE")
-    private fun onItemsUpdate(eventData: ItemsStatesUpdateEventData) {
+    private fun showItemAddAnimation(eventData: ItemUpdateEventData) {
         val startCoordinate = determineAnimationStartPointInGameContainer(eventData.map, eventData.missionId)
         val activeScene = game.activeScene.unsafeCast<DefaultGameScene>()
 
         if (!gameControl.isWindowVisible) {
             activeScene.scripts(ASYNC_ANIMATION_CHANNEL, false) {
-                eventData.onFinishSpec.items.add.forEach { item ->
-                    this.unsafeCast<DefaultGameDirector>().suspendAnimation {
-                        itemPopup(item, startCoordinate)
+                this.unsafeCast<DefaultGameDirector>().suspendAnimation {
+                    eventData.addedItemIds.forEach {
+                        itemPopup(it, startCoordinate)
                     }
                 }
             }
         } else {
             GlobalScope.launch {
-                eventData.onFinishSpec.items.add.forEach { item ->
-                    itemPopup(item, startCoordinate)
+                eventData.addedItemIds.forEach {
+                    itemPopup(it, startCoordinate)
                 }
             }
         }
@@ -141,21 +129,17 @@ class GlobalEventHandler(
 
     private fun PixelCoordinate.isOutOfGameContainer(gameContainerSize: PixelSize) = x < 0 || y < 0 || x >= gameContainerSize.width || y >= gameContainerSize.height
 
-    private suspend fun itemPopup(item: String, startPointInGameContainer: PixelCoordinate) {
-        val iconUrl = game.resolve(game.itemAchievementManager.getItems().getValue(item).metadata.icon)
+    private suspend fun itemPopup(itemId: String, startPointInGameContainer: PixelCoordinate) {
+        val item = game.itemAchievementManager.getItems().getValue(itemId)
+        val iconUrl = game.resolve(item.metadata.iconUrl)
 
-        val text = game.i(item)
+        val itemName = game.i(item.metadata.nameTextId)
         val canvasState = game.activeScene.canvasState
-        game.bannerController.showBanner(Banner(game.i("GetItem", text), "success", 5))
-        itemPopupEffect(
+        game.bannerController.showBanner(Banner(game.i("GetItem", itemName), "success", 5))
+        showAchievementEffect(
+            canvasState,
             iconUrl,
-            canvasState.gameContainerSize,
-            startPointInGameContainer,
-            canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(
-                0,
-                200
-            ), /* items box offset */
-            5.0
+            canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(0, 200)
         )
     }
 
@@ -167,11 +151,8 @@ class GlobalEventHandler(
         game.bannerController.showBanner(Banner(game.i("GetAchievement", text), "success", 5))
         showAchievementEffect(
             canvasState,
-            game.resolve(achievementMetadata.icon),
-            canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(
-                0,
-                250
-            )
+            game.resolve(achievementMetadata.iconUrl),
+            canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(0, 200)
         )
     }
 }

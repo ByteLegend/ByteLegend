@@ -35,6 +35,7 @@ import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Game
 import com.bytelegend.client.app.engine.GameControl
 import com.bytelegend.client.app.engine.GameMouseEvent
+import com.bytelegend.client.app.engine.Item
 import com.bytelegend.client.app.engine.calculateCoordinateInGameContainer
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.engine.resource.AudioResource
@@ -290,17 +291,17 @@ class DefaultGameDirector(
         })
     }
 
-    override fun removeItem(item: String, targetCoordinate: GridCoordinate?) {
+    override fun useItem(item: String, targetCoordinate: GridCoordinate?) {
         scripts.add(RemoveItemScript(item, targetCoordinate))
     }
 
     override fun animation(action: AnimationBuilder.() -> Unit) {
         val builder = AnimationBuilder()
         builder.action()
-        compositeAnimation(builder)
+        animation(builder)
     }
 
-    override fun compositeAnimation(vararg builders: AnimationBuilder) {
+    override fun animation(vararg builders: AnimationBuilder) {
         builders.forEach {
             require(!isMainChannel || it.loop != 0) { "Infinite animation loop in main channel is not allowed!" }
             require(!it.animationId.isNullOrEmpty()) { "Animation is empty!" }
@@ -426,11 +427,11 @@ class DefaultGameDirector(
         private val destination: GridCoordinate?
     ) : GameScript {
         override fun start() {
-            if (destination != null) {
-                itemDisappearAnimation()
-                GlobalScope.launch {
+            GlobalScope.launch {
+                val item = game.itemAchievementManager.getItems().getValue(item)
+                if (destination != null) {
                     val canvasState = gameScene.canvasState
-                    val iconUrl = game.resolve(game.itemAchievementManager.getItems().getValue(item).metadata.icon)
+                    val iconUrl = game.resolve(item.metadata.iconUrl)
                     itemPopupEffect(
                         iconUrl,
                         canvasState.gameContainerSize,
@@ -438,19 +439,22 @@ class DefaultGameDirector(
                         canvasState.calculateCoordinateInGameContainer(destination),
                         3.0
                     )
-                    next()
                 }
-            } else {
-                itemDisappearAnimation()
+
+                useItem(item)
+                next()
             }
         }
 
-        private fun itemDisappearAnimation() {
-            GlobalScope.launch {
-                gameRuntime.heroPlayer.items.remove(item)
-                gameRuntime.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
-                webSocketClient.removeItem(item)
+        private suspend fun useItem(item: Item) {
+            val result = game.itemAchievementManager.useItem(item)
+            if (result != null) {
+                val title = game.i("UseItemFailed")
+                val body = game.i("UseItemFailedWith", game.i(item.metadata.nameTextId), result.message ?: "")
+                game.toastController.addToast(title, body, 5000)
             }
+
+            game.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
         }
     }
 

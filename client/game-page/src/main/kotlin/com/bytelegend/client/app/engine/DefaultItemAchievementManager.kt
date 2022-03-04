@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.GameRuntime
+import com.bytelegend.app.client.misc.playAudio
 import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.objects.GameMapMission
+import com.bytelegend.client.app.engine.resource.AudioResource
 import com.bytelegend.client.app.engine.resource.ItemAchievementMetadataResource
+import com.bytelegend.client.app.web.delete
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.await
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
 
@@ -30,8 +38,8 @@ import org.kodein.di.instance
  * The metadata for the item.
  */
 data class ItemOrAchievementMetadata(
-    val id: String,
-    val icon: String,
+    val iconId: String,
+    val iconUrl: String,
     val nameTextId: String,
     val descTextId: String
 )
@@ -39,17 +47,18 @@ data class ItemOrAchievementMetadata(
 /**
  * An item may be able to applied to a specific mission,
  * for example, the key to open chest 1, the key to open chest 2, etc.
- * In this way, it's stored as "{itemId}:{mapId}:{missionId}", e.g. "key:JavaIsland:install-java-ide" or "gold-sword:JavaIsland:create-a-new-class"
+ * In this way, its "id" is stored as "{itemIconId}:{mapId}:{missionId}",
+ * E.g. an item's id is "key:JavaIsland:install-java-ide" or "gold-sword:JavaIsland:create-a-new-class"
  */
 data class Item(
+    val id: String,
     val metadata: ItemOrAchievementMetadata,
     val mission: GameMapMission? = null
 ) {
-    override fun toString() = if (mission == null) metadata.id else "${metadata.id}:${mission.map}:${mission.id}"
+    override fun toString() = id
 }
 
 interface ItemAchievementManager {
-
     /**
      * Because the mission referenced in item might not be loaded yet (in another scene),
      * we have to load the game map and i18n texts if we need to know the mission title.
@@ -59,6 +68,11 @@ interface ItemAchievementManager {
     suspend fun getItems(): Map<String, Item>
 
     suspend fun getAchievements(): Map<String, Item>
+
+    /**
+     * Use an item. Return null upon success, and the error message upon failure.
+     */
+    suspend fun useItem(item: Item): Throwable?
 }
 
 /**
@@ -84,9 +98,24 @@ class DefaultItemAchievementManager(private val di: DI) : ItemAchievementManager
             achievementMetadata.putAll(game.resourceLoader.loadAsync(ItemAchievementMetadataResource("achievementMetadata", game.resolve("/misc/achievement-metadata.json")), false).await())
         }
         game.heroPlayer.achievements.forEach {
-            achievements[it] = Item(achievementMetadata.getValue(it))
+            achievements[it] = Item(it, achievementMetadata.getValue(it))
         }
         return achievements
+    }
+
+    override suspend fun useItem(item: Item): Throwable? {
+        GlobalScope.launch {
+            game.resourceLoader.loadAsync(AudioResource("disappear", game.resolve("/audio/disappear.mp3")), false).await()
+            playAudio("disappear")
+        }
+        val response = delete("/game/api/item/${item.id}")
+        if (response.ok) {
+            game.heroPlayer.items.remove(item.id)
+            game.heroPlayer.usedItems.add(item.id)
+            return null
+        } else {
+            return Exception(response.text().await())
+        }
     }
 
     override suspend fun getItems(): Map<String, Item> {
@@ -96,6 +125,7 @@ class DefaultItemAchievementManager(private val di: DI) : ItemAchievementManager
         if (itemMetadata.isEmpty()) {
             itemMetadata.putAll(game.resourceLoader.loadAsync(ItemAchievementMetadataResource("itemMetadata", game.resolve("/misc/item-metadata.json")), false).await())
         }
+        game.heroPlayer.usedItems.forEach(items::remove)
         val loadingMaps = mutableListOf<Deferred<*>>()
         val unresolvedItems = mutableListOf<String>()
         game.heroPlayer.items.forEach {
@@ -120,13 +150,13 @@ class DefaultItemAchievementManager(private val di: DI) : ItemAchievementManager
      * Return `null` if mission is resolved successfully,
      * otherwise return the map id of unresolved mission.
      */
-    private fun resolveItem(itemWithMissionId: String): String? {
-        if (items.containsKey(itemWithMissionId)) {
+    private fun resolveItem(itemId: String): String? {
+        if (items.containsKey(itemId)) {
             return null
         }
-        val itemMapMissionId = itemWithMissionId.split(":")
+        val itemMapMissionId = itemId.split(":")
         if (itemMapMissionId.size == 1) {
-            items[itemWithMissionId] = Item(itemMetadata.getValue(itemWithMissionId))
+            items[itemId] = Item(itemId, itemMetadata.getValue(itemId))
             return null
         } else if (itemMapMissionId.size > 2) {
             val mapId = itemMapMissionId[1]
@@ -136,12 +166,12 @@ class DefaultItemAchievementManager(private val di: DI) : ItemAchievementManager
                 mapId
             } else {
                 val missionId = itemMapMissionId[2]
-                val item = Item(itemMetadata.getValue(itemMapMissionId[0]), gameMap.objects.first { it.id == missionId }.unsafeCast<GameMapMission>())
-                items[itemWithMissionId] = item
+                val item = Item(itemId, itemMetadata.getValue(itemMapMissionId[0]), gameMap.objects.first { it.id == missionId }.unsafeCast<GameMapMission>())
+                items[itemId] = item
                 null
             }
         } else {
-            console.warn("Unrecognized item: $itemWithMissionId")
+            logger.warn("Unrecognized item: $itemId")
             return null
         }
     }

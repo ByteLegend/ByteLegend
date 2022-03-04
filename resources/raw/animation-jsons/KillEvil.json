@@ -1,0 +1,40 @@
+{
+  "columns" : 7,
+  "image" : "../animations/KillEvil.png",
+  "imageheight" : 73,
+  "imagewidth" : 700,
+  "margin" : 0,
+  "name" : "KillEvil",
+  "tilecount" : 7,
+  "tiledversion" : "1.7.2",
+  "tileheight" : 73,
+  "objectalignment" : "topleft",
+  "tiles" : [ {
+    "animation" : [ {
+      "duration" : 500,
+      "tileid" : 0
+    }, {
+      "duration" : 500,
+      "tileid" : 1
+    }, {
+      "duration" : 500,
+      "tileid" : 2
+    }, {
+      "duration" : 500,
+      "tileid" : 3
+    }, {
+      "duration" : 500,
+      "tileid" : 4
+    }, {
+      "duration" : 500,
+      "tileid" : 5
+    }, {
+      "duration" : 500,
+      "tileid" : 6
+    } ],
+    "id" : 0
+  } ],
+  "tilewidth" : 100,
+  "type" : "tileset",
+  "version" : "1.6"
+}

@@ -27,12 +27,11 @@ import java.io.File
 fun main() {
     val tilesetName = System.getProperty("tilesetName")!!
     val mapId = System.getProperty("mapId")!!
-    val groupType = System.getProperty("groupType")!!
-    require(groupType == DYNAMIC_SPRITE_LAYER_GROUP_NAME || groupType == ANIMATION_LAYER_GROUP_NAME)
+    val groupType = SpecialMapGroup.valueOf(System.getProperty("groupType")!!)
 
     val mapJson = File("resources/raw/maps/$mapId/$mapId.json")
     val mapData = uglyObjectMapper.readValue<TiledMap>(mapJson)
-    val tilesetSource = "../../tileset-jsons/$tilesetName.json"
+    val tilesetSource = "../../${groupType.tilesetJsonDir}/$tilesetName.json"
     val tileset = readTileset(mapJson, tilesetSource)
     if (mapData.tilesets.none { it.source == tilesetSource }) {
         val lastExistingTileset = mapData.tilesets.lastOrNull()
@@ -88,13 +87,13 @@ fun main() {
     prettyObjectMapper.writeValue(mapJson, mapData)
 }
 
-private fun TiledMap.createOrGetGroupLayer(groupName: String): TiledMap.Layer {
-    if (layers.none { it.name == groupName }) {
+private fun TiledMap.createOrGetGroupLayer(mapGroup: SpecialMapGroup): TiledMap.Layer {
+    if (layers.none { it.name == mapGroup.name }) {
         val layer = TiledMap.Layer(
             null,
             null,
             getNextLayerIdAndIncrement(),
-            ANIMATION_LAYER_GROUP_NAME,
+            SpecialMapGroup.Animations.name,
             1,
             "group",
             true,
@@ -108,12 +107,12 @@ private fun TiledMap.createOrGetGroupLayer(groupName: String): TiledMap.Layer {
         layers.add(layer)
         return layer
     } else {
-        return layers.first { it.name == groupName }
+        return layers.first { it.name == mapGroup.name }
     }
 }
 
 private fun readTileset(mapJson: File, source: String): TiledTileset {
-    return uglyObjectMapper.readValue<TiledTileset>(mapJson.parentFile.resolve(source))
+    return uglyObjectMapper.readValue(mapJson.parentFile.resolve(source))
 }
 
 private fun TiledMap.getNextLayerIdAndIncrement(): Long {

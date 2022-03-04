@@ -23,8 +23,8 @@ import com.bytelegend.app.client.api.ExpensiveResource
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.client.utils.JSObjectBackedMap
-import com.bytelegend.app.client.utils.parseServerEvent
-import com.bytelegend.app.client.utils.toSceneInitData
+import com.bytelegend.client.utils.parseServerEvent
+import com.bytelegend.client.utils.toSceneInitData
 import com.bytelegend.app.shared.entities.SceneInitData
 import com.bytelegend.app.shared.protocol.DEFAULT_REPLY_TIMEOUT_SECONDS
 import com.bytelegend.app.shared.protocol.ENTER_SCENE
@@ -36,7 +36,6 @@ import com.bytelegend.app.shared.protocol.MOVE_TO
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PUT_STATE_EVENT
 import com.bytelegend.app.shared.protocol.PublishMessage
-import com.bytelegend.app.shared.protocol.REMOVE_ITEM_EVENT
 import com.bytelegend.app.shared.protocol.ReplyMessage
 import com.bytelegend.app.shared.protocol.SPEAK
 import com.bytelegend.app.shared.protocol.SendMessage
@@ -240,10 +239,6 @@ class WebSocketClient(
 
     override suspend fun putState(key: String, value: String) {
         send<Unit>(PUT_STATE_EVENT, key, value)
-    }
-
-    override suspend fun removeItem(item: String) {
-        send<Unit>(REMOVE_ITEM_EVENT, item)
     }
 
     override suspend fun switchScene(destMapId: String) {

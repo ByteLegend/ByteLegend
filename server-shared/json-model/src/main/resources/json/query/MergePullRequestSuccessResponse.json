@@ -1,0 +1,17 @@
+{
+  "data": {
+    "mergePullRequest": {
+      "pullRequest": {
+        "commits": {
+          "nodes": [
+            {
+              "commit": {
+                "oid": "a28b9ec31acac0fc5f49153524264d061f9fc76b"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

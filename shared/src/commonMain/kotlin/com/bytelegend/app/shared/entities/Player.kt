@@ -20,6 +20,8 @@ import com.bytelegend.app.shared.annotations.JsonIgnore
 import com.bytelegend.app.shared.annotations.ReadOnly
 
 const val ANONYMOUS_DUMMY_MAP = "ANONYMOUS_DUMMY_MAP"
+const val PLACEHOLDER_PLAYER_MARKER = -1
+const val OFFLINE_PLAYER_MARKER = 0
 
 open class Player : BasePlayer() {
     /**
@@ -47,15 +49,15 @@ open class Player : BasePlayer() {
      * This means that `save()` should avoid saving these ReadOnly-marked fields.
      */
     @get: ReadOnly
-    // it's stored as dynamodb set
+    // it's stored as dynamodb string set
     var items: MutableList<String> = ArrayList()
 
     @get: ReadOnly
-    // it's stored as dynamodb set
+    // it's stored as dynamodb string set
     var usedItems: MutableList<String> = ArrayList()
 
     @get: ReadOnly
-    // it's stored as dynamodb set
+    // it's stored as dynamodb string set
     var achievements: MutableList<String> = ArrayList()
 
     /**
@@ -68,7 +70,7 @@ open class Player : BasePlayer() {
     val online: Boolean
         @JsonIgnore
         @DynamoDbIgnore
-        get() = server != 0
+        get() = server > 0
 
     /**
      * The preferred locale.

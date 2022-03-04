@@ -1,0 +1,7 @@
+{
+  "success": true,
+  "errors": [],
+  "data": {
+    "authenticated_url": "https://pipelines.actions.githubusercontent.com/a5FwH1ZtG1Cq9G7KvUHx22MVjPT4RNUsSCY5Q109mgk8aKNZf7/_apis/pipelines/1/runs/66/live?api-version=5.2-preview.1&urlExpires=2021-06-24T00%3A12%3A34.2524038Z&urlSigningMethod=HMACV1&urlSignature=KFFO81xiuRigMYB383g1nvSa2URy3KZUCBa2XFmRTMQ%3D"
+  }
+}

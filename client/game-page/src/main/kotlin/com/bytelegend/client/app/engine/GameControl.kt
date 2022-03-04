@@ -76,12 +76,12 @@ class GameControl(
     // In offline mode, everything is still clickable, but hero won't move.
     private fun clickObjectsAndMove(coordinate: GridCoordinate) {
         val scene = gameSceneContainer.activeScene!!.unsafeCast<DefaultGameScene>()
-        val gameObjects = scene.objects.getByCoordinate(coordinate)
+        val gameObjects = scene.objects.getByCoordinate(coordinate).objects
 
         var canBeSetAsDestination = true
         gameObjects.forEach {
-            canBeSetAsDestination = !it.roles.contains(UnableToBeSetAsDestination.toString())
-            it.onClick()
+            canBeSetAsDestination = !it.value.roles.contains(UnableToBeSetAsDestination.toString())
+            it.value.onClick()
         }
 
         if (!online) {

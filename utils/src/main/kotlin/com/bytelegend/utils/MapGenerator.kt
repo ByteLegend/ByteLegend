@@ -79,7 +79,6 @@ val prettyObjectMapper = uglyObjectMapper.writerWithDefaultPrettyPrinter()
 private const val TILE_LAYER_TYPE = "tilelayer"
 private const val PLAYER_LAYER_NAME = "Player"
 private const val BLOCKERS_LAYER_NAME = "Blockers"
-private const val DYNAMIC_SPRITES_GROUP_NAME = "DynamicSprites"
 
 class MapGenerator(
     private val mapId: String,
@@ -145,8 +144,8 @@ class MapGenerator(
     }.flatMap { layer ->
         when {
             layer.name == BLOCKERS_LAYER_NAME -> emptyList()
-            layer.name == DYNAMIC_SPRITES_GROUP_NAME -> emptyList()
-            layer.name == ANIMATION_LAYER_GROUP_NAME -> emptyList()
+            layer.name == SpecialMapGroup.DynamicSprites.name -> emptyList()
+            layer.name == SpecialMapGroup.Animations.name -> emptyList()
             !layer.visible -> emptyList()
             layer.type == TILE_LAYER_TYPE -> listOf(layer)
             layer.type == "group" -> layer.layers.filter { it.visible }.map {
@@ -264,7 +263,7 @@ class MapGenerator(
     }
 
     private fun readAnimations(): List<GameMapAnimation> {
-        return tiledMap.layers.firstOrNull { it.name == ANIMATION_LAYER_GROUP_NAME }
+        return tiledMap.layers.firstOrNull { it.name == SpecialMapGroup.Animations.name }
             ?.layers?.map {
                 val tileset = nameToTilesetMap.getValue(it.name).tileset
                 GameMapAnimation(it.name, PixelSize((tileset.imagewidth / tileset.tilecount).toInt(), tileset.imageheight.toInt()), tileset.tilecount.toInt())

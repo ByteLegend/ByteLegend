@@ -27,7 +27,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapInputGroup
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
-import com.bytelegend.app.client.utils.toInvitationInformation
+import com.bytelegend.client.utils.toInvitationInformation
 import com.bytelegend.app.shared.COIN_REWARD_PER_CODE
 import com.bytelegend.app.shared.INVITER_ID_STATE
 import com.bytelegend.app.shared.InvitationInformation
@@ -39,7 +39,7 @@ import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.HttpRequestException
-import com.bytelegend.client.app.web.get
+import com.bytelegend.client.app.web.getText
 import com.bytelegend.client.app.web.post
 import kotlinext.js.jso
 import kotlinx.browser.document
@@ -229,6 +229,6 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : Component<GameProps
     }
 
     private suspend fun getInvitationInformation(): InvitationInformation {
-        return toInvitationInformation(JSON.parse(get("/game/api/invitation")))
+        return toInvitationInformation(JSON.parse(getText("/game/api/invitation")))
     }
 }

@@ -18,11 +18,11 @@ package com.bytelegend.app.shared.entities.mission
 import com.bytelegend.app.shared.annotations.JsonIgnore
 
 /**
- * Upon mission completion, update states or items.
+ * Upon mission completion, or item used, make some changes.
  */
-data class OnFinishSpec(
-    val items: OnFinishItemsChange = OnFinishItemsChange(),
-    val states: OnFinishStatesChange = OnFinishStatesChange(),
+data class ChangeSpec(
+    val items: List<String> = emptyList(),
+    val states: StatesChange = StatesChange(),
     /**
      * The achievements to get after finishing the mission
      */
@@ -33,15 +33,7 @@ data class OnFinishSpec(
     val coin: Int = 0
 )
 
-data class OnFinishItemsChange(
-    val add: List<String> = emptyList(),
-    val remove: List<String> = emptyList()
-) {
-    @JsonIgnore
-    fun isEmpty() = add.isEmpty() && remove.isEmpty()
-}
-
-data class OnFinishStatesChange(
+data class StatesChange(
     val put: Map<String, String> = emptyMap(),
 ) {
     @JsonIgnore

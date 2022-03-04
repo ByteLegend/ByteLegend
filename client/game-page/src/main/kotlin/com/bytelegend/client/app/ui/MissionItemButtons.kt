@@ -20,9 +20,12 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.GameMission
+import com.bytelegend.app.client.api.missionItemUsedEvent
 import com.bytelegend.app.client.api.missionItemsButtonRepaintEvent
 import com.bytelegend.app.shared.PixelCoordinate
+import com.bytelegend.app.shared.missionHeroDistance
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
+import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Item
 import kotlinext.js.jso
 import kotlinx.browser.document
@@ -35,8 +38,6 @@ import react.State
 import react.create
 import react.dom.html.ReactHTML.img
 import react.react
-import kotlin.math.abs
-import kotlin.math.max
 
 private const val MISSION_TITLE_BUTTONS_LAYER = "mission-title-buttons-layer"
 
@@ -47,16 +48,11 @@ interface MissionItemButtonsState : State {
 class MissionItemButtons(props: GameProps) : GameUIComponent<GameProps, MissionItemButtonsState>(props) {
     init {
         state = jso { items = emptyList() }
-        GlobalScope.launch {
-            val items = props.game.itemAchievementManager.getItems()
-            val currentMap = props.game.activeScene.map.id
-            setState {
-                this.items = items.values.filter { it.mission?.map == currentMap }
-            }
-        }
+        refreshItems(Unit)
     }
 
     private val onAnimation: EventListener<Nothing> = this::onAnimation
+    private val refreshItems: EventListener<Unit> = this::refreshItems
 
     private val divCoordinate: PixelCoordinate
         get() = canvasCoordinateInGameContainer - canvasCoordinateInMap
@@ -90,13 +86,24 @@ class MissionItemButtons(props: GameProps) : GameUIComponent<GameProps, MissionI
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
+    private fun refreshItems(u: Unit) {
+        GlobalScope.launch {
+            val items = props.game.itemAchievementManager.getItems()
+            val currentMap = props.game.activeScene.map.id
+            setState {
+                this.items = items.values.filter { it.mission?.map == currentMap }
+            }
+        }
+    }
+
     override fun componentDidMount() {
-        super.componentDidMount()
+        props.game.eventBus.on(GAME_UI_UPDATE_EVENT, refreshItems)
         props.game.eventBus.on(GAME_ANIMATION_EVENT, onAnimation)
     }
 
     override fun componentWillUnmount() {
-        super.componentWillUnmount()
+        props.game.eventBus.on(GAME_UI_UPDATE_EVENT, refreshItems)
         props.game.eventBus.remove(GAME_ANIMATION_EVENT, onAnimation)
     }
 }
@@ -107,23 +114,27 @@ interface MissionItemButtonProps : GameProps {
 }
 
 interface MissionItemButtonState : State {
-    var disabled: Boolean
     var loading: Boolean
-    var flickering: Boolean
 }
 
 class MissionItemButton(props: MissionItemButtonProps) : Component<MissionItemButtonProps, MissionItemButtonState>(props) {
     init {
         state = jso {
-            disabled = distanceToHero > 2
             loading = false
-            flickering = distanceToHero <= 2
         }
     }
 
     private val onRepaint: EventListener<Nothing> = this::onRepaint
     private val distanceToHero: Int
-        get() = max(abs(props.game.heroPlayer.x - props.mission.gridCoordinate.x), abs(props.game.heroPlayer.y - props.mission.gridCoordinate.y))
+        get() = props.mission.gridCoordinate.missionHeroDistance(props.game.heroPlayer.x, props.game.heroPlayer.y)
+
+    override fun componentDidUpdate(prevProps: MissionItemButtonProps, prevState: MissionItemButtonState, snapshot: Any) {
+        if (props.mission.id != prevProps.mission.id) {
+            // this may happen when previously there were two buttons, but now there's only one
+            props.game.eventBus.remove(missionItemsButtonRepaintEvent(prevProps.mission.id), onRepaint)
+            props.game.eventBus.on(missionItemsButtonRepaintEvent(props.mission.id), onRepaint)
+        }
+    }
 
     override fun componentDidMount() {
         props.game.eventBus.on(missionItemsButtonRepaintEvent(props.mission.id), onRepaint)
@@ -135,19 +146,16 @@ class MissionItemButton(props: MissionItemButtonProps) : Component<MissionItemBu
 
     @Suppress("UNUSED_PARAMETER")
     private fun onRepaint(n: Nothing) {
-        setState {
-            disabled = distanceToHero > 2
-            flickering = distanceToHero <= 2
-        }
+        setState {}
     }
 
     override fun render() = Fragment.create {
+        val disabled = distanceToHero > 2
         var className = "mission-item-button"
-        if (state.flickering) {
-            className += " mission-item-button-animation"
-        }
-        if (state.disabled) {
-            className += " mission-item-button-disabled"
+        className += if (disabled) {
+            " mission-item-button-disabled"
+        } else {
+            " mission-item-button-animation"
         }
         absoluteDiv(
             left = props.mission.pixelCoordinate.x - 8,
@@ -158,16 +166,37 @@ class MissionItemButton(props: MissionItemButtonProps) : Component<MissionItemBu
             zIndex = Layer.MissionItemButton.zIndex(),
         ) { div ->
             img {
-                src = props.game.resolve(props.item.metadata.icon)
+                src = props.game.resolve(props.item.metadata.iconUrl)
             }
             if (state.loading) {
                 loadingSpinner()
             }
             div.onClick = {
-                if (state.disabled) {
+                val itemName = props.game.i(props.item.metadata.nameTextId)
+                if (disabled) {
                     val title = props.game.i("CantUseItem")
-                    val body = props.game.i("YouMustBeAdjacentToUseTheItem", props.game.i(props.item.metadata.nameTextId))
+                    val body = props.game.i("YouMustBeAdjacentToUseTheItem", itemName)
                     props.game.toastController.addToast(title, body, 5000)
+                } else {
+                    if (!props.game.hero!!.isMoving()) {
+                        props.game.hero!!.direction = props.game.hero!!.directionTo(props.mission)
+                    }
+                    setState { loading = true }
+                    GlobalScope.launch {
+                        val result = props.game.itemAchievementManager.useItem(props.item)
+                        if (result == null) {
+                            // make button disappear
+                            props.game.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+                            props.game.eventBus.emit(missionItemUsedEvent(props.mission.id), props.item.id)
+                        } else {
+                            val title = props.game.i("UseItemFailed")
+                            val body = props.game.i("UseItemFailedWith", itemName, result.message ?: "")
+                            props.game.toastController.addToast(title, body, 5000)
+                        }
+
+                        props.game.eventBus.emit(GAME_UI_UPDATE_EVENT, null)
+                        setState { loading = false }
+                    }
                 }
             }
         }

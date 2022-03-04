@@ -1,0 +1,18 @@
+{
+  "name": "README.md",
+  "path": "README.md",
+  "sha": "807ebff57051cb9f9353e429068f468ebe5adf0f",
+  "size": 614,
+  "url": "https://api.github.com/repos/ByteLegend/ByteLegend/contents/README.md?ref=master",
+  "html_url": "https://github.com/ByteLegend/ByteLegend/blob/master/README.md",
+  "git_url": "https://api.github.com/repos/ByteLegend/ByteLegend/git/blobs/807ebff57051cb9f9353e429068f468ebe5adf0f",
+  "download_url": "https://raw.githubusercontent.com/ByteLegend/ByteLegend/master/README.md",
+  "type": "file",
+  "content": "IyMgQnl0ZUxlZ2VuZCAtIGxlYXJuIHByb2dyYW1taW5nIHdoaWxlIHBsYXlp\nbmcgYSBnYW1lCgpbIVtjaGVja10oaHR0cHM6Ly9naXRodWIuY29tL0J5dGVM\nZWdlbmQvQnl0ZUxlZ2VuZC9hY3Rpb25zL3dvcmtmbG93cy9jaGVjay55bWwv\nYmFkZ2Uuc3ZnKV0oaHR0cHM6Ly9naXRodWIuY29tL0J5dGVMZWdlbmQvQnl0\nZUxlZ2VuZC9hY3Rpb25zL3dvcmtmbG93cy9jaGVjay55bWwpCgpbIVtXYXRj\naCB0aGUgdmlkZW9dKGh0dHBzOi8vaW1nLnlvdXR1YmUuY29tL3ZpL0Y4QTNf\nWGFTLUFzL21heHJlc2RlZmF1bHQuanBnKV0oaHR0cHM6Ly93d3cueW91dHVi\nZS5jb20vd2F0Y2g/dj1GOEEzX1hhUy1BcykKCgojIyBIb3cgdG8gcGxheQoK\nWW91IHdpbGwgYmUgcGxheWluZyBhcyBhIGhlcm8gY3Jvc3NpbmcgdGhlIGlz\nbGFuZCBhbmQgZmluaXNoIGNoYWxsZW5nZXMgdmlhIEdpdEh1YiBwdWxsIHJl\ncXVlc3QuIFlvdSBzdWJtaXQgR2l0SHViIHB1bGwgcmVxdWVzdCB0byBraWxs\nIHRoZSBtb25zdGVycywgYWNjb21wbGlzaCBtaXNzaW9ucy4KCgojIyMgU3Rh\ncnQgbG9jYWxseQoKUnVuIGAuL2dyYWRsZXcgYm9vdFJ1bmAsIHRoZW4gYWNj\nZXNzIGBodHRwOi8vbG9jYWxob3N0OjgwODBgLgo=\n",
+  "encoding": "base64",
+  "_links": {
+    "self": "https://api.github.com/repos/ByteLegend/ByteLegend/contents/README.md?ref=master",
+    "git": "https://api.github.com/repos/ByteLegend/ByteLegend/git/blobs/807ebff57051cb9f9353e429068f468ebe5adf0f",
+    "html": "https://github.com/ByteLegend/ByteLegend/blob/master/README.md"
+  }
+}

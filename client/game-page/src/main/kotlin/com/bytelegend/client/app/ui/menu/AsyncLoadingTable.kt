@@ -23,7 +23,7 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
-import com.bytelegend.client.app.web.get
+import com.bytelegend.client.app.web.getText
 import kotlinext.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -60,7 +60,7 @@ abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : Component<GamePro
             loadingSpinner()
         } else if (state.data == undefined) {
             GlobalScope.launch {
-                val json = get(url)
+                val json = getText(url)
                 setState {
                     data = JSON.parse(json)
                 }

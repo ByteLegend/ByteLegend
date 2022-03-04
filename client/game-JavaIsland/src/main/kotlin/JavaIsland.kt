@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.bytelegend.app.client.api.AnimationBuilder
 import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.DynamicSprite
+import com.bytelegend.app.client.api.FlickeringSingleFrameAnimation
 import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.GameObjectContainer
@@ -25,10 +25,16 @@ import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.StaticFrame
-import com.bytelegend.app.client.misc.uuid
+import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.client.api.missionItemUsedEvent
+import com.bytelegend.app.client.api.openMissionModalEvent
+import com.bytelegend.app.client.utils.AnimationFrameRange
 import com.bytelegend.app.client.utils.GameScriptHelpers
-import com.bytelegend.app.client.utils.animationWithFixedInterval
 import com.bytelegend.app.client.utils.configureBookSprite
+import com.bytelegend.app.client.utils.configureChestOpenByKey
+import com.bytelegend.app.client.utils.refreshAnimationForItem
+import com.bytelegend.app.client.utils.refreshTeslaCoilAnimation
+import com.bytelegend.app.client.utils.removeMissionBlocker
 import com.bytelegend.app.shared.COFFEE
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GIT_ISLAND
@@ -36,10 +42,8 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.INVITER_ID_STATE
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_SENIOR_JAVA_CASTLE
+import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.app.shared.PixelCoordinate
-import com.bytelegend.app.shared.PixelSize
-import com.bytelegend.app.shared.objects.CoordinateAware
-import com.bytelegend.app.shared.objects.GameMapDynamicSprite
 import com.bytelegend.app.shared.objects.GameObject
 import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.app.shared.objects.mapEntranceId
@@ -47,12 +51,8 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.Element
 import org.w3c.dom.get
-import kotlin.math.PI
-import kotlin.math.atan
-import kotlin.math.sqrt
 
 const val BEGINNER_GUIDE_FINISHED_STATE = "BeginnerGuideFinished"
-const val NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE = "OldManGotCoffee"
 const val NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID = "remember-brave-people-challenge"
 const val STAR_BYTELEGEND_MISSION_ID = "star-bytelegend"
 const val FIRST_STAR_MEDAL_ID = "first-star-medal"
@@ -69,7 +69,7 @@ fun main() {
             configureInstallJavaIDEChest()
 
             pubGuard()
-            newbieVillageOldMan()
+            newbieVillageOracle()
             newbieVillageNoticeboard()
             newbieVillageHead()
             newbieVillageSailor()
@@ -82,13 +82,22 @@ fun main() {
             basicStructureStone(
                 "JavaBasicStructure",
                 "JavaBasicStructure-challenge-text",
+                GridCoordinate(0, 1),
                 listOf("import-third-party-package", "import-class", "create-a-new-class")
             )
             commentDungeonNoticeboard()
             basicStructureStone(
                 "JavaMethodField",
                 "JavaMethodField-challenge-text",
-                listOf("java-method", "java-method-overloading", "java-field", "java-method-invocation", "java-local-variable-scope", "java-method-recursion")
+                GridCoordinate(-1, 0),
+                listOf(
+                    "java-method-recursion",
+                    "java-local-variable-scope",
+                    "java-method-invocation",
+                    "java-field",
+                    "java-method-overloading",
+                    "java-method"
+                )
             )
 
             billboard()
@@ -119,16 +128,16 @@ fun GameScene.commentDungeonNoticeboard() = objects {
  * Upon initialization and mission repaint events,
  * update the checkboxes and mission animation/blockers.
  */
-fun GameScriptHelpers.updateCheckboxes(blockMissionId: String, blockTextId: String, missionIds: List<String>) {
-    val html = gameScene.gameRuntime.i(blockTextId)
+fun GameScene.updateCheckboxes(blockMissionId: String, blockTextId: String, missionIds: List<String>) {
+    val html = gameRuntime.i(blockTextId)
     val tmp = document.createElement("div")
     tmp.innerHTML = html
 
     val accomplishedMissionBefore = tmp.querySelectorAll("li>input[checked]").length
     missionIds.forEach {
-        if (gameScene.challengeAnswers.missionAccomplished(it)) {
-            val mission = gameScene.objects.getById<GameMission>(it)
-            val title = gameScene.gameRuntime.i(mission.gameMapMission.title)
+        if (missionItemUsed(it)) {
+            val mission = objects.getById<GameMission>(it)
+            val title = gameRuntime.i(mission.gameMapMission.title)
             val list = tmp.querySelectorAll("li")
             for (i in 0 until list.length) {
                 val li = list[i]
@@ -140,10 +149,10 @@ fun GameScriptHelpers.updateCheckboxes(blockMissionId: String, blockTextId: Stri
         }
     }
 
-    gameScene.gameRuntime.putText(blockTextId, tmp.innerHTML)
+    gameRuntime.putText(blockTextId, tmp.innerHTML)
 
     val accomplishedMissionAfter = tmp.querySelectorAll("li>input[checked]").length
-    val missionStone = gameScene.objects.getById<GameMission>(blockMissionId)
+    val missionStone = objects.getById<GameMission>(blockMissionId)
     if (accomplishedMissionAfter == missionIds.size) {
         missionStone.animation = StaticFrame(1)
     } else {
@@ -154,44 +163,103 @@ fun GameScriptHelpers.updateCheckboxes(blockMissionId: String, blockTextId: Stri
     }
 }
 
-fun GameScene.basicStructureStone(stoneMissionId: String, stoneTextId: String, missionIds: List<String>) {
-    val helpers = GameScriptHelpers(this)
-    helpers.updateCheckboxes(stoneMissionId, stoneTextId, missionIds)
-    missionIds.forEach {
-        val mission = objects.getById<DynamicSprite>(it)
-        helpers.addMissionRepaintCallback(mission) {
-            helpers.updateCheckboxes(stoneMissionId, stoneTextId, missionIds)
+fun GameScene.hasItem(itemId: String) = gameRuntime.heroPlayer.items.contains(itemId)
+fun GameScene.itemUsed(itemId: String) = gameRuntime.heroPlayer.usedItems.contains(itemId)
+fun GameScene.missionItemUsed(missionId: String) = gameRuntime.heroPlayer.usedItems.any {
+    it.endsWith(":${map.id}:$missionId")
+}
+
+fun GameScene.findUndestroyedTower(missionIds: List<String>): GameMission? {
+    return missionIds.firstOrNull { !missionItemUsed(it) }?.let { objects.getById(it) }
+}
+
+/**
+ * if the stone is already destroyed, show the mission modal.
+ * if the stone is not destroyed and we have finished all missions,
+ *    Move to the point below stone, show the animation
+ *    (if the point is not reachable, show the mission modal)
+ * else if hero is at the point below the mission, tesla coil attack, show the mission modal
+ * else show the mission modal.
+ *
+ */
+fun GameScene.basicStructureStone(stoneMissionId: String, stoneTextId: String, attackPointOffset: GridCoordinate, missionIds: List<String>) {
+    updateCheckboxes(stoneMissionId, stoneTextId, missionIds)
+
+    val stoneMission = objects.getById<GameMission>(stoneMissionId)
+    val attackPoint = stoneMission.gridCoordinate + attackPointOffset
+
+    objects {
+        dynamicSprite {
+            id = "attack-point-of-$stoneMissionId"
+            gridCoordinate = attackPoint
+            onTouch = {
+                findUndestroyedTower(missionIds)?.let {
+                    teslaCoilAttackAnimation(it, gameRuntime.hero!!)
+                }
+            }
+        }
+    }
+
+    val openModal: UnitFunction = {
+        updateCheckboxes(stoneMissionId, stoneTextId, missionIds)
+        gameRuntime.eventBus.emit(openMissionModalEvent(stoneMissionId), null)
+    }
+    stoneMission.onClickFunction = {
+        val undestroyedTower = findUndestroyedTower(missionIds)
+        if (blockers[stoneMission.gridCoordinate.y][stoneMission.gridCoordinate.x] >= NON_BLOCKER) {
+            // clicked via bouncing title
+            openModal()
+        } else if (undestroyedTower == null) {
+            // all towers are destroyed
+            // move to the point, show destroyed animation
+            val movePath = gameRuntime.hero!!.searchPath(attackPoint)
+            if (movePath.isEmpty()) {
+                openModal()
+            } else {
+                gameRuntime.hero!!.moveAlong(movePath) {
+                    stoneMission.animation = FlickeringSingleFrameAnimation(0, 200)
+
+                    window.setTimeout({
+                        stoneMission.animation = StaticFrame(1)
+                        openModal()
+                    }, 2000)
+                }
+            }
+        } else if (gameRuntime.heroPlayer.gridCoordinate.manhattanDistanceTo(stoneMission.gridCoordinate) < 2) {
+            // attack
+            teslaCoilAttackAnimation(undestroyedTower, gameRuntime.hero!!)
+            window.setTimeout({ openModal() }, 2000)
+        } else {
+            openModal()
         }
     }
 }
 
 fun GameScene.firstBugEvil() = objects {
-    val mission = objects.getById<DynamicSprite>("fix-simple-add")
-    val helpers = GameScriptHelpers(this@firstBugEvil)
-    helpers.configureAnimation(mission, 3)
-    if (challengeAnswers.missionAccomplished("fix-simple-add")) {
-        helpers.removeMissionBlocker(mission)
-    }
-    helpers.addMissionRepaintCallback(mission) {
-        if (!it.wasAccomplished && it.newValue.accomplished) {
-            helpers.removeMissionBlocker(mission)
-        }
-        helpers.configureAnimation(mission, 3)
+    val mission = objects.getById<GameMission>("fix-simple-add")
+
+    refreshAnimationForItem(mission, "dagger:JavaIsland:fix-simple-add", 3, AnimationFrameRange(0, 3), null, 500)
+    gameRuntime.eventBus.on(missionItemUsedEvent(mission.id)) { _: String ->
+        killEvil(mission)
+        mission.animation = FlickeringSingleFrameAnimation(0, 200)
+
+        window.setTimeout({
+            refreshAnimationForItem(mission, "dagger:JavaIsland:fix-simple-add", 3, AnimationFrameRange(0, 3), null, 500)
+        }, 3000)
     }
 }
 
 fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
     val mission = objects.getById<DynamicSprite>(missionId)
-    val helpers = GameScriptHelpers(this)
-    if (challengeAnswers.challengeAccomplished(challengeId)) {
-        helpers.removeMissionBlocker(mission)
+    if (itemUsed("door-key:${map.id}:$missionId")) {
+        removeMissionBlocker(mission)
         mission.animation = StaticFrame(3)
     } else {
-        helpers.addCloseCallbackToMission(mission) {
+        gameRuntime.eventBus.on(missionItemUsedEvent(mission.id)) { _: String ->
             if (challengeAnswers.challengeAccomplished(challengeId) &&
                 mission.animation.unsafeCast<StaticFrame>().frameIndex != 3
             ) {
-                helpers.removeMissionBlocker(mission)
+                removeMissionBlocker(mission)
                 mission.animation = FramePlayingAnimation(
                     frames = arrayOf(
                         AnimationFrame(0, 1500),
@@ -212,8 +280,7 @@ fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
 fun GameScene.configureMissionTowers() {
     val helpers = GameScriptHelpers(this@configureMissionTowers)
 
-    val teslaCoils = mutableListOf<CoordinateAware>()
-    objects.getByRole<DynamicSprite>(GameObjectRole.Mission).forEach { mission ->
+    objects.getByRole<GameMission>(GameObjectRole.Mission).forEach { mission ->
         if (mission.mapDynamicSprite.id == "MissionTower") {
             helpers.configureAnimation(mission, 2)
             helpers.addMissionRepaintCallback(mission) {
@@ -221,10 +288,13 @@ fun GameScene.configureMissionTowers() {
             }
         }
         if (mission.mapDynamicSprite.id == "TeslaCoil") {
-            teslaCoils.add(mission)
-            helpers.configureAnimation(mission, 6, 200)
-            helpers.addMissionRepaintCallback(mission) {
-                helpers.configureAnimation(mission, 6, 200)
+            refreshTeslaCoilAnimation(mission)
+            gameRuntime.eventBus.on(missionItemUsedEvent(mission.id)) { item: String ->
+                when {
+                    item.startsWith("iron-sword") -> ironSwordAttack(mission)
+                    item.startsWith("silver-sword") -> silverSwordAttack(mission)
+                    item.startsWith("gold-sword") -> goldSwordAttack(mission)
+                }
             }
         }
     }
@@ -235,7 +305,7 @@ fun GameScene.configureStarByteLegendBook() {
 }
 
 fun GameScene.configureInstallJavaIDEChest() {
-    GameScriptHelpers(this).configureChest("install-java-ide")
+    configureChestOpenByKey("install-java-ide")
 }
 
 fun GameScene.newbieVillageNoticeboard() = objects {
@@ -320,59 +390,6 @@ fun GameScene.billboard() = objects {
     }
 }
 
-fun GameScene.thunderCurrentAnimation(startMission: GameMission, endObject: CoordinateAware) {
-    scripts("thunder-current-${uuid()}") {
-        val sprite = objects.getById<GameMapDynamicSprite>("TeslaCoilAttack")
-        startMission.mapDynamicSprite = sprite
-        startMission.animation = sprite.animationWithFixedInterval(100, 0, false)
-        val frameNumber = sprite.frames[0][0].size
-
-        val attackAnimationDuration = frameNumber * 100L
-
-        compositeAnimation(AnimationBuilder().apply {
-            animationId = "ThunderCurrent"
-            audioId = "ThunderCurrentAudio"
-            frameDurationMs = 100
-            initDelayMs = attackAnimationDuration
-            onStart = {
-                startMission.mapDynamicSprite = objects.getById("TeslaCoil")
-                startMission.animation = startMission.mapDynamicSprite.animationWithFixedInterval(200, 0, true)
-            }
-            onDraw = { canvas, frameIndex ->
-                val start = startMission.pixelCoordinate + PixelSize(16, 0)
-                val end = endObject.pixelCoordinate + PixelSize(16, 16)
-
-                val startPointOnCanvas = start - canvasState.getCanvasCoordinateInMap()
-                val endPointOnCanvas = end - canvasState.getCanvasCoordinateInMap()
-
-                canvas.translate(startPointOnCanvas.x.toDouble(), startPointOnCanvas.y.toDouble())
-                canvas.rotate(PI - atan(1.0 * (endPointOnCanvas.x - startPointOnCanvas.x) / (endPointOnCanvas.y - startPointOnCanvas.y)))
-
-                val distance =
-                    sqrt(1.0 * (endPointOnCanvas.y - startPointOnCanvas.y) * (endPointOnCanvas.y - startPointOnCanvas.y) + (endPointOnCanvas.x - startPointOnCanvas.x) * (endPointOnCanvas.x - startPointOnCanvas.x))
-                val frameSize = gameMapAnimation.frameSize
-                canvas.drawImage(
-                    image.htmlElement, frameSize.width.toDouble() * frameIndex, 0.0, frameSize.width.toDouble(), frameSize.height.toDouble(),
-                    -45.0, 0.0, frameSize.width.toDouble(), distance + 32
-                )
-            }
-        }, AnimationBuilder().apply {
-            animationId = "e-shock"
-            frameDurationMs = 100
-            initDelayMs = attackAnimationDuration + 300
-            onDraw = { canvas, frameIndex ->
-                val frameSize = gameMapAnimation.frameSize
-                val end = endObject.pixelCoordinate - PixelSize(8, 8)
-                val endPointOnCanvas = end - canvasState.getCanvasCoordinateInMap()
-                canvas.drawImage(
-                    image.htmlElement, frameSize.width.toDouble() * frameIndex, 0.0, frameSize.width.toDouble(), frameSize.height.toDouble(),
-                    endPointOnCanvas.x.toDouble(), endPointOnCanvas.y.toDouble(), 48.0, 48.0
-                )
-            }
-        })
-    }
-}
-
 fun GameScene.pubGuard() = objects {
     val helpers = GameScriptHelpers(this@pubGuard)
 
@@ -447,8 +464,10 @@ fun GameScene.pubGuard() = objects {
     }
 }
 
-fun GameScene.newbieVillageOldMan() = objects {
-    val helpers = GameScriptHelpers(this@newbieVillageOldMan)
+fun GameScene.newbieVillageOracle() = objects {
+    val helpers = GameScriptHelpers(this@newbieVillageOracle)
+    val heroName = gameRuntime.heroPlayer.nickname
+    val javaCastlePoint = objects.getPointById("JavaIsland-JavaIslandSeniorJavaCastle-left").toHumanReadableCoordinate().toString()
 
     npc {
         val oldManId = "JavaIslandNewbieVillageOldMan"
@@ -457,7 +476,7 @@ fun GameScene.newbieVillageOldMan() = objects {
         id = oldManId
         sprite = "$oldManId-sprite"
         onInit = {
-            if (gameRuntime.heroPlayer.states.containsKey(NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE)) {
+            if (itemUsed(COFFEE)) {
                 helpers.getCharacter(oldManId).gridCoordinate = oldManDestination
             } else {
                 helpers.getCharacter(oldManId).gridCoordinate = oldManStartPoint
@@ -465,17 +484,24 @@ fun GameScene.newbieVillageOldMan() = objects {
         }
         onClick = helpers.standardNpcSpeech(oldManId) {
             when {
-                gameRuntime.heroPlayer.states.containsKey(NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE) -> {
+                itemUsed(COFFEE) -> {
                     scripts {
-                        speech(oldManId, "NiceDayHuh", arrow = false)
+                        speech(oldManId, "RememberDestroyTowers", arrow = false, args = arrayOf(javaCastlePoint))
                     }
                 }
-                gameRuntime.heroPlayer.items.contains(COFFEE) -> {
+                hasItem(COFFEE) -> {
                     scripts {
+                        useItem(COFFEE, oldManStartPoint)
                         speech(oldManId, "ThankYouForYourCoffee")
-                        putState(NEWBIE_VILLAGE_OLD_MAN_GOT_COFFEE)
-                        // TODO atomic operation
-                        removeItem(COFFEE, oldManStartPoint)
+                        speech(HERO_ID, "MyNameIs", args = arrayOf(heroName))
+                        speech(oldManId, "YouAreFinallyHere", args = arrayOf(heroName))
+                        speech(HERO_ID, "HowToEliminateBugs")
+                        speech(oldManId, "BugsAreScoutOfFleet")
+                        speech(oldManId, "DestroyBugTowers", args = arrayOf(heroName))
+                        speech(HERO_ID, "SoIOnlyNeedToDestroyTowers")
+                        speech(oldManId, "BugsInCastle", args = arrayOf(javaCastlePoint))
+                        speech(HERO_ID, "IWillGoNow")
+                        speech(oldManId, "GoodLuckFateOfWorldInYourHands", arrow = false)
                         characterMove(oldManId, oldManDestination) {
                             helpers.getCharacter(oldManId).direction = Direction.DOWN
                         }
@@ -483,7 +509,7 @@ fun GameScene.newbieVillageOldMan() = objects {
                 }
                 else -> {
                     scripts {
-                        speech(oldManId, "CanYouPleaseGrabACoffee", arrow = false)
+                        speech(oldManId, "CanYouGetMeACoffee", arrow = false)
                     }
                 }
             }
@@ -513,28 +539,23 @@ fun GameScene.newbieVillageHead() = objects {
                 if (challengeAnswers.challengeAccomplished(NEWBIE_VILLAGE_NOTICEBOARD_MISSION_ID)) {
                     scripts {
                         speech(villageHeadId, "OutsideWorldIsDangerousButIHaveToLetYouGo")
-                        speech(villageHeadId, "GoodLuckPursueHolyJavaCoffee", arrow = false)
+                        speech(villageHeadId, "GoodLuckFateOfWorldInYourHands", arrow = false)
                         characterMove(villageHeadId, destPoint) {
                             helpers.getCharacter(villageHeadId).direction = Direction.DOWN
                         }
                     }
                 } else {
                     val noticeboardPoint = objects.getPointById("remember-brave-people").toHumanReadableCoordinate().toString()
-                    val javaCastlePoint = objects.getPointById("JavaIsland-JavaIslandSeniorJavaCastle-left").toHumanReadableCoordinate().toString()
 
                     scripts {
                         speech(villageHeadId, "OutsideWorldIsDangerous")
-                        speech(HERO_ID, "ButIHaveToDoSomething")
-                        speech(villageHeadId, "YouCanFindHolyJavaCoffee", args = arrayOf(javaCastlePoint))
-                        speech(villageHeadId, "HolyJavaCoffeeIsAntidote")
-                        speech(villageHeadId, "ButYouHaveToGoThroughJavaIsland")
-                        speech(HERO_ID, "WithItICanDate")
+                        speech(HERO_ID, "WouldTheBugsDisappear")
                         speech(villageHeadId, "LeaveYourName", args = arrayOf(noticeboardPoint), arrow = false)
                     }
                 }
             } else {
                 scripts {
-                    speech(villageHeadId, "GoodLuckPursueHolyJavaCoffee", arrow = false)
+                    speech(villageHeadId, "GoodLuckFateOfWorldInYourHands", arrow = false)
                 }
             }
         }
@@ -560,6 +581,7 @@ fun GameScene.newbieVillageSailor() = objects {
                     speech {
                         speakerId = sailorId
                         contentHtmlId = "WouldYouLikeToGitIsland"
+                        args = arrayOf(objects.getPointById("InvitationBox-point").toHumanReadableCoordinate().toString())
                         arrow = false
                         showYesNo = true
                         onYes = {
@@ -604,10 +626,10 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
         id = soldierId
         sprite = "$soldierId-sprite"
 
-        val medalId = "bronze-git-medal"
+        val amuletId = "bronze-git-medal"
 
         onInit = {
-            if (gameRuntime.heroPlayer.achievements.contains(medalId)) {
+            if (gameRuntime.heroPlayer.achievements.contains(amuletId)) {
                 helpers.getCharacter(soldierId).gridCoordinate = destPoint
             } else {
                 helpers.getCharacter(soldierId).gridCoordinate = startPoint
@@ -617,13 +639,13 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
         onClick = helpers.standardNpcSpeech(
             soldierId,
             {
-                val hasMedal = gameRuntime.heroPlayer.achievements.contains(medalId)
+                val hasAmulet = gameRuntime.heroPlayer.achievements.contains(amuletId)
 
                 if (helpers.getCharacter(soldierId).gridCoordinate == startPoint) {
-                    if (hasMedal) {
+                    if (hasAmulet) {
                         scripts {
                             // move to dest point
-                            speech(soldierId, "BravePeopleISeeYourBronzeGitMedal", arrow = false)
+                            speech(soldierId, "BravePeopleISeeYourGitAmulet", arrow = false)
                             speech(HERO_ID, "IPromise", arrow = false)
                             characterMove(soldierId, destPoint) {
                                 helpers.getCharacter(soldierId).direction = Direction.DOWN
@@ -631,13 +653,16 @@ fun GameScene.newbieVillageBridgeSoldier() = objects {
                         }
                     } else {
                         scripts {
-                            speech(soldierId, "YouMustGetBronzeGitMedal", arrow = false)
+                            speech(soldierId, "YouMustGetGitAmulet")
+                            speech(soldierId, "WhereToGetGitAmulet")
+                            speech(soldierId, "GitAmuletOnGitIsland", arrow = false)
                         }
                     }
                 } else {
-                    if (hasMedal) {
+                    if (hasAmulet) {
                         scripts {
-                            speech(soldierId, "DidYouForgetYourPromise", arrow = false)
+                            speech(soldierId, "BravePeopleISeeYourGitAmulet", arrow = false)
+                            speech(HERO_ID, "IPromise", arrow = false)
                         }
                     } else {
                         // this should not happen, do nothing

@@ -25,7 +25,7 @@ import com.bytelegend.app.shared.entities.PullRequestCheckRun
 import com.bytelegend.app.shared.protocol.LogStreamEventData
 import com.bytelegend.app.shared.protocol.logStreamEvent
 import com.bytelegend.client.app.engine.DefaultGameMission
-import com.bytelegend.client.app.web.get
+import com.bytelegend.client.app.web.getText
 import com.bytelegend.app.client.utils.JSArrayBackedList
 import com.bytelegend.app.client.utils.JSObjectBackedMap
 import kotlinx.coroutines.Deferred
@@ -76,7 +76,7 @@ class DefaultPullRequestLogContainer(
     }
 
     private suspend fun download(repo: String, checkRunId: String): String {
-        return get("/game/api/log?repo=$repo&checkRunId=$checkRunId")
+        return getText("/game/api/log?repo=$repo&checkRunId=$checkRunId")
     }
 
     inner class LiveLog(

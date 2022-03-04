@@ -15,6 +15,8 @@
  */
 package com.bytelegend.app.shared.entities.mission
 
+import com.bytelegend.app.shared.annotations.JsonIgnore
+
 /**
  * MissionSpec is immutable data structure to store the mission definitions.
  * It's usually stored in GitHub repositories so that it can be contributed by community.
@@ -48,5 +50,12 @@ data class MissionSpec(
     /**
      * Special actions to be performed when the mission is accomplished
      */
-    val onFinish: OnFinishSpec = OnFinishSpec()
-)
+    val onFinish: ChangeSpec = ChangeSpec(),
+    /**
+     * Special actions to be performed when the mission is accomplished
+     */
+    val onItemUsed: Map<String, ChangeSpec> = emptyMap()
+) {
+    val totalStars
+        @JsonIgnore get() = challenges.sumOf { it.star }
+}

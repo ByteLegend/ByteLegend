@@ -1,0 +1,49 @@
+{
+  "columns" : 10,
+  "image" : "../animations/IronSwordAttack.png",
+  "imageheight" : 92,
+  "imagewidth" : 1000,
+  "margin" : 0,
+  "name" : "IronSwordAttack",
+  "tilecount" : 10,
+  "tiledversion" : "1.7.2",
+  "tileheight" : 92,
+  "objectalignment" : "topleft",
+  "tiles" : [ {
+    "animation" : [ {
+      "duration" : 500,
+      "tileid" : 0
+    }, {
+      "duration" : 500,
+      "tileid" : 1
+    }, {
+      "duration" : 500,
+      "tileid" : 2
+    }, {
+      "duration" : 500,
+      "tileid" : 3
+    }, {
+      "duration" : 500,
+      "tileid" : 4
+    }, {
+      "duration" : 500,
+      "tileid" : 5
+    }, {
+      "duration" : 500,
+      "tileid" : 6
+    }, {
+      "duration" : 500,
+      "tileid" : 7
+    }, {
+      "duration" : 500,
+      "tileid" : 8
+    }, {
+      "duration" : 500,
+      "tileid" : 9
+    } ],
+    "id" : 0
+  } ],
+  "tilewidth" : 100,
+  "type" : "tileset",
+  "version" : "1.6"
+}

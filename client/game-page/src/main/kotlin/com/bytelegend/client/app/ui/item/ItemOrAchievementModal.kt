@@ -102,13 +102,13 @@ abstract class ItemOrAchievementModal : GameUIComponent<ItemOrAchievementModalPr
                         state.items.forEach { (id, item) ->
                             child(ItemAchievementModalItem::class.react, jso {
                                 this.id = id
-                                iconUrl = game.resolve(item.metadata.icon)
+                                iconUrl = game.resolve(item.metadata.iconUrl)
                                 name = game.i(item.metadata.nameTextId)
                                 desc = game.i(item.metadata.descTextId)
                                 missionTitle = if (item.mission == null) null else game.i(item.mission.title)
 
                                 onMouseClick = {
-                                    if (state.selectedItem?.metadata?.id == id) {
+                                    if (state.selectedItem?.metadata?.iconId == id) {
                                         setState {
                                             selectedItem = null
                                             descCoordinate = null

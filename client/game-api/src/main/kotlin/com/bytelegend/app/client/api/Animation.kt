@@ -17,7 +17,27 @@ package com.bytelegend.app.client.api
 
 interface Animation {
     val isStatic: Boolean
+
+    // 0~GameMapDynamicSprite.frames.size-1
+    // -1 nothing should be painted
     fun getNextFrameIndex(): Int
+}
+
+object Invisible : Animation {
+    override val isStatic: Boolean
+        get() = true
+
+    override fun getNextFrameIndex(): Int = -1
+}
+
+class FlickeringSingleFrameAnimation(private val frameIndex: Int, private val frameDurationMs: Int) : Animation {
+    private val startTime = Timestamp.now()
+    override val isStatic: Boolean = false
+
+    override fun getNextFrameIndex(): Int {
+        val elapsedTimeMs = startTime.elapsedTimeMs()
+        return if ((elapsedTimeMs / frameDurationMs) % 2 == 0L) -1 else frameIndex
+    }
 }
 
 object Static : Animation {
@@ -41,8 +61,8 @@ class AnimationFrame(
  * Play a series of frame repetitively or one-time.
  */
 class FramePlayingAnimation(
-    private val frames: Array<AnimationFrame>,
-    private val repetitive: Boolean = true
+    val frames: Array<AnimationFrame>,
+    val repetitive: Boolean = true
 ) : Animation {
     override val isStatic: Boolean = false
     private val startTime = Timestamp.now()

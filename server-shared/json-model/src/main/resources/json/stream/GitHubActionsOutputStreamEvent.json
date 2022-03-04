@@ -1,0 +1,18 @@
+{
+  "type": 1,
+  "target": "logConsoleLines",
+  "arguments": [
+    {
+      "runId": 64,
+      "timelineId": "c34a1c53-51e0-4807-8242-2adb20ba9aaa",
+      "timelineRecordId": "be919a0f-c709-5b1d-488a-d5e7ec449945",
+      "stepRecordId": "c1bbce7a-e250-5fdf-d71d-17e75f6db718",
+      "startLine": 248,
+      "lines": [
+        "Fetched data from 0 at 2015-03-30 00:00:00-23:59:59",
+        "Fetched data from 100 at 2015-03-30 00:00:00-23:59:59",
+        "Saved 117 changesets to /home/runner/work/aosp-changesets-statistics/aosp-changesets-statistics/build/2015-03-30.json"
+      ]
+    }
+  ]
+}
