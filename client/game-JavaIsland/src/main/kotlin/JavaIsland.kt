@@ -577,11 +577,17 @@ fun GameScene.newbieVillageSailor() = objects {
         onClick = helpers.standardNpcSpeech(
             sailorId,
             {
+                if (!gameRuntime.heroPlayer.states.containsKey(INVITER_ID_STATE)) {
+                    gameRuntime.toastController.addToast(
+                        gameRuntime.i("MoreGold"),
+                        gameRuntime.i("ThereIsMoreGold", objects.getPointById("InvitationBox-point").toHumanReadableCoordinate().toString()),
+                        5000
+                    )
+                }
                 scripts {
                     speech {
                         speakerId = sailorId
                         contentHtmlId = "WouldYouLikeToGitIsland"
-                        args = arrayOf(objects.getPointById("InvitationBox-point").toHumanReadableCoordinate().toString())
                         arrow = false
                         showYesNo = true
                         onYes = {

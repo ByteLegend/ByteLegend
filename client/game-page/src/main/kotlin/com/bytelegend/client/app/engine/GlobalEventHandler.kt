@@ -152,7 +152,7 @@ class GlobalEventHandler(
         showAchievementEffect(
             canvasState,
             game.resolve(achievementMetadata.iconUrl),
-            canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(0, 200)
+            canvasState.determineRightSideBarTopLeftCornerCoordinateInGameContainer() + PixelCoordinate(0, 250)
         )
     }
 }
