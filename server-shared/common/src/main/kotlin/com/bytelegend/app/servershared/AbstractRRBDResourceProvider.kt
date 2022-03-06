@@ -65,7 +65,7 @@ abstract class AbstractRRBDResourceProvider(
 
     override val allMaps: List<String> by lazy { idToMapDefinitions.keys.toList() }
 
-    private val mapToMissionSpecs: Map<String, List<MissionSpec>> =
+    val mapToMissionSpecs: Map<String, List<MissionSpec>> =
         idToMapDefinitions.keys.associateWith { serializer.fromJson(File(localRRBD, "map/$it/missions.json").readText(), object : TypeReference<List<MissionSpec>>() {}) }
 
     private val missionIdToMissionSpec: Map<String, MissionSpec> = mapToMissionSpecs.values

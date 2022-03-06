@@ -26,12 +26,12 @@ import com.bytelegend.app.client.api.HasBouncingTitle
 import com.bytelegend.app.client.api.ScriptsBuilder
 import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.client.api.dsl.UnitFunction
-import com.bytelegend.app.client.api.missionItemUsedEvent
 import com.bytelegend.app.client.api.openMissionModalEvent
 import com.bytelegend.app.client.utils.AnimationFrameRange
 import com.bytelegend.app.client.utils.GameScriptHelpers
 import com.bytelegend.app.client.utils.configureBookSprite
 import com.bytelegend.app.client.utils.configureChestOpenByKey
+import com.bytelegend.app.client.utils.onMissionItemUsed
 import com.bytelegend.app.client.utils.refreshAnimationForItem
 import com.bytelegend.app.client.utils.refreshTeslaCoilAnimation
 import com.bytelegend.app.client.utils.removeMissionBlocker
@@ -239,7 +239,7 @@ fun GameScene.firstBugEvil() = objects {
     val mission = objects.getById<GameMission>("fix-simple-add")
 
     refreshAnimationForItem(mission, "dagger:JavaIsland:fix-simple-add", 3, AnimationFrameRange(0, 3), null, 500)
-    gameRuntime.eventBus.on(missionItemUsedEvent(mission.id)) { _: String ->
+    onMissionItemUsed(mission.id) {
         killEvil(mission)
         mission.animation = FlickeringSingleFrameAnimation(0, 200)
 
@@ -255,7 +255,7 @@ fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
         removeMissionBlocker(mission)
         mission.animation = StaticFrame(3)
     } else {
-        gameRuntime.eventBus.on(missionItemUsedEvent(mission.id)) { _: String ->
+        onMissionItemUsed(mission.id) {
             if (challengeAnswers.challengeAccomplished(challengeId) &&
                 mission.animation.unsafeCast<StaticFrame>().frameIndex != 3
             ) {
@@ -289,7 +289,7 @@ fun GameScene.configureMissionTowers() {
         }
         if (mission.mapDynamicSprite.id == "TeslaCoil") {
             refreshTeslaCoilAnimation(mission)
-            gameRuntime.eventBus.on(missionItemUsedEvent(mission.id)) { item: String ->
+            onMissionItemUsed(mission.id) { item: String ->
                 when {
                     item.startsWith("iron-sword") -> ironSwordAttack(mission)
                     item.startsWith("silver-sword") -> silverSwordAttack(mission)

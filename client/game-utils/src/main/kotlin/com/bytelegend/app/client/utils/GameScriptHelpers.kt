@@ -25,6 +25,7 @@ import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.client.api.closeMissionModalEvent
 import com.bytelegend.app.client.api.dsl.UnitFunction
+import com.bytelegend.app.client.api.missionItemUsedEvent
 import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.objects.GameMapCurve
@@ -104,9 +105,13 @@ fun GameScene.removeMissionBlocker(mission: DynamicSprite) {
     }
 }
 
+fun GameScene.onMissionItemUsed(missionId: String, callback: (String) -> Unit) {
+    gameRuntime.eventBus.on(missionItemUsedEvent(missionId), callback)
+}
+
 fun GameScene.configureChestOpenByKey(missionId: String) {
     refreshAnimationForItem(
-        objects.getById<DynamicSprite>(missionId),
+        objects.getById(missionId),
         "key:${map.id}:$missionId",
         3,
         AnimationFrameRange(0, 0),
@@ -114,6 +119,17 @@ fun GameScene.configureChestOpenByKey(missionId: String) {
         500,
         false
     )
+    onMissionItemUsed(missionId) { _: String ->
+        refreshAnimationForItem(
+            objects.getById(missionId),
+            "key:${map.id}:$missionId",
+            3,
+            AnimationFrameRange(0, 0),
+            AnimationFrameRange(),
+            500,
+            false
+        )
+    }
 }
 
 // TODO this should not in `game-api` module
@@ -121,7 +137,7 @@ fun GameScene.configureChestOpenByKey(missionId: String) {
  * We have to use instance method due to the defect of current module loading mechanism
  */
 class GameScriptHelpers(val gameScene: GameScene) {
-    fun addCloseCallbackToMission(mission: DynamicSprite, callback: EventListener<Unit>) {
+    private fun addCloseCallbackToMission(mission: DynamicSprite, callback: EventListener<Unit>) {
         gameScene.gameRuntime.eventBus.on(closeMissionModalEvent(mission.id), callback)
     }
 

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 import com.bytelegend.app.client.api.GameRuntime
-import com.bytelegend.app.client.utils.GameScriptHelpers
 import com.bytelegend.app.client.api.HasBouncingTitle
+import com.bytelegend.app.client.utils.GameScriptHelpers
+import com.bytelegend.app.client.utils.configureChestOpenByKey
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_COMMENT_DUNGEON
 import com.bytelegend.app.shared.objects.GameObject
@@ -29,8 +30,8 @@ fun main() {
         objects.getById<GameObject>(mapEntranceId(JAVA_ISLAND_COMMENT_DUNGEON, JAVA_ISLAND))
             .unsafeCast<HasBouncingTitle>().bouncingTitleEnabled = false
         GameScriptHelpers(this).apply {
-            configureChest("java-comment")
-            configureChest("java-javadoc")
+            configureChestOpenByKey("java-comment")
+            configureChestOpenByKey("java-javadoc")
         }
     }
 }

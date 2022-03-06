@@ -16,6 +16,7 @@
 import com.bytelegend.app.client.api.GameRuntime
 import com.bytelegend.app.client.utils.GameScriptHelpers
 import com.bytelegend.app.client.api.HasBouncingTitle
+import com.bytelegend.app.client.utils.configureChestOpenByKey
 import com.bytelegend.app.shared.JAVA_ISLAND
 import com.bytelegend.app.shared.JAVA_ISLAND_DEBUGGER_DUNGEON
 import com.bytelegend.app.shared.objects.GameObject
@@ -29,8 +30,8 @@ fun main() {
         objects.getById<GameObject>(mapEntranceId(JAVA_ISLAND_DEBUGGER_DUNGEON, JAVA_ISLAND))
             .unsafeCast<HasBouncingTitle>().bouncingTitleEnabled = false
         GameScriptHelpers(this).apply {
-            configureChest("java-debugger-breakpoint")
-            configureChest("java-debugger-conditional-breakpoint")
+            configureChestOpenByKey("java-debugger-breakpoint")
+            configureChestOpenByKey("java-debugger-conditional-breakpoint")
         }
     }
 }
