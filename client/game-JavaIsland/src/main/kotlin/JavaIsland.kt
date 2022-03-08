@@ -100,6 +100,8 @@ fun main() {
                 )
             )
 
+            unfinishedPartBlocker()
+
             billboard()
             // #28a745
             missionCastle("java-todo-webapp", "white", "rgba(40,167,69,0.8)")
@@ -110,6 +112,18 @@ fun main() {
             missionCastle("java-e-commerce-website", "white", "rgba(220,53,69,0.8)")
             castleDoor()
             castleNoticeboard()
+        }
+    }
+}
+
+fun GameScene.unfinishedPartBlocker() = objects {
+    dynamicSprite {
+        id = "UnfinishedPartBlocker"
+        gridCoordinate = objects.getPointById("UnfinishedPartBlocker-point")
+        onClick = {
+            scripts {
+                speech("UnfinishedPartBlocker", "UnfinishedTitle", arrow = false)
+            }
         }
     }
 }
