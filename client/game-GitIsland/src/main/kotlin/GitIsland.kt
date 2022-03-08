@@ -77,22 +77,34 @@ fun GameScene.dockSailor() = objects {
             sailorId,
             {
                 scripts {
-                    speech {
-                        speakerId = sailorId
-                        contentHtmlId = "WouldYouLikeToJavaIsland"
-                        arrow = false
-                        showYesNo = true
-                        onYes = {
-                            scripts {
-                                enterScene(JAVA_ISLAND, {
-                                    scripts {
-                                        characterEnterVehicleAndMoveToMap(HERO_ID, "Boat", helpers.searchVehiclePath("GitIslandToJavaIsland"), JAVA_ISLAND)
-                                    }
-                                }, {
-                                    scripts {
-                                        speech(sailorId, "SorryYouDontHaveEnoughCoin", arrow = false)
-                                    }
-                                })
+                    if (gameRuntime.heroPlayer.items.contains("key:GitIsland:install-git")) {
+                        speech {
+                            speakerId = sailorId
+                            contentHtmlId = "YouDidNotUseYourChestKey"
+                        }
+                    } else {
+                        speech {
+                            speakerId = sailorId
+                            contentHtmlId = "WouldYouLikeToJavaIsland"
+                            arrow = false
+                            showYesNo = true
+                            onYes = {
+                                scripts {
+                                    enterScene(JAVA_ISLAND, {
+                                        scripts {
+                                            characterEnterVehicleAndMoveToMap(
+                                                HERO_ID,
+                                                "Boat",
+                                                helpers.searchVehiclePath("GitIslandToJavaIsland"),
+                                                JAVA_ISLAND
+                                            )
+                                        }
+                                    }, {
+                                        scripts {
+                                            speech(sailorId, "SorryYouDontHaveEnoughCoin", arrow = false)
+                                        }
+                                    })
+                                }
                             }
                         }
                     }
