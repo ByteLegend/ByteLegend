@@ -63,6 +63,13 @@ allprojects {
 //    }
 }
 
+// As NodeJS 14.x does not provide Arm based distribution, we modify the node version to 16.x.
+// Kotlin 1.6.20 fixed this bug, but we may not upgrade recently.
+// See: https://youtrack.jetbrains.com/issue/KT-49109
+rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
+    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().nodeVersion = "16.14.0"
+}
+
 idea {
     module {
         excludeDirs = setOf(file("server/app/logs"), file("build"), file("github1s/dist"), file("github1s/vscode-web-github1s/dist"))
