@@ -81,6 +81,7 @@ fun GameScene.dockSailor() = objects {
                         speech {
                             speakerId = sailorId
                             contentHtmlId = "YouDidNotUseYourChestKey"
+                            arrow = false
                         }
                     } else {
                         speech {
