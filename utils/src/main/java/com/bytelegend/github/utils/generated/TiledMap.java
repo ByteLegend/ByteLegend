@@ -1340,7 +1340,7 @@ public class TiledMap {
     public static class Polygon {
 
         @JsonProperty("x")
-        private Long x;
+        private Double x;
         @JsonProperty("y")
         private Long y;
         @JsonIgnore
@@ -1358,19 +1358,19 @@ public class TiledMap {
          * @param x
          * @param y
          */
-        public Polygon(Long x, Long y) {
+        public Polygon(Double x, Long y) {
             super();
             this.x = x;
             this.y = y;
         }
 
         @JsonProperty("x")
-        public Long getX() {
+        public Double getX() {
             return x;
         }
 
         @JsonProperty("x")
-        public void setX(Long x) {
+        public void setX(Double x) {
             this.x = x;
         }
 
