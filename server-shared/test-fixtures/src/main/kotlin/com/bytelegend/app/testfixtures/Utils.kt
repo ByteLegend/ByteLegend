@@ -15,13 +15,7 @@
  */
 package com.bytelegend.app.testfixtures
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.runBlocking
 import java.io.File
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
-
-fun runBlockingUnit(context: CoroutineContext = EmptyCoroutineContext, block: suspend CoroutineScope.() -> Unit) = runBlocking(context, block)
 
 fun File.newFile(path: String): File {
     require(this.isDirectory) { "$this must be a directory!" }
