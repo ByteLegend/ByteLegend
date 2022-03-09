@@ -45,7 +45,9 @@ jobs:
         working-directory: github1s
       - run: yarn build && yarn hash
         working-directory: github1s
-      - run: find github1s/dist -name '*.js.map' | xargs rm -rf
+      # don't remove them, otherwise it will be redirected to index.html on CDN and show a lot of warnings in browser console
+      # DevTools failed to load source map: Could not parse content for https://XXXX.js.map: Unexpected token < in JSON at position 0
+      - run: find github1s/dist -name '*.js.map' -exec truncate --size 0 {} \;
       - run: find github1s/dist -name '*.gif' | xargs rm -rf
       - run: find github1s/dist -name 'learn.svg' | xargs rm -rf
       - uses: actions/upload-artifact@v2
