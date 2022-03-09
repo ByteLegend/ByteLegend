@@ -471,7 +471,7 @@ fun GameScene.pubGuard() = objects {
                 }
             } else {
                 scripts {
-                    speech(guardId, "NiceDayHuh", arrow = false)
+                    speech(guardId, "NiceDayButEndOfTheWorld", arrow = false)
                 }
             }
         }
