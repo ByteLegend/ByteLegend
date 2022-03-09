@@ -68,11 +68,13 @@ class MissionItemButtons(props: GameProps) : GameUIComponent<GameProps, MissionI
         ) {
             it.id = MISSION_TITLE_BUTTONS_LAYER
             state.items.forEach { item ->
-                child(MissionItemButton::class.react, jso {
-                    this.game = props.game
-                    this.item = item
-                    this.mission = activeScene.objects.getById(item.mission!!.id)
-                })
+                if (item.mission?.map == activeScene.map.id) {
+                    child(MissionItemButton::class.react, jso {
+                        this.game = props.game
+                        this.item = item
+                        this.mission = activeScene.objects.getById(item.mission.id)
+                    })
+                }
             }
         }
     }
@@ -103,7 +105,7 @@ class MissionItemButtons(props: GameProps) : GameUIComponent<GameProps, MissionI
     }
 
     override fun componentWillUnmount() {
-        props.game.eventBus.on(GAME_UI_UPDATE_EVENT, refreshItems)
+        props.game.eventBus.remove(GAME_UI_UPDATE_EVENT, refreshItems)
         props.game.eventBus.remove(GAME_ANIMATION_EVENT, onAnimation)
     }
 }
