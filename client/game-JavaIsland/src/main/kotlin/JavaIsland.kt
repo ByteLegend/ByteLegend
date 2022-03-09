@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.bytelegend.app.client.api.AnimationFrame
 import com.bytelegend.app.client.api.DynamicSprite
 import com.bytelegend.app.client.api.FlickeringSingleFrameAnimation
-import com.bytelegend.app.client.api.FramePlayingAnimation
 import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.GameObjectContainer
 import com.bytelegend.app.client.api.GameRuntime
@@ -76,8 +74,8 @@ fun main() {
             newbieVillageBridgeSoldier()
             invitationCodeBox()
 
-            javaCloneRunDoor("clone-and-run-java-project", "clone-and-run-java-project-challenge")
-            javaCloneRunDoor("clone-and-switch-branch", "clone-and-switch-branch-challenge")
+            javaCloneRunDoor("clone-and-run-java-project")
+            javaCloneRunDoor("clone-and-switch-branch")
             firstBugEvil()
             basicStructureStone(
                 "JavaBasicStructure",
@@ -263,31 +261,12 @@ fun GameScene.firstBugEvil() = objects {
     }
 }
 
-fun GameScene.javaCloneRunDoor(missionId: String, challengeId: String) {
+fun GameScene.javaCloneRunDoor(missionId: String) {
     val mission = objects.getById<DynamicSprite>(missionId)
-    if (itemUsed("door-key:${map.id}:$missionId")) {
-        removeMissionBlocker(mission)
-        mission.animation = StaticFrame(3)
-    } else {
-        onMissionItemUsed(mission.id) {
-            if (challengeAnswers.challengeAccomplished(challengeId) &&
-                mission.animation.unsafeCast<StaticFrame>().frameIndex != 3
-            ) {
-                removeMissionBlocker(mission)
-                mission.animation = FramePlayingAnimation(
-                    frames = arrayOf(
-                        AnimationFrame(0, 1500),
-                        AnimationFrame(1, 500),
-                        AnimationFrame(2, 500),
-                        AnimationFrame(3, 500)
-                    ),
-                    repetitive = false
-                )
-                window.setTimeout({
-                    mission.animation = StaticFrame(3)
-                }, 3000)
-            }
-        }
+    val itemId = "door-key:${map.id}:$missionId"
+    refreshAnimationForItem(mission, itemId, 3, AnimationFrameRange(0, 0), AnimationFrameRange(0, 3))
+    onMissionItemUsed(mission.id) {
+        refreshAnimationForItem(mission, itemId, 3, AnimationFrameRange(0, 0), AnimationFrameRange(0, 3))
     }
 }
 
