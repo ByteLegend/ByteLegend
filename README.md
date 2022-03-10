@@ -37,6 +37,10 @@
   - 如前所述，你可以对[字节传说](https://bytelegend.com)中能看到的任何东西做出修改，包括修正不佳的翻译或者添加一种新语言。
   - 点击[这里](https://github.com/ByteLegend/ByteLegend/blob/master/docs/zh_hans/i18n.md)查看如何增加一种语言或者帮助我们改进翻译的质量。  
 
+## 联系我们
+
+您可以在[Discord](https://discord.gg/35RreUUGWt)上加入我们或者通过email联系： [contact@bytelegend.com](contact@bytelegend.com)。
+
 ## 加入玩家QQ群
 
 我们的玩家QQ群是`788942934`，但是请注意您需要在登录游戏之后打开右下角的`关于&联系`菜单获取入群密码后方可加入。入群密码各不相同，且只能
@@ -104,6 +108,10 @@
   - We support **ALL** languages on this planet since day 1. You just need to click and select language on right-top corner of [ByteLegend](https://bytelegend.com).
   - As we said above, you can make a contribution to anything you see in [ByteLegend](https://bytelegend.com), including fixing bad translations or adding more languages to the game.
   - Check out [here](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/i18n.md) to see how to add a language or help us improve translation quality.
+
+## Contact
+
+Join us at [Discord](https://discord.gg/35RreUUGWt) or contact us via [contact@bytelegend.com](contact@bytelegend.com).
 
 ## Credits
 
