@@ -325,7 +325,6 @@ fun toGameMapDefinition(jsonObject: dynamic): GameMapDefinition = GameMapDefinit
 fun toGameInitData(jsonObject: dynamic) = GameInitData(
     jsonObject.initMapId,
     jsonObject.onlineCount,
-    ServerLocation.valueOf(jsonObject.serverLocation),
     jsonObject.rrbd,
     jsonObject.enjoyProgrammingText,
     toPlayer(jsonObject.player),

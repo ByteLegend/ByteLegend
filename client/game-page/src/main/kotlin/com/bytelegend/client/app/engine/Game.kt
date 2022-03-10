@@ -31,7 +31,6 @@ import com.bytelegend.app.shared.GameMapDefinition
 import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.entities.Player
-import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.render
 import com.bytelegend.client.app.obj.character.CharacterSprite
@@ -62,7 +61,6 @@ fun init(gameInitData: GameInitData): Game {
         bind<EventBus>() with instance(WindowBasedEventBus)
         bind<GameSceneContainer>() with singleton { DefaultGameSceneContainer(di, PixelSize(window.innerWidth, window.innerHeight)) }
         bind<String>(tag = "RRBD") with instance(gameInitData.rrbd)
-        bind<ServerLocation>() with instance(gameInitData.serverLocation)
         bind<Locale>() with instance(determineLocale(gameInitData))
         bind<MutableMap<String, String>>(tag = "i18nTextContainer") with instance(JSObjectBackedMap())
         bind<Player>() with instance(gameInitData.player)

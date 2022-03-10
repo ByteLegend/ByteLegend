@@ -32,7 +32,6 @@ abstract class AbstractIndexPageRenderer(
         player: Player,
         locale: Locale,
         RRBD: String,
-        serverLocation: ServerLocation,
         joinQQGroupSecret: String
     ): String {
         val enjoyProgrammingText = rrbdResourceProvider.getI18nText("EnjoyProgramming", locale)
@@ -47,7 +46,6 @@ abstract class AbstractIndexPageRenderer(
                 GameInitData(
                     initMapId,
                     onlinePlayerCount,
-                    serverLocation,
                     RRBD,
                     enjoyProgrammingText,
                     player,

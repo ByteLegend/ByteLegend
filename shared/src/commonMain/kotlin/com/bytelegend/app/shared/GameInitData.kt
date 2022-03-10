@@ -28,7 +28,6 @@ import com.bytelegend.app.shared.i18n.LocalizedText
 data class GameInitData(
     val initMapId: String,
     val onlineCount: Int,
-    val serverLocation: ServerLocation,
     val rrbd: String,
     val enjoyProgrammingText: String,
     val player: Player,

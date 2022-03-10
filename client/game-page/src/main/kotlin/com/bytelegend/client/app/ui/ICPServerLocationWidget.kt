@@ -27,7 +27,6 @@ val ICPServerLocationWidgetWidth = 300
 val ICPServerLocationWidgetHeight = 20
 
 interface ICPServerLocationWidgetState : State {
-//    var show: Boolean
 }
 
 class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidgetState>() {
