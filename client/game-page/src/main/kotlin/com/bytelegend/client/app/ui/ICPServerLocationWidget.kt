@@ -23,13 +23,10 @@ import react.dom.html.AnchorTarget
 import react.dom.html.ReactHTML.a
 import react.dom.html.ReactHTML.span
 
-val ICPServerLocationWidgetWidth = 300
-val ICPServerLocationWidgetHeight = 20
+const val ICPServerLocationWidgetWidth = 300
+const val ICPServerLocationWidgetHeight = 20
 
-interface ICPServerLocationWidgetState : State {
-}
-
-class ICPServerLocationWidget : GameUIComponent<GameProps, ICPServerLocationWidgetState>() {
+class ICPServerLocationWidget : GameUIComponent<GameProps, State>() {
     override fun render() = Fragment.create {
         absoluteDiv(
             left = (gameContainerWidth - ICPServerLocationWidgetWidth) / 2,
