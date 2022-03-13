@@ -1,0 +1,20 @@
+name: update-star-distribution
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '54 22 * * *'
+
+jobs:
+  deploy:
+    name: Update star distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: ByteLegend/ByteLegend
+          submodules: recursive
+          token: ${{ secrets.BYTELEGENDBOT_TOKEN }}
+      - name: Gradle build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: server:dal-dynamodb:updateStarDistribution -Ddynamodb.serverLocation=Seoul -Ddynamodb.accessKeyId=${{ secrets.ACCESS_KEY_ID_SEOUL }} -Ddynamodb.secretAccessKey=${{ secrets.SECRET_ACCESS_KEY_SEOUL }} -DagreePublicBuildScanTermOfService=yes
