@@ -985,3 +985,9 @@ div.speech-bubble::after {
 .tile-cursor-white {
     border: white 4px dashed;
 }
+
+.leaderboard {
+    margin-top: 10px;
+    background-color: transparent;
+}
+

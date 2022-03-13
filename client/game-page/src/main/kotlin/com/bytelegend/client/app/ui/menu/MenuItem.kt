@@ -133,7 +133,7 @@ class Menu : GameUIComponent<MenuProps, State>() {
         MenuItemData("menu-credits", "MenuCreditsTitle", this::onClickCreditsMenu),
         MenuItemData("menu-about", "MenuAboutTitle", this::onClickContactAboutMenu),
         MenuItemData("menu-settings", "MenuSettingsTitle", this::onClickUnfinishedMenu),
-        MenuItemData("menu-help", "MenuHelpTitle", this::onClickUnfinishedMenu),
+        MenuItemData("menu-ranking", "MenuLeaderboardTitle", this::onClickLeaderboardMenu),
         MenuItemData("menu-notification", "MenuNotificationTitle", this::onClickUnfinishedMenu),
         MenuItemData("menu-github", "MenuGitHubTitle", this::onClickGitHubMenu),
     )
@@ -170,6 +170,23 @@ class Menu : GameUIComponent<MenuProps, State>() {
 
     private fun onClickGitHubMenu() {
         window.open("https://github.com/ByteLegend/ByteLegend", "_blank")
+    }
+
+    private fun onClickLeaderboardMenu() {
+        game.modalController.show {
+            BootstrapModalHeader {
+                closeButton = true
+                BootstrapModalTitle {
+                    +i("MenuLeaderboardTitle")
+                }
+            }
+            BootstrapModalBody {
+                child(LeaderboardTable::class.react, jso {
+                    this.game = props.game
+                    this.pagination = true
+                })
+            }
+        }
     }
 
     private fun onClickUnfinishedMenu() {

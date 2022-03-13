@@ -17,12 +17,11 @@
 
 package com.bytelegend.client.app.ui.menu
 
-import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
+import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
 import com.bytelegend.app.client.ui.bootstrap.BootstrapTable
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
-import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.getText
 import kotlinext.js.jso
 import kotlinx.coroutines.GlobalScope
@@ -32,21 +31,23 @@ import react.Component
 import react.Fragment
 import react.State
 import react.create
-import react.dom.html.AnchorTarget
-import react.dom.html.ReactHTML.a
-import react.dom.html.ReactHTML.p
+import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.tbody
-import react.dom.html.ReactHTML.td
-import react.dom.html.ReactHTML.th
 import react.dom.html.ReactHTML.thead
 import react.dom.html.ReactHTML.tr
 
-interface AsyncLoadingTableState : State {
-    var data: Array<dynamic>
+interface AsyncLoadingTableProps : GameProps {
+    var pagination: Boolean
 }
 
-abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : Component<GameProps, S>() {
+interface AsyncLoadingTableState : State {
+    var data: Array<dynamic>?
+    var currentPage: Int
+}
+
+abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTableState> : Component<P, S>() {
     abstract val url: String
+    open val isLastPage: Boolean = true
     private var loading = false
 
     init {
@@ -59,13 +60,15 @@ abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : Component<GamePro
         if (state.data == undefined && loading) {
             loadingSpinner()
         } else if (state.data == undefined) {
+            loading = true
             GlobalScope.launch {
                 val json = getText(url)
+                loading = false
                 setState {
                     data = JSON.parse(json)
                 }
             }
-            loading = true
+            loadingSpinner()
         } else {
             BootstrapTable {
                 striped = true
@@ -77,9 +80,38 @@ abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : Component<GamePro
                     }
                 }
                 tbody {
-                    state.data.forEach {
+                    state.data?.forEachIndexed { index: Int, row: dynamic ->
                         tr {
-                            tableRowBuilder(it)
+                            tableRowBuilder(index, row)
+                        }
+                    }
+                }
+            }
+
+            if (props.pagination) {
+                div {
+                    className = "page-button-wrapper flex-center"
+                    BootstrapButton {
+                        className = "page-button"
+                        disabled = (state.currentPage == 1)
+
+                        +"<"
+                        onClick = {
+                            setState {
+                                currentPage -= 1
+                                data = undefined
+                            }
+                        }
+                    }
+                    BootstrapButton {
+                        className = "page-button"
+                        disabled = isLastPage
+                        +">"
+                        onClick = {
+                            setState {
+                                currentPage += 1
+                                data = undefined
+                            }
                         }
                     }
                 }
@@ -89,95 +121,5 @@ abstract class AsyncLoadingTable<S : AsyncLoadingTableState> : Component<GamePro
 
     abstract fun ChildrenBuilder.textBeforeTable()
     abstract fun ChildrenBuilder.tableHeaderBuilder()
-    abstract fun ChildrenBuilder.tableRowBuilder(rowData: dynamic)
-}
-
-class OpenSourceSoftwareTable : AsyncLoadingTable<AsyncLoadingTableState>() {
-    override val url: String
-        get() = props.game.resolve("/misc/oss.json")
-
-    override fun ChildrenBuilder.textBeforeTable() {
-        p {
-            +props.game.i("ThisGameWouldNotExistWithoutOpenSourceSoftware")
-        }
-    }
-
-    override fun ChildrenBuilder.tableHeaderBuilder() {
-        th { +props.game.i("Software") }
-        th { +props.game.i("License") }
-    }
-
-    override fun ChildrenBuilder.tableRowBuilder(rowData: dynamic) {
-        td {
-            a {
-                href = rowData.url.toString()
-                target = AnchorTarget._blank
-                +(rowData.creditName.toString())
-            }
-        }
-        td {
-            if (rowData.licenseUrl) {
-                a {
-                    href = rowData.licenseUrl.toString()
-                    target = AnchorTarget._blank
-                    +(rowData.license.toString())
-                }
-            } else {
-                +(rowData.license.toString())
-            }
-        }
-    }
-}
-
-interface GameMaterialTableState : AsyncLoadingTableState {
-    var showAlert: Boolean
-}
-
-class GameMaterialTable : AsyncLoadingTable<GameMaterialTableState>() {
-    override val url: String
-        get() = props.game.resolve("/misc/material.json")
-
-    init {
-        state = jso { showAlert = true }
-    }
-
-    override fun ChildrenBuilder.textBeforeTable() {
-        if (state.showAlert) {
-            BootstrapAlert {
-                show = true
-                variant = "success"
-                dismissible = "true"
-                onClose = {
-                    setState { showAlert = false }
-                }
-                unsafeSpan(props.game.i("ContactUsIfYouThinkUsMisuse"))
-            }
-        }
-        +props.game.i("ThisGameWouldNotExistWithoutArtwork")
-    }
-
-    override fun ChildrenBuilder.tableHeaderBuilder() {
-        th { +props.game.i("Material") }
-        th { +props.game.i("Author") }
-        th { +props.game.i("License") }
-    }
-
-    override fun ChildrenBuilder.tableRowBuilder(rowData: dynamic) {
-        td {
-            a {
-                href = rowData.url.toString()
-                target = AnchorTarget._blank
-                +(rowData.name.toString())
-            }
-        }
-        td { +(rowData.artist.toString()) }
-
-        td {
-            a {
-                href = rowData.licenceUrl.toString()
-                target = AnchorTarget._blank
-                +(rowData.licence.toString())
-            }
-        }
-    }
+    abstract fun ChildrenBuilder.tableRowBuilder(index: Int, rowData: dynamic)
 }
