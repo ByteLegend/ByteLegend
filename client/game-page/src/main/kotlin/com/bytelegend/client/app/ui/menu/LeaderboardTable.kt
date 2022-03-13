@@ -75,7 +75,7 @@ class LeaderboardTable : AsyncLoadingTable<AsyncLoadingTableProps, LeaderboardTa
             a {
                 target = AnchorTarget._blank
                 href = "https://github.com/${player.id.substringAfter("gh#")}"
-                +player.username
+                +player.nickname
             }
         }
         td { +player.star.toString() }
