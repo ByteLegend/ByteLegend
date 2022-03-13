@@ -17,7 +17,6 @@ package com.bytelegend.app.servershared
 
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.entities.Player
-import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
