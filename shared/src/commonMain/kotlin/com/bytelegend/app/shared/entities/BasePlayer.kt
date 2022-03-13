@@ -19,6 +19,7 @@ import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.annotations.DynamoDbIgnore
 import com.bytelegend.app.shared.annotations.DynamoDbSecondaryPartitionKey
 import com.bytelegend.app.shared.annotations.JsonIgnore
+import com.bytelegend.app.shared.annotations.ReadOnly
 import com.bytelegend.app.shared.objects.GridCoordinateAware
 import kotlinx.serialization.Serializable
 
@@ -74,6 +75,15 @@ open class BasePlayer : GridCoordinateAware {
      */
     @get: DynamoDbSecondaryPartitionKey(indexNames = ["serverIndex"])
     var server: Int = 0
+
+    /**
+     * Star marks the progress of player challenge. Players get stars
+     * by accomplishing challenges.
+     */
+    @get: ReadOnly
+    var star: Int = 0
+
+    var avatarUrl: String? = null
 
     /**
      * The character id for display.

@@ -53,7 +53,6 @@ import com.bytelegend.app.shared.entities.mission.ChangeSpec
 import com.bytelegend.app.shared.entities.mission.StatesChange
 import com.bytelegend.app.shared.entities.mission.Pagination
 import com.bytelegend.app.shared.entities.mission.Tutorial
-import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.LocalizedText
 import com.bytelegend.app.shared.i18n.LocalizedTextFormat
@@ -194,8 +193,10 @@ private fun BasePlayer.configureBasePlayer(jsonObject: dynamic) {
     this.map = jsonObject.map
     this.x = jsonObject.x
     this.y = jsonObject.y
+    this.avatarUrl = jsonObject.avatarUrl
     this.characterId = jsonObject.characterId
     this.server = jsonObject.server
+    this.star = jsonObject.star
 }
 
 fun toBasePlayer(jsonObject: dynamic) = BasePlayer().apply { configureBasePlayer(jsonObject) }

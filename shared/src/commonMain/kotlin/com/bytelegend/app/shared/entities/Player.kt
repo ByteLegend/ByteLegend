@@ -24,12 +24,6 @@ const val PLACEHOLDER_PLAYER_MARKER = -1
 const val OFFLINE_PLAYER_MARKER = 0
 
 open class Player : BasePlayer() {
-    /**
-     * Star marks the progress of player challenge. Players get stars
-     * by accomplishing challenges.
-     */
-    @get: ReadOnly
-    var star: Int = 0
 
     /**
      * The basic currency in the game. Can be obtained via many ways.
@@ -77,8 +71,6 @@ open class Player : BasePlayer() {
      */
     var locale: String? = null
 
-    var avatarUrl: String? = null
-
     /**
      * The main email.
      */
@@ -105,6 +97,8 @@ open class Player : BasePlayer() {
         this.y = this@Player.y
         this.characterId = this@Player.characterId
         this.server = this@Player.server
+        this.star = this@Player.star
+        this.avatarUrl = this@Player.avatarUrl
     }
 }
 
