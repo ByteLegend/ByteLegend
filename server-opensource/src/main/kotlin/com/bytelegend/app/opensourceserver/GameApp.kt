@@ -26,7 +26,6 @@ import com.bytelegend.app.servershared.mock.mockPlayer
 import com.bytelegend.app.shared.entities.MapChallengeStates
 import com.bytelegend.app.shared.entities.Player
 import com.bytelegend.app.shared.entities.SceneInitData
-import com.bytelegend.app.shared.enums.ServerLocation
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.protocol.GET_SCENE_INIT_DATA
 import com.bytelegend.app.shared.protocol.MOVE_TO
