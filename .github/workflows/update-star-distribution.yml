@@ -17,4 +17,4 @@ jobs:
       - name: Gradle build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: server:dal-dynamodb:updateStarDistribution -Ddynamodb.serverLocation=Seoul -Ddynamodb.accessKeyId=${{ secrets.ACCESS_KEY_ID_SEOUL }} -Ddynamodb.secretAccessKey=${{ secrets.SECRET_ACCESS_KEY_SEOUL }} -DagreePublicBuildScanTermOfService=yes
+          arguments: server:dal-dynamodb:updateStarDistribution -Ddynamodb.serverLocation=Seoul -Ddynamodb.accessKeyId=${{ secrets.DYNAMODB_ADMIN_ACCESS_KEY_ID }} -Ddynamodb.secretAccessKey=${{ secrets.DYNAMODB_ADMIN_SECRET_ACCESS_KEY }} -DagreePublicBuildScanTermOfService=yes
