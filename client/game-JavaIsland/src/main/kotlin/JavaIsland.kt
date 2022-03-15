@@ -104,7 +104,7 @@ fun main() {
                 listOf(
                     "java-reference-and-value",
                     "java-npe",
-                    "java-constructure",
+                    "java-constructor",
                     "java-instance-method",
                     "java-instance-field",
                     "java-class-instantiation",
