@@ -97,6 +97,19 @@ fun main() {
                     "java-method"
                 )
             )
+            basicStructureStone(
+                "JavaClassObjectBlocker",
+                "JavaClassObjectBlocker-challenge-text",
+                GridCoordinate(-1, 0),
+                listOf(
+                    "java-reference-and-value",
+                    "java-npe",
+                    "java-constructure",
+                    "java-instance-method",
+                    "java-instance-field",
+                    "java-class-instantiation",
+                )
+            )
 
             unfinishedPartBlocker()
 
