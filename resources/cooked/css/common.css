@@ -996,3 +996,6 @@ div.speech-bubble::after {
     margin-bottom: 0;
 }
 
+canvas {
+    image-rendering: pixelated;
+}
