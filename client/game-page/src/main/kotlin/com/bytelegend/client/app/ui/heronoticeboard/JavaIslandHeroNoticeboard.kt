@@ -184,6 +184,7 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
     private fun ChildrenBuilder.paginationButtons() {
         if (props.totalPage > 1) {
             BootstrapPagination {
+                className = "flex-center hero-noticeboard-pagination"
                 repeat(props.totalPage) { page ->
                     BootstrapPaginationItem {
                         +(page + 1).toString()

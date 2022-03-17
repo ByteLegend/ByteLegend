@@ -991,3 +991,8 @@ div.speech-bubble::after {
     background-color: transparent;
 }
 
+.hero-noticeboard-pagination {
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
