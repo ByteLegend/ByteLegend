@@ -16,9 +16,7 @@
 
 package com.bytelegend.client.app.ui.invitationcode
 
-import com.bytelegend.app.client.api.Character
 import com.bytelegend.app.client.api.DynamicSprite
-import com.bytelegend.app.client.api.HERO_ID
 import com.bytelegend.app.client.api.StaticFrame
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.app.client.ui.bootstrap.BootstrapButton
@@ -138,14 +136,6 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : Component<GameProps
                 p {
                     +props.game.i("InvitationCodeBoxDescription", COIN_REWARD_PER_CODE.toString())
                 }
-                val disabled = isDisabled()
-                if (disabled) {
-                    BootstrapAlert {
-                        show = true
-                        variant = "warning"
-                        +props.game.i("YouMustBeAdjacentToOpenTheBox")
-                    }
-                }
                 BootstrapInputGroup {
                     BootstrapFormControl {
                         this.disabled = disabled
@@ -172,17 +162,11 @@ class InvitationCodeModal(props: InvitationCodeModalProps) : Component<GameProps
         }
     }
 
-    private fun isDisabled(): Boolean {
-        val activeScene = props.game.activeScene
-        val heroInScene = activeScene.objects.getByIdOrNull<Character>(HERO_ID) ?: return true
-        return heroInScene.gridCoordinate.manhattanDistanceTo(invitationBoxPoint()) > 2
-    }
-
     private fun invitationBoxPoint() = props.game.activeScene.objects.getPointById("InvitationBox-point")
 
     private fun useInvitationCode() {
         val code = (document.getElementsByClassName("invitation-code-input")[0]!! as HTMLInputElement).value
-        if (code.isBlank() || isDisabled()) {
+        if (code.isBlank()) {
             return
         }
         setState {
