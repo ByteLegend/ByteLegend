@@ -39,7 +39,7 @@
 
 ## 联系我们
 
-您可以在[Discord](https://discord.gg/35RreUUGWt)上加入我们或者通过email联系： [contact@bytelegend.com](mailto:contact@bytelegend.com)。
+您可以在[Discord](https://discord.gg/PvmqK3hF)上加入我们或者通过email联系： [contact@bytelegend.com](mailto:contact@bytelegend.com)。
 
 ## 加入玩家QQ群
 
