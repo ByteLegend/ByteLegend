@@ -53,7 +53,7 @@ open class DefaultJsonMapper constructor(
 
     private val uglyMapper = ObjectMapper().apply {
         setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        registerModule(KotlinModule())
+        registerModule(KotlinModule.Builder().build())
         registerMapMissionSpecMapping()
         install(WebSocketMessage::class.java, WebSocketMessageDeserializer())
         configuration()
@@ -63,7 +63,7 @@ open class DefaultJsonMapper constructor(
     }.writerWithDefaultPrettyPrinter()
 
     private val yamlMapper = ObjectMapper(YAMLFactory()).apply {
-        registerModule(KotlinModule())
+        registerModule(KotlinModule.Builder().build())
     }
 
     override fun toJson(obj: Any) = if (devMode) {
