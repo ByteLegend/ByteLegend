@@ -72,7 +72,7 @@ val module = SimpleModule().apply {
 val uglyObjectMapper = ObjectMapper().apply {
     setSerializationInclusion(JsonInclude.Include.NON_NULL)
     registerModule(module)
-    registerModule(KotlinModule())
+    registerModule(KotlinModule.Builder().build())
 }
 
 val prettyObjectMapper = uglyObjectMapper.writerWithDefaultPrettyPrinter()

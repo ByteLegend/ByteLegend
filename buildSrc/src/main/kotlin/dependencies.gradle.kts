@@ -24,10 +24,10 @@ import com.bytelegend.buildsupport.OpenSourceLicense.MIT
 import com.bytelegend.buildsupport.OpenSourceLicense.WTFPL
 import com.bytelegend.buildsupport.OpenSourceLicense.Free
 
-val forestVersion = "0.3.16-SNAPSHOT"
+val forestVersion = "0.3.17-SNAPSHOT"
 val vertxVersion = "4.1.2"
 val guavaVersion = "30.1.1-jre"
-val jacksonVersion = "2.12.3"
+val jacksonVersion = "2.13.2"
 val kotlinVersion = "1.6.10"
 val kotlinxVersion = "1.6.0"
 val junitVersion = "5.8.1"

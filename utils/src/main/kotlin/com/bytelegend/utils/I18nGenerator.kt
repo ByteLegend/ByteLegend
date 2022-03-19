@@ -165,4 +165,4 @@ private fun File.jsonToLocalizedTexts(): LinkedHashMap<String, LocalizedText> {
 }
 
 val YAML_FACTORY = YAMLFactory()
-val YAML_PARSER = ObjectMapper(YAML_FACTORY).registerModule(KotlinModule())
+val YAML_PARSER = ObjectMapper(YAML_FACTORY).registerModule(KotlinModule.Builder().build())
