@@ -127,7 +127,7 @@ class DefaultGameSceneContainer(
     @Suppress("UnsafeCastFromDynamic")
     private suspend fun createThenSwitchScene(oldScene: GameScene?, mapId: String, switchAfterLoading: Boolean, action: suspend (GameScene?, GameScene) -> Unit) {
         val map = loadGameMap(mapId, true)
-        loadI18nResource(mapId, true)
+        val i18nResource = loadI18nResource(mapId, true)
         val tileset = resourceLoader.loadAsync(ImageResource(mapTilesetResourceId(mapId), "$RRBD/map/$mapId/tileset.png"))
         val mapScript = resourceLoader.loadAsync(TextAjaxResource(mapScriptResourceId(mapId), "$RRBD/js/game-$mapId.js"))
         val sceneInitData = resourceLoader.loadAsync(GameSceneInitResource(game.heroPlayer.id, mapId, game.webSocketClient))
@@ -142,6 +142,7 @@ class DefaultGameSceneContainer(
 
         eventBus.emit(ONLINE_COUNTER_UPDATE_EVENT, initData.online)
 
+        i18nResource.await() // because map script might reference i18n texts
         eval(mapScript.await())
         resourceLoader.unsafeCast<DefaultResourceLoader>().sceneSwitchReady()
     }
