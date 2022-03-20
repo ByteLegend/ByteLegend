@@ -155,7 +155,6 @@ class GamePage(props: GameProps) : Component<GameProps, GamePageState>(props) {
                 game.i18nTextContainer
             )
         )
-        game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg")), false)
 
         if (!game.heroPlayer.isAnonymous) {
             game.resourceLoader.loadAsync(AudioResource("coin", game.resolve("/audio/coin.mp3")), false)

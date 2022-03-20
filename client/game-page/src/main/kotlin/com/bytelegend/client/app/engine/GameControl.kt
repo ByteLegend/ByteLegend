@@ -22,9 +22,12 @@ import com.bytelegend.app.client.misc.getAudioElementOrNull
 import com.bytelegend.app.shared.GridCoordinate
 import com.bytelegend.app.shared.NON_BLOCKER
 import com.bytelegend.app.shared.objects.GameObjectRole.UnableToBeSetAsDestination
+import com.bytelegend.client.app.engine.resource.AudioResource
 import com.bytelegend.client.app.script.ASYNC_ANIMATION_CHANNEL
 import com.bytelegend.client.app.web.WebSocketClient
 import kotlinx.browser.document
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.instance
 
@@ -34,10 +37,13 @@ class GameControl(
     var audioEnabled: Boolean = false
         set(value) {
             field = value
-            if (value) {
-                getAudioElementOrNull("forest")?.play()
-            } else {
-                getAudioElementOrNull("forest")?.pause()
+            GlobalScope.launch {
+                game.resourceLoader.loadAsync(AudioResource("forest", game.resolve("/audio/forest.ogg")), false).await()
+                if (value) {
+                    getAudioElementOrNull("forest")?.play()
+                } else {
+                    getAudioElementOrNull("forest")?.pause()
+                }
             }
         }
 
