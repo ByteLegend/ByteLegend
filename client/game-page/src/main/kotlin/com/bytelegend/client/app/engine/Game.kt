@@ -149,6 +149,14 @@ class Game(
         setClock(GAME_CLOCK_20MS, GAME_CLOCK_20MS_EVENT)
 
         checkGfw()
+
+        showWarningOnMobileDevice()
+    }
+
+    private fun showWarningOnMobileDevice() {
+        if (window.navigator.userAgent.matches(".*(Mobi|Android).*".toRegex())) {
+            modalController.showModal(i("YouMayExperienceIssuesOnMobileDevices", window.navigator.userAgent), i("NotOptimizedForMobileDevices"))
+        }
     }
 
     fun transformGitHubUrl(url: String): String {
