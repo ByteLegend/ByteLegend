@@ -88,6 +88,11 @@ open class Player : BasePlayer() {
     @JsonIgnore
     var githubToken: String? = null
 
+    /**
+     * The time of last connection to server via WebSocket.
+     */
+    var lastLogInAt: String? = null
+
     fun toPartialEntity() = BasePlayer().apply {
         this.id = this@Player.id
         this.username = this@Player.username
