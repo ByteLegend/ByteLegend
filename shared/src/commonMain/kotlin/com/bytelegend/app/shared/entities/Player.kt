@@ -88,6 +88,7 @@ open class Player : BasePlayer() {
     @JsonIgnore
     var githubToken: String? = null
 
+    var createdAt: String? = null
     /**
      * The time of last connection to server via WebSocket.
      */
