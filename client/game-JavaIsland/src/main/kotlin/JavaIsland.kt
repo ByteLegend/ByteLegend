@@ -111,6 +111,20 @@ fun main() {
                 )
             )
 
+            basicStructureStone(
+                "JavaDataStructureBlocker",
+                "JavaDataStructureBlocker-challenge-text",
+                GridCoordinate(-1, 0),
+                listOf(
+                    "java-bitwise-operators",
+                    "java-operator-precedence",
+                    "java-increment-operator",
+                    "java-logical-operators",
+                    "java-ternary-operator",
+                    "java-basic-operators",
+                )
+            )
+
             unfinishedPartBlocker()
 
             billboard()

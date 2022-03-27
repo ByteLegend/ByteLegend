@@ -55,6 +55,13 @@ class MapData(ymlDir: File) {
             require(missionSpec.challenges.distinctBy { it.id }.size == missionSpec.challenges.size) {
                 "${missionSpec.id} has duplicate challenges!"
             }
+            missionSpec.onFinish.items.forEach {
+                if (it.contains(":")) {
+                    require(it.substringAfterLast(":") == missionSpec.id) {
+                        "${missionSpec.id} has wrong items!"
+                    }
+                }
+            }
             missionSpec.validateChallenges(ChallengeType.Question) {
                 require(readme.isNotBlank()) {
                     "tldr or readme is empty for $id!"
@@ -71,8 +78,12 @@ class MapData(ymlDir: File) {
         it.id
     }
 
-    private fun MissionSpec.validateChallenges(type: ChallengeType, action: ChallengeSpec.() -> Unit) {
-        challenges.filter { it.type == type }.forEach(action)
+    private fun MissionSpec.validateChallenges(type: ChallengeType? = null, action: ChallengeSpec.() -> Unit) {
+        if (type == null) {
+            challenges.forEach(action)
+        } else {
+            challenges.filter { it.type == type }.forEach(action)
+        }
     }
 
     val tutorials: Map<String, Tutorial> = missionSpecs.values.flatMap {

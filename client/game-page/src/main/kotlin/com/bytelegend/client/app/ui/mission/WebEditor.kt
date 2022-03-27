@@ -39,6 +39,7 @@ import kotlinext.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLIFrameElement
+import org.w3c.dom.url.URLSearchParams
 import react.Component
 import react.Fragment
 import react.State
@@ -66,6 +67,9 @@ interface WebEditorProps : GameProps {
 
 class WebEditor : Component<WebEditorProps, WebEditorState>() {
     private val webEditorIframeId = "webeditor-${uuid()}"
+    private val useLocalWebEditor: Boolean by lazy {
+        URLSearchParams(window.location.search).get("useLocalWebEditor")?.toBoolean() ?: false
+    }
 
     private val missionRepaintEventListener: EventListener<ChallengeUpdateEventData> = this::onChallengeAnswersUpdate
     private val liveLogStreamEventListener: EventListener<LogStreamEventData> = this::onLiveLogStream
@@ -127,7 +131,7 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
     }
 
     private fun determineWebEditorUrl(): String {
-        val baseUrl = if (window.location.hostname == "localhost") "http://localhost:5000" else "https://webeditor.bytelegend.com"
+        val baseUrl = if (useLocalWebEditor && window.location.hostname == "localhost") "http://localhost:5000" else "https://webeditor.bytelegend.com"
 
         return if (isPullRequestChallenge) {
             val latestPullRequestAnswer = getLatestOpenPullRequest()
@@ -145,7 +149,11 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
     private fun determineWebEditorInitData(): dynamic {
         val whitelist = props.whitelist?.toTypedArray() ?: emptyArray()
         val apiServer = if (window.location.hostname == "localhost") "http://${window.location.host}" else "https://bytelegend.com"
-        val githubApiBaseUrl = if (props.game.heroPlayer.isAnonymous) "${window.location.protocol}//${window.location.host}/ghapi" else "https://ghapi.bytelegend.com"
+        val githubApiBaseUrl = when {
+            useLocalWebEditor && props.game.heroPlayer.isAnonymous -> "${window.location.protocol}//${window.location.host}/ghapi"
+            !useLocalWebEditor && props.game.heroPlayer.isAnonymous -> "https://bytelegend.com/ghapi"
+            else -> "https://ghapi.bytelegend.com"
+        }
         val ret = jso<dynamic> {
             missionId = props.missionId
             challengeId = props.challengeSpec.id
