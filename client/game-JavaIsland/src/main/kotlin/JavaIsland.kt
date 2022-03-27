@@ -116,12 +116,10 @@ fun main() {
                 "JavaDataStructureBlocker-challenge-text",
                 GridCoordinate(-1, 0),
                 listOf(
-                    "java-bitwise-operators",
-                    "java-operator-precedence",
-                    "java-increment-operator",
-                    "java-logical-operators",
-                    "java-ternary-operator",
-                    "java-basic-operators",
+                    "java-data-representation-in-computer",
+                    "java-type-conversion",
+                    "java-box-unbox",
+                    "java-array-basics"
                 )
             )
 
