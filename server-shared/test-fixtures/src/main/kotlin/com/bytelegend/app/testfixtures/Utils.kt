@@ -15,6 +15,7 @@
  */
 package com.bytelegend.app.testfixtures
 
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 fun File.newFile(path: String): File {
@@ -36,4 +37,10 @@ fun File.setupUpstreamGitRepo() {
     this.resolve("init.txt").writeText("Init version")
     execSuccessfully(this, "git", "add", "init.txt")
     execSuccessfully(this, "git", "commit", "-m", "Init commit")
+}
+
+fun runBlockingUnit(fn: suspend () -> Unit) {
+    runBlocking {
+        fn()
+    }
 }
