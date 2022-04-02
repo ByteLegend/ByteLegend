@@ -216,7 +216,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                             }
                             BootstrapCol {
                                 md = "auto"
-                                +format(missionAnswer.time, game.locale)
+                                +props.game.format(missionAnswer.time)
                             }
                             BootstrapCol {
                                 md = "auto"

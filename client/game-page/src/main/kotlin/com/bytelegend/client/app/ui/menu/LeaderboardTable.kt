@@ -28,11 +28,7 @@ import react.dom.html.ReactHTML.th
 
 interface LeaderboardTableState : AsyncLoadingTableState
 
-class LeaderboardTable : AsyncLoadingTable<AsyncLoadingTableProps, LeaderboardTableState>() {
-    init {
-        state.currentPage = 1
-    }
-
+class LeaderboardTable : AsyncLoadingTable<AsyncLoadingTableProps, LeaderboardTableState>(true) {
     override val isLastPage: Boolean
         get() {
             if (state.data == undefined) {
@@ -43,9 +39,6 @@ class LeaderboardTable : AsyncLoadingTable<AsyncLoadingTableProps, LeaderboardTa
 
     override val url: String
         get() = "/game/api/leaderboard?page=${state.currentPage}"
-
-    override fun ChildrenBuilder.textBeforeTable() {
-    }
 
     override fun ChildrenBuilder.tableHeaderBuilder() {
         th {

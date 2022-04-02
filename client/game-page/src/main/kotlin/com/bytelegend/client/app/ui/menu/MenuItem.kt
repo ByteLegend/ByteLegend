@@ -183,7 +183,6 @@ class Menu : GameUIComponent<MenuProps, State>() {
             BootstrapModalBody {
                 child(LeaderboardTable::class.react, jso {
                     this.game = props.game
-                    this.pagination = true
                 })
             }
         }

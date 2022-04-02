@@ -150,8 +150,7 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
         val whitelist = props.whitelist?.toTypedArray() ?: emptyArray()
         val apiServer = if (window.location.hostname == "localhost") "http://${window.location.host}" else "https://bytelegend.com"
         val githubApiBaseUrl = when {
-            useLocalWebEditor && props.game.heroPlayer.isAnonymous -> "${window.location.protocol}//${window.location.host}/ghapi"
-            !useLocalWebEditor && props.game.heroPlayer.isAnonymous -> "https://bytelegend.com/ghapi"
+            useLocalWebEditor -> "${window.location.protocol}//${window.location.host}/ghapi"
             else -> "https://ghapi.bytelegend.com"
         }
         val ret = jso<dynamic> {

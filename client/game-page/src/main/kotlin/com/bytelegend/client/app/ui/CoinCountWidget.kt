@@ -16,6 +16,8 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.misc.playAudio
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
+import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.shared.protocol.COIN_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.CoinUpdateEventData
 import com.bytelegend.app.shared.protocol.NumberChange
@@ -42,9 +44,15 @@ class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, 
         renderIcon()
         onClick = {
             game.modalController.show {
-                child(HistoryModal::class.react, jso {
-                    this.game = props.game
-                })
+                BootstrapModalHeader {
+                    closeButton = true
+                    +props.game.i("MyCoinHistory")
+                }
+                BootstrapModalBody {
+                    child(CoinHistoryModal::class.react, jso {
+                        this.game = props.game
+                    })
+                }
             }
         }
     }

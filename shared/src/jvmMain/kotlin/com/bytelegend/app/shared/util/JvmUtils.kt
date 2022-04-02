@@ -20,3 +20,4 @@ import java.time.Instant
 actual fun currentTimeMillis(): Long = System.currentTimeMillis()
 actual fun currentTimeIso8601(): String = Instant.now().toString()
 actual fun Long.toIso8601(): String = Instant.ofEpochMilli(this).toString()
+actual fun String.iso8601ToEpochMs(): Long = Instant.parse(this).toEpochMilli()

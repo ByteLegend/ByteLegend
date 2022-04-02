@@ -15,10 +15,16 @@
  */
 package com.bytelegend.client.app.engine.util
 
-import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.client.app.engine.Game
 
 @Suppress("UnsafeCastFromDynamic", "UNUSED_PARAMETER", "UNUSED_VARIABLE")
-fun format(iso8601: String, locale: Locale): String {
+fun Game.format(iso8601: String): String {
     val localeString = locale.javascriptLocale
     return js("new Date(iso8601).toLocaleString(localeString)")
+}
+
+@Suppress("UnsafeCastFromDynamic", "UNUSED_PARAMETER", "UNUSED_VARIABLE")
+fun Game.format(epochMs: Long): String {
+    val localeString = locale.javascriptLocale
+    return js("new Date(epochMs).toLocaleString(localeString)")
 }

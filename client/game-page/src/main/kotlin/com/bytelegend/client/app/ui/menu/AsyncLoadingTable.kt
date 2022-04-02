@@ -36,22 +36,21 @@ import react.dom.html.ReactHTML.tbody
 import react.dom.html.ReactHTML.thead
 import react.dom.html.ReactHTML.tr
 
-interface AsyncLoadingTableProps : GameProps {
-    var pagination: Boolean
-}
+interface AsyncLoadingTableProps : GameProps
 
 interface AsyncLoadingTableState : State {
     var data: Array<dynamic>?
     var currentPage: Int
 }
 
-abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTableState> : Component<P, S>() {
+abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTableState>(private val pagination: Boolean = false) : Component<P, S>() {
     abstract val url: String
     open val isLastPage: Boolean = true
     private var loading = false
 
     init {
         state = jso()
+        state.currentPage = 1
     }
 
     override fun render() = Fragment.create {
@@ -88,7 +87,7 @@ abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTab
                 }
             }
 
-            if (props.pagination) {
+            if (pagination) {
                 div {
                     className = "page-button-wrapper flex-center"
                     BootstrapButton {
@@ -119,7 +118,7 @@ abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTab
         }
     }
 
-    abstract fun ChildrenBuilder.textBeforeTable()
+    open fun ChildrenBuilder.textBeforeTable() {}
     abstract fun ChildrenBuilder.tableHeaderBuilder()
     abstract fun ChildrenBuilder.tableRowBuilder(index: Int, rowData: dynamic)
 }

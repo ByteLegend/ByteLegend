@@ -27,6 +27,7 @@ import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.entities.ChallengeAnswer
 import com.bytelegend.app.shared.entities.ChallengeAnswers
 import com.bytelegend.app.shared.entities.ChallengeTabData
+import com.bytelegend.app.shared.entities.HistoryItem
 import com.bytelegend.app.shared.entities.DiscussionsTabData
 import com.bytelegend.app.shared.entities.HeroNoticeboardTabData
 import com.bytelegend.app.shared.entities.LivestreamData
@@ -368,4 +369,13 @@ fun toInvitationInformation(jsonObject: dynamic) = InvitationInformation(
     jsonObject.inviterId,
     jsonObject.invitationCode,
     jsonObject.rewardedCoin
+)
+
+fun toHistoryItem(jsonObject: dynamic) = HistoryItem(
+    jsonObject.playerId,
+    jsonObject.id,
+    jsonObject.createdAt,
+    jsonObject.change,
+    jsonObject.reasonId,
+    JSArrayBackedList(delegate = jsonObject.reasonArgs)
 )

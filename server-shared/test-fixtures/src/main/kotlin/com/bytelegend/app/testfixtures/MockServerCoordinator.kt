@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.bytelegend.app.shared.util
 
-inline fun <T> Collection<T>.ifNotEmpty(fn: Collection<T>.() -> Unit) {
-    if (isNotEmpty()) {
-        this.fn()
+package com.bytelegend.app.testfixtures
+
+import com.bytelegend.app.backend.dal.ServerCoordinator
+import com.bytelegend.app.shared.enums.ServerLocation
+
+class MockServerCoordinator(override val currentId: Int, override val currentLocation: ServerLocation) : ServerCoordinator {
+    override suspend fun getOnlineServerIds(): Set<Int> {
+        TODO("Not yet implemented")
     }
 }
-
-inline fun <K, V> Map<K, V>.ifNotEmpty(fn: Map<K, V>.() -> Unit) {
-    if (isNotEmpty()) {
-        this.fn()
-    }
-}
-
-expect fun currentTimeMillis(): Long
-
-expect fun currentTimeIso8601(): String
-
-expect fun Long.toIso8601(): String
-
-expect fun String.iso8601ToEpochMs(): Long
