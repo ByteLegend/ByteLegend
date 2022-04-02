@@ -16,7 +16,7 @@
 
 package com.bytelegend.app.testfixtures
 
-import com.bytelegend.app.backend.dal.ServerCoordinator
+import com.bytelegend.app.servershared.ServerCoordinator
 import com.bytelegend.app.shared.enums.ServerLocation
 
 class MockServerCoordinator(override val currentId: Int, override val currentLocation: ServerLocation) : ServerCoordinator {

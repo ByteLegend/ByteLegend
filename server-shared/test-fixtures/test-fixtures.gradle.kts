@@ -31,6 +31,5 @@ dependencies {
     api(project(":shared"))
     api(project(":server-shared:common"))
     api(project(":server-shared:json-model"))
-    api(project(":server:dal-api"))
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 }
