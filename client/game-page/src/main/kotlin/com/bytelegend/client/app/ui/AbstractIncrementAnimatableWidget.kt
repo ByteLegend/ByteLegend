@@ -42,12 +42,16 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
     val iconClassName: String
 ) : GameUIComponent<P, S>() {
     abstract val eventName: String
+    abstract fun onClick()
     private var div: RefObject<HTMLDivElement> = createRef()
 
     private val numberChangeEventListener: EventListener<NumberChange> = ::onNumberChange
 
     override fun render() = Fragment.create {
         BootstrapListGroupItem {
+            onClick = {
+                this@AbstractIncrementAnimatableWidget.onClick()
+            }
             div {
                 className = "text-align-right"
                 renderDiv()

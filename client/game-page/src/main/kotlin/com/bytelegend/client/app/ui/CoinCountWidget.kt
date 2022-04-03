@@ -42,19 +42,6 @@ class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, 
             +game.heroPlayer.coin.toString()
         }
         renderIcon()
-        onClick = {
-            game.modalController.show {
-                BootstrapModalHeader {
-                    closeButton = true
-                    +props.game.i("MyCoinHistory")
-                }
-                BootstrapModalBody {
-                    child(CoinHistoryModal::class.react, jso {
-                        this.game = props.game
-                    })
-                }
-            }
-        }
     }
 
     override fun onNumberChange(numberChange: NumberChange) {
@@ -69,5 +56,19 @@ class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, 
         )
         game.heroPlayer.coin = numberChange.newValue
         animateAndSetState(numberChange)
+    }
+
+    override fun onClick() {
+        game.modalController.show {
+            BootstrapModalHeader {
+                closeButton = true
+                +props.game.i("MyCoinHistory")
+            }
+            BootstrapModalBody {
+                child(CoinHistoryModal::class.react, jso {
+                    this.game = props.game
+                })
+            }
+        }
     }
 }

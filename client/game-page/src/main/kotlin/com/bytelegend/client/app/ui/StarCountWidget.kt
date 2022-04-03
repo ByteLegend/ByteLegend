@@ -42,4 +42,7 @@ class StarCountWidget : AbstractIncrementAnimatableWidget<StarCountWidgetProps, 
         game.heroPlayer.star = numberChange.newValue
         animateAndSetState(numberChange)
     }
+
+    override fun onClick() {
+    }
 }
