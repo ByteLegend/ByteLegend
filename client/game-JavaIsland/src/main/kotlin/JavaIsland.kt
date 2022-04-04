@@ -123,6 +123,23 @@ fun main() {
                 )
             )
 
+            basicStructureStone(
+                "JavaOperatorsBlocker",
+                "JavaOperatorsBlocker-challenge-text",
+                GridCoordinate(0, 1),
+                listOf(
+                    "java-operator-precedence",
+                    "java-basic-operators",
+                    "java-ternary-operator",
+                    "java-logical-operators",
+                    "java-increment-operator",
+                    "java-bitwise-operators"
+                )
+            )
+
+            configureChestOpenByKey("java-loop-senior")
+            configureChestOpenByKey("java-pattern-matching-switch")
+
             unfinishedPartBlocker()
 
             billboard()
