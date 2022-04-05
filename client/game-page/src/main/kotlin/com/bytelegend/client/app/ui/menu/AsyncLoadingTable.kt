@@ -53,6 +53,10 @@ abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTab
         state.currentPage = 1
     }
 
+    open suspend fun transformData(data: Array<dynamic>): Array<dynamic> {
+        return data
+    }
+
     override fun render() = Fragment.create {
         textBeforeTable()
 
@@ -61,10 +65,10 @@ abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTab
         } else if (state.data == undefined) {
             loading = true
             GlobalScope.launch {
-                val json = getText(url)
+                val transformedData = transformData(JSON.parse(getText(url)))
                 loading = false
                 setState {
-                    data = JSON.parse(json)
+                    data = transformedData
                 }
             }
             loadingSpinner()

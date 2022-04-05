@@ -16,13 +16,16 @@
 
 package com.bytelegend.client.app.ui
 
+import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.util.currentTimeMillis
 import com.bytelegend.app.shared.util.iso8601ToEpochMs
+import com.bytelegend.client.app.engine.DefaultGameSceneContainer
 import com.bytelegend.client.app.engine.util.format
 import com.bytelegend.client.app.ui.menu.AsyncLoadingTable
 import com.bytelegend.client.app.ui.menu.AsyncLoadingTableProps
 import com.bytelegend.client.app.ui.menu.AsyncLoadingTableState
 import com.bytelegend.client.utils.toHistoryItem
+import kotlinx.coroutines.awaitAll
 import react.ChildrenBuilder
 import react.dom.html.ReactHTML.td
 import react.dom.html.ReactHTML.th
@@ -77,7 +80,31 @@ class CoinHistoryModal : AsyncLoadingTable<AsyncLoadingTableProps, AsyncLoadingT
             }
         }
         td {
+            console.log("Args: ${JSON.stringify(record.reasonArgs)}")
             unsafeSpan(props.game.i(record.reasonId, *record.reasonArgs.toTypedArray()))
         }
+    }
+
+    override suspend fun transformData(data: Array<dynamic>): Array<dynamic> {
+        data.forEach { rowData ->
+            if (rowData.reasonId == "MissionAccomplishedReward" && rowData.reasonArgs[1] != undefined) {
+                val missionId = rowData.reasonArgs[0]
+                val mapId = rowData.reasonArgs[1]
+                val sceneContainer = props.game.sceneContainer.unsafeCast<DefaultGameSceneContainer>()
+                val gameMap = sceneContainer.loadGameMap(mapId, false)
+                val i18n = sceneContainer.loadI18nResource(mapId, false)
+                listOf(gameMap, i18n).awaitAll()
+
+                gameMap.await().objects.firstOrNull { it.id == missionId }?.let { obj ->
+                    i18n.await()[obj.unsafeCast<GameMapMission>().title]?.let {
+                        rowData.reasonArgs[0] = it
+                    }
+                }
+            } else if (rowData.reasonId == "MapSwitchingToll") {
+                rowData.reasonArgs[0] = props.game.i(rowData.reasonArgs[0])
+                rowData.reasonArgs[1] = props.game.i(rowData.reasonArgs[1])
+            }
+        }
+        return data
     }
 }
