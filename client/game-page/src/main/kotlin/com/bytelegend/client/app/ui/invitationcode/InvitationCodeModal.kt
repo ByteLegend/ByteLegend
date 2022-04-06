@@ -39,7 +39,7 @@ import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.HttpRequestException
 import com.bytelegend.client.app.web.getText
 import com.bytelegend.client.app.web.post
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

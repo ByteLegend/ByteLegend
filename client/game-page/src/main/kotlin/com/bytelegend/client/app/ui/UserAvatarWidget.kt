@@ -21,7 +21,8 @@ import BootstrapDropdownMenu
 import BootstrapDropdownToggle
 import com.bytelegend.app.client.ui.bootstrap.BootstrapDropdown
 import com.bytelegend.client.app.web.LOGIN_LINK_CLICKED_EVENT
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.events.Event
@@ -63,12 +64,12 @@ class UserAvatarWidget : GameUIComponent<GameProps, UserAvatarWidgetState>() {
                 it.title = i("Login")
 
                 img {
-                    className = "avatar-img"
+                    className = ClassName("avatar-img")
                     src = game.resolve("/img/ui/login.png")
                 }
 
                 span {
-                    className = "avatar-login-span"
+                    className = ClassName("avatar-login-span")
                     a {
                         id = "login-link"
                         href = "/game/login?redirect=/"
@@ -80,7 +81,7 @@ class UserAvatarWidget : GameUIComponent<GameProps, UserAvatarWidgetState>() {
                 }
             } else {
                 img {
-                    className = "avatar-img"
+                    className = ClassName("avatar-img")
                     src = game.heroPlayer.avatarUrl ?: ""
                 }
                 it.onMouseMove = {

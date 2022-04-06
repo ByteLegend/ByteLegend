@@ -18,7 +18,8 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.shared.protocol.NumberChange
 import com.bytelegend.app.shared.protocol.REPUTATION_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.ReputationUpdateEventData
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import org.w3c.dom.HTMLDivElement
 import react.ChildrenBuilder
 import react.State
@@ -35,7 +36,7 @@ class ReputationCountWidget : AbstractIncrementAnimatableWidget<ReputationCountW
     override fun <T> T.renderDiv() where T : HTMLAttributes<HTMLDivElement>, T : ChildrenBuilder {
         id = "reputation-count"
         span {
-            className = "map-title-text"
+            className = ClassName("map-title-text")
             +game.heroPlayer.reputation.toString()
         }
         renderIcon()

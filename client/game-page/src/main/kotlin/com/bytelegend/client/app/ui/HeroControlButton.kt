@@ -25,7 +25,8 @@ import com.bytelegend.client.app.engine.MOUSE_CLICK_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
 import com.bytelegend.client.app.engine.showSpeechBubble
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import react.ChildrenBuilder
@@ -145,7 +146,7 @@ class HeroControlButton : GameUIComponent<GameProps, HeroControlButtonState>() {
         if (state.showSpeakMenu) {
             val z = Layer.HeroControlButton.zIndex() + 4
             div {
-                className = "dropdown-menu"
+                className = ClassName("dropdown-menu")
                 jsStyle {
                     display = "block"
                     position = "absolute"
@@ -155,7 +156,7 @@ class HeroControlButton : GameUIComponent<GameProps, HeroControlButtonState>() {
                 }
                 sentences.forEach { sentenceId ->
                     div {
-                        className = "dropdown-item"
+                        className = ClassName("dropdown-item")
                         jsStyle {
                             cursor = "pointer"
                         }

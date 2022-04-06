@@ -17,7 +17,8 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLDivElement
@@ -117,7 +118,7 @@ class OnlineCounter(props: OnlineCounterProps) : GameUIComponent<OnlineCounterPr
         span {
             if (gameControl.online) {
                 id = "online-counter"
-                className = "map-title-widget"
+                className = ClassName("map-title-widget")
 
                 +i("OnlineCount")
                 span {
@@ -130,7 +131,7 @@ class OnlineCounter(props: OnlineCounterProps) : GameUIComponent<OnlineCounterPr
                 }
             } else {
                 id = "online-counter-offline"
-                className = "map-title-widget"
+                className = ClassName("map-title-widget")
 
                 +i("OfflineMode")
             }

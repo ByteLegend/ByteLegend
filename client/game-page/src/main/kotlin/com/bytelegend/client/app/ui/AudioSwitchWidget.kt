@@ -16,6 +16,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSwitchButton
+import csstype.ClassName
 import react.Fragment
 import react.State
 import react.create
@@ -31,10 +32,10 @@ class AudioSwitchWidget : GameUIComponent<GameProps, State>() {
                     position = "relative"
                     top = "4px"
                 }
-                className = "white-text-white-shadow-1"
+                className = ClassName("white-text-white-shadow-1")
                 +"\uD83C\uDFB5 "
             }
-            className = "map-title-widget"
+            className = ClassName("map-title-widget")
             jsStyle {
                 display = "inline-block"
             }

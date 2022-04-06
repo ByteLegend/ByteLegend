@@ -17,7 +17,7 @@ package com.bytelegend.client.app.external
 
 import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.client.app.engine.logger
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.Element

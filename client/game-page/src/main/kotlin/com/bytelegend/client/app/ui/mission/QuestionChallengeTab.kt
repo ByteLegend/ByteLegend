@@ -43,7 +43,8 @@ import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeH4
 import com.bytelegend.client.app.web.submitChallengeAnswer
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLTextAreaElement
@@ -85,7 +86,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
 
     override fun render() = Fragment.create {
         div {
-            className = "mission-tab-content"
+            className = ClassName("mission-tab-content")
             if (!game.heroPlayer.isAnonymous && isDisabled()) {
                 BootstrapAlert {
                     show = true
@@ -117,7 +118,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                         BootstrapButton {
                             disabled = true
                             span {
-                                className = "spinner-border spinner-border-sm"
+                                className = ClassName("spinner-border spinner-border-sm")
                             }
                             +("Checking...")
                         }
@@ -137,10 +138,11 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
             }
             br { }
 
-            val answers: List<ChallengeAnswer> = game.activeScene.challengeAnswers.getChallengeAnswersByMissionId(props.missionId)
-                .flatMap { answersOfChallenge ->
-                    answersOfChallenge.answers.values.map { it.last().unsafeCast<ChallengeAnswer>() }
-                }
+            val answers: List<ChallengeAnswer> =
+                game.activeScene.challengeAnswers.getChallengeAnswersByMissionId(props.missionId)
+                    .flatMap { answersOfChallenge ->
+                        answersOfChallenge.answers.values.map { it.last().unsafeCast<ChallengeAnswer>() }
+                    }
 
             renderQuestionAnswers(answers)
 
@@ -209,9 +211,9 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                             BootstrapCol {
                                 md = "auto"
                                 if (missionAnswer.accomplished) {
-                                    div { className = "mission-success-tick-icon inline-icon-16" }
+                                    div { className = ClassName("mission-success-tick-icon inline-icon-16") }
                                 } else {
-                                    div { className = "mission-fail-cross-icon inline-icon-16" }
+                                    div { className = ClassName("mission-fail-cross-icon inline-icon-16") }
                                 }
                             }
                             BootstrapCol {
@@ -229,7 +231,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
                         eventKey = index.toString()
                         com.bytelegend.app.client.ui.bootstrap.BootstrapCardBody {
                             pre {
-                                className = "pre-scrollable bg-light"
+                                className = ClassName("pre-scrollable bg-light")
                                 +missionAnswer.answer
                             }
                         }

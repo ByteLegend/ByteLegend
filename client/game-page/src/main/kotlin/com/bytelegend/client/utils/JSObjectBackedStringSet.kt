@@ -15,8 +15,8 @@
  */
 package com.bytelegend.app.client.utils
 
-import kotlinext.js.Object
-import kotlinext.js.jso
+import kotlinx.js.Object
+import kotlinx.js.jso
 
 fun jsObjectBackedSetOf(vararg elements: Any): MutableSet<String> {
     val ret = JSObjectBackedStringSet()

@@ -35,7 +35,8 @@ import com.bytelegend.client.app.ui.minimap.mapToNativeJsArray
 import com.bytelegend.client.app.ui.minimap.nativeJsArrayOf
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.HTMLIFrameElement
@@ -89,7 +90,7 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
 
     override fun render() = Fragment.create {
         div {
-            className = "webeditor-wrapper"
+            className = ClassName("webeditor-wrapper")
             if (props.game.heroPlayer.isAnonymous) {
                 BootstrapAlert {
                     show = true

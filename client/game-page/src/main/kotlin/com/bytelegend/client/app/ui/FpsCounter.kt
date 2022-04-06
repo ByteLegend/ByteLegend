@@ -18,7 +18,8 @@ package com.bytelegend.client.app.ui
 import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import react.Fragment
 import react.State
 import react.create
@@ -67,7 +68,7 @@ class FpsCounter : GameUIComponent<GameProps, FpsCounterState>() {
         val z = Layer.MapTitle.zIndex()
         span {
             id = "fps-counter"
-            className = "map-title-widget map-title-text"
+            className = ClassName("map-title-widget map-title-text")
             jsStyle {
                 zIndex = z
             }

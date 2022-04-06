@@ -22,7 +22,7 @@ import com.bytelegend.app.shared.PixelCoordinate
 import com.bytelegend.client.app.engine.logger
 import com.bytelegend.client.app.ui.minimap.getMinimapEChartsOptions
 import com.bytelegend.client.app.ui.minimap.getMinimapMapFeatures
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.events.MouseEvent

@@ -16,9 +16,10 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.ui.bootstrap.BootstrapSpinner
+import csstype.ClassName
 import csstype.px
 import kotlinext.js.assign
-import kotlinext.js.jso
+import kotlinx.js.jso
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import react.ChildrenBuilder
@@ -45,7 +46,7 @@ fun ChildrenBuilder.icon(
     config: HTMLAttributes<HTMLDivElement>.() -> Unit = {}
 ) {
     div {
-        this.className = "inline-icon $className"
+        this.className = ClassName("inline-icon $className")
         style = jso {
             width = size.px
             height = size.px
@@ -85,7 +86,7 @@ fun ChildrenBuilder.absoluteDiv(
     block: ChildrenBuilder.(HTMLAttributes<HTMLDivElement>) -> Unit = {}
 ) {
     div {
-        this.className = className
+        this.className = ClassName(className)
         this.style = jso<dynamic> {
             position = "absolute"
             if (left != null) {
@@ -137,7 +138,7 @@ fun <PARENT : GameProps, CHILD : GameProps> gameChild(
 
 fun ChildrenBuilder.unsafeP(html: String, className: String = "") {
     p {
-        this.className = className
+        this.className = ClassName(className)
         dangerouslySetInnerHTML = jso {
             __html = html
         }
@@ -146,7 +147,7 @@ fun ChildrenBuilder.unsafeP(html: String, className: String = "") {
 
 fun ChildrenBuilder.unsafeSpan(html: String, className: String = "") {
     span {
-        this.className = className
+        this.className = ClassName(className)
         dangerouslySetInnerHTML = jso {
             __html = html
         }

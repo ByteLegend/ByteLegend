@@ -37,7 +37,8 @@ import com.bytelegend.client.app.ui.heronoticeboard.JavaIslandHeroNoticeboard
 import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.browser.window
 import react.ChildrenBuilder
 import react.Fragment
@@ -150,7 +151,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
 
     private fun ChildrenBuilder.textContentChallenge(tab: ChallengeTabData) {
         unsafeDiv(i(tab.data.spec)) {
-            className = "mission-tab-content"
+            className = ClassName("mission-tab-content")
         }
     }
 

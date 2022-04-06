@@ -21,7 +21,7 @@ import com.bytelegend.client.app.engine.DefaultGameScene
 import com.bytelegend.client.app.engine.GAME_CLOCK_20MS_EVENT
 import com.bytelegend.client.app.obj.character.CharacterSprite
 import com.bytelegend.client.app.obj.getSpriteBlockOnCanvas
-import kotlinext.js.jso
+import kotlinx.js.jso
 import react.ChildrenBuilder
 import react.Component
 import react.Fragment

@@ -23,7 +23,8 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.web.getText
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import react.ChildrenBuilder
@@ -93,7 +94,7 @@ abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTab
 
             if (pagination) {
                 div {
-                    className = "page-button-wrapper flex-center"
+                    className = ClassName("page-button-wrapper flex-center")
                     BootstrapButton {
                         className = "page-button"
                         disabled = (state.currentPage == 1)

@@ -16,6 +16,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.shared.protocol.NumberChange
+import csstype.ClassName
 import org.w3c.dom.HTMLDivElement
 import react.ChildrenBuilder
 import react.State
@@ -32,7 +33,7 @@ class StarCountWidget : AbstractIncrementAnimatableWidget<StarCountWidgetProps, 
     override fun <T> T.renderDiv() where T : HTMLAttributes<HTMLDivElement>, T : ChildrenBuilder {
         id = "star-count"
         span {
-            className = "map-title-text"
+            className = ClassName("map-title-text")
             +game.heroPlayer.star.toString()
         }
         renderIcon()

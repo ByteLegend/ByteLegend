@@ -16,7 +16,7 @@
 package com.bytelegend.app.client.misc
 
 import com.bytelegend.app.shared.GridCoordinate
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.window
 
 /**

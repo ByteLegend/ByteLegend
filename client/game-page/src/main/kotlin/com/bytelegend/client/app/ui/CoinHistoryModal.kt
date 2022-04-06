@@ -25,6 +25,7 @@ import com.bytelegend.client.app.ui.menu.AsyncLoadingTable
 import com.bytelegend.client.app.ui.menu.AsyncLoadingTableProps
 import com.bytelegend.client.app.ui.menu.AsyncLoadingTableState
 import com.bytelegend.client.utils.toHistoryItem
+import csstype.ClassName
 import kotlinx.coroutines.awaitAll
 import react.ChildrenBuilder
 import react.dom.html.ReactHTML.td
@@ -72,10 +73,10 @@ class CoinHistoryModal : AsyncLoadingTable<AsyncLoadingTableProps, AsyncLoadingT
         }
         td {
             if (record.change > 0) {
-                className = "text-success"
+                className = ClassName("text-success")
                 +"+${record.change}"
             } else {
-                className = "text-danger"
+                className = ClassName("text-danger")
                 +record.change.toString()
             }
         }

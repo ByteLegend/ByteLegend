@@ -27,7 +27,7 @@ import com.bytelegend.app.shared.missionHeroDistance
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.engine.Item
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

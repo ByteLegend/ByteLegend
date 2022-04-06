@@ -23,6 +23,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalTitle
 import com.bytelegend.app.shared.i18n.Locale
 import com.bytelegend.app.shared.i18n.PREFERRED_LOCALE_COOKIE_NAME
+import csstype.ClassName
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
@@ -45,7 +46,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, St
     @Suppress("UnsafeCastFromDynamic")
     override fun render() = Fragment.create {
         div {
-            className = "locale-selection-widget map-title-widget"
+            className = ClassName("locale-selection-widget map-title-widget")
             BootstrapDropdownButton {
                 id = "locale-selection"
                 title = game.locale.displayName
@@ -53,7 +54,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, St
                 Locale.values().filter { it != Locale.ALL }.forEach { locale ->
                     BootstrapDropdownItem {
                         span {
-                            className = "locale-selection-dropdown-item-span"
+                            className = ClassName("locale-selection-dropdown-item-span")
                             +locale.displayName
                         }
                         onClick = stateUpdatingEventHandler {
@@ -66,7 +67,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, St
 
                 BootstrapDropdownItem {
                     span {
-                        className = "locale-selection-dropdown-item-span"
+                        className = ClassName("locale-selection-dropdown-item-span")
                         +i("AddANewLanguage")
                     }
                     onClick = {
@@ -76,7 +77,7 @@ class LocaleSelectionDropdown : GameUIComponent<LocaleSelectionDropdownProps, St
 
                 BootstrapDropdownItem {
                     span {
-                        className = "locale-selection-dropdown-item-span"
+                        className = ClassName("locale-selection-dropdown-item-span")
                         +i("HelpUsImproveTheTranslationQuality")
                     }
                     onClick = {

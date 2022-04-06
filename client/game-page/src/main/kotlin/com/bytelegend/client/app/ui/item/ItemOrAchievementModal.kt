@@ -30,7 +30,8 @@ import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeP
 import com.bytelegend.client.app.ui.unsafeSpan
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLDivElement
@@ -148,11 +149,13 @@ abstract class ItemOrAchievementModal : GameUIComponent<ItemOrAchievementModalPr
                         }
 
                         if (state.descCoordinate != null) {
-                            val itemName = state.selectedItem?.metadata?.nameTextId ?: state.hoveredItem?.metadata?.nameTextId
-                            val itemDesc = state.selectedItem?.metadata?.descTextId ?: state.hoveredItem?.metadata?.descTextId
+                            val itemName =
+                                state.selectedItem?.metadata?.nameTextId ?: state.hoveredItem?.metadata?.nameTextId
+                            val itemDesc =
+                                state.selectedItem?.metadata?.descTextId ?: state.hoveredItem?.metadata?.descTextId
                             val itemMission = state.selectedItem?.mission ?: state.hoveredItem?.mission
                             ReactHTML.div {
-                                className = "item-desc"
+                                className = ClassName("item-desc")
                                 jsStyle {
                                     top = "${state.descCoordinate!!.y + 16}px"
                                     left = "${state.descCoordinate!!.x + 16}px"
@@ -194,22 +197,22 @@ private const val ITEM_Z_INDEX = 1
 class ItemAchievementModalItem : Component<ItemAchievementModalItemProps, State>() {
     override fun render() = Fragment.create {
         ReactHTML.div {
-            className = "item-or-achievement"
+            className = ClassName("item-or-achievement")
             jsStyle {
                 zIndex = ITEM_Z_INDEX
             }
             ReactHTML.div {
-                className = "item-title no-pointer-events"
+                className = ClassName("item-title no-pointer-events")
                 +props.name
             }
             ReactHTML.img {
-                className = "no-pointer-events"
+                className = ClassName("no-pointer-events")
                 src = props.iconUrl
             }
 
             if (props.missionTitle != null) {
                 ReactHTML.div {
-                    className = "item-mission-title no-pointer-events"
+                    className = ClassName("item-mission-title no-pointer-events")
                     unsafeSpan(props.missionTitle!!)
                 }
             }

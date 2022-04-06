@@ -21,7 +21,8 @@ import com.bytelegend.app.client.api.Timestamp
 import com.bytelegend.app.client.misc.getImageElement
 import com.bytelegend.client.app.engine.GAME_ANIMATION_EVENT
 import com.bytelegend.client.app.engine.GameAnimationEventListener
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import react.ChildrenBuilder
@@ -145,7 +146,7 @@ class MainMapCanvasLayer : GameUIComponent<GameProps, State>() {
     private fun CanvasHTMLAttributes<HTMLCanvasElement>.canvasAttr(canvasId: String, canvasZIndex: Int) {
         id = canvasId
         if (!mapCoveredByCanvas) {
-            className = "canvas-border"
+            className = ClassName("canvas-border")
         }
         width = canvasPixelSize.width.toDouble()
         height = canvasPixelSize.height.toDouble()

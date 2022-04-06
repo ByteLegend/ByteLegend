@@ -22,7 +22,7 @@ import com.bytelegend.client.app.engine.DefaultGameMission
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
 import com.bytelegend.client.app.ui.setState
-import kotlinext.js.jso
+import kotlinx.js.jso
 import react.Fragment
 import react.ReactNode
 import react.create

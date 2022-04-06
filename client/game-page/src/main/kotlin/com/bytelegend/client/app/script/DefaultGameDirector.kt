@@ -52,7 +52,7 @@ import com.bytelegend.client.app.ui.mission.HIGHTLIGHT_TITLES_EVENT
 import com.bytelegend.client.app.ui.script.SpeechBubbleWidget
 import com.bytelegend.client.app.ui.script.Widget
 import com.bytelegend.client.app.web.WebSocketClient
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope

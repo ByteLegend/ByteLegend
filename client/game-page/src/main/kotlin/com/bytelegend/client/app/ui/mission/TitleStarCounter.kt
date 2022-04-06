@@ -16,6 +16,7 @@
 package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.client.app.ui.icon
+import csstype.ClassName
 import react.Component
 import react.Fragment
 import react.Props
@@ -35,7 +36,7 @@ class TitleStarCounter : Component<TitleStarCounterProps, State>() {
         return Fragment.create {
             if (props.total > 5) {
                 span {
-                    className = "map-title-text"
+                    className = ClassName("map-title-text")
                     +"${props.current}/${props.total}"
                 }
                 icon(props.starSize, "mission-star-icon")

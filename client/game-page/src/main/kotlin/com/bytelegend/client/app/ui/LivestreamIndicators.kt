@@ -31,7 +31,8 @@ import com.bytelegend.client.app.web.getText
 import com.bytelegend.app.client.utils.JSArrayBackedList
 import com.bytelegend.app.client.utils.JSObjectBackedStringSet
 import com.bytelegend.client.utils.toLivestreams
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.browser.localStorage
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -164,10 +165,10 @@ class LivestreamIndicators : Component<GameProps, LivestreamIndicatorsState>() {
             ) {
                 state.livestreams.filter { !it.isPast() }.forEach {
                     div {
-                        className = "livestream-item"
+                        className = ClassName("livestream-item")
                         if (it.isLive()) {
                             div {
-                                className = "livestream-icon"
+                                className = ClassName("livestream-icon")
                             }
                             a {
                                 target = AnchorTarget._blank
@@ -176,7 +177,7 @@ class LivestreamIndicators : Component<GameProps, LivestreamIndicatorsState>() {
                             }
                         } else {
                             div {
-                                className = "incoming-livestream-icon"
+                                className = ClassName("incoming-livestream-icon")
                             }
                             a {
                                 target = AnchorTarget._blank

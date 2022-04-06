@@ -36,7 +36,8 @@ import com.bytelegend.client.app.ui.mission.WebEditor
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
 import com.bytelegend.client.app.web.getText
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.browser.window
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -145,11 +146,11 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
             }
 
             div {
-                className = "noticeboard-avatars-div"
+                className = ClassName("noticeboard-avatars-div")
 
                 if (state.imageIsLoading || state.jsonIsLoading) {
                     div {
-                        className = "center-of-parent"
+                        className = ClassName("center-of-parent")
                         loadingSpinner()
                     }
                 }
@@ -167,7 +168,7 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
                 if (state.hoveredTileCoordinate != null) {
                     +"(${state.hoveredTileCoordinate!!.x}, ${state.hoveredTileCoordinate!!.y})"
                 } else {
-                    className = "transparent-text"
+                    className = ClassName("transparent-text")
                     +"Yay! You found an easter egg!"
                 }
             }
@@ -247,7 +248,7 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
 
     private fun ChildrenBuilder.avatarImg() {
         div {
-            className = "noticeboard-avatars-img"
+            className = ClassName("noticeboard-avatars-img")
             img {
                 src = heroesImgUrl(state.currentPage, state.timestamp)
                 onLoad = {

@@ -17,7 +17,7 @@ package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.client.app.ui.GameProps
-import kotlinext.js.jso
+import kotlinx.js.jso
 import react.Component
 import react.Fragment
 import react.State

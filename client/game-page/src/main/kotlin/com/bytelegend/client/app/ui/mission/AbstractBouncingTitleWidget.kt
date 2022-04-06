@@ -25,7 +25,7 @@ import com.bytelegend.client.app.ui.absoluteDiv
 import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
-import kotlinext.js.jso
+import kotlinx.js.jso
 import react.ChildrenBuilder
 import react.Component
 import react.Props

@@ -21,7 +21,8 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapModalHeader
 import com.bytelegend.app.shared.protocol.COIN_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.CoinUpdateEventData
 import com.bytelegend.app.shared.protocol.NumberChange
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import org.w3c.dom.HTMLDivElement
 import react.ChildrenBuilder
 import react.State
@@ -38,7 +39,7 @@ class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, 
     override fun <T> T.renderDiv() where T : HTMLAttributes<HTMLDivElement>, T : ChildrenBuilder {
         span {
             id = "coin-count"
-            className = "map-title-text"
+            className = ClassName("map-title-text")
             +game.heroPlayer.coin.toString()
         }
         renderIcon()

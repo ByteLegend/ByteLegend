@@ -29,7 +29,7 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.loadingSpinner
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeSpan
-import kotlinext.js.jso
+import kotlinx.js.jso
 import react.ChildrenBuilder
 import react.Component
 import react.Fragment

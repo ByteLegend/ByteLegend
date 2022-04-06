@@ -15,6 +15,7 @@
  */
 package com.bytelegend.client.app.ui.mission
 
+import csstype.ClassName
 import react.Component
 import react.Fragment
 import react.Props
@@ -29,7 +30,7 @@ interface ModalCloseButtonProps : Props {
 class ModalCloseButton : Component<ModalCloseButtonProps, State>() {
     override fun render() = Fragment.create {
         div {
-            className = "modal-close-button"
+            className = ClassName("modal-close-button")
             onClick = {
                 props.onClickFunction()
             }

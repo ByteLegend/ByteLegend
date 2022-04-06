@@ -22,7 +22,8 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
 import com.bytelegend.client.app.engine.GAME_CLOCK_1S_EVENT
 import com.bytelegend.app.client.utils.JSArrayBackedList
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import react.Fragment
 import react.State
 import react.create
@@ -99,7 +100,7 @@ class BannerUIComponent : GameUIComponent<GameProps, GameBannersState>() {
     override fun render() = Fragment.create {
         if (state.banners.isNotEmpty()) {
             div {
-                className = "fixed-top"
+                className = ClassName("fixed-top")
                 jsStyle {
                     zIndex = BANNER_Z_INDEX
                     margin = "auto"
@@ -122,7 +123,7 @@ class BannerUIComponent : GameUIComponent<GameProps, GameBannersState>() {
 
                         if (banner.isAutoClosable) {
                             b {
-                                className = "closed-in-span"
+                                className = ClassName("closed-in-span")
                                 +" ${i("BannerClosedIn")} ${formatSecond(secondsLeft)}"
                             }
                         }

@@ -21,7 +21,7 @@ import com.bytelegend.app.shared.objects.GameObjectRole
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.window
 import react.Fragment
 import react.State

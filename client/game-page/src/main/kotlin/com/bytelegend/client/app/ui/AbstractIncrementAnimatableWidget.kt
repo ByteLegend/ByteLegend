@@ -21,6 +21,7 @@ import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.ui.bootstrap.BootstrapListGroupItem
 import com.bytelegend.app.shared.protocol.NumberChange
 import com.bytelegend.client.app.script.effect.numberIncrementEffect
+import csstype.ClassName
 import kotlinx.browser.document
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -53,7 +54,7 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
                 this@AbstractIncrementAnimatableWidget.onClick()
             }
             div {
-                className = "text-align-right"
+                className = ClassName("text-align-right")
                 renderDiv()
                 ref = div
             }
@@ -66,7 +67,7 @@ abstract class AbstractIncrementAnimatableWidget<P : GameProps, S : State>(
 
     protected fun ChildrenBuilder.renderIcon() {
         div {
-            className = "$iconClassName inline-icon-16"
+            className = ClassName("$iconClassName inline-icon-16")
         }
     }
 

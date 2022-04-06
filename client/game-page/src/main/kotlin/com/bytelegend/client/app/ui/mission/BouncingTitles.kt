@@ -26,7 +26,7 @@ import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.absoluteDiv
 import com.bytelegend.client.app.ui.setState
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 import react.ChildrenBuilder

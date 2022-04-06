@@ -19,6 +19,7 @@ import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTile
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.setState
+import csstype.ClassName
 import react.Component
 import react.Fragment
 import react.State
@@ -46,7 +47,7 @@ class AvatarTooltip : Component<AvatarCardProps, State>() {
 
     override fun render() = Fragment.create {
         div {
-            className = "brave-people-avatar-tooltip"
+            className = ClassName("brave-people-avatar-tooltip")
             jsStyle {
                 position = "absolute"
                 left = "${props.tile.x * AVATAR_TILE_SIZE + TOOLTIP_OFFSET_X}px"
@@ -75,7 +76,7 @@ class AvatarTooltip : Component<AvatarCardProps, State>() {
                     position = "absolute"
                     left = "${TOOLTIP_HEIGHT + 4}px"
                 }
-                className = "white-text-black-shadow-1"
+                className = ClassName("white-text-black-shadow-1")
                 p {
                     jsStyle {
                         fontSize = "16px"

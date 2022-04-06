@@ -36,7 +36,8 @@ import com.bytelegend.client.app.ui.minimap.getMinimapMapFeatures
 import com.bytelegend.client.app.ui.minimap.getRoadmapEChartsOptions
 import com.bytelegend.client.app.ui.mission.ModalCloseButton
 import com.bytelegend.client.app.ui.setState
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
@@ -105,7 +106,7 @@ class RoadmapModal(props: GameProps) : GameUIComponent<GameProps, RoadmapModalSt
         })
 
         div {
-            className = "show-mission-titles-switch"
+            className = ClassName("show-mission-titles-switch")
 
             span {
                 +i("ShowMissionTitles")

@@ -22,7 +22,8 @@ import com.bytelegend.client.app.engine.Item
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.item.ItemOrAchievementModal
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import react.Fragment
 import react.State
 import react.create
@@ -42,7 +43,7 @@ class AchievementWidget : GameUIComponent<GameProps, State>() {
                 }
             }
             div {
-                className = "map-title-text items-widget"
+                className = ClassName("map-title-text items-widget")
 
                 if (game.locale == Locale.EN) {
                     +"Achv (${game.heroPlayer.achievements.size})"

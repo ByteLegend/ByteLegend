@@ -27,7 +27,7 @@ import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.client.app.external.confetti
 import com.bytelegend.client.app.ui.Layer
 import kotlinext.js.assign
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.delay

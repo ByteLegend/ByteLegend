@@ -22,7 +22,7 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.setState
 import common.widget.ProgressBar
-import kotlinext.js.jso
+import kotlinx.js.jso
 import react.ChildrenBuilder
 import react.Component
 import react.Fragment

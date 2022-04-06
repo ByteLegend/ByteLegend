@@ -23,7 +23,8 @@ import com.bytelegend.client.app.engine.MAP_SCROLL_EVENT
 import com.bytelegend.client.app.engine.MOUSE_MOVE_EVENT
 import com.bytelegend.client.app.engine.MOUSE_OUT_OF_MAP_EVENT
 import com.bytelegend.client.app.engine.MouseEventListener
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import react.Fragment
 import react.State
 import react.create
@@ -96,9 +97,9 @@ class MapCoordinateTitleWidget : GameUIComponent<GameProps, MapCoordinateWidgetS
         span {
             id = "map-coordinate"
             if (!state.flickering || (counter / 5) % 2 == 0) {
-                className = "map-title-widget map-title-text map-coordinate"
+                className = ClassName("map-title-widget map-title-text map-coordinate")
             } else {
-                className = "map-title-widget map-title-text bordered-map-coordinate"
+                className = ClassName("map-title-widget map-title-text bordered-map-coordinate")
             }
 
             val z = Layer.MapTitle.zIndex().toString()

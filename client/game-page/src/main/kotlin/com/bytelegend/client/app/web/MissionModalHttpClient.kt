@@ -24,7 +24,7 @@ import com.bytelegend.client.utils.toChallengeUpdateEventData
 import com.bytelegend.client.utils.toMissionModalData
 import com.bytelegend.client.utils.toPagination
 import com.bytelegend.client.utils.toTutorial
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 import org.w3c.fetch.RequestInit

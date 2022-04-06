@@ -20,7 +20,7 @@ import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeH4
-import kotlinext.js.jso
+import kotlinx.js.jso
 import react.Fragment
 import react.State
 import react.create

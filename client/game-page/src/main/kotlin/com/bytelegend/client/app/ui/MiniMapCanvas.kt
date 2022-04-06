@@ -27,7 +27,7 @@ import com.bytelegend.app.shared.Ratio
 import com.bytelegend.app.shared.objects.GameMapRegion
 import com.bytelegend.client.app.page.HERO_AVATAR_IMG_ID
 import com.bytelegend.client.app.ui.roadmap.RoadmapModal
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.localStorage
 import react.Fragment
 import react.State

@@ -17,8 +17,9 @@ package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.api.dsl.UnitFunction
 import com.bytelegend.app.shared.PixelCoordinate
+import csstype.ClassName
 import kotlinext.js.assign
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.window
 import react.Component
 import react.Fragment
@@ -78,7 +79,7 @@ class PieMenuCloseButton : Component<PieMenuCloseButtonProps, PieMenuButtonState
     override fun render() = Fragment.create {
         val size = if (state.hovered) MENU_CLOSE_BUTTON_PX * 1.5 else MENU_CLOSE_BUTTON_PX
         div {
-            className = "pie-menu-white-close-button"
+            className = ClassName("pie-menu-white-close-button")
             jsStyle {
                 zIndex = props.zIndex.toString()
                 width = "${size}px"
@@ -150,7 +151,7 @@ class PieMenuButton : Component<PieMenuButtonProps, PieMenuButtonState>() {
             })
         }
         div {
-            className = props.item.iconClass
+            className = ClassName(props.item.iconClass)
             setJsStyle(assign(commonStyle) {
                 zIndex = (props.zIndex + 2).toString()
                 backgroundSize = "100% 100%"

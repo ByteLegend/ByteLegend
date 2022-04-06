@@ -21,7 +21,8 @@ import com.bytelegend.app.client.api.ToastController
 import com.bytelegend.app.client.ui.bootstrap.BootstrapToast
 import com.bytelegend.app.client.ui.bootstrap.BootstrapToastBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapToastHeader
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.browser.window
 import react.Fragment
 import react.State
@@ -115,7 +116,7 @@ class ToastUIComponent : GameUIComponent<GameProps, ToastUIComponentState>() {
                     }
                     BootstrapToastHeader {
                         strong {
-                            className = "mr-auto"
+                            className = ClassName("mr-auto")
                             unsafeSpan(t.headerHtml)
                         }
                     }

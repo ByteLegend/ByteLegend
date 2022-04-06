@@ -24,7 +24,7 @@ import com.bytelegend.app.shared.Direction.UP
 import com.bytelegend.app.shared.math.imageBlockOnCanvas
 import com.bytelegend.app.shared.math.outOfCanvas
 import com.bytelegend.client.app.engine.GAME_CLOCK_100MS_EVENT
-import kotlinext.js.jso
+import kotlinx.js.jso
 import react.Fragment
 import react.State
 import react.create

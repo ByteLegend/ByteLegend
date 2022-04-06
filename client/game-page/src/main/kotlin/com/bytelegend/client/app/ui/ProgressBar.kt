@@ -21,7 +21,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapProgressBar
 import com.bytelegend.client.app.engine.GAME_UI_UPDATE_EVENT
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.setState
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.window
 import react.Component
 import react.ReactNode

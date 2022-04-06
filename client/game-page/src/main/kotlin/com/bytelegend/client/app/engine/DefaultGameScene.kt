@@ -59,7 +59,7 @@ import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.invitationcode.InvitationCodeModal
 import com.bytelegend.client.app.ui.mission.DefaultPullRequestLogContainer
 import com.bytelegend.client.app.ui.script.Widget
-import kotlinext.js.jso
+import kotlinx.js.jso
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.instance

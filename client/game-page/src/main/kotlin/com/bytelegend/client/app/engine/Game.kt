@@ -39,7 +39,7 @@ import com.bytelegend.client.app.ui.DefaultModalController
 import com.bytelegend.client.app.ui.DefaultToastController
 import com.bytelegend.client.app.ui.ModalControllerInternal
 import com.bytelegend.client.app.web.WebSocketClient
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import org.kodein.di.DI

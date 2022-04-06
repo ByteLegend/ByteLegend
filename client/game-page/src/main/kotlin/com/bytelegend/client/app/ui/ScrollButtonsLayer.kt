@@ -25,7 +25,7 @@ import com.bytelegend.app.shared.Direction.RIGHT
 import com.bytelegend.app.shared.Direction.RIGHT_DOWN
 import com.bytelegend.app.shared.Direction.RIGHT_UP
 import com.bytelegend.app.shared.Direction.UP
-import kotlinext.js.jso
+import kotlinx.js.jso
 import react.ChildrenBuilder
 import react.Fragment
 import react.State

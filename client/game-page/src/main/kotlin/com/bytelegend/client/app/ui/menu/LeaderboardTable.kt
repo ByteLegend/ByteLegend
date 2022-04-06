@@ -18,6 +18,7 @@ package com.bytelegend.client.app.ui.menu
 
 import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.client.app.ui.jsStyle
+import csstype.ClassName
 import react.ChildrenBuilder
 import react.dom.html.AnchorTarget
 import react.dom.html.ReactHTML.a
@@ -52,7 +53,7 @@ class LeaderboardTable : AsyncLoadingTable<AsyncLoadingTableProps, LeaderboardTa
         th {
             jsStyle { width = "20%" }
             div {
-                className = "star-icon inline-icon-16"
+                className = ClassName("star-icon inline-icon-16")
             }
         }
     }
@@ -62,7 +63,7 @@ class LeaderboardTable : AsyncLoadingTable<AsyncLoadingTableProps, LeaderboardTa
         td { +((state.currentPage - 1) * 10 + index + 1).toString() }
         td {
             img {
-                className = "inline-icon-16"
+                className = ClassName("inline-icon-16")
                 src = player.avatarUrl
             }
             a {

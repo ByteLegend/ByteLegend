@@ -16,6 +16,7 @@
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.shared.i18n.Locale
+import csstype.ClassName
 import react.Fragment
 import react.State
 import react.create
@@ -40,14 +41,14 @@ class ICPServerLocationWidget : GameUIComponent<GameProps, State>() {
                 a {
                     target = AnchorTarget._blank
                     href = "https://beian.miit.gov.cn"
-                    className = "icp-widget"
+                    className = ClassName("icp-widget")
                     +"沪ICP备2020033444号"
                 }
             }
 
             if (!game.gameControl.online) {
                 span {
-                    className = "server-location-link-offline"
+                    className = ClassName("server-location-link-offline")
                     +i("OfflineMode")
                 }
             }

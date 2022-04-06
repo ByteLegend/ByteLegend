@@ -28,7 +28,7 @@ import com.bytelegend.client.app.engine.DefaultGameMission
 import com.bytelegend.client.app.obj.htmlToText
 import com.bytelegend.client.app.ui.minimapGraphSeries
 import kotlinext.js.assign
-import kotlinext.js.jso
+import kotlinx.js.jso
 import kotlin.math.max
 
 private const val JAVA_LOGO_IMAGE =

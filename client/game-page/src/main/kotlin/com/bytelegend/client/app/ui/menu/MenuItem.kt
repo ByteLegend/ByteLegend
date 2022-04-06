@@ -31,7 +31,8 @@ import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
 import com.bytelegend.client.app.ui.unsafeSpan
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import kotlinx.browser.window
 import react.Fragment
 import react.State
@@ -81,7 +82,7 @@ class MenuItem : GameUIComponent<MenuItemProps, MenuItemState>() {
             onBlur = onHoverOut.unsafeCast<FocusEventHandler<*>>()
             onClick = props.onClickFunction
 
-            className = "menu-item-div"
+            className = ClassName("menu-item-div")
             jsStyle {
                 height = "${iconSize}px"
                 width = "${iconSize}px"
@@ -98,7 +99,7 @@ class MenuItem : GameUIComponent<MenuItemProps, MenuItemState>() {
             if (state.hover) {
                 div {
                     +i(props.titleId)
-                    className = "menu-item-div-title white-text-black-shadow-1"
+                    className = ClassName("menu-item-div-title white-text-black-shadow-1")
                 }
             }
         }

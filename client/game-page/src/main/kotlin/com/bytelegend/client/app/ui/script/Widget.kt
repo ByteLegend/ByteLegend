@@ -31,7 +31,8 @@ import com.bytelegend.client.app.ui.Layer
 import com.bytelegend.client.app.ui.jsStyle
 import com.bytelegend.client.app.ui.setState
 import com.bytelegend.client.app.ui.unsafeDiv
-import kotlinext.js.jso
+import csstype.ClassName
+import kotlinx.js.jso
 import react.ElementType
 import react.Fragment
 import react.State
@@ -89,7 +90,7 @@ class SpeechBubbleWidget : GameUIComponent<SpeechBubbleWidgetProps, SpeechBubble
         val bubbleBottom = gameContainerHeight -
             (speakerCoordinate.y - canvasCoordinateInMap.y + canvasCoordinateInGameContainer.y)
         div {
-            className = "speech-bubble"
+            className = ClassName("speech-bubble")
             val z = Layer.ScriptWidget.zIndex()
             jsStyle {
                 zIndex = z
