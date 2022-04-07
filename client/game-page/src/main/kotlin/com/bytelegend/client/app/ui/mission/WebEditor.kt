@@ -152,6 +152,7 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
         val apiServer = if (window.location.hostname == "localhost") "http://${window.location.host}" else "https://bytelegend.com"
         val githubApiBaseUrl = when {
             useLocalWebEditor -> "${window.location.protocol}//${window.location.host}/ghapi"
+            game.heroPlayer.isAnonymous -> "https://bytelegend.com/ghapi
             else -> "https://ghapi.bytelegend.com"
         }
         val ret = jso<dynamic> {
