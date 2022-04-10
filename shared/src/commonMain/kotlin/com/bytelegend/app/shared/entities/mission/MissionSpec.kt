@@ -54,7 +54,12 @@ data class MissionSpec(
     /**
      * Special actions to be performed when the mission is accomplished
      */
-    val onItemUsed: Map<String, ChangeSpec> = emptyMap()
+    val onItemUsed: Map<String, ChangeSpec> = emptyMap(),
+
+    /**
+     * How much does the tutorials cost?
+     */
+    val tutorialsPrice: Int = 0
 ) {
     val totalStars
         @JsonIgnore get() = challenges.sumOf { it.star }

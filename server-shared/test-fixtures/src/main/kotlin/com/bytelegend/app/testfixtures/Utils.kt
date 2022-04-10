@@ -16,7 +16,9 @@
 package com.bytelegend.app.testfixtures
 
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions
 import java.io.File
+import java.time.Instant
 
 fun File.newFile(path: String): File {
     require(this.isDirectory) { "$this must be a directory!" }
@@ -43,4 +45,12 @@ fun runBlockingUnit(fn: suspend () -> Unit) {
     runBlocking {
         fn()
     }
+}
+
+fun assertUpdatedRecently(instant: Instant) {
+    assertUpdatedRecently(instant.toEpochMilli())
+}
+
+fun assertUpdatedRecently(epochMs: Long) {
+    Assertions.assertTrue(epochMs >= Instant.now().toEpochMilli() - 10_000)
 }

@@ -15,13 +15,13 @@
  */
 package com.bytelegend.app.shared
 
-val INVITER_ID_STATE = "INVITER_ID"
+const val INVITER_ID_STATE = "INVITER_ID"
 
 // How many coins the inviter and invitee can get from an invitation code
-val COIN_REWARD_PER_CODE = 500
+const val COIN_REWARD_PER_CODE = 500
 
 // Max coins the inviter can get from an invitation code
-val MAX_COIN_REWARD_PER_CODE = 5000
+const val MAX_COIN_REWARD_PER_CODE = 5000
 
 data class InvitationInformation(
     // The inviterId. null means it's not invited by anyone.

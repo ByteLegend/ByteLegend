@@ -24,6 +24,7 @@ import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
 
 data class MissionModalData(
+    val tutorialsUnlocked: Boolean,
     val tabs: List<MissionTabData<*>>,
     val challengeAnswers: List<ChallengeAnswers>
 )
