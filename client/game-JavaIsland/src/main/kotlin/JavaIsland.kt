@@ -137,6 +137,18 @@ fun main() {
                 )
             )
 
+            basicStructureStone(
+                "JavaControlFlowBlocker",
+                "JavaControlFlow-challenge-text",
+                GridCoordinate(1, 0),
+                listOf(
+                    "java-if-else",
+                    "java-loop",
+                    "java-loop-break-continue",
+                    "java-switch"
+                )
+            )
+
             configureChestOpenByKey("java-loop-senior")
             configureChestOpenByKey("java-pattern-matching-switch")
 
@@ -178,6 +190,13 @@ fun GameScene.commentDungeonNoticeboard() = objects {
     }
 }
 
+fun htmlToText(html: String): String {
+    return document.createElement("div").let {
+        it.innerHTML = html
+        it.textContent?.trim() ?: ""
+    }
+}
+
 /**
  * Upon initialization and mission repaint events,
  * update the checkboxes and mission animation/blockers.
@@ -191,7 +210,7 @@ fun GameScene.updateCheckboxes(blockMissionId: String, blockTextId: String, miss
     missionIds.forEach {
         if (missionItemUsed(it)) {
             val mission = objects.getById<GameMission>(it)
-            val title = gameRuntime.i(mission.gameMapMission.title)
+            val title = htmlToText(gameRuntime.i(mission.gameMapMission.title))
             val list = tmp.querySelectorAll("li")
             for (i in 0 until list.length) {
                 val li = list[i]
