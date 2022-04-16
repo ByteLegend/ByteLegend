@@ -25,6 +25,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapPagination
 import com.bytelegend.app.client.ui.bootstrap.BootstrapPaginationItem
 import com.bytelegend.client.utils.toHeroNoticeboardTilesData
 import com.bytelegend.app.shared.GridCoordinate
+import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.entities.mission.HeroNoticeboardTile
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
@@ -68,7 +69,7 @@ interface JavaIslandHeroNoticeboardProps : GameProps {
     // the mission modal data from backend.
     var initTiles: List<HeroNoticeboardTile>
     var totalPage: Int
-    var missionId: String
+    var missionModalData: MissionModalData
     var challengeSpec: ChallengeSpec
     var whitelist: List<String>
 }
@@ -176,7 +177,7 @@ class JavaIslandHeroNoticeboard(props: JavaIslandHeroNoticeboardProps) :
             child(WebEditor::class.react, jso {
                 game = props.game
                 whitelist = props.whitelist
-                missionId = props.missionId
+                missionModalData = props.missionModalData
                 challengeSpec = props.challengeSpec
             })
         }

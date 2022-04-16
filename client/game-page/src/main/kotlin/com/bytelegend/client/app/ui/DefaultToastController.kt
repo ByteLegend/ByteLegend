@@ -29,10 +29,10 @@ import react.State
 import react.create
 import react.dom.html.ReactHTML.strong
 
-val TOASTS_UPDATE_EVENT = "toasts.update.event"
+const val TOASTS_UPDATE_EVENT = "toasts.update.event"
 
 // TODO: make it adaptive to game container size
-val MAX_TOASTS = 3
+const val MAX_TOASTS = 3
 
 class Toast(
     val headerHtml: String,
@@ -95,7 +95,7 @@ class ToastUIComponent : GameUIComponent<GameProps, ToastUIComponentState>() {
         }
 
         absoluteDiv(
-            zIndex = Layer.BannerToast.zIndex(),
+            zIndex = BANNER_TOAST_Z_INDEX,
             className = "toast-container",
             extraStyleBuilder = {
                 left = uiContainerCoordinateInGameContainer.x

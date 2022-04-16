@@ -43,6 +43,7 @@ const val ONLINE_COUNTER_UPDATE_EVENT = "protocol.online.counter"
 /***************** Point-to-point events from server to client-side EventBus ***********************/
 const val STAR_UPDATE_EVENT = "protocol.star.update"
 const val COIN_UPDATE_EVENT = "protocol.coin.update"
+const val MISSION_TUTORIALS_UNLOCKED_EVENT = "protocol.mission.tutorials.unlocked"
 const val REPUTATION_UPDATE_EVENT = "protocol.reputation.update"
 const val ITEM_UPDATE_EVENT = "protocol.item.update"
 const val ACHIEVEMENT_UPDATE_EVENT = "protocol.achievement.update"

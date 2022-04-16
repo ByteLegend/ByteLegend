@@ -15,6 +15,7 @@
  */
 package com.bytelegend.client.app.ui.mission
 
+import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.client.app.ui.GameProps
 import com.bytelegend.client.app.ui.GameUIComponent
@@ -28,7 +29,7 @@ import react.dom.html.ReactHTML.br
 import react.react
 
 interface PullRequestChallengeTabProps : GameProps {
-    var missionId: String
+    var missionModalData: MissionModalData
     var challengeSpec: ChallengeSpec
     var whitelist: List<String>
 }
@@ -44,7 +45,7 @@ class PullRequestChallengeTab : GameUIComponent<PullRequestChallengeTabProps, St
         child(WebEditor::class.react, jso {
             whitelist = props.whitelist
             game = props.game
-            missionId = props.missionId
+            missionModalData = props.missionModalData
             challengeSpec = props.challengeSpec
         })
     }

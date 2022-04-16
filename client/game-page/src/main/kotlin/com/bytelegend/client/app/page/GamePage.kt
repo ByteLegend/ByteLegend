@@ -158,6 +158,7 @@ class GamePage(props: GameProps) : Component<GameProps, GamePageState>(props) {
 
         if (!game.heroPlayer.isAnonymous) {
             game.resourceLoader.loadAsync(AudioResource("coin", game.resolve("/audio/coin.mp3")), false)
+            game.resourceLoader.loadAsync(AudioResource("coin-loss", game.resolve("/audio/coin-loss.mp3")), false)
             game.resourceLoader.loadAsync(AudioResource("starfly", game.resolve("/audio/starfly.mp3")), false)
             game.resourceLoader.loadAsync(AudioResource("popup", game.resolve("/audio/popup.mp3")), false)
             game.resourceLoader.loadAsync(AudioResource("achievement", game.resolve("/audio/achievement.mp3")), false)

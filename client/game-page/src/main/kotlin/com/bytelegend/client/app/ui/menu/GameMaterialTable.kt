@@ -24,11 +24,11 @@ import react.ChildrenBuilder
 import react.dom.html.AnchorTarget
 import react.dom.html.ReactHTML
 
-interface GameMaterialTableState : AsyncLoadingTableState {
+interface GameMaterialTableState : AsyncLoadingTableState<dynamic> {
     var showAlert: Boolean
 }
 
-class GameMaterialTable : AsyncLoadingTable<AsyncLoadingTableProps, GameMaterialTableState>() {
+class GameMaterialTable : AsyncLoadingTable<dynamic, AsyncLoadingTableProps, GameMaterialTableState>() {
     override val url: String
         get() = props.game.resolve("/misc/material.json")
 

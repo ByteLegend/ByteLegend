@@ -26,6 +26,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.app.shared.entities.ChallengeTabData
 import com.bytelegend.app.shared.entities.DiscussionsTabData
 import com.bytelegend.app.shared.entities.HeroNoticeboardTabData
+import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.MissionTabData
 import com.bytelegend.app.shared.entities.MissionTabType
 import com.bytelegend.app.shared.protocol.ChallengeUpdateEventData
@@ -126,10 +127,10 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                 val activeTab = mission.tabs[state.activeTabIndex]
                 div {
                     when (activeTab.type) {
-                        MissionTabType.QuestionChallenge -> renderQuestionChallenge(activeTab.asDynamic())
-                        MissionTabType.StarChallenge -> renderStarChallenge(activeTab.asDynamic())
-                        MissionTabType.PullRequestChallenge -> renderPullRequestChallenge(activeTab.asDynamic())
-                        MissionTabType.HeroNoticeboardChallenge -> heroNoticeboardChallenge(activeTab.asDynamic())
+                        MissionTabType.QuestionChallenge -> renderQuestionChallenge(mission, activeTab.asDynamic())
+                        MissionTabType.StarChallenge -> renderStarChallenge(mission, activeTab.asDynamic())
+                        MissionTabType.PullRequestChallenge -> renderPullRequestChallenge(mission, activeTab.asDynamic())
+                        MissionTabType.HeroNoticeboardChallenge -> heroNoticeboardChallenge(mission, activeTab.asDynamic())
                         MissionTabType.TextContentChallenge -> textContentChallenge(activeTab.asDynamic())
                         else -> throw IllegalArgumentException(activeTab.title)
                     }
@@ -138,12 +139,12 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
         }
     }
 
-    private fun ChildrenBuilder.heroNoticeboardChallenge(tab: HeroNoticeboardTabData) {
+    private fun ChildrenBuilder.heroNoticeboardChallenge(missionModalData: MissionModalData, tab: HeroNoticeboardTabData) {
         child(JavaIslandHeroNoticeboard::class.react, jso {
-            this.game = props.game
+            game = props.game
+            this.missionModalData = missionModalData
             initTiles = tab.data.tiles
             totalPage = tab.data.page
-            missionId = props.missionId
             challengeSpec = tab.challengeSpec
             whitelist = tab.whitelist
         })
@@ -155,28 +156,28 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
         }
     }
 
-    private fun ChildrenBuilder.renderPullRequestChallenge(tab: ChallengeTabData) {
+    private fun ChildrenBuilder.renderPullRequestChallenge(missionModalData: MissionModalData, tab: ChallengeTabData) {
         child(PullRequestChallengeTab::class.react, jso {
-            this.game = props.game
-            missionId = props.missionId
+            game = props.game
+            this.missionModalData = missionModalData
             challengeSpec = tab.data
             whitelist = tab.whitelist
         })
     }
 
-    private fun ChildrenBuilder.renderStarChallenge(tab: ChallengeTabData) {
+    private fun ChildrenBuilder.renderStarChallenge(missionModalData: MissionModalData, tab: ChallengeTabData) {
         child(StarChallengeTab::class.react, jso {
+            game = props.game
+            this.missionModalData = missionModalData
             contentHtml = props.game.i(tab.data.readme)
-            this.game = props.game
-            missionId = props.missionId
             challengeSpec = tab.data
         })
     }
 
-    private fun ChildrenBuilder.renderQuestionChallenge(tabData: ChallengeTabData) {
+    private fun ChildrenBuilder.renderQuestionChallenge(missionModalData: MissionModalData, tabData: ChallengeTabData) {
         child(QuestionChallengeTab::class.react, jso {
-            this.game = props.game
-            missionId = props.missionId
+            game = props.game
+            this.missionModalData = missionModalData
             challengeSpec = tabData.data
         })
     }

@@ -54,7 +54,7 @@ suspend fun getText(uri: String): String = request("GET", uri).let {
     it.text().await()
 }
 
-suspend fun post(uri: String, body: String): String {
+suspend fun post(uri: String, body: String? = null): String {
     return window.fetch(
         uri,
         jso {
@@ -63,7 +63,9 @@ suspend fun post(uri: String, body: String): String {
                 this["Content-Type"] = "application/json"
                 this["Accept"] = "application/json"
             }
-            this.body = body
+            if (body != null) {
+                this.body = body
+            }
         }
     )
         .await()

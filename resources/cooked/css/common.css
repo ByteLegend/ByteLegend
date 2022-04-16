@@ -856,12 +856,31 @@ div.speech-bubble::after {
     height: 128px;
 }
 
-.submit-answer-button-button > span {
+.webeditor-button-text {
     flex: 0 0 80px;
+    user-select: none;
 }
 
-.submit-answer-button-button {
+.webeditor-button-bg {
+    cursor: pointer;
+    position: absolute;
+    background-size: 100% 100%;
+    width: 128px;
+    height: 128px;
+    z-index: 1;
+}
+
+.webeditor-button-popup {
+    position: absolute;
+    left: 16px;
+    bottom: 12px;
+    width: 400px;
+    z-index: 4;
+}
+
+.webeditor-button-button {
     display: flex;
+    position: absolute;
     align-items: center;
     left: 24px !important;
     top: 24px !important;
@@ -877,10 +896,14 @@ div.speech-bubble::after {
     cursor: pointer;
     color: white;
     text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000, #000 0.1em 0.1em 0.1em;
+
+    background-size: 100% 100%;
 }
 
-.submit-answer-button-button:hover {
+.webeditor-button-button:hover {
     color: #fdec6e;
+    filter: drop-shadow(0 0 20px #fdec6e);
+    transition: all 0.2s ease-in;
 }
 
 .submit-answer-button-border {
@@ -998,4 +1021,18 @@ div.speech-bubble::after {
 
 canvas {
     image-rendering: pixelated;
+}
+
+.unlock-tutorials-popup-text {
+    text-align: center;
+    padding-bottom: 16px;
+}
+
+.unlock-tutorials-popup-buttons {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.unlock-tutorials-popup-buttons button {
+    width: 30%;
 }

@@ -27,7 +27,7 @@ import com.bytelegend.app.shared.entities.BasePlayer
 import com.bytelegend.app.shared.entities.ChallengeAnswer
 import com.bytelegend.app.shared.entities.ChallengeAnswers
 import com.bytelegend.app.shared.entities.ChallengeTabData
-import com.bytelegend.app.shared.entities.HistoryItem
+import com.bytelegend.app.shared.entities.HistoryRecord
 import com.bytelegend.app.shared.entities.DiscussionsTabData
 import com.bytelegend.app.shared.entities.HeroNoticeboardTabData
 import com.bytelegend.app.shared.entities.LivestreamData
@@ -69,6 +69,8 @@ import com.bytelegend.app.shared.protocol.KICK_OFF_EVENT
 import com.bytelegend.app.shared.protocol.KickOffEventData
 import com.bytelegend.app.shared.protocol.LOG_STREAM_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.LogStreamEventData
+import com.bytelegend.app.shared.protocol.MISSION_TUTORIALS_UNLOCKED_EVENT
+import com.bytelegend.app.shared.protocol.MissionTutorialsUnlockedEventData
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.PLAYER_SPEECH_EVENT_PREFIX
 import com.bytelegend.app.shared.protocol.PlayerSpeechEventData
@@ -86,6 +88,7 @@ fun parseServerEvent(eventMessage: dynamic): Any {
         event == ONLINE_COUNTER_UPDATE_EVENT -> eventMessage.payload
         event == STAR_UPDATE_EVENT -> toStarUpdateEventData(eventMessage.payload)
         event == COIN_UPDATE_EVENT -> toCoinUpdateEventData(eventMessage.payload)
+        event == MISSION_TUTORIALS_UNLOCKED_EVENT -> toTutorialsUnlockedEventData(eventMessage.payload)
         event == REPUTATION_UPDATE_EVENT -> toReputationUpdateEventData(eventMessage.payload)
         event == ITEM_UPDATE_EVENT -> toItemUpdateEventData(eventMessage.payload)
         event == ACHIEVEMENT_UPDATE_EVENT -> toAchievementUpdateEventData(eventMessage.payload)
@@ -95,6 +98,12 @@ fun parseServerEvent(eventMessage: dynamic): Any {
         else -> throw IllegalStateException("Unsupported event: $event")
     }
 }
+
+fun toTutorialsUnlockedEventData(jsonObject: dynamic) = MissionTutorialsUnlockedEventData(
+    jsonObject.playerId,
+    jsonObject.mapId,
+    jsonObject.missionId
+)
 
 fun toPlayerSpeechEventData(jsonObject: dynamic) = PlayerSpeechEventData(
     jsonObject.playerId,
@@ -235,6 +244,7 @@ fun toItems(jsonObject: dynamic): List<String> {
 }
 
 fun toMissionModalData(jsonObject: dynamic) = MissionModalData(
+    jsonObject.missionId,
     jsonObject.tutorialsUnlocked,
     toTypedList(jsonObject.tabs, ::toMissionTabData),
     toTypedList(jsonObject.challengeAnswers, ::toChallengeAnswers)
@@ -372,7 +382,7 @@ fun toInvitationInformation(jsonObject: dynamic) = InvitationInformation(
     jsonObject.rewardedCoin
 )
 
-fun toHistoryItem(jsonObject: dynamic) = HistoryItem(
+fun toHistoryRecord(jsonObject: dynamic) = HistoryRecord(
     jsonObject.playerId,
     jsonObject.id,
     jsonObject.createdAt,

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:Suppress("EXPERIMENTAL_API_USAGE", "DeferredResultUnused")
+@file:Suppress("EXPERIMENTAL_API_USAGE", "DeferredResultUnused", "OPT_IN_USAGE")
 
 package com.bytelegend.client.app.engine
 
@@ -27,6 +27,7 @@ import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.shared.GameMap
 import com.bytelegend.app.shared.PixelSize
 import com.bytelegend.app.shared.i18n.Locale
+import com.bytelegend.app.shared.objects.GameMapMission
 import com.bytelegend.app.shared.objects.mapEntranceDestinationId
 import com.bytelegend.app.shared.protocol.ONLINE_COUNTER_UPDATE_EVENT
 import com.bytelegend.client.app.engine.resource.GameMapResource
@@ -39,6 +40,7 @@ import com.bytelegend.client.app.script.effect.fadeInEffect
 import com.bytelegend.client.app.web.GameSceneInitResource
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
 import org.kodein.di.DIAware
@@ -60,7 +62,6 @@ class DefaultGameSceneContainer(
     containerSize: PixelSize
 ) : GameSceneContainer, DIAware {
     private val eventBus: EventBus by di.instance()
-    private val i18nContainer: MutableMap<String, String> by di.instance(tag = "i18nTextContainer")
     private val scenes: MutableMap<String, GameScene> = JSObjectBackedMap()
     private val RRBD: String by di.instance(tag = "RRBD")
     private val locale: Locale by di.instance()
@@ -82,6 +83,21 @@ class DefaultGameSceneContainer(
             field = value
             scenes.values.forEach { it.gameContainerSize = value }
         }
+
+    /**
+     * Sometimes we need the resource of scene B when we are on scene A.
+     * For example, coin change history needs to display the mission title for "Finish Mission Reward".
+     * Item widget needs to show the mission title for an item.
+     *
+     * This method can be used to load another scene's resource (GameMap, I18nResource) asynchronously.
+     */
+    suspend fun getOrLoadMapMission(mapId: String, missionId: String): GameMapMission {
+        val gameMap = loadGameMap(mapId, false)
+        val i18n = loadI18nResource(mapId, false)
+        listOf(gameMap, i18n).awaitAll()
+        return gameMap.await().objects.find { it.id == missionId }?.unsafeCast<GameMapMission>()
+            ?: throw IllegalArgumentException("Mission $missionId not found in map $mapId")
+    }
 
     override fun loadScene(mapId: String, switchAfterLoad: Boolean, onFinish: suspend (GameScene?, GameScene) -> Unit) {
         if (_activeScene?.unsafeCast<DefaultGameScene>()?.mainChannelDirector?.isRunning == true) {

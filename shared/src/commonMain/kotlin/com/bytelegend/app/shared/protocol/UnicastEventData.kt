@@ -28,6 +28,16 @@ interface NumberChange {
     val newValue: Int
 }
 
+/**
+ * This is emitted when player unlocks the tutorials in VSCode.
+ * We need to notify the button to change its background.
+ */
+data class MissionTutorialsUnlockedEventData(
+    override val playerId: String,
+    val map: String,
+    val missionId: String,
+) : UnicastEventData
+
 data class StarUpdateEventData(
     override val playerId: String,
     val map: String,

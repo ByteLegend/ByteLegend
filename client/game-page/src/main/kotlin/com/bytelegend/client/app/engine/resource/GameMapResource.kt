@@ -98,6 +98,7 @@ private fun readObjects(objects: Array<dynamic>): List<CompressedGameMapObject> 
             it.title,
             it.totalStar,
             (it.challenges as Array<String>).toList(),
+            it.tutorialsPrice,
             it.map,
             it.sprite,
             (it.point as Array<Int>).toList(),

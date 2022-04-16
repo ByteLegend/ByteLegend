@@ -19,9 +19,11 @@
 package com.bytelegend.client.app.ui.mission
 
 import com.bytelegend.app.client.api.EventListener
+import com.bytelegend.app.client.api.GameMission
 import com.bytelegend.app.client.api.missionRepaintEvent
 import com.bytelegend.app.client.misc.uuid
 import com.bytelegend.app.client.ui.bootstrap.BootstrapAlert
+import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.PullRequestAnswer
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.entities.mission.ChallengeType
@@ -49,14 +51,15 @@ import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.iframe
 import react.react
 
-private const val IFRAME_WEBEDITOR_INIT_COMPLETED = "webeditor.init.completed"
+private const val WEBEDITOR_IFRAME_INIT_COMPLETED = "webeditor.init.completed"
+private const val WEBEDITOR_IFRAME_READY_FOR_INIT_DATA = "webeditor.ready.for.init.data"
 
 interface WebEditorState : State {
     var showSubmitAnswerButton: Boolean
 }
 
 interface WebEditorProps : GameProps {
-    var missionId: String
+    var missionModalData: MissionModalData
 
     // Supported challenge type:
     // 1. Star: hide activity bar, show tutorial view, not open any markdown by default.
@@ -71,9 +74,18 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
     private val useLocalWebEditor: Boolean by lazy {
         URLSearchParams(window.location.search).get("useLocalWebEditor")?.toBoolean() ?: false
     }
+    private val useLocalGitHubApi: Boolean by lazy {
+        URLSearchParams(window.location.search).get("useLocalGitHubApi")?.toBoolean() ?: false
+    }
 
     private val missionRepaintEventListener: EventListener<ChallengeUpdateEventData> = this::onChallengeAnswersUpdate
     private val liveLogStreamEventListener: EventListener<LogStreamEventData> = this::onLiveLogStream
+    private val openTutorialsEventListener: EventListener<Nothing> = this::onOpenTutorials
+    private val webEditorReadyForInitDataEventListener: EventListener<Nothing> = {
+        postMessageToWebEditorIframe(jso<dynamic> {
+            bytelegendInitData = determineWebEditorInitData()
+        })
+    }
     private val webEditorInitCompletedEventListener: EventListener<Nothing> = {
         setState { showSubmitAnswerButton = true }
     }
@@ -104,18 +116,14 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
                 jsStyle {
                     border = "none"
                 }
-                onLoad = {
-                    postMessageToWebEditorIframe(jso<dynamic> {
-                        bytelegendInitData = determineWebEditorInitData()
-                    })
-                }
             }
 
             if (state.showSubmitAnswerButton && isPullRequestChallenge && !props.game.heroPlayer.isAnonymous) {
-                child(SubmitAnswerButton::class.react, jso {
+                child(WebEditorButtonGroup::class.react, jso {
                     game = props.game
                     challengeId = props.challengeSpec.id
-                    onClick = {
+                    missionModalData = props.missionModalData
+                    onClickSubmitAnswerButton = {
                         val arg = nativeJsArrayOf()
                         postMessageToWebEditorIframe(jso<dynamic> {
                             forwardCommand = "bytelegend.submitAnswer"
@@ -151,16 +159,19 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
         val whitelist = props.whitelist?.toTypedArray() ?: emptyArray()
         val apiServer = if (window.location.hostname == "localhost") "http://${window.location.host}" else "https://bytelegend.com"
         val githubApiBaseUrl = when {
-            useLocalWebEditor -> "${window.location.protocol}//${window.location.host}/ghapi"
+            useLocalGitHubApi -> "${window.location.protocol}//${window.location.host}/ghapi"
             props.game.heroPlayer.isAnonymous -> "https://bytelegend.com/ghapi"
             else -> "https://ghapi.bytelegend.com"
         }
+        val tutorialsPrice = props.game.activeScene.objects.getById<GameMission>(props.missionModalData.missionId).gameMapMission.tutorialsPrice
+
         val ret = jso<dynamic> {
-            missionId = props.missionId
+            missionId = props.missionModalData.missionId
             challengeId = props.challengeSpec.id
             this.apiServer = apiServer
             this.githubApiBaseUrl = githubApiBaseUrl
             this.whitelist = whitelist
+            this.tutorialsPrice = tutorialsPrice
             answers = getAnswers()
             locale = props.game.locale.javascriptLocale
             localeName = props.game.locale.displayName
@@ -220,16 +231,26 @@ class WebEditor : Component<WebEditorProps, WebEditorState>() {
     }
 
     override fun componentDidMount() {
+        props.game.eventBus.on(WEBEDITOR_OPEN_TUTORIALS_EVENT, openTutorialsEventListener)
         props.game.eventBus.on(logStreamEvent(props.game.activeScene.map.id), liveLogStreamEventListener)
-        props.game.eventBus.on(missionRepaintEvent(props.missionId), missionRepaintEventListener)
-        props.game.eventBus.on(IFRAME_WEBEDITOR_INIT_COMPLETED, webEditorInitCompletedEventListener)
+        props.game.eventBus.on(missionRepaintEvent(props.missionModalData.missionId), missionRepaintEventListener)
+        props.game.eventBus.on(WEBEDITOR_IFRAME_INIT_COMPLETED, webEditorInitCompletedEventListener)
+        props.game.eventBus.on(WEBEDITOR_IFRAME_READY_FOR_INIT_DATA, webEditorReadyForInitDataEventListener)
     }
 
     override fun componentWillUnmount() {
-        timestamp = currentTimeMillis()
-        props.game.eventBus.remove(IFRAME_WEBEDITOR_INIT_COMPLETED, webEditorInitCompletedEventListener)
-        props.game.eventBus.remove(missionRepaintEvent(props.missionId), missionRepaintEventListener)
+        props.game.eventBus.remove(WEBEDITOR_OPEN_TUTORIALS_EVENT, openTutorialsEventListener)
+        props.game.eventBus.remove(WEBEDITOR_IFRAME_INIT_COMPLETED, webEditorInitCompletedEventListener)
+        props.game.eventBus.remove(missionRepaintEvent(props.missionModalData.missionId), missionRepaintEventListener)
         props.game.eventBus.remove(logStreamEvent(props.game.activeScene.map.id), liveLogStreamEventListener)
+        props.game.eventBus.remove(WEBEDITOR_IFRAME_READY_FOR_INIT_DATA, webEditorReadyForInitDataEventListener)
+    }
+
+    private fun onOpenTutorials(n: Nothing) {
+        postMessageToWebEditorIframe(jso<dynamic> {
+            forwardCommand = "bytelegend.views.tutorials.focus"
+            forwardCommandArgs = nativeJsArrayOf()
+        })
     }
 
     private fun onLiveLogStream(logStreamEventData: LogStreamEventData) {

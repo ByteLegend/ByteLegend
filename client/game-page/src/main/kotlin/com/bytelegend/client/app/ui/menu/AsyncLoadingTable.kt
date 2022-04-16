@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:Suppress("EXPERIMENTAL_API_USAGE")
+@file:Suppress("EXPERIMENTAL_API_USAGE", "OPT_IN_USAGE")
 
 package com.bytelegend.client.app.ui.menu
 
@@ -39,12 +39,12 @@ import react.dom.html.ReactHTML.tr
 
 interface AsyncLoadingTableProps : GameProps
 
-interface AsyncLoadingTableState : State {
-    var data: Array<dynamic>?
+interface AsyncLoadingTableState<T> : State {
+    var data: Array<T>?
     var currentPage: Int
 }
 
-abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTableState>(private val pagination: Boolean = false) : Component<P, S>() {
+abstract class AsyncLoadingTable<T, P : AsyncLoadingTableProps, S : AsyncLoadingTableState<T>>(private val pagination: Boolean = false) : Component<P, S>() {
     abstract val url: String
     open val isLastPage: Boolean = true
     private var loading = false
@@ -54,7 +54,7 @@ abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTab
         state.currentPage = 1
     }
 
-    open suspend fun transformData(data: Array<dynamic>): Array<dynamic> {
+    open suspend fun transformData(data: Array<dynamic>): Array<T> {
         return data
     }
 
@@ -125,5 +125,5 @@ abstract class AsyncLoadingTable<P : AsyncLoadingTableProps, S : AsyncLoadingTab
 
     open fun ChildrenBuilder.textBeforeTable() {}
     abstract fun ChildrenBuilder.tableHeaderBuilder()
-    abstract fun ChildrenBuilder.tableRowBuilder(index: Int, rowData: dynamic)
+    abstract fun ChildrenBuilder.tableRowBuilder(index: Int, rowData: T)
 }

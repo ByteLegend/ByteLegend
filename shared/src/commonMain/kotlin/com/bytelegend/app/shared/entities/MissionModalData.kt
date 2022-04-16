@@ -24,6 +24,7 @@ import com.bytelegend.app.shared.entities.mission.Tutorial
 import com.bytelegend.app.shared.i18n.Locale
 
 data class MissionModalData(
+    val missionId: String,
     val tutorialsUnlocked: Boolean,
     val tabs: List<MissionTabData<*>>,
     val challengeAnswers: List<ChallengeAnswers>
@@ -44,7 +45,7 @@ class TutorialsTabData(
     val locales: List<Locale>
 ) : MissionTabData<Pagination<Tutorial>> {
     override val type: MissionTabType = MissionTabType.Tutorials
-    override val title: String = "MissionTutorials"
+    override val title: String = "Tutorials"
 }
 
 class ChallengeTabData(

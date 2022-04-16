@@ -27,9 +27,7 @@ import react.dom.html.ReactHTML.img
 import react.dom.html.ReactHTML.td
 import react.dom.html.ReactHTML.th
 
-interface LeaderboardTableState : AsyncLoadingTableState
-
-class LeaderboardTable : AsyncLoadingTable<AsyncLoadingTableProps, LeaderboardTableState>(true) {
+class LeaderboardTable : AsyncLoadingTable<dynamic, AsyncLoadingTableProps, AsyncLoadingTableState<dynamic>>(true) {
     override val isLastPage: Boolean
         get() {
             if (state.data == undefined) {

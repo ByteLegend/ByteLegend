@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:Suppress("EXPERIMENTAL_API_USAGE")
+@file:Suppress("EXPERIMENTAL_API_USAGE", "OPT_IN_USAGE")
 
 package com.bytelegend.client.app.engine
 
 import com.bytelegend.app.client.api.EventBus
 import com.bytelegend.app.client.api.GameSceneContainer
-import com.bytelegend.app.shared.entities.MissionModalData
-import com.bytelegend.client.app.web.getMissionModalData
 import com.bytelegend.app.client.utils.JSObjectBackedMap
 import com.bytelegend.app.client.utils.jsObjectBackedSetOf
+import com.bytelegend.app.shared.entities.MissionModalData
+import com.bytelegend.app.shared.protocol.MISSION_TUTORIALS_UNLOCKED_EVENT
+import com.bytelegend.app.shared.protocol.MissionTutorialsUnlockedEventData
+import com.bytelegend.client.app.web.getMissionModalData
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.kodein.di.DI
@@ -30,13 +32,24 @@ import org.kodein.di.instance
 
 const val MISSION_DATA_LOAD_FINISH = "mission.data.load.finish"
 
-class MissionContainer(
+class MissionModalDataContainer(
     di: DI,
 ) {
     private val sceneContainer: GameSceneContainer by di.instance()
     private val eventBus: EventBus by di.instance()
     private val loadingMissions: MutableSet<String> = jsObjectBackedSetOf()
     private val missionData: MutableMap<String, MissionModalData> = JSObjectBackedMap()
+
+    init {
+        eventBus.on(MISSION_TUTORIALS_UNLOCKED_EVENT, this::onMissionTutorialsUnlocked)
+    }
+
+    private fun onMissionTutorialsUnlocked(event: MissionTutorialsUnlockedEventData) {
+        val existingData = missionData[event.missionId]
+        if (existingData != null) {
+            missionData[event.missionId] = existingData.copy(tutorialsUnlocked = true)
+        }
+    }
 
     fun isMissionModalDataLoading(missionId: String): Boolean = loadingMissions.contains(missionId)
 

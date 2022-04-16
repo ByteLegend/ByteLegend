@@ -32,8 +32,8 @@ import react.dom.html.ReactHTML.div
 
 const val BANNER_UPDATE_EVENT = "banner.update.event"
 
-// Default modal z-index seems to be ~1020
-const val BANNER_Z_INDEX = 2000
+// Default modal z-index seems to be ~1020, we want the banner/toast to appear above the modal
+const val BANNER_TOAST_Z_INDEX = 2000
 
 class DefaultBannerController(
     private val eventBus: EventBus
@@ -102,7 +102,7 @@ class BannerUIComponent : GameUIComponent<GameProps, GameBannersState>() {
             div {
                 className = ClassName("fixed-top")
                 jsStyle {
-                    zIndex = BANNER_Z_INDEX
+                    zIndex = BANNER_TOAST_Z_INDEX
                     margin = "auto"
                     maxWidth = "${gameContainerWidth / 2}px"
                 }

@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("OPT_IN_USAGE")
+
 package com.bytelegend.client.app.ui
 
 import com.bytelegend.app.client.misc.playAudio
@@ -22,6 +24,8 @@ import com.bytelegend.app.shared.protocol.COIN_UPDATE_EVENT
 import com.bytelegend.app.shared.protocol.CoinUpdateEventData
 import com.bytelegend.app.shared.protocol.NumberChange
 import csstype.ClassName
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.js.jso
 import org.w3c.dom.HTMLDivElement
 import react.ChildrenBuilder
@@ -46,17 +50,22 @@ class CoinCountWidget : AbstractIncrementAnimatableWidget<CoinCountWidgetProps, 
     }
 
     override fun onNumberChange(numberChange: NumberChange) {
-        val coinChange = numberChange.unsafeCast<CoinUpdateEventData>()
-        if (numberChange.change > 0) {
-            playAudio("coin")
+        GlobalScope.launch {
+            val coinChange = numberChange.unsafeCast<CoinUpdateEventData>()
+            if (numberChange.change > 0) {
+                playAudio("coin")
+            } else {
+                playAudio("coin-loss")
+            }
+            game.transformCoinChangeReasonArgs(coinChange.reasonId, coinChange.reasonArgs)
+            game.toastController.addToast(
+                "${formatChange(numberChange.change)} <div class='$iconClassName inline-icon-16'></div>",
+                game.i(coinChange.reasonId, *coinChange.reasonArgs),
+                5000
+            )
+            game.heroPlayer.coin = numberChange.newValue
+            animateAndSetState(numberChange)
         }
-        game.toastController.addToast(
-            "${formatChange(numberChange.change)} <div class='$iconClassName inline-icon-16'></div>",
-            game.i(coinChange.reasonId, *coinChange.reasonArgs),
-            5000
-        )
-        game.heroPlayer.coin = numberChange.newValue
-        animateAndSetState(numberChange)
     }
 
     override fun onClick() {

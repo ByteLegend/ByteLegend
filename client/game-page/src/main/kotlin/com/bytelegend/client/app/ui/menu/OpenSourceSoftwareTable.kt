@@ -20,7 +20,7 @@ import react.ChildrenBuilder
 import react.dom.html.AnchorTarget
 import react.dom.html.ReactHTML
 
-class OpenSourceSoftwareTable : AsyncLoadingTable<AsyncLoadingTableProps, AsyncLoadingTableState>() {
+class OpenSourceSoftwareTable : AsyncLoadingTable<dynamic, AsyncLoadingTableProps, AsyncLoadingTableState<dynamic>>() {
     override val url: String
         get() = props.game.resolve("/misc/oss.json")
 

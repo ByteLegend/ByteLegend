@@ -31,6 +31,7 @@ import com.bytelegend.app.client.ui.bootstrap.BootstrapCardHeader
 import com.bytelegend.app.client.ui.bootstrap.BootstrapCol
 import com.bytelegend.app.client.ui.bootstrap.BootstrapRow
 import com.bytelegend.app.shared.entities.ChallengeAnswer
+import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.app.shared.protocol.challengeUpdateEvent
 import com.bytelegend.client.app.engine.DefaultGameMission
@@ -60,7 +61,7 @@ import react.dom.html.ReactHTML.span
 import react.react
 
 interface QuestionChallengeTabProps : GameProps {
-    var missionId: String
+    var missionModalData: MissionModalData
     var challengeSpec: ChallengeSpec
 }
 
@@ -77,11 +78,11 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
 
     // If player is not adjacent to the mission, disable the input box and submit button
     private fun isDisabled(): Boolean {
-        if (props.missionId != "install-java") {
+        if (props.missionModalData.missionId != "install-java") {
             return false
         }
         val heroInScene = activeScene.objects.getByIdOrNull<Character>(HERO_ID) ?: return true
-        return heroInScene.gridCoordinate.manhattanDistanceTo(activeScene.objects.getById<DefaultGameMission>(props.missionId).gridCoordinate) > 2
+        return heroInScene.gridCoordinate.manhattanDistanceTo(activeScene.objects.getById<DefaultGameMission>(props.missionModalData.missionId).gridCoordinate) > 2
     }
 
     override fun render() = Fragment.create {
@@ -139,7 +140,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
             br { }
 
             val answers: List<ChallengeAnswer> =
-                game.activeScene.challengeAnswers.getChallengeAnswersByMissionId(props.missionId)
+                game.activeScene.challengeAnswers.getChallengeAnswersByMissionId(props.missionModalData.missionId)
                     .flatMap { answersOfChallenge ->
                         answersOfChallenge.answers.values.map { it.last().unsafeCast<ChallengeAnswer>() }
                     }
@@ -148,7 +149,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
 
             child(WebEditor::class.react, jso {
                 game = props.game
-                missionId = props.missionId
+                missionModalData = props.missionModalData
                 challengeSpec = props.challengeSpec
             })
         }
@@ -172,7 +173,7 @@ class QuestionChallengeTab : GameUIComponent<QuestionChallengeTabProps, Question
             loading = true
         }
 
-        val challengeUpdateEventData = submitChallengeAnswer(props.missionId, props.challengeSpec.id, textarea.value)
+        val challengeUpdateEventData = submitChallengeAnswer(props.missionModalData.missionId, props.challengeSpec.id, textarea.value)
         game.eventBus.emit(challengeUpdateEvent(activeScene.map.id), challengeUpdateEventData)
         if (challengeUpdateEventData.change.accomplished) {
             game.bannerController.showBanner(

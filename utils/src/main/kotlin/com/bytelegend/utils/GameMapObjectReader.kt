@@ -229,6 +229,7 @@ class TiledObjectReader(
                 idToMissionSpecs.getValue(it.name).title,
                 idToMissionSpecs.getValue(it.name).challenges.sumOf { it.star },
                 idToMissionSpecs.getValue(it.name).challenges.map { it.id },
+                idToMissionSpecs.getValue(it.name).tutorialsPrice,
                 mapId,
                 tileIdToSpriteIdMap.get(it.gid) ?: throw IllegalStateException("Sprite for mission ${it.name} is missing, did you forget to add `dynamicSprites`?"),
                 it.toPoint(),

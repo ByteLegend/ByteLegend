@@ -15,6 +15,7 @@
  */
 package com.bytelegend.client.app.ui.mission
 
+import com.bytelegend.app.shared.entities.MissionModalData
 import com.bytelegend.app.shared.entities.mission.ChallengeSpec
 import com.bytelegend.client.app.ui.GameProps
 import kotlinx.js.jso
@@ -26,15 +27,15 @@ import react.react
 
 interface StarChallengeTabProps : GameProps {
     var contentHtml: String
-    var missionId: String
+    var missionModalData: MissionModalData
     var challengeSpec: ChallengeSpec
 }
 
 class StarChallengeTab : Component<StarChallengeTabProps, State>() {
     override fun render() = Fragment.create {
         child(WebEditor::class.react, jso {
+            missionModalData = props.missionModalData
             game = props.game
-            missionId = props.missionId
             challengeSpec = props.challengeSpec
         })
     }
