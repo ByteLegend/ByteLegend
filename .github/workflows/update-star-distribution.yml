@@ -9,7 +9,7 @@ jobs:
     name: Update star distribution
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: ByteLegend/ByteLegend
           submodules: recursive

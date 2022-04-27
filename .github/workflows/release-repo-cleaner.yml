@@ -5,7 +5,7 @@ jobs:
   check-and-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
           token: ${{ secrets.BYTELEGENDBOT_TOKEN }}
@@ -13,5 +13,3 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: :server:github-release:uploadRepoCleanerToGitHubRelease -DgitHubToken=${{ secrets.BYTELEGENDBOT_TOKEN }} -DagreePublicBuildScanTermOfService=yes
-
-
