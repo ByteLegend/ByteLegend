@@ -14,6 +14,7 @@ jobs:
   deploy:
     name: Deploy webeditor
     runs-on: ubuntu-latest
+    if: github.repository == 'ByteLegend/ByteLegend'
     steps:
       - id: determine-webeditor-commit
         name: Determine webeditor commit to deploy
