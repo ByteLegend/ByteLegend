@@ -11,7 +11,7 @@
 
     ```yaml
     - id: «YourNewMapId»
-    data:
+      data:
         EN: «The display name of that map»
     ```
 

@@ -11,7 +11,7 @@ To create a new game map, you need to:
 
     ```yaml
     - id: «YourNewMapId»
-    data:
+      data:
         EN: «The display name of that map»
     ```
 
