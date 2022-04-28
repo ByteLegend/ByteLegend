@@ -8,19 +8,18 @@ on:
     branches-ignore:
       - release
 
-env:
-  # 设置时区
-  TZ: Asia/Shanghai
-
 jobs:
   markdown-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          submodules: false
 
-      - name: markdownlint-cli
+      - name: Fetch game-data
+        run: git submodule update --init -- game-data
+
+      - name: markdownlint
         uses: nosborn/github-action-markdown-cli@v3.0.1
         with:
           files: "."
