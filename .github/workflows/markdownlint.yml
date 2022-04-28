@@ -1,0 +1,26 @@
+name: Markdown Lint
+
+on:
+  push:
+    branches-ignore:
+      - release
+  pull_request:
+    branches-ignore:
+      - release
+
+jobs:
+  markdown-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: false
+
+      - name: Fetch game-data
+        run: git submodule update --init -- game-data
+
+      - name: markdownlint
+        uses: nosborn/github-action-markdown-cli@v3.0.1
+        with:
+          files: "."
+          config_file: .markdownlint.yaml

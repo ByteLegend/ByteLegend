@@ -1,0 +1,21 @@
+default: true
+
+# MD013/line-length - Line length
+MD013:
+  # Number of characters
+  line_length: 8120
+
+# MD025/single-title/single-h1 - Multiple top-level headings in the same document
+MD025: false
+
+# MD033/no-inline-html - Inline HTML
+MD033:
+  # Allowed elements
+  allowed_elements:
+    - details
+    - summary
+
+# MD041/first-line-heading/first-line-h1 - First line in a file should be a top-level heading
+MD041:
+  # Heading level
+  level: 1

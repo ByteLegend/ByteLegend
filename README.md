@@ -16,7 +16,7 @@
 ## 如何玩
 
 - 访问[字节传说](https://bytelegend.com)，点击右上角的登录按钮并使用GitHub账号登录。
-- 和其他游戏一样，玩就是了——和NPC对话，收集物品，完成任务，等等。 
+- 和其他游戏一样，玩就是了——和NPC对话，收集物品，完成任务，等等。
 - 和其他游戏不同的是，你在这个游戏中获得的是真实世界里的高薪编程技能。
 
 ## 为什么选择字节传说
@@ -54,7 +54,7 @@
 
 请访问[字节传说](https://bytelegend.com)并点击右下角的`致谢`按钮查看本游戏使用的开源项目和游戏资源。
 
-## Contributing
+## 贡献
 
 我们感谢您作出的任何贡献：
 
@@ -96,7 +96,7 @@
   
 ## Why ByteLegend
 
-- Free 
+- Free
   - Yes, it's free, as in "free beer". :-)
 - Opensource
   - Yes, it's opensource. This means everything you see in the game is customizable: game map, story, NPC conversations, i18n texts, ...
@@ -104,7 +104,7 @@
   - See [here](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/CONTRIBUTING.md) for more information on how to contribute.
 - Fun
   - It's a game!
-- Internationalization    
+- Internationalization
   - We support **ALL** languages on this planet since day 1. You just need to click and select language on right-top corner of [ByteLegend](https://bytelegend.com).
   - As we said above, you can make a contribution to anything you see in [ByteLegend](https://bytelegend.com), including fixing bad translations or adding more languages to the game.
   - Check out [here](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/i18n.md) to see how to add a language or help us improve translation quality.
@@ -144,4 +144,3 @@ Please note that `server` git submodule hasn't been opensource yet, as we have c
 However, we do provide a opensource version of backend service in `server-opensource` module.
 
 See [here](https://github.com/ByteLegend/ByteLegend/blob/master/docs/en/game-code-contributor-guide.md) for more details.
-
