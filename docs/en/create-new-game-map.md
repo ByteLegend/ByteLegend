@@ -9,13 +9,13 @@ To create a new game map, you need to:
 3. Edit `settings.gradle.kts` to include the new subproject `client/game-<mapId>`.
 4. Add an entry in `game-data/i18n-common.yml` in the following format:
 
-```
-- id: «YourNewMapId»
-  data:
-    EN: «The display name of that map»
-```
+    ```yaml
+    - id: «YourNewMapId»
+    data:
+        EN: «The display name of that map»
+    ```
 
-Note that you must provide at least English version of the text.
+    Note that you must provide at least English version of the text.
 
 5. Click "Reload All Gradle Projects" button in Gradle window of IDEA.
 

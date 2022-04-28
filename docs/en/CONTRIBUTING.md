@@ -2,14 +2,14 @@
 
 ## All Kinds of Contribution are Welcomed
 
-- Game data contributor: 
+- Game data contributor:
   - You see a typo or bad translation in a text, like mission description, UI prompt, etc.
   - You see a tutorial better than any existing ones, and you want to share it with the whole world (and earn coins)!
-- Game map contributor: 
+- Game map contributor:
   - You see a flaw in the game map, like a bad tile image, or incorrectly marked tile (e.g. you can walk into a sea tile).  
-- Game code contributor: 
+- Game code contributor:
   - You see a bug in the game code (either frontend or backend or game script) and you want to fix it.
-- Game creator: 
+- Game creator:
   - You want to build a new map on top of infrastructure provided by ByteLegend.
 
 ## Prerequisite
@@ -18,7 +18,7 @@ You need to install the software:
 
 - For game data contributor: your favorite text editor.
 - For game map contributor: a map editor named [Tiled](https://www.mapeditor.org/).
-- For game code contributor and game creator: 
+- For game code contributor and game creator:
   - [Tiled](https://www.mapeditor.org/)
   - [IntelliJ IDEA](https://www.jetbrains.com/idea/download/) (Ultimate version or Community version, it doesn't matter)
   - [Java 11](https://adoptopenjdk.net/)
