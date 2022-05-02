@@ -63,9 +63,10 @@ class MapData(ymlDir: File) {
                 }
             }
             missionSpec.validateChallenges(ChallengeType.Question) {
-                require(readme.isNotBlank()) {
-                    "tldr or readme is empty for $id!"
-                }
+                require(readme.isNotBlank()) { "tldr or readme is empty for $id!" }
+            }
+            missionSpec.validateChallenges(ChallengeType.PullRequest) {
+                require(!spec.startsWith("https")) { "$id has invalid spec: $spec" }
             }
 
             missionSpec
