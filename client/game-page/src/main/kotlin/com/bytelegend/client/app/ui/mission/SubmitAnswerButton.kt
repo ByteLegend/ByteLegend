@@ -77,11 +77,21 @@ class SubmitAnswerButton(props: SubmitAnswerButtonProps) : Component<SubmitAnswe
     }
 
     init {
-        state = jso {
+        state = init(props.challengeId)
+    }
+
+    override fun componentWillReceiveProps(nextProps: SubmitAnswerButtonProps) {
+        if (nextProps.challengeId != props.challengeId) {
+            setState(init(nextProps.challengeId))
+        }
+    }
+
+    private fun init(challengeId: String): SubmitAnswerButtonState {
+        return jso {
             glow = false
             dotNumber = 0
 
-            if (props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(props.challengeId).anyCheckRunning()) {
+            if (props.game.activeScene.challengeAnswers.getPullRequestChallengeAnswersByChallengeId(challengeId).anyCheckRunning()) {
                 spinning = true
                 textId = "CheckingAnswer"
             } else {
