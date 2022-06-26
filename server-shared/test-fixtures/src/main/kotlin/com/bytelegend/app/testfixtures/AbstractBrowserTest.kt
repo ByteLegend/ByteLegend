@@ -140,12 +140,16 @@ abstract class AbstractByteLegendIntegrationTest {
         sendWebhookFromJsonObject("pull_request", createMockPullRequestEvent(playerId, challengeSpec, prOpenEvent.pullRequest.number.toInt(), PullRequestEventAction.CLOSED))
     }
 
-    protected fun sendWebhookFromResource(event: String, resource: String, mutator: (String) -> String = { it }) {
-        val json = mutator(javaClass.getResourceAsFile(resource).readText())
+    protected fun sendWebhookFromText(event: String, json: String) {
         post(
             "http://localhost:$gameServerPort/github_webhook", json,
             mapOf("Content-Type" to "application/json", "X-GitHub-Event" to event)
         ).assert2XXStatusCode()
+    }
+
+    protected fun sendWebhookFromResource(event: String, resource: String, mutator: (String) -> String = { it }) {
+        val json = mutator(javaClass.getResourceAsFile(resource).readText())
+        sendWebhookFromText(event, json)
     }
 
     protected fun sendWebhookFromJsonObject(event: String, payload: Any) {
