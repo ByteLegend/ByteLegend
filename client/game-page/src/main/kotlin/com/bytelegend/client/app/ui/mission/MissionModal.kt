@@ -127,7 +127,7 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                 }
                 val activeTab = mission.tabs[state.activeTabIndex]
                 div {
-                    // Show tabs
+                    // Show tags
                     val tags = mission.tags
                     if (tags.isNotEmpty()) {
                         BootstrapCard {
