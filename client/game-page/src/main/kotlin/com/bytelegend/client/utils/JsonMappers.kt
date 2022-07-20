@@ -248,7 +248,7 @@ fun toMissionModalData(jsonObject: dynamic) = MissionModalData(
     jsonObject.tutorialsUnlocked,
     toTypedList(jsonObject.tabs, ::toMissionTabData),
     toTypedList(jsonObject.challengeAnswers, ::toChallengeAnswers),
-    new JSArrayBackedList(jsonObject.tags)
+    arrayToList(jsonObject.tags)
 )
 
 fun toMissionTabData(jsonObject: dynamic): MissionTabData<*> {
