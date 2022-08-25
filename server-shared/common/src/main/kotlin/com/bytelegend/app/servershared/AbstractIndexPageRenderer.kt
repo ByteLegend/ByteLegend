@@ -40,7 +40,7 @@ abstract class AbstractIndexPageRenderer(
         val model = mutableMapOf(
             "{RRBD}" to RRBD,
             "{LANG}" to locale.language.code,
-            "{TITLE}" to enjoyProgrammingText,
+            "{TITLE}" to "字节传说",
             "{gameInitData}" to jsonMapper.toUglyJson(
                 GameInitData(
                     initMapId,
