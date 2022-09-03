@@ -27,7 +27,7 @@ import react.Props
 external val BootstrapTab: ElementType<BootstrapTabProps>
 
 external interface BootstrapTabProps : Props {
-    var key: String
+    override var key: String?
     var disabled: Boolean
     var eventKey: String
     var tabClassName: String
