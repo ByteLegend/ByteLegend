@@ -41,6 +41,7 @@ dependencies {
 
     api(libs("kotlin-react"))
     api(libs("kotlin-react-dom"))
+    api(libs("kotlin-extensions"))
     api(npm("react", libVersions("react")))
     api(npm("react-dom", libVersions("react")))
     api(libs("kotlinx-coroutines-core-js"))

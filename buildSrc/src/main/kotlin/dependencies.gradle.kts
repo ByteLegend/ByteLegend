@@ -207,6 +207,7 @@ val dependencies: List<OpenSourceLibrary> = listOf(
 
     OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-react:$kotlinReactVersion"),
     OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-react-dom:$kotlinReactVersion"),
+    OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.382"),
     OpenSourceLibrary("kotlin-react", "https://github.com/JetBrains/kotlin-wrappers", Apache2),
     OpenSourceLibrary(name = "react", version = reactVersion, creditName = "React", url = "https://reactjs.org", license = MIT),
     OpenSourceLibrary(name = "react-bootstrap", version = reactBootstrapVersion),
