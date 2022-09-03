@@ -49,7 +49,7 @@ class MapTitleWidgets : GameUIComponent<MapTitleWidgetsProps, State>() {
                 }
                 top = "${uiContainerCoordinateInGameContainer.y + 10}px"
             }
-            props.children()
+            props.children
         }
     }
 }
