@@ -20,10 +20,10 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.StaticTableMetadata
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.BeanTableSchemaAttributeTag
 import java.util.function.Consumer
 
-@kotlin.annotation.Target(AnnotationTarget.PROPERTY_GETTER)
-@kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.PROPERTY_GETTER)
+@Retention(AnnotationRetention.RUNTIME)
 @BeanTableSchemaAttributeTag(ReadOnlyAttributeTags::class)
-actual annotation class ReadOnly()
+actual annotation class ReadOnly
 
 class ReadOnlyAttributeTags {
     companion object {

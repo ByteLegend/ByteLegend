@@ -241,7 +241,7 @@ class BuildGameResourcesPlugin : Plugin<Project> {
         rename { "TiledMap.json" }
     }
 
-    private fun Project.createCopyTiledTilesetJsonTask() = tasks.register<Copy>("copyTilesetJson", Copy::class.java) {
+    private fun Project.createCopyTiledTilesetJsonTask() = tasks.register("copyTilesetJson", Copy::class.java) {
         from(rootProject.rootDir.resolve("resources/raw/tileset-jsons/java-flag.json"))
         into(project.buildDir)
         rename { "TiledTileset.json" }

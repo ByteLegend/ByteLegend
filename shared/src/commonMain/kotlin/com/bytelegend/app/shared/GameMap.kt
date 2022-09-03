@@ -59,8 +59,8 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 
-val BLOCKER = 1
-val NON_BLOCKER = 0
+const val BLOCKER = 1
+const val NON_BLOCKER = 0
 
 interface GameMap {
     val id: String
@@ -226,9 +226,9 @@ data class CompressedGameMap(
         @JsonIgnore get() = rawGameMap.objects
 
     fun decompress(): RawGameMap {
-        val constantPoolTable: Map<Int, ConstantPoolEntry> = constantPool.withIndex().map {
+        val constantPoolTable: Map<Int, ConstantPoolEntry> = constantPool.withIndex().associate {
             it.index + 1 to IndexedConstantPoolEntryWrapper(it.index + 1, it.value)
-        }.toMap()
+        }
 
         val decompressedTiles = tiles.chunked(size.width)
             .map { constantPoolTable.getValue(it).decompress(constantPoolTable) as RawGameMapTile }

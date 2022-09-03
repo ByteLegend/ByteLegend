@@ -121,7 +121,7 @@ abstract class AbstractBiMap<K : Any, V : Any> protected constructor(
             try {
                 reverse.remove(value)
             } catch (throwable: Throwable) {
-                direct.put(key, value)
+                direct[key] = value
                 throw throwable
             }
             return true
@@ -165,7 +165,7 @@ abstract class AbstractBiMap<K : Any, V : Any> protected constructor(
                 try {
                     iterator.remove()
                 } catch (throwable: Throwable) {
-                    reverse.put(value, key)
+                    reverse[value] = key
                     throw throwable
                 }
             } finally {
@@ -179,16 +179,16 @@ abstract class AbstractBiMap<K : Any, V : Any> protected constructor(
     ) : MutableMap.MutableEntry<K, V> by entry {
         override fun setValue(newValue: V): V {
             if (entry.value == newValue) {
-                reverse.put(newValue, entry.key)
+                reverse[newValue] = entry.key
                 try {
                     return entry.setValue(newValue)
                 } catch (throwable: Throwable) {
-                    reverse.put(entry.value, entry.key)
+                    reverse[entry.value] = entry.key
                     throw throwable
                 }
             } else {
                 check(newValue !in reverse) { "BiMap already contains value $newValue" }
-                reverse.put(newValue, entry.key)
+                reverse[newValue] = entry.key
                 try {
                     return entry.setValue(newValue)
                 } catch (throwable: Throwable) {

@@ -20,7 +20,6 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.Arrays
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
@@ -44,7 +43,7 @@ class Shell(private val workingDir: File) {
         val latchResult = latch.await(1, TimeUnit.MINUTES)
         check(!(!result || !latchResult)) {
             """
-                Timeout waiting ${Arrays.toString(args)}
+                Timeout waiting ${args.contentToString()}
                 stdout:
                 $stdout
                 stderr:

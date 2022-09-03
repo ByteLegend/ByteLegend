@@ -36,7 +36,7 @@ import java.util.Date
 
 // openssl pkcs8 -topk8 -inform PEM -outform PEM -in server/app/src/main/resources/gradlelegend.2020-10-31.private-key.pem -out server/app/src/main/resources/gradlelegend.2020-10-31.private-key.pkcs8.pem -nocrypt
 val privateKeyPath = File("server/app/src/main/resources/gradlelegend.2020-10-31.private-key.pkcs8.pem")
-val appId = "84439"
+const val appId = "84439"
 
 val privateKey = readPrivateKeyFromFile(privateKeyPath, "RSA") as RSAPrivateKey
 val algorithm = Algorithm.RSA256(null, privateKey)

@@ -178,10 +178,10 @@ class TiledObjectReader(
 
     private fun List<PixelCoordinate>.getOrCalculateCenterPoint(regionId: String): PixelCoordinate {
         val existingCenterPoint = points.firstOrNull { it.id == "${regionId}CenterPoint" }
-        if (existingCenterPoint != null) {
-            return existingCenterPoint.gridCoordinate * tileSize
+        return if (existingCenterPoint != null) {
+            existingCenterPoint.gridCoordinate * tileSize
         } else {
-            return PixelCoordinate(
+            PixelCoordinate(
                 sumOf { it.x } / size,
                 sumOf { it.y } / size
             )
@@ -231,7 +231,7 @@ class TiledObjectReader(
                 idToMissionSpecs.getValue(it.name).challenges.map { it.id },
                 idToMissionSpecs.getValue(it.name).tutorialsPrice,
                 mapId,
-                tileIdToSpriteIdMap.get(it.gid) ?: throw IllegalStateException("Sprite for mission ${it.name} is missing, did you forget to add `dynamicSprites`?"),
+                tileIdToSpriteIdMap[it.gid] ?: throw IllegalStateException("Sprite for mission ${it.name} is missing, did you forget to add `dynamicSprites`?"),
                 it.toPoint(),
                 nextIds.map { nextId -> tiledNumberIdToRawMissionObjects.getValue(nextId.toLong()).name },
                 regionId
