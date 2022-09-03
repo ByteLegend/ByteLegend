@@ -23,8 +23,8 @@ pluginManagement {
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.6.3"
-    id("com.gradle.enterprise.gradle-enterprise-conventions-plugin") version "0.7.4"
+    id("com.gradle.enterprise") version "3.11.1"
+    id("io.github.gradle.gradle-enterprise-conventions-plugin") version "0.7.6"
 }
 
 rootProject.name = "ByteLegend"
