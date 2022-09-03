@@ -63,9 +63,9 @@ allprojects {
 //    }
 }
 
-// Use NodeJS 16.14.0
+// Sync with Kotlin embedded version
 rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
-    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().nodeVersion = "16.14.0"
+    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().nodeVersion = "16.17.0"
 }
 
 idea {
