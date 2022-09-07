@@ -25,7 +25,7 @@ class GameContainer : GameUIComponent<GameContainerProps, State>() {
     override fun render() = Fragment.create {
         containerFillingDiv {
             it.id = "game-container-layer"
-            props.children()
+            child(props.children)
         }
     }
 }

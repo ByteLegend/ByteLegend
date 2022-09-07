@@ -28,8 +28,8 @@ val forestVersion = "0.3.17-SNAPSHOT"
 val vertxVersion = "4.2.6"
 val guavaVersion = "31.1-jre"
 val jacksonVersion = "2.13.2"
-val kotlinVersion = "1.6.21"
-val kotlinxVersion = "1.6.1"
+val kotlinVersion = "1.7.10"
+val coroutinesVersion = "1.6.4"
 val junitVersion = "5.8.2"
 val junit4Version = "4.13.2"
 val mockKVersion = "1.11.0"
@@ -59,7 +59,7 @@ val dynamodbCrossRegionReplicationVersion = "1.2.1.19"
 val caffeineVersion = "2.8.8"
 val testContainersVersion = "1.17.1"
 val kodeinVersion = "7.6.0"
-val kotlinReactVersion = "18.0.0-pre.332-kotlin-1.6.21"
+val kotlinReactVersion = "18.2.0-pre.382"
 val reactVersion = "18.0.0"
 val reactBootstrapVersion = "1.6.1"
 val materialUIVersion = "4.11.2"
@@ -116,9 +116,9 @@ val dependencies: List<OpenSourceLibrary> = listOf(
 
     OpenSourceLibrary("com.zaxxer:HikariCP:$hikariVersion"),
 
-    OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion"),
-    OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$kotlinxVersion"),
-    OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinxVersion"),
+    OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"),
+    OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:$coroutinesVersion"),
+    OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutinesVersion"),
     OpenSourceLibrary("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"),
     OpenSourceLibrary("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"),
     OpenSourceLibrary("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion"),
@@ -207,6 +207,7 @@ val dependencies: List<OpenSourceLibrary> = listOf(
 
     OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-react:$kotlinReactVersion"),
     OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-react-dom:$kotlinReactVersion"),
+    OpenSourceLibrary("org.jetbrains.kotlin-wrappers:kotlin-extensions:1.0.1-pre.382"),
     OpenSourceLibrary("kotlin-react", "https://github.com/JetBrains/kotlin-wrappers", Apache2),
     OpenSourceLibrary(name = "react", version = reactVersion, creditName = "React", url = "https://reactjs.org", license = MIT),
     OpenSourceLibrary(name = "react-bootstrap", version = reactBootstrapVersion),

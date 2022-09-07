@@ -44,9 +44,8 @@ class PlayerAnimationSetGenerator(
     }
 
     fun generate() {
-        val idToPng = inputDir.listFiles().filter { it.name.endsWith(".png") }
-            .map { it.name.replace(".png", "").toInt() to it }
-            .toMap()
+        val idToPng =
+            inputDir.listFiles().filter { it.name.endsWith(".png") }.associateBy { it.name.replace(".png", "").toInt() }
 
         merge(idToPng, ANIMATION_SET_HORIZONTAL_NUMBER, PLAYER_ANIMATION_SET_VERTICAL_NUMBER)
     }

@@ -65,6 +65,7 @@ import java.util.concurrent.ConcurrentHashMap
 import javax.servlet.http.Cookie
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import kotlin.concurrent.thread
 
 @SpringBootApplication
 @Controller
@@ -198,10 +199,10 @@ class GameWebSocketServer(private val jsonMapper: JsonMapper) : TextWebSocketHan
     private val sessions = ConcurrentHashMap<WebSocketSession, Player>()
     override fun afterConnectionEstablished(session: WebSocketSession) {
         sessions[session] = PlayerContext.get()
-        Thread() {
+        thread {
             Thread.sleep(1000)
             sendMessage(session, PublishMessage(ONLINE_COUNTER_UPDATE_EVENT, sessions.size))
-        }.start()
+        }
     }
 
     /**

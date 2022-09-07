@@ -184,14 +184,19 @@ abstract class AbstractByteLegendIntegrationTest {
                 requestConfiguration(this)
             }
             .build()
-        if (responseType == String::class.java) {
-            return httpClient.send(request, HttpResponse.BodyHandlers.ofString()) as HttpResponse<T>
-        } else if (responseType == InputStream::class.java) {
-            return httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream()) as HttpResponse<T>
-        } else if (responseType == ByteArray::class.java) {
-            return httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray()) as HttpResponse<T>
-        } else {
-            throw UnsupportedOperationException()
+        return when (responseType) {
+            String::class.java -> {
+                httpClient.send(request, HttpResponse.BodyHandlers.ofString()) as HttpResponse<T>
+            }
+            InputStream::class.java -> {
+                httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream()) as HttpResponse<T>
+            }
+            ByteArray::class.java -> {
+                httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray()) as HttpResponse<T>
+            }
+            else -> {
+                throw UnsupportedOperationException()
+            }
         }
     }
 

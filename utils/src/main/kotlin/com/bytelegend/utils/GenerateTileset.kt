@@ -138,7 +138,7 @@ private fun determineInputImages(): List<BufferedImage> {
     } else if (inputFiles.contains("*")) {
         val dir = if (inputFiles.contains("/")) inputFiles.substringBeforeLast("/") else "."
         val name = if (inputFiles.contains("/")) inputFiles.substringAfterLast("/") else inputFiles
-        val namePattern = name.split("*").map { Pattern.quote(it) }.joinToString(".*").toRegex()
+        val namePattern = name.split("*").joinToString(".*") { Pattern.quote(it) }.toRegex()
         File(dir).listFiles()
             .filter { it.isFile && it.name.matches(namePattern) }
             .sortedBy { it.name }

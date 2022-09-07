@@ -15,16 +15,16 @@
  */
 pluginManagement {
     plugins {
-        id("org.jetbrains.kotlin.js") version "1.6.21"
-        id("org.jetbrains.kotlin.jvm") version "1.6.21"
-        id("org.jetbrains.kotlin.multiplatform") version "1.6.21"
-        id("org.jetbrains.kotlin.plugin.serialization") version "1.6.21"
+        id("org.jetbrains.kotlin.js") version "1.7.10"
+        id("org.jetbrains.kotlin.jvm") version "1.7.10"
+        id("org.jetbrains.kotlin.multiplatform") version "1.7.10"
+        id("org.jetbrains.kotlin.plugin.serialization") version "1.7.10"
     }
 }
 
 plugins {
-    id("com.gradle.enterprise") version "3.6.3"
-    id("com.gradle.enterprise.gradle-enterprise-conventions-plugin") version "0.7.4"
+    id("com.gradle.enterprise") version "3.11.1"
+    id("io.github.gradle.gradle-enterprise-conventions-plugin") version "0.7.6"
 }
 
 rootProject.name = "ByteLegend"

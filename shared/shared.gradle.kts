@@ -70,14 +70,12 @@ kotlin {
         val main by compilations.getting {
             kotlinOptions {
                 jvmTarget = "11"
-                freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
             }
         }
     }
     js {
         compilations.getByName("main") {
             kotlinOptions {
-                freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
             }
         }
     }

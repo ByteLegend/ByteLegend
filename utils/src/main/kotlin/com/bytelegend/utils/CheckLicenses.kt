@@ -25,7 +25,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributes
 
-internal val LICENSE = """Copyright 2021 ByteLegend Technologies and the original author or authors.
+internal const val LICENSE = """Copyright 2021 ByteLegend Technologies and the original author or authors.
 
 Licensed under the GNU Affero General Public License v3.0 (the "License");
 you may not use this file except in compliance with the License.
