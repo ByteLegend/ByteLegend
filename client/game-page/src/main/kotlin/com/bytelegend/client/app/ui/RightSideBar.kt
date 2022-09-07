@@ -47,7 +47,7 @@ class RightSideBar : GameUIComponent<RightSideBarProps, State>() {
             className = "right-sidebar"
         ) {
             BootstrapListGroup {
-                props.children
+                child(props.children)
             }
         }
     }

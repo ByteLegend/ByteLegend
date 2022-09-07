@@ -19,7 +19,6 @@ package com.bytelegend.client.app.page
 
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.WindowBasedEventBus
-import com.bytelegend.client.utils.toGameInitData
 import com.bytelegend.app.shared.Direction
 import com.bytelegend.app.shared.GameInitData
 import com.bytelegend.app.shared.PixelSize
@@ -83,16 +82,17 @@ import com.bytelegend.client.app.ui.menu.Menu
 import com.bytelegend.client.app.ui.menu.MenuProps
 import com.bytelegend.client.app.ui.mission.BouncingTitles
 import com.bytelegend.client.app.ui.setState
-import kotlinx.js.jso
+import com.bytelegend.client.utils.toGameInitData
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.js.jso
 import react.ChildrenBuilder
 import react.Component
 import react.Fragment
 import react.ReactNode
 import react.State
 import react.create
-import react.dom.render
+import react.dom.client.createRoot
 import react.react
 
 const val HERO_AVATAR_IMG_ID = "hero-avatar"
@@ -124,11 +124,12 @@ fun main() {
         null
     }
 
-    render(Fragment.create {
-        child(GamePage::class.react, jso {
-            this.game = game
+    createRoot(document.getElementById("app")!!)
+        .render(Fragment.create {
+            child(GamePage::class.react, jso {
+                this.game = game
+            })
         })
-    }, document.getElementById("app")!!)
 }
 
 interface GamePageState : State {
