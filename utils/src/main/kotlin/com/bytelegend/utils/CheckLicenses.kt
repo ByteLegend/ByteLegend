@@ -16,6 +16,7 @@
 
 package com.bytelegend.utils
 
+import org.apache.commons.io.FilenameUtils
 import org.springframework.util.AntPathMatcher
 import java.io.File
 import java.io.IOException
@@ -53,18 +54,20 @@ internal val INCLUDED_PATHS = listOf(
 )
 internal val MATCHER = AntPathMatcher()
 
+internal fun Path.unixStyle(): String = FilenameUtils.separatorsToUnix(this.toString())
+
 internal fun Path.isIgnoredPath(): Boolean = IGNORED_PATHS.any {
     // Remove leading "./"
     require(!this.isAbsolute) { "$this must be relative!" }
-    if (this.toString() == ".") {
+    if (this.unixStyle() == ".") {
         return false
     }
-    MATCHER.match(it, this.toString().substring(2))
+    MATCHER.match(it, this.unixStyle().substring(2))
 }
 
 internal fun Path.isIncludedPath() = INCLUDED_PATHS.any {
     // Remove leading "./"
-    MATCHER.match(it, this.toString().substring(2))
+    MATCHER.match(it, this.unixStyle().substring(2))
 }
 
 internal fun File.parseLicense() = when {
