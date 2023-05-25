@@ -50,6 +50,7 @@ dependencies {
     implementation(libs("commonmark"))
     implementation(libs("commonmark-ext-task-list-items"))
     implementation(libs("animated-gif-lib-for-java"))
+    implementation(libs("commons-io"))
 
     testImplementation(libs("junit-jupiter-api"))
     testImplementation(libs("junit-jupiter-engine"))
