@@ -81,7 +81,11 @@ fun main() {
                 "JavaBasicStructure",
                 "JavaBasicStructure-challenge-text",
                 GridCoordinate(0, 1),
-                listOf("import-third-party-package", "import-class", "create-a-new-class")
+                listOf(
+                    "create-a-new-class",
+                    "import-class",
+                    "import-third-party-package",
+                )
             )
             commentDungeonNoticeboard()
             basicStructureStone(
@@ -89,12 +93,12 @@ fun main() {
                 "JavaMethodField-challenge-text",
                 GridCoordinate(-1, 0),
                 listOf(
-                    "java-method-recursion",
-                    "java-local-variable-scope",
-                    "java-method-invocation",
-                    "java-field",
+                    "java-method",
                     "java-method-overloading",
-                    "java-method"
+                    "java-field",
+                    "java-method-invocation",
+                    "java-local-variable-scope",
+                    "java-method-recursion",
                 )
             )
             basicStructureStone(
@@ -102,12 +106,12 @@ fun main() {
                 "JavaClassObjectBlocker-challenge-text",
                 GridCoordinate(-1, 0),
                 listOf(
-                    "java-reference-and-value",
-                    "java-npe",
-                    "java-constructor",
-                    "java-instance-method",
-                    "java-instance-field",
                     "java-class-instantiation",
+                    "java-instance-field",
+                    "java-instance-method",
+                    "java-constructor",
+                    "java-npe",
+                    "java-reference-and-value",
                 )
             )
 
@@ -129,11 +133,11 @@ fun main() {
                 GridCoordinate(0, 1),
                 listOf(
                     "java-operator-precedence",
-                    "java-basic-operators",
-                    "java-ternary-operator",
-                    "java-logical-operators",
+                    "java-bitwise-operators",
                     "java-increment-operator",
-                    "java-bitwise-operators"
+                    "java-logical-operators",
+                    "java-ternary-operator",
+                    "java-basic-operators",
                 )
             )
 
@@ -143,9 +147,9 @@ fun main() {
                 GridCoordinate(1, 0),
                 listOf(
                     "java-if-else",
-                    "java-loop",
                     "java-loop-break-continue",
-                    "java-switch"
+                    "java-loop",
+                    "java-switch",
                 )
             )
 
@@ -207,18 +211,11 @@ fun GameScene.updateCheckboxes(blockMissionId: String, blockTextId: String, miss
     tmp.innerHTML = html
 
     val accomplishedMissionBefore = tmp.querySelectorAll("li>input[checked]").length
-    missionIds.forEach {
-        if (missionItemUsed(it)) {
-            val mission = objects.getById<GameMission>(it)
-            val title = htmlToText(gameRuntime.i(mission.gameMapMission.title))
-            val list = tmp.querySelectorAll("li")
-            for (i in 0 until list.length) {
-                val li = list[i]
-                if (li?.textContent?.trim() == title) {
-                    li.firstChild?.unsafeCast<Element>()?.setAttribute("checked", "")
-                    break
-                }
-            }
+    val list = tmp.querySelectorAll("li")
+    for (i in 0 until missionIds.size) {
+        if (missionItemUsed(missionIds[i])) {
+            val li = list[i]
+            li?.firstChild?.unsafeCast<Element>()?.setAttribute("checked", "")
         }
     }
 
