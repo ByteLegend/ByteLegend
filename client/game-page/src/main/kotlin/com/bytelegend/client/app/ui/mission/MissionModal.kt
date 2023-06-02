@@ -21,6 +21,7 @@ import BootstrapNavItem
 import BootstrapNavLink
 import com.bytelegend.app.client.api.EventListener
 import com.bytelegend.app.client.api.missionRepaintEvent
+import com.bytelegend.app.client.ui.bootstrap.BootstrapCard
 import com.bytelegend.app.client.ui.bootstrap.BootstrapModalBody
 import com.bytelegend.app.client.ui.bootstrap.BootstrapNav
 import com.bytelegend.app.shared.entities.ChallengeTabData
@@ -125,6 +126,27 @@ class MissionModal : GameUIComponent<MissionModalProps, MissionModalState>() {
                     }
                 }
                 val activeTab = mission.tabs[state.activeTabIndex]
+                div {
+                    // Show tags
+                    val tags = mission.tags
+                    if (tags.isNotEmpty()) {
+                        BootstrapCard {
+                            div {
+                                className = ClassName("challenge-tags")
+                                +i("Tag")
+                                tags.forEachIndexed { index, tag ->
+                                    span {
+                                        className = ClassName("challenge-tag")
+                                        +i(tag)
+                                    }
+                                    if (index != tags.size - 1) {
+                                        +" / "
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 div {
                     when (activeTab.type) {
                         MissionTabType.QuestionChallenge -> renderQuestionChallenge(mission, activeTab.asDynamic())

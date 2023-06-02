@@ -31,6 +31,10 @@ data class MissionSpec(
      */
     val title: String,
     /**
+     *
+     */
+    val tags: List<String> = emptyList(),
+    /**
      * The challenge in this mission
      */
     val challenges: List<ChallengeSpec> = emptyList(),

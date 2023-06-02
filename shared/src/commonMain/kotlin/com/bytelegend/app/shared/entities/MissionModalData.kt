@@ -27,7 +27,8 @@ data class MissionModalData(
     val missionId: String,
     val tutorialsUnlocked: Boolean,
     val tabs: List<MissionTabData<*>>,
-    val challengeAnswers: List<ChallengeAnswers>
+    val challengeAnswers: List<ChallengeAnswers>,
+    val tags: List<String>
 )
 
 interface MissionTabData<T> {
